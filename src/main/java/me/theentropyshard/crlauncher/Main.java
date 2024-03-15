@@ -19,10 +19,16 @@
 package me.theentropyshard.crlauncher;
 
 import com.beust.jcommander.JCommander;
+import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.HashUtils;
 import org.apache.logging.log4j.LogManager;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 
 public class Main {
     public static void main(String[] args) {
@@ -37,6 +43,26 @@ public class Main {
             LogManager.getLogger(Main.class).error("Unable to start the launcher", t);
             System.exit(1);
         }
+
+        /*try {
+            Path hashes = Paths.get("C:\\Users\\Yura\\Desktop\\test\\hashes.txt");
+
+            if (Files.exists(hashes)) {
+                FileUtils.delete(hashes);
+            }
+
+            FileUtils.createFileIfNotExists(hashes);
+
+            for (Path path : FileUtils.list(Paths.get("C:\\Users\\Yura\\Desktop\\test"))) {
+                String hash = HashUtils.murmur3(path);
+                Files.writeString(hashes,
+                        path.getFileName() + " " +
+                        hash + " " + Files.size(path) + System.lineSeparator(),
+                        StandardCharsets.UTF_8, StandardOpenOption.APPEND);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }*/
     }
 
     private static Args parseArgs(String[] rawArgs) {

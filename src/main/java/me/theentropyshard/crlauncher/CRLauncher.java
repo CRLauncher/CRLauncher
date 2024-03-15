@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher;
 
+import me.theentropyshard.crlauncher.cosmic.VersionManager;
+import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import okhttp3.OkHttpClient;
@@ -42,6 +44,8 @@ public class CRLauncher {
 
     private final OkHttpClient httpClient;
 
+    private final VersionManager versionManager;
+
     public CRLauncher(Args theArgs, Path workDir) {
         this.theArgs = theArgs;
         this.workDir = workDir;
@@ -57,7 +61,10 @@ public class CRLauncher {
 
         this.httpClient = CRLauncher.createHttpClient(CRLauncher.USER_AGENT);
 
-        System.out.println("Hello, World!");
+        this.versionManager = new VersionManager(this.workDir.resolve("versions"));
+
+        Gui gui = new Gui();
+        gui.show();
     }
 
     private static OkHttpClient createHttpClient(String userAgent) {
@@ -86,5 +93,9 @@ public class CRLauncher {
 
     public static CRLauncher getInstance() {
         return instance;
+    }
+
+    public VersionManager getVersionManager() {
+        return this.versionManager;
     }
 }
