@@ -18,8 +18,12 @@
 
 package me.theentropyshard.crlauncher.utils;
 
+import org.apache.commons.codec.digest.MurmurHash3;
+
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
@@ -48,6 +52,18 @@ public final class HashUtils {
         } catch (NoSuchAlgorithmException ex) {
             throw new IOException("SHA-1 algorithm is not available in your JRE", ex);
         }
+    }
+
+    public static String murmur3(Path file) throws IOException {
+        long[] twoLongs = MurmurHash3.hash128x64(Files.readAllBytes(file));
+
+        byte[] bytes = new byte[Long.BYTES * 2];
+
+        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
+        byteBuffer.putLong(twoLongs[0]);
+        byteBuffer.putLong(twoLongs[1]);
+
+        return new BigInteger(bytes).toString(16);
     }
 
     private HashUtils() {
