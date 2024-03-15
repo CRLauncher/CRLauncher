@@ -63,7 +63,7 @@ public final class HashUtils {
         byteBuffer.putLong(twoLongs[0]);
         byteBuffer.putLong(twoLongs[1]);
 
-        return new BigInteger(bytes).toString(16);
+        return new BigInteger(bytes).abs().toString(16);
     }
 
     private HashUtils() {
