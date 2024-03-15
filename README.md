@@ -5,7 +5,7 @@
 
 CRLauncher - an unofficial launcher for [Cosmic Reach](https://finalforeach.itch.io/cosmic-reach)
 
-![Screenshot_1](Screenshot_1.png) ![Screenshot_2.png](Screenshot_2.png)
+![Screenshot_1](images/Screenshot_1.png) ![Screenshot_2.png](images/Screenshot_2.png)
 
 ### Quick Start
 
