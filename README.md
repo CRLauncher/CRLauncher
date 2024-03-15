@@ -5,6 +5,8 @@
 
 CRLauncher - an unofficial launcher for [Cosmic Reach](https://finalforeach.itch.io/cosmic-reach)
 
+![Screenshot_1](Screenshot_1.png) ![Screenshot_2.png](Screenshot_2.png)
+
 ### Quick Start
 
 You can either download a prebuilt jar from [Releases](https://github.com/CRLauncher/CRLauncher/releases) page, or, build it yourself. To build CRLauncher you need at least JDK 17 and
