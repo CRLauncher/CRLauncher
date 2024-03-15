@@ -50,9 +50,9 @@ public final class FileUtils {
 
         if (Files.isRegularFile(path)) {
             Files.delete(path);
+        } else {
+            Files.walkFileTree(path, FileUtils.DELETE_VISITOR);
         }
-
-        Files.walkFileTree(path, FileUtils.DELETE_VISITOR);
     }
 
     public static void createDirectoryIfNotExists(Path dir) throws IOException {
