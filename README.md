@@ -5,7 +5,7 @@
 
 CRLauncher - an unofficial launcher for [Cosmic Reach](https://finalforeach.itch.io/cosmic-reach)
 
-![Screenshot_1](images/Screenshot_1.png) ![Screenshot_2.png](images/Screenshot_2.png)
+![Screenshot.png](images/Screenshot.png)
 
 ### Quick Start
 
@@ -29,6 +29,4 @@ java -jar target/CRLauncher-0.0.3.jar --workDir C:\Users\User\Documents\CRLaunch
 
 
 ### Plans:
- - An ability to change the location of Cosmic Reach's files
- - Introduce the notion of 'instances', where each version of the game is independent of each other
  - Add a way to automatically install fabric
