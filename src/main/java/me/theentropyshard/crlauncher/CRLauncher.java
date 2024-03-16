@@ -36,7 +36,7 @@ public class CRLauncher {
     private static final Logger LOG = LogManager.getLogger(CRLauncher.class);
 
     public static final String NAME = "CRLauncher";
-    public static final String VERSION = "0.0.1";
+    public static final String VERSION = "0.0.2";
     public static final String USER_AGENT = CRLauncher.NAME + "/" + CRLauncher.VERSION;
 
     private final Args args;
