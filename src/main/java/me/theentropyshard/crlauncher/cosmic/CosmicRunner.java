@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.utils.MathUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
+import me.theentropyshard.crlauncher.utils.ResourceUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -75,8 +76,7 @@ public class CosmicRunner extends Thread {
             Path loaderPath = CRLauncher.getInstance().getWorkDir().resolve("libraries").resolve("CRLoader-0.0.1.jar");
 
             if (!Files.exists(loaderPath)) {
-                LOG.error("Unable to find CRLoader at '{}'", loaderPath);
-                return;
+                ResourceUtils.extractResource("/CRLoader-0.0.1.jar", loaderPath);
             }
 
             command.add("\"-javaagent:" + loaderPath + "=" + saveDirPath + "\"");
