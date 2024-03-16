@@ -19,16 +19,10 @@
 package me.theentropyshard.crlauncher;
 
 import com.beust.jcommander.JCommander;
-import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.HashUtils;
 import org.apache.logging.log4j.LogManager;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 
 public class Main {
     public static void main(String[] args) {

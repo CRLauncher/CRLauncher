@@ -56,14 +56,12 @@ public class Gui {
                     JOptionPane.ERROR_MESSAGE
             );
         } else {
-            SwingUtilities.invokeLater(() -> {
-                JOptionPane.showMessageDialog(
-                        instance.getFrame(),
-                        msg,
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
-                );
-            });
+            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
+                    instance.getFrame(),
+                    msg,
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+            ));
         }
     }
 

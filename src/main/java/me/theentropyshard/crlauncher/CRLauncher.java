@@ -39,15 +39,15 @@ public class CRLauncher {
     public static final String VERSION = "0.0.1";
     public static final String USER_AGENT = CRLauncher.NAME + "/" + CRLauncher.VERSION;
 
-    private final Args theArgs;
+    private final Args args;
     private final Path workDir;
 
     private final OkHttpClient httpClient;
 
     private final VersionManager versionManager;
 
-    public CRLauncher(Args theArgs, Path workDir) {
-        this.theArgs = theArgs;
+    public CRLauncher(Args args, Path workDir) {
+        this.args = args;
         this.workDir = workDir;
 
         instance = this;
@@ -77,8 +77,8 @@ public class CRLauncher {
                 .build();
     }
 
-    public Args getTheArgs() {
-        return this.theArgs;
+    public Args getArgs() {
+        return this.args;
     }
 
     public Path getWorkDir() {
