@@ -19,55 +19,61 @@
 package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.gui.Gui;
-import me.theentropyshard.crlauncher.utils.MathUtils;
+import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.instance.JarMod;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import me.theentropyshard.crlauncher.utils.ResourceUtils;
+import me.theentropyshard.crlauncher.utils.TimeUtils;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class CosmicRunner extends Thread {
     private static final Logger LOG = LogManager.getLogger(CosmicRunner.class);
 
-    private final Version version;
+    private final Instance instance;
 
-    public CosmicRunner(Version version) {
-        this.version = version;
+    private Path clientCopyTmp;
+
+    public CosmicRunner(Instance instance) {
+        this.instance = instance;
 
         this.setName("Cosmic Reach run thread");
     }
 
     @Override
     public void run() {
+        SwingUtilities.invokeLater(CRLauncher.getInstance().getGui()::disableBeforePlay);
+
         try {
             VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
-            versionManager.downloadVersion(this.version,
-                    ((contentLength, totalBytesRead, bytesReadThisTime, done) -> {
-                        JProgressBar downloadProgress = Gui.instance.getMainView().getDownloadProgress();
-                        downloadProgress.setMinimum(0);
-                        downloadProgress.setMaximum((int) contentLength);
-                        downloadProgress.setValue((int) totalBytesRead);
-                        downloadProgress.setString(MathUtils.round(totalBytesRead / 1024.0D / 1024.0D, 2) +
-                                " MiB / " + MathUtils.round(contentLength / 1024.0D / 1024.0D, 2) + " MiB");
-                    }));
+            Version version = versionManager.getVersion(this.instance.getCrVersion());
+
+            CRDownloadDialog dialog = new CRDownloadDialog();
+            dialog.setVisible(true);
+            versionManager.downloadVersion(version, dialog);
+            dialog.getDialog().dispose();
 
             List<String> command = new ArrayList<>();
             command.add(this.getJavaPath());
 
-            String saveDirPath = CRLauncher.getInstance().getWorkDir().resolve("cosmic-reach").toString();
+            InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
+            String saveDirPath = instanceManager.getCosmicDir(this.instance).toString();
 
             if (OperatingSystem.isWindows()) {
                 saveDirPath = saveDirPath.replace("\\", "\\\\");
@@ -82,13 +88,97 @@ public class CosmicRunner extends Thread {
             command.add("\"-javaagent:" + loaderPath + "=" + saveDirPath + "\"");
 
             command.add("-jar");
-            command.add(versionManager.getVersionPath(this.version).toAbsolutePath().toString());
+
+            Path path = this.applyJarMods(version, CRLauncher.getInstance().getWorkDir().resolve("versions"));
+
+            command.add(path.toString());
+
+            this.instance.setLastTimePlayed(LocalDateTime.now());
+            long start = System.currentTimeMillis();
 
             int exitCode = this.runGameProcess(command);
             LOG.info("Cosmic Reach process finished with exit code {}", exitCode);
+
+            long end = System.currentTimeMillis();
+
+            if (this.clientCopyTmp != null && Files.exists(this.clientCopyTmp)) {
+                Files.delete(this.clientCopyTmp);
+            }
+
+            long timePlayedSeconds = (end - start) / 1000;
+            String timePlayed = TimeUtils.getHoursMinutesSeconds(timePlayedSeconds);
+            if (!timePlayed.trim().isEmpty()) {
+                LOG.info("You played for " + timePlayed + "!");
+            }
+
+            this.instance.setTotalPlayedForSeconds(this.instance.getTotalPlayedForSeconds() + timePlayedSeconds);
+            this.instance.setLastPlayedForSeconds(timePlayedSeconds);
+            this.instance.save();
         } catch (Exception e) {
-            LOG.error(e);
+            LOG.error("Exception occurred while trying to start Cosmic Reach", e);
+        } finally {
+            SwingUtilities.invokeLater(CRLauncher.getInstance().getGui()::enableAfterPlay);
         }
+    }
+
+    private Path applyJarMods(Version version, Path clientsDir) {
+        Path originalClientPath = clientsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
+
+        List<JarMod> jarMods = this.instance.getJarMods();
+
+        if (jarMods == null || jarMods.isEmpty() || jarMods.stream().noneMatch(JarMod::isActive)) {
+            return originalClientPath;
+        } else {
+            try {
+                InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
+                Path instanceDir = instanceManager.getInstanceDir(this.instance);
+                Path copyOfClient = Files.copy(originalClientPath, instanceDir
+                        .resolve(originalClientPath.getFileName().toString() + System.currentTimeMillis() + ".jar"));
+                this.clientCopyTmp = copyOfClient;
+
+                List<File> zipFilesToMerge = new ArrayList<>();
+
+                for (JarMod jarMod : jarMods) {
+                    if (!jarMod.isActive()) {
+                        continue;
+                    }
+
+                    zipFilesToMerge.add(Paths.get(jarMod.getFullPath()).toFile());
+                }
+
+                try (ZipFile copyZip = new ZipFile(copyOfClient.toFile())) {
+                    for (File modFile : zipFilesToMerge) {
+                        Path unpackDir = instanceDir.resolve(modFile.getName().replace(".", "_"));
+                        try (ZipFile modZip = new ZipFile(modFile)) {
+                            if (Files.exists(unpackDir)) {
+                                FileUtils.delete(unpackDir);
+                            }
+                            FileUtils.createDirectoryIfNotExists(unpackDir);
+
+                            modZip.extractAll(unpackDir.toAbsolutePath().toString());
+                        }
+
+                        List<Path> modFiles = FileUtils.walk(unpackDir);
+
+                        ZipParameters zipParameters = new ZipParameters();
+
+                        for (Path modFileToAdd : modFiles) {
+                            String relative = unpackDir.toAbsolutePath().toUri().relativize(modFileToAdd.toAbsolutePath().toUri()).getPath();
+                            zipParameters.setFileNameInZip(relative);
+                            copyZip.addFile(modFileToAdd.toFile(), zipParameters);
+                        }
+
+                        FileUtils.delete(unpackDir);
+                    }
+                }
+
+                return copyOfClient;
+            } catch (IOException e) {
+                LOG.error("Exception while applying jar mods", e);
+            }
+        }
+
+        return originalClientPath;
     }
 
     private int runGameProcess(List<String> command) throws IOException {

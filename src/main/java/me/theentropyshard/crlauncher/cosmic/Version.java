@@ -25,6 +25,11 @@ public class Version {
     private String id;
 
     /**
+     * Type of the version
+     */
+    private VersionType type;
+
+    /**
      * Time, when version was released
      */
     private String releaseTime;
@@ -52,6 +57,7 @@ public class Version {
     public String toString() {
         return "Version{" +
                 "id='" + this.id + '\'' +
+                ", type=" + this.type +
                 ", releaseTime='" + this.releaseTime + '\'' +
                 ", url='" + this.url + '\'' +
                 ", hash='" + this.hash + '\'' +
@@ -61,6 +67,10 @@ public class Version {
 
     public String getId() {
         return this.id;
+    }
+
+    public VersionType getType() {
+        return this.type;
     }
 
     public String getReleaseTime() {

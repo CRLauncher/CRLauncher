@@ -18,63 +18,153 @@
 
 package me.theentropyshard.crlauncher.gui;
 
-import com.formdev.flatlaf.FlatLightLaf;
+import com.formdev.flatlaf.FlatDarculaLaf;
+import com.formdev.flatlaf.FlatIntelliJLaf;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.components.InstanceItem;
+import me.theentropyshard.crlauncher.gui.playview.InstancesPanel;
+import me.theentropyshard.crlauncher.gui.playview.PlayView;
 
 import javax.swing.*;
+import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
 public class Gui {
-    private final JFrame frame;
-    private final MainView mainView;
+    private JTabbedPane viewSelector;
+    private AppWindow appWindow;
+    private PlayView playView;
 
-    public static Gui instance;
+    private boolean darkTheme;
+    private boolean initialized;
 
-    public Gui() {
+    public Gui(boolean darkTheme) {
+        this.darkTheme = darkTheme;
+        this.initGui();
+    }
+
+    public void initGui() {
+        this.switchTheme();
+
         JDialog.setDefaultLookAndFeelDecorated(true);
         JFrame.setDefaultLookAndFeelDecorated(true);
-        FlatLightLaf.setup();
 
-        instance = this;
+        this.viewSelector = new JTabbedPane(JTabbedPane.LEFT);
+        CRLauncher.window = this.appWindow = new AppWindow(CRLauncher.NAME, CRLauncher.WIDTH, CRLauncher.HEIGHT, this.viewSelector);
+        this.appWindow.getFrame().setGlassPane(new BlockGlassPane());
+    }
 
-        this.mainView = new MainView();
+    public void switchTheme() {
+        if (this.isDarkTheme()) {
+            UIManager.put("InstanceItem.defaultColor", new ColorUIResource(64, 75, 93));
+            UIManager.put("InstanceItem.hoveredColor", new ColorUIResource(70, 80, 100));
+            UIManager.put("InstanceItem.pressedColor", new ColorUIResource(60, 70, 86));
 
-        this.frame = new JFrame(CRLauncher.NAME);
-        this.frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.frame.add(this.mainView, BorderLayout.CENTER);
-        this.frame.pack();
-        SwingUtils.centerWindow(this.frame, 0);
+            UIManager.put("ProgressBar.selectionBackground", Color.WHITE);
+            UIManager.put("ProgressBar.selectionForeground", Color.WHITE);
+            UIManager.put("ProgressBar.foreground", new ColorUIResource(64, 75, 93));
+
+            UIManager.put("AccountItem.borderColor", new ColorUIResource(Color.decode("#4B6EAF")));
+
+            FlatDarculaLaf.setup();
+        } else {
+            UIManager.put("InstanceItem.defaultColor", new ColorUIResource(222, 230, 237));
+            UIManager.put("InstanceItem.hoveredColor", new ColorUIResource(224, 234, 244));
+            UIManager.put("InstanceItem.pressedColor", new ColorUIResource(216, 224, 240));
+
+            UIManager.put("ProgressBar.selectionBackground", Color.BLACK);
+            UIManager.put("ProgressBar.selectionForeground", Color.BLACK);
+            UIManager.put("ProgressBar.foreground", new ColorUIResource(222, 230, 237));
+
+            UIManager.put("AccountItem.borderColor", new ColorUIResource(Color.decode("#2675BF")));
+
+            FlatIntelliJLaf.setup();
+        }
+
+        if (!this.initialized) {
+            return;
+        }
+
+        InstancesPanel defaultInstancesPanel = this.playView.getDefaultInstancesPanel();
+
+        for (Component component : defaultInstancesPanel.getInstancesPanel().getComponents()) {
+            ((InstanceItem) component).updateColors();
+        }
+
+        defaultInstancesPanel.getScrollPane().setBorder(null);
+        this.playView.getGroups().values().forEach(instancesPanel -> {
+
+            for (Component component : instancesPanel.getInstancesPanel().getComponents()) {
+                ((InstanceItem) component).updateColors();
+            }
+            instancesPanel.getScrollPane().setBorder(null);
+        });
     }
 
     public static void showErrorDialog(String msg) {
-        if (SwingUtilities.isEventDispatchThread()) {
-            JOptionPane.showMessageDialog(
-                    instance.getFrame(),
-                    msg,
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            );
-        } else {
-            SwingUtilities.invokeLater(() -> JOptionPane.showMessageDialog(
-                    instance.getFrame(),
-                    msg,
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-            ));
-        }
+        JOptionPane.showMessageDialog(
+                CRLauncher.window.getFrame(),
+                msg,
+                "Error", JOptionPane.ERROR_MESSAGE
+        );
     }
 
-    public void show() {
-        this.frame.setVisible(true);
-        this.mainView.onStartup();
+    public void enableAfterPlay() {
+        this.getViewSelector().setEnabled(true);
+        this.getPlayView().getHeader().getInstanceGroups().setEnabled(true);
+        this.appWindow.getFrame().getGlassPane().setVisible(false);
     }
 
-    public JFrame getFrame() {
-        return this.frame;
+    public void disableBeforePlay() {
+        this.getViewSelector().setEnabled(false);
+        this.getPlayView().getHeader().getInstanceGroups().setEnabled(false);
+        this.appWindow.getFrame().getGlassPane().setVisible(true);
     }
 
-    public MainView getMainView() {
-        return this.mainView;
+    public void updateLookAndFeel() {
+        this.switchTheme();
+        JFrame frame = CRLauncher.window.getFrame();
+        SwingUtilities.updateComponentTreeUI(frame);
+        frame.pack();
+
+        InstancesPanel defaultInstancesPanel = this.playView.getDefaultInstancesPanel();
+        defaultInstancesPanel.getScrollPane().setBorder(null);
+
+        this.playView.getGroups().values().forEach(instancesPanel -> {
+            instancesPanel.getScrollPane().setBorder(null);
+        });
+    }
+
+    public void showGui() {
+        SwingUtilities.invokeLater(() -> {
+            this.playView = new PlayView();
+
+            this.viewSelector.addTab("Play", this.playView.getRoot());
+            this.viewSelector.addTab("Settings", new SettingsView().getRoot());
+            this.viewSelector.addTab("About", new AboutView().getRoot());
+
+            this.appWindow.setVisible(true);
+
+            this.initialized = true;
+        });
+    }
+
+    public JTabbedPane getViewSelector() {
+        return this.viewSelector;
+    }
+
+    public AppWindow getAppWindow() {
+        return this.appWindow;
+    }
+
+    public boolean isDarkTheme() {
+        return this.darkTheme;
+    }
+
+    public void setDarkTheme(boolean darkTheme) {
+        this.darkTheme = darkTheme;
+    }
+
+    public PlayView getPlayView() {
+        return this.playView;
     }
 }

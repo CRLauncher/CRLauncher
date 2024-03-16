@@ -21,12 +21,17 @@ package me.theentropyshard.crlauncher.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
+import me.theentropyshard.crlauncher.cosmic.VersionType;
+import me.theentropyshard.crlauncher.cosmic.gson.VersionTypeTypeAdapter;
+
+import java.time.LocalDateTime;
 
 public final class Json {
     private static final Gson GSON = new GsonBuilder()
             .disableHtmlEscaping()
             //
-
+            .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+            .registerTypeAdapter(VersionType.class, new VersionTypeTypeAdapter())
             //
             .create();
 

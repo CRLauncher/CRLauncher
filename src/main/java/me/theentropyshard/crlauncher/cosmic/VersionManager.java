@@ -19,63 +19,67 @@
 package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.network.HttpRequest;
-import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
-import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
-import me.theentropyshard.crlauncher.utils.HashUtils;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.Json;
-import okhttp3.OkHttpClient;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class VersionManager {
     private static final String REMOTE_VERSIONS = "https://raw.githubusercontent.com/CRLauncher/MetaInfo/master/versions.json";
 
     private final Path workDir;
 
+    private final Map<String, Version> remoteVersions;
+
     public VersionManager(Path workDir) {
         this.workDir = workDir;
+
+        this.remoteVersions = new LinkedHashMap<>();
     }
 
     public void downloadVersion(Version version, ProgressListener listener) throws IOException {
-        Path filePath = this.workDir.resolve(version.getId() + ".jar");
-
-        if (Files.exists(filePath) && HashUtils.murmur3(filePath).equals(version.getHash())) {
-            return;
-        }
-
-        OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient().newBuilder()
-                .addNetworkInterceptor(new ProgressNetworkInterceptor(listener))
-                .build();
-
-        HttpDownload download = new HttpDownload.Builder()
-                .url(version.getUrl())
-                .expectedSize(version.getSize())
-                .httpClient(httpClient)
-                .saveAs(filePath)
-                .build();
-
-        Gui.instance.getMainView().changeDownloadProgressVisibility(true);
-        download.execute();
-        Gui.instance.getMainView().changeDownloadProgressVisibility(false);
+        CosmicDownloader downloader = new CosmicDownloader();
+        downloader.downloadVersion(version, listener);
     }
 
-    public Path getVersionPath(Version version) {
-        return this.workDir.resolve(version.getId() + ".jar");
-    }
-
-    public List<Version> getRemoteAvailableVersions() throws IOException {
+    public void loadRemoteVersions() throws IOException {
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
             VersionList versionList = Json.parse(request.asString(VersionManager.REMOTE_VERSIONS), VersionList.class);
 
-            return versionList.getVersions();
+            for (Version version : versionList.getVersions()) {
+                this.remoteVersions.put(version.getId(), version);
+            }
         }
+    }
+
+    public Path getVersionPath(Version version) {
+        return this.workDir.resolve(version.getId()).resolve(version.getId() + ".jar");
+    }
+
+    public Version getVersion(String id) throws IOException {
+        Path versionJson = this.workDir.resolve(id).resolve(id + ".json");
+        if (Files.exists(versionJson)) {
+            return Json.parse(FileUtils.readUtf8(versionJson), Version.class);
+        }
+
+        if (this.remoteVersions.isEmpty()) {
+            this.loadRemoteVersions();
+        }
+
+        return this.remoteVersions.get(id);
+    }
+
+    public List<Version> getRemoteVersions() throws IOException {
+        if (this.remoteVersions.isEmpty()) {
+            this.loadRemoteVersions();
+        }
+
+        return new ArrayList<>(this.remoteVersions.values());
     }
 
     public List<Version> getLocalAvailableVersions() throws IOException {
