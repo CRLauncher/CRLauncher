@@ -75,7 +75,7 @@ public class FabricModsTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (columnIndex != 1) {
+        if (columnIndex != 3) {
             return;
         }
 

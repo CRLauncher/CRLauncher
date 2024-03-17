@@ -42,9 +42,12 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class CosmicRunner extends Thread {
     private static final Logger LOG = LogManager.getLogger(CosmicRunner.class);
@@ -99,6 +102,28 @@ public class CosmicRunner extends Thread {
                 command.add("-jar");
                 command.add(path.toString());
             } else {
+                Path modsDir = instanceManager.getFabricModsDir(this.instance);
+                Path disabledModsDir = instanceManager.getCosmicDir(this.instance).resolve("disabledmods");
+
+                FileUtils.createDirectoryIfNotExists(modsDir);
+                FileUtils.createDirectoryIfNotExists(disabledModsDir);
+
+                for (FabricMod mod : fabricMods.stream().filter(Predicate.not(FabricMod::isActive)).toList()) {
+                    Path filePath = Paths.get(mod.getFilePath());
+                    if (Files.exists(filePath)) {
+                        Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                        Files.delete(filePath);
+                    }
+                }
+
+                for (FabricMod mod : fabricMods.stream().filter(FabricMod::isActive).toList()) {
+                    Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
+                    if (Files.exists(filePath)) {
+                        Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                        Files.delete(filePath);
+                    }
+                }
+
                 Path fabricLoaderDir = instanceManager.getInstanceDir(this.instance).resolve("fabric_loader");
 
                 Path loaderArchivePath = fabricLoaderDir.resolve("fabric_loader.zip");
