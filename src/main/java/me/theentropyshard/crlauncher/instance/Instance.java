@@ -21,7 +21,6 @@ package me.theentropyshard.crlauncher.instance;
 import me.theentropyshard.crlauncher.CRLauncher;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,6 +39,7 @@ public class Instance {
     private long lastPlayedForSeconds;
     private long totalPlayedForSeconds;
     private List<JarMod> jarMods;
+    private List<FabricMod> fabricMods;
 
     public Instance() {
 
@@ -165,5 +165,13 @@ public class Instance {
 
     public void setJarMods(List<JarMod> jarMods) {
         this.jarMods = jarMods;
+    }
+
+    public List<FabricMod> getFabricMods() {
+        return this.fabricMods;
+    }
+
+    public void setFabricMods(List<FabricMod> fabricMods) {
+        this.fabricMods = fabricMods;
     }
 }

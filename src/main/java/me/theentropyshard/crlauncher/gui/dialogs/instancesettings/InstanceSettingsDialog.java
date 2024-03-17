@@ -47,6 +47,7 @@ public class InstanceSettingsDialog extends AppDialog {
         this.addTab(new MainTab("Main", instance, this.getDialog()));
         this.addTab(new JavaTab("Java", instance, this.getDialog()));
         this.addTab(new JarModsTab(instance, this.getDialog()));
+        this.addTab(new FabricModsTab(instance, this.getDialog()));
 
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override

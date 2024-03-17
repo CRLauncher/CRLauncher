@@ -158,6 +158,10 @@ public class InstanceManager {
         return this.workDir.resolve(instance.getDirName()).resolve("jarmods");
     }
 
+    public Path getFabricModsDir(Instance instance) {
+        return this.getCosmicDir(instance).resolve("mods");
+    }
+
     public Instance getInstanceByName(String name) {
         return this.instancesByName.get(name);
     }
