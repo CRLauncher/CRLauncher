@@ -19,12 +19,12 @@ mvn clean package
 
 Done! To run the launcher, just do:
 ```shell
-java -jar target/CRLauncher-0.0.4.jar
+java -jar target/CRLauncher-0.0.5.jar
 ```
 
 If you want to change the location of launcher's files, add `--workDir` argument:
 ```shell
-java -jar target/CRLauncher-0.0.4.jar --workDir C:\Users\User\Documents\CRLauncher
+java -jar target/CRLauncher-0.0.5.jar --workDir C:\Users\User\Documents\CRLauncher
 ```
 
 
