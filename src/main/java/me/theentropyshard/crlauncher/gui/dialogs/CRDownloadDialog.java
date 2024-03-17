@@ -28,6 +28,7 @@ import java.awt.*;
 
 public class CRDownloadDialog extends AppDialog implements ProgressListener {
     private final JProgressBar progressBar;
+    private final JLabel stageLabel;
 
     public CRDownloadDialog() {
         super(CRLauncher.window.getFrame(), "Downloading Cosmic Reach");
@@ -36,8 +37,8 @@ public class CRDownloadDialog extends AppDialog implements ProgressListener {
         root.setPreferredSize(new Dimension(450, 270));
 
         JPanel centerPanel = new JPanel();
-        JLabel stageLabel = new JLabel("Downloading client...");
-        centerPanel.add(stageLabel);
+        this.stageLabel = new JLabel("Downloading client...");
+        centerPanel.add(this.stageLabel);
         root.add(centerPanel, BorderLayout.CENTER);
 
         this.progressBar = new JProgressBar(JProgressBar.HORIZONTAL);
@@ -59,5 +60,9 @@ public class CRDownloadDialog extends AppDialog implements ProgressListener {
         this.progressBar.setValue((int) downloadedBytes);
         this.progressBar.setString(MathUtils.round(downloadedBytes / 1024.0D / 1024.0D, 2) +
                 " MiB / " + MathUtils.round(contentLength / 1024.0D / 1024.0D, 2) + " MiB");
+    }
+
+    public void setStage(String stage) {
+        this.stageLabel.setText(stage);
     }
 }
