@@ -85,7 +85,7 @@ public class CosmicRunner extends Thread {
                 ResourceUtils.extractResource("/CRLoader-0.0.1.jar", loaderPath);
             }
 
-            command.add("\"-javaagent:" + loaderPath + "=" + saveDirPath + "\"");
+            command.add("-javaagent:" + loaderPath + "=" + saveDirPath);
 
             command.add("-jar");
 
@@ -181,7 +181,7 @@ public class CosmicRunner extends Thread {
         return originalClientPath;
     }
 
-    private int runGameProcess(List<String> command) throws IOException {
+    private int runGameProcess(List<String> command) throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true);
 
@@ -194,7 +194,7 @@ public class CosmicRunner extends Thread {
             LOG.info(line);
         }
 
-        return process.exitValue();
+        return process.waitFor();
     }
 
     private String getJavaPath() {
