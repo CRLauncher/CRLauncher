@@ -18,17 +18,32 @@
 
 package me.theentropyshard.crlauncher.cosmic;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class VersionList {
-    private String latest;
+    private Latest latest;
     private List<Version> versions;
 
     public VersionList() {
 
     }
 
-    public String getLatest() {
+    public static final class Latest {
+        @SerializedName("pre_alpha")
+        private String preAlpha;
+
+        public Latest() {
+
+        }
+
+        public String getPreAlpha() {
+            return this.preAlpha;
+        }
+    }
+
+    public Latest getLatest() {
         return this.latest;
     }
 

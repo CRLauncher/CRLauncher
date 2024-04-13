@@ -18,7 +18,11 @@
 
 package me.theentropyshard.crlauncher.cosmic;
 
+import java.time.format.DateTimeFormatter;
+
 public class Version {
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+
     /**
      * Version id
      */
@@ -30,9 +34,9 @@ public class Version {
     private VersionType type;
 
     /**
-     * Time, when version was released
+     * Time, when version was released, unix timestamp
      */
-    private String releaseTime;
+    private long releaseTime;
 
     /**
      * Download url
@@ -73,7 +77,7 @@ public class Version {
         return this.type;
     }
 
-    public String getReleaseTime() {
+    public long getReleaseTime() {
         return this.releaseTime;
     }
 

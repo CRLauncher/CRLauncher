@@ -52,7 +52,7 @@ public enum VersionType {
 
     @Override
     public String toString() {
-        return this.jsonName;
+        return this.readableName;
     }
 
     public String getJsonName() {

@@ -26,6 +26,9 @@ import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -61,9 +64,10 @@ public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
         }
 
         for (Version version : versions) {
+            Instant instant = Instant.ofEpochSecond(version.getReleaseTime());
             Object[] rowData = {
                     version.getId(),
-                    version.getReleaseTime(),
+                    Version.FORMATTER.format(OffsetDateTime.ofInstant(instant, ZoneId.of("UTC"))),
                     version.getType()
             };
 
