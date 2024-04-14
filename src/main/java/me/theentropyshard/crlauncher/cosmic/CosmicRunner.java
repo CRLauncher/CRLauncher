@@ -64,17 +64,15 @@ public class CosmicRunner extends Thread {
 
     @Override
     public void run() {
-        SwingUtilities.invokeLater(CRLauncher.getInstance().getGui()::disableBeforePlay);
+        VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
         try {
-            VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
-
             Version version = versionManager.getVersion(this.instance.getCrVersion());
 
             CRDownloadDialog dialog = new CRDownloadDialog();
-            dialog.setVisible(true);
+            SwingUtilities.invokeLater(() -> dialog.setVisible(true));
             versionManager.downloadVersion(version, dialog);
-            dialog.getDialog().dispose();
+            SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
 
             List<String> command = new ArrayList<>();
             command.add(this.getJavaPath());
@@ -219,8 +217,6 @@ public class CosmicRunner extends Thread {
             this.instance.save();
         } catch (Exception e) {
             LOG.error("Exception occurred while trying to start Cosmic Reach", e);
-        } finally {
-            SwingUtilities.invokeLater(CRLauncher.getInstance().getGui()::enableAfterPlay);
         }
     }
 

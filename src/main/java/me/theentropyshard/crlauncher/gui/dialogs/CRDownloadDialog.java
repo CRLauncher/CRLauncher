@@ -47,7 +47,6 @@ public class CRDownloadDialog extends AppDialog implements ProgressListener {
         this.progressBar.setStringPainted(true);
         root.add(this.progressBar, BorderLayout.SOUTH);
 
-        this.getDialog().setModal(false);
         this.setResizable(false);
         this.setContent(root);
         this.center(0);
