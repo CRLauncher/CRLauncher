@@ -92,107 +92,8 @@ public class CosmicRunner extends Thread {
 
             command.add("-javaagent:" + loaderPath + "=" + saveDirPath);
 
-            List<FabricMod> fabricMods = this.instance.getFabricMods();
-
             Path path = this.applyJarMods(version, CRLauncher.getInstance().getWorkDir().resolve("versions"));
-
-            if (fabricMods == null || fabricMods.isEmpty() || fabricMods.stream().noneMatch(FabricMod::isActive)) {
-                command.add("-jar");
-                command.add(path.toString());
-            } else {
-                Path modsDir = instanceManager.getFabricModsDir(this.instance);
-                Path disabledModsDir = instanceManager.getCosmicDir(this.instance).resolve("disabledmods");
-
-                FileUtils.createDirectoryIfNotExists(modsDir);
-                FileUtils.createDirectoryIfNotExists(disabledModsDir);
-
-                for (FabricMod mod : fabricMods.stream().filter(Predicate.not(FabricMod::isActive)).toList()) {
-                    Path filePath = Paths.get(mod.getFilePath());
-                    if (Files.exists(filePath)) {
-                        Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                        Files.delete(filePath);
-                    }
-                }
-
-                for (FabricMod mod : fabricMods.stream().filter(FabricMod::isActive).toList()) {
-                    Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
-                    if (Files.exists(filePath)) {
-                        Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                        Files.delete(filePath);
-                    }
-                }
-
-                Path fabricLoaderDir = instanceManager.getInstanceDir(this.instance).resolve("fabric_loader");
-
-                Path loaderArchivePath = fabricLoaderDir.resolve("fabric_loader.zip");
-
-                if (!Files.exists(fabricLoaderDir)) {
-                    FileUtils.createDirectoryIfNotExists(fabricLoaderDir);
-
-                    GithubReleaseDownloader downloader = new GithubReleaseDownloader();
-
-                    CRDownloadDialog downloadDialog = new CRDownloadDialog();
-
-                    downloadDialog.setStage("Downloading Fabric mod loader...");
-                    downloadDialog.setVisible(true);
-
-                    GithubReleaseResponse release = downloader.getReleaseResponse("ForwarD-NerN", "CosmicReach-Mod-Loader");
-
-                    downloader.downloadLatestRelease(
-                            loaderArchivePath,
-                            release,
-                            0,
-                            downloadDialog
-                    );
-                    downloadDialog.getDialog().dispose();
-
-                    try (ZipFile loaderArchive = new ZipFile(loaderArchivePath.toFile())) {
-                        loaderArchive.removeFile("launch.bat");
-                        loaderArchive.removeFile("launch.sh");
-
-                        loaderArchive.extractAll(fabricLoaderDir.toString());
-                    }
-                }
-
-                command.add("-Dfabric.skipMcProvider=true");
-                command.add("-Dfabric.gameJarPath=" + path);
-
-                command.add("-classpath");
-
-                List<String> classpath = new ArrayList<>();
-                classpath.add(path.toString());
-
-                Path fabricJar = null;
-                for (Path p : FileUtils.list(fabricLoaderDir)) {
-                    String fileName = p.getFileName().toString();
-                    if (fileName.contains("fabric") && fileName.contains("modloader") && fileName.endsWith(".jar")) {
-                        fabricJar = p;
-                    }
-                }
-
-                if (fabricJar == null) {
-                    LOG.error("Cannot find fabric modloader jar in {}", fabricLoaderDir);
-                    Gui.showErrorDialog("Cannot find fabric modloader jar in " + fabricLoaderDir);
-                    return;
-                }
-
-                classpath.add(fabricJar.toString());
-
-                Path depsDir = fabricLoaderDir.resolve("deps");
-                if (!Files.exists(depsDir)) {
-                    LOG.error("Cannot find fabric modloader dependencies in {}", depsDir);
-                    Gui.showErrorDialog("Cannot find fabric modloader dependencies in " + depsDir);
-                    return;
-                }
-
-                for (Path dep : FileUtils.list(depsDir)) {
-                    classpath.add(dep.toString());
-                }
-
-                command.add(String.join(File.pathSeparator, classpath));
-
-                command.add("net.fabricmc.loader.launch.knot.KnotClient");
-            }
+            this.applyFabricMods(path, command);
 
             this.instance.setLastTimePlayed(LocalDateTime.now());
             long start = System.currentTimeMillis();
@@ -278,6 +179,110 @@ public class CosmicRunner extends Thread {
         }
 
         return originalClientPath;
+    }
+
+    private void applyFabricMods(Path clientPath, List<String> command) throws IOException {
+        InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
+
+        List<FabricMod> fabricMods = this.instance.getFabricMods();
+
+        if (fabricMods == null || fabricMods.isEmpty() || fabricMods.stream().noneMatch(FabricMod::isActive)) {
+            command.add("-jar");
+            command.add(clientPath.toString());
+        } else {
+            Path modsDir = instanceManager.getFabricModsDir(this.instance);
+            Path disabledModsDir = instanceManager.getCosmicDir(this.instance).resolve("disabledmods");
+
+            FileUtils.createDirectoryIfNotExists(modsDir);
+            FileUtils.createDirectoryIfNotExists(disabledModsDir);
+
+            for (FabricMod mod : fabricMods.stream().filter(Predicate.not(FabricMod::isActive)).toList()) {
+                Path filePath = Paths.get(mod.getFilePath());
+                if (Files.exists(filePath)) {
+                    Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.delete(filePath);
+                }
+            }
+
+            for (FabricMod mod : fabricMods.stream().filter(FabricMod::isActive).toList()) {
+                Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
+                if (Files.exists(filePath)) {
+                    Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.delete(filePath);
+                }
+            }
+
+            Path fabricLoaderDir = instanceManager.getInstanceDir(this.instance).resolve("fabric_loader");
+
+            Path loaderArchivePath = fabricLoaderDir.resolve("fabric_loader.zip");
+
+            if (!Files.exists(fabricLoaderDir)) {
+                FileUtils.createDirectoryIfNotExists(fabricLoaderDir);
+
+                GithubReleaseDownloader downloader = new GithubReleaseDownloader();
+
+                CRDownloadDialog downloadDialog = new CRDownloadDialog();
+
+                downloadDialog.setStage("Downloading Fabric mod loader...");
+                SwingUtilities.invokeLater(() -> downloadDialog.setVisible(true));
+
+                GithubReleaseResponse release = downloader.getReleaseResponse("ForwarD-NerN", "CosmicReach-Mod-Loader");
+
+                downloader.downloadLatestRelease(
+                        loaderArchivePath,
+                        release,
+                        0,
+                        downloadDialog
+                );
+                SwingUtilities.invokeLater(() -> downloadDialog.getDialog().dispose());
+
+                try (ZipFile loaderArchive = new ZipFile(loaderArchivePath.toFile())) {
+                    loaderArchive.removeFile("launch.bat");
+                    loaderArchive.removeFile("launch.sh");
+
+                    loaderArchive.extractAll(fabricLoaderDir.toString());
+                }
+            }
+
+            command.add("-Dfabric.skipMcProvider=true");
+            command.add("-Dfabric.gameJarPath=" + clientPath);
+
+            command.add("-classpath");
+
+            List<String> classpath = new ArrayList<>();
+            classpath.add(clientPath.toString());
+
+            Path fabricJar = null;
+            for (Path p : FileUtils.list(fabricLoaderDir)) {
+                String fileName = p.getFileName().toString();
+                if (fileName.contains("fabric") && fileName.contains("modloader") && fileName.endsWith(".jar")) {
+                    fabricJar = p;
+                }
+            }
+
+            if (fabricJar == null) {
+                LOG.error("Cannot find fabric modloader jar in {}", fabricLoaderDir);
+                Gui.showErrorDialog("Cannot find fabric modloader jar in " + fabricLoaderDir);
+                return;
+            }
+
+            classpath.add(fabricJar.toString());
+
+            Path depsDir = fabricLoaderDir.resolve("deps");
+            if (!Files.exists(depsDir)) {
+                LOG.error("Cannot find fabric modloader dependencies in {}", depsDir);
+                Gui.showErrorDialog("Cannot find fabric modloader dependencies in " + depsDir);
+                return;
+            }
+
+            for (Path dep : FileUtils.list(depsDir)) {
+                classpath.add(dep.toString());
+            }
+
+            command.add(String.join(File.pathSeparator, classpath));
+
+            command.add("net.fabricmc.loader.launch.knot.KnotClient");
+        }
     }
 
     private int runGameProcess(Path dir, List<String> command) throws IOException, InterruptedException {
