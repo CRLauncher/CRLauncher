@@ -28,10 +28,6 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public final class SwingUtils {
     private static final Map<String, Icon> ICON_CACHE = new HashMap<>();
@@ -41,7 +37,12 @@ public final class SwingUtils {
             return SwingUtils.ICON_CACHE.get(path);
         }
 
-        Icon icon = new ImageIcon(Objects.requireNonNull(SwingUtils.class.getResource(path)));
+        Icon icon;
+        try {
+            icon = new ImageIcon(ResourceUtils.readToByteArray("assets/" + path));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         SwingUtils.ICON_CACHE.put(path, icon);
 
         return icon;
