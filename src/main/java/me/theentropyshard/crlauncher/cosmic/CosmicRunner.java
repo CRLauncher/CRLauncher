@@ -88,7 +88,7 @@ public class CosmicRunner extends Thread {
             Path loaderPath = CRLauncher.getInstance().getWorkDir().resolve("libraries").resolve("CRLoader-0.0.1.jar");
 
             if (!Files.exists(loaderPath)) {
-                ResourceUtils.extractResource("/CRLoader-0.0.1.jar", loaderPath);
+                ResourceUtils.extractResource("assets/CRLoader-0.0.1.jar", loaderPath);
             }
 
             command.add("-javaagent:" + loaderPath + "=" + saveDirPath);

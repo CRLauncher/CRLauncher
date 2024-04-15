@@ -23,17 +23,21 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class ResourceUtils {
+    private static String getPath(String requested) {
+        return "/" + requested;
+    }
+
     public static byte[] readToByteArray(String path) throws IOException {
-        return StreamUtils.readToByteArray(ResourceUtils.class.getResourceAsStream(path));
+        return StreamUtils.readToByteArray(ResourceUtils.class.getResourceAsStream(ResourceUtils.getPath(path)));
     }
 
     public static void extractResource(String name, Path target) throws IOException {
         FileUtils.createDirectoryIfNotExists(target.getParent());
-        Files.write(target, ResourceUtils.readToByteArray(name));
+        Files.write(target, ResourceUtils.readToByteArray(ResourceUtils.getPath(name)));
     }
 
     public static String readToString(String path) throws IOException {
-        return StreamUtils.readToString(ResourceUtils.class.getResourceAsStream(path));
+        return StreamUtils.readToString(ResourceUtils.class.getResourceAsStream(ResourceUtils.getPath(path)));
     }
 
     private ResourceUtils() {
