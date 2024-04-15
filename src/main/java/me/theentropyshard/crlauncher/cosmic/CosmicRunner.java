@@ -27,6 +27,7 @@ import me.theentropyshard.crlauncher.instance.FabricMod;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.instance.JarMod;
+import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import me.theentropyshard.crlauncher.utils.ResourceUtils;
@@ -75,7 +76,7 @@ public class CosmicRunner extends Thread {
             SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
 
             List<String> command = new ArrayList<>();
-            command.add(this.getJavaPath());
+            command.add(JavaLocator.getJavaPath());
 
             InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
             String saveDirPath = instanceManager.getCosmicDir(this.instance).toString();
@@ -300,11 +301,5 @@ public class CosmicRunner extends Thread {
         }
 
         return process.waitFor();
-    }
-
-    private String getJavaPath() {
-        String exeName = OperatingSystem.isWindows() ? "javaw.exe" : "java";
-
-        return Paths.get(System.getProperty("java.home"), "bin", exeName).toString();
     }
 }
