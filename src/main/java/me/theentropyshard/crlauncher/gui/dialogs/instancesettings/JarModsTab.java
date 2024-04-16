@@ -21,7 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.JarMod;
+import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;

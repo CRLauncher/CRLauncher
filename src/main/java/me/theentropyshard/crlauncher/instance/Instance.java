@@ -19,6 +19,8 @@
 package me.theentropyshard.crlauncher.instance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
+import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 
 import java.io.IOException;
 import java.time.LocalDateTime;

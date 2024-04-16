@@ -21,7 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.Gui;
-import me.theentropyshard.crlauncher.instance.FabricMod;
+import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;

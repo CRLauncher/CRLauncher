@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.instance;
+package me.theentropyshard.crlauncher.cosmic.mods.jar;
 
 import java.util.UUID;
 

@@ -18,9 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 
-import me.theentropyshard.crlauncher.instance.FabricMod;
+import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.JarMod;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;

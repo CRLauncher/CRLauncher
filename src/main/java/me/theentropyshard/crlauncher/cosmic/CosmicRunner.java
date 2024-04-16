@@ -23,10 +23,10 @@ import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
-import me.theentropyshard.crlauncher.instance.FabricMod;
+import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
-import me.theentropyshard.crlauncher.instance.JarMod;
+import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
@@ -48,7 +48,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class CosmicRunner extends Thread {
     private static final Logger LOG = LogManager.getLogger(CosmicRunner.class);
