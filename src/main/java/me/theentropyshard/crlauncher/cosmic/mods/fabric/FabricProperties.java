@@ -20,13 +20,15 @@ package me.theentropyshard.crlauncher.cosmic.mods.fabric;
 
 import me.theentropyshard.crlauncher.java.SystemProperty;
 
-public final class FabricSystemProperties {
+public final class FabricProperties {
+    public static final String MAIN_CLASS = "net.fabricmc.loader.launch.knot.KnotClient";
+
     public static final SystemProperty SKIP_MC_PROVIDER = new SystemProperty("fabric", "skipMcProvider");
     public static final SystemProperty GAME_JAR_PATH = new SystemProperty("fabric", "gameJarPath");
     public static final SystemProperty GAME_VERSION = new SystemProperty("fabric", "gameVersion");
     public static final SystemProperty MODS_FOLDER = new SystemProperty("fabric", "modsFolder");
 
-    private FabricSystemProperties() {
+    private FabricProperties() {
         throw new UnsupportedOperationException();
     }
 }
