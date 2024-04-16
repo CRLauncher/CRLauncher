@@ -104,10 +104,6 @@ public class CosmicRunner extends Thread {
 
             long end = System.currentTimeMillis();
 
-            if (this.clientCopyTmp != null && Files.exists(this.clientCopyTmp)) {
-                Files.delete(this.clientCopyTmp);
-            }
-
             long timePlayedSeconds = (end - start) / 1000;
             String timePlayed = TimeUtils.getHoursMinutesSeconds(timePlayedSeconds);
             if (!timePlayed.trim().isEmpty()) {
@@ -119,6 +115,14 @@ public class CosmicRunner extends Thread {
             this.oldInstance.save();
         } catch (Exception e) {
             LOG.error("Exception occurred while trying to start Cosmic Reach", e);
+        } finally {
+            if (this.clientCopyTmp != null && Files.exists(this.clientCopyTmp)) {
+                try {
+                    Files.delete(this.clientCopyTmp);
+                } catch (IOException e) {
+                    LOG.error("Unable to delete temporary client", e);
+                }
+            }
         }
     }
 
