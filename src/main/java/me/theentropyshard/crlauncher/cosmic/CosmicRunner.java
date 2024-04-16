@@ -19,19 +19,17 @@
 package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricProperties;
+import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
-import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.instance.OldInstance;
 import me.theentropyshard.crlauncher.instance.OldInstanceManager;
-import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
-import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
-import me.theentropyshard.crlauncher.utils.ResourceUtils;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
@@ -64,6 +62,61 @@ public class CosmicRunner extends Thread {
     }
 
     @Override
+    public void run() {
+        VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
+
+        try {
+            Version version = versionManager.getVersion(this.oldInstance.getCrVersion());
+
+            CRDownloadDialog dialog = new CRDownloadDialog();
+            SwingUtilities.invokeLater(() -> dialog.setVisible(true));
+            versionManager.downloadVersion(version, dialog);
+            SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
+
+            OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
+            Path saveDirPath = oldInstanceManager.getCosmicDir(this.oldInstance);
+
+            Path path = this.applyJarMods(version, CRLauncher.getInstance().getWorkDir().resolve("versions"));
+
+            this.oldInstance.setLastTimePlayed(LocalDateTime.now());
+            long start = System.currentTimeMillis();
+
+            CosmicLauncher launcher = CosmicLauncherFactory.getLauncher(
+                    LaunchType.VANILLA,
+                    oldInstanceManager.getCosmicDir(this.oldInstance),
+                    saveDirPath,
+                    path
+            );
+
+            int exitCode = launcher.launch(LOG::info);
+
+            LOG.info("Cosmic Reach process finished with exit code {}", exitCode);
+
+            long end = System.currentTimeMillis();
+
+            long timePlayedSeconds = (end - start) / 1000;
+            String timePlayed = TimeUtils.getHoursMinutesSeconds(timePlayedSeconds);
+            if (!timePlayed.trim().isEmpty()) {
+                LOG.info("You played for " + timePlayed + "!");
+            }
+
+            this.oldInstance.setTotalPlayedForSeconds(this.oldInstance.getTotalPlayedForSeconds() + timePlayedSeconds);
+            this.oldInstance.setLastPlayedForSeconds(timePlayedSeconds);
+            this.oldInstance.save();
+        } catch (Exception e) {
+            LOG.error("Exception occurred while trying to start Cosmic Reach", e);
+        } finally {
+            if (this.clientCopyTmp != null && Files.exists(this.clientCopyTmp)) {
+                try {
+                    Files.delete(this.clientCopyTmp);
+                } catch (IOException e) {
+                    LOG.error("Unable to delete temporary client", e);
+                }
+            }
+        }
+    }
+
+    /*@Override
     public void run() {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
@@ -124,7 +177,7 @@ public class CosmicRunner extends Thread {
                 }
             }
         }
-    }
+    }*/
 
     private Path applyJarMods(Version version, Path clientsDir) {
         Path originalClientPath = clientsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();

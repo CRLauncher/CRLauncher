@@ -18,13 +18,32 @@
 
 package me.theentropyshard.crlauncher.java;
 
-public class SystemProperty {
-    private final String prefix;
-    private final String name;
+import java.util.Objects;
 
-    public SystemProperty(String prefix, String name) {
-        this.prefix = prefix;
-        this.name = name;
+public class SystemProperty {
+    private final String property;
+    private final String value;
+
+    public SystemProperty(String property) {
+        this(property, null);
+    }
+
+    public SystemProperty(String property, String value) {
+        this.property = property;
+        this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        SystemProperty that = (SystemProperty) o;
+        return Objects.equals(this.property, that.property) && Objects.equals(this.value, that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.property, this.value);
     }
 
     public String get() {
@@ -32,7 +51,7 @@ public class SystemProperty {
     }
 
     public String get(String def) {
-        String p = System.getProperty(this.prefix + "." + this.name);
+        String p = System.getProperty(this.property);
 
         if (p == null) {
             return def;
@@ -41,7 +60,15 @@ public class SystemProperty {
         return p;
     }
 
+    public String asJvmArg() {
+        if (this.value == null) {
+            throw new NullPointerException("value must not be null");
+        }
+
+        return "-D" + this.property + "=" + this.value;
+    }
+
     public String asJvmArg(Object value) {
-        return "-D" + this.prefix + "." + this.name + "=" + value;
+        return "-D" + this.property + "=" + value;
     }
 }
