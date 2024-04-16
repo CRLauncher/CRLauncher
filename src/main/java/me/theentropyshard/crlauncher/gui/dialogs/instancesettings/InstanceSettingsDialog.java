@@ -41,6 +41,7 @@ public class InstanceSettingsDialog extends AppDialog {
         super(CRLauncher.window.getFrame(), "Instance Settings - " + oldInstance.getName());
 
         this.tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
+        this.tabbedPane.setPreferredSize(new Dimension(900, 480));
 
         this.tabs = new ArrayList<>();
 
