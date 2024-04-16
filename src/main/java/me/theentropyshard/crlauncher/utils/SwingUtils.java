@@ -39,7 +39,7 @@ public final class SwingUtils {
 
         Icon icon;
         try {
-            icon = new ImageIcon(ResourceUtils.readToByteArray("assets/" + path));
+            icon = new ImageIcon(ResourceUtils.readToByteArray("/assets" + path));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
