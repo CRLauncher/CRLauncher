@@ -23,6 +23,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import me.theentropyshard.crlauncher.cosmic.VersionType;
 import me.theentropyshard.crlauncher.cosmic.gson.VersionTypeTypeAdapter;
+import me.theentropyshard.crlauncher.instance.InstanceType;
+import me.theentropyshard.crlauncher.instance.InstanceTypeTypeAdapter;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +34,7 @@ public final class Json {
             //
             .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
             .registerTypeAdapter(VersionType.class, new VersionTypeTypeAdapter())
+            .registerTypeAdapter(InstanceType.class, new InstanceTypeTypeAdapter())
             //
             .create();
 

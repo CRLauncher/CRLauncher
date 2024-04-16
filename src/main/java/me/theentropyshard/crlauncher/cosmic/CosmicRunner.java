@@ -20,16 +20,12 @@ package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
-import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricProperties;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
-import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
-import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
-import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.instance.OldInstance;
 import me.theentropyshard.crlauncher.instance.OldInstanceManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
@@ -37,8 +33,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -76,23 +72,51 @@ public class CosmicRunner extends Thread {
             OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
             Path saveDirPath = oldInstanceManager.getCosmicDir(this.oldInstance);
 
-            Path path = this.applyJarMods(version, CRLauncher.getInstance().getWorkDir().resolve("versions"));
+            Path versionsDir = CRLauncher.getInstance().getWorkDir().resolve("versions");
+            Path clientPath = versionsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
 
             this.oldInstance.setLastTimePlayed(LocalDateTime.now());
-            long start = System.currentTimeMillis();
 
-            CosmicLauncher launcher = CosmicLauncherFactory.getLauncher(
-                    LaunchType.VANILLA,
-                    oldInstanceManager.getCosmicDir(this.oldInstance),
-                    saveDirPath,
-                    path
-            );
+            CosmicLauncher launcher;
+
+            if (this.oldInstance.getType() == InstanceType.VANILLA) {
+                clientPath = this.applyJarMods(version, versionsDir);
+
+                launcher = CosmicLauncherFactory.getLauncher(
+                        LaunchType.VANILLA,
+                        saveDirPath,
+                        saveDirPath,
+                        clientPath
+                );
+            } else if (this.oldInstance.getType() == InstanceType.FABRIC) {
+                this.updateFabricMods();
+
+                launcher = CosmicLauncherFactory.getLauncher(
+                        LaunchType.FABRIC,
+                        saveDirPath,
+                        saveDirPath,
+                        clientPath,
+                        oldInstanceManager.getFabricModsDir(this.oldInstance)
+                );
+            } else if (this.oldInstance.getType() == InstanceType.QUILT) {
+                launcher = CosmicLauncherFactory.getLauncher(
+                        LaunchType.QUILT,
+                        saveDirPath,
+                        saveDirPath,
+                        clientPath,
+                        oldInstanceManager.getQuiltModsDir(this.oldInstance)
+                );
+            } else {
+                throw new IllegalArgumentException("Unknown instance type: " + this.oldInstance.getType());
+            }
+
+            long start = System.currentTimeMillis();
 
             int exitCode = launcher.launch(LOG::info);
 
-            LOG.info("Cosmic Reach process finished with exit code {}", exitCode);
-
             long end = System.currentTimeMillis();
+
+            LOG.info("Cosmic Reach process finished with exit code {}", exitCode);
 
             long timePlayedSeconds = (end - start) / 1000;
             String timePlayed = TimeUtils.getHoursMinutesSeconds(timePlayedSeconds);
@@ -115,69 +139,6 @@ public class CosmicRunner extends Thread {
             }
         }
     }
-
-    /*@Override
-    public void run() {
-        VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
-
-        try {
-            Version version = versionManager.getVersion(this.oldInstance.getCrVersion());
-
-            CRDownloadDialog dialog = new CRDownloadDialog();
-            SwingUtilities.invokeLater(() -> dialog.setVisible(true));
-            versionManager.downloadVersion(version, dialog);
-            SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
-
-            List<String> command = new ArrayList<>();
-            command.add(JavaLocator.getJavaPath());
-
-            OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
-            String saveDirPath = oldInstanceManager.getCosmicDir(this.oldInstance).toString();
-
-            if (OperatingSystem.isWindows()) {
-                saveDirPath = saveDirPath.replace("\\", "\\\\");
-            }
-
-            Path loaderPath = CRLauncher.getInstance().getWorkDir().resolve("libraries").resolve("CRLoader-0.0.1.jar");
-
-            if (!Files.exists(loaderPath)) {
-                ResourceUtils.extractResource("/assets/CRLoader-0.0.1.jar", loaderPath);
-            }
-
-            command.add("-javaagent:" + loaderPath + "=" + saveDirPath);
-
-            Path path = this.applyJarMods(version, CRLauncher.getInstance().getWorkDir().resolve("versions"));
-            this.applyFabricMods(path, command);
-
-            this.oldInstance.setLastTimePlayed(LocalDateTime.now());
-            long start = System.currentTimeMillis();
-
-            int exitCode = this.runGameProcess(oldInstanceManager.getCosmicDir(this.oldInstance), command);
-            LOG.info("Cosmic Reach process finished with exit code {}", exitCode);
-
-            long end = System.currentTimeMillis();
-
-            long timePlayedSeconds = (end - start) / 1000;
-            String timePlayed = TimeUtils.getHoursMinutesSeconds(timePlayedSeconds);
-            if (!timePlayed.trim().isEmpty()) {
-                LOG.info("You played for " + timePlayed + "!");
-            }
-
-            this.oldInstance.setTotalPlayedForSeconds(this.oldInstance.getTotalPlayedForSeconds() + timePlayedSeconds);
-            this.oldInstance.setLastPlayedForSeconds(timePlayedSeconds);
-            this.oldInstance.save();
-        } catch (Exception e) {
-            LOG.error("Exception occurred while trying to start Cosmic Reach", e);
-        } finally {
-            if (this.clientCopyTmp != null && Files.exists(this.clientCopyTmp)) {
-                try {
-                    Files.delete(this.clientCopyTmp);
-                } catch (IOException e) {
-                    LOG.error("Unable to delete temporary client", e);
-                }
-            }
-        }
-    }*/
 
     private Path applyJarMods(Version version, Path clientsDir) {
         Path originalClientPath = clientsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
@@ -239,17 +200,13 @@ public class CosmicRunner extends Thread {
         return originalClientPath;
     }
 
-    private void applyFabricMods(Path clientPath, List<String> command) throws IOException {
+    private void updateFabricMods() throws IOException {
         OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
-
         List<FabricMod> fabricMods = this.oldInstance.getFabricMods();
 
-        if (fabricMods == null || fabricMods.isEmpty() || fabricMods.stream().noneMatch(FabricMod::isActive)) {
-            command.add("-jar");
-            command.add(clientPath.toString());
-        } else {
+        if (fabricMods != null && !fabricMods.isEmpty() && fabricMods.stream().anyMatch(FabricMod::isActive)) {
             Path modsDir = oldInstanceManager.getFabricModsDir(this.oldInstance);
-            Path disabledModsDir = oldInstanceManager.getCosmicDir(this.oldInstance).resolve("disabledmods");
+            Path disabledModsDir = oldInstanceManager.getCosmicDir(this.oldInstance).resolve("disabledfabricmods");
 
             FileUtils.createDirectoryIfNotExists(modsDir);
             FileUtils.createDirectoryIfNotExists(disabledModsDir);
@@ -269,94 +226,6 @@ public class CosmicRunner extends Thread {
                     Files.delete(filePath);
                 }
             }
-
-            Path fabricLoaderDir = oldInstanceManager.getInstanceDir(this.oldInstance).resolve("fabric_loader");
-
-            Path loaderArchivePath = fabricLoaderDir.resolve("fabric_loader.zip");
-
-            if (!Files.exists(fabricLoaderDir)) {
-                FileUtils.createDirectoryIfNotExists(fabricLoaderDir);
-
-                GithubReleaseDownloader downloader = new GithubReleaseDownloader();
-
-                CRDownloadDialog downloadDialog = new CRDownloadDialog();
-
-                downloadDialog.setStage("Downloading Fabric mod loader...");
-                SwingUtilities.invokeLater(() -> downloadDialog.setVisible(true));
-
-                GithubReleaseResponse release = downloader.getReleaseResponse("ForwarD-NerN", "CosmicReach-Mod-Loader");
-
-                downloader.downloadLatestRelease(
-                        loaderArchivePath,
-                        release,
-                        0,
-                        downloadDialog
-                );
-                SwingUtilities.invokeLater(() -> downloadDialog.getDialog().dispose());
-
-                try (ZipFile loaderArchive = new ZipFile(loaderArchivePath.toFile())) {
-                    loaderArchive.removeFile("launch.bat");
-                    loaderArchive.removeFile("launch.sh");
-
-                    loaderArchive.extractAll(fabricLoaderDir.toString());
-                }
-            }
-
-            command.add(FabricProperties.SKIP_MC_PROVIDER.asJvmArg(true));
-            command.add(FabricProperties.GAME_JAR_PATH.asJvmArg(clientPath));
-
-            command.add("-classpath");
-
-            List<String> classpath = new ArrayList<>();
-            classpath.add(clientPath.toString());
-
-            Path fabricJar = null;
-            for (Path p : FileUtils.list(fabricLoaderDir)) {
-                String fileName = p.getFileName().toString();
-                if (fileName.contains("fabric") && fileName.contains("modloader") && fileName.endsWith(".jar")) {
-                    fabricJar = p;
-                }
-            }
-
-            if (fabricJar == null) {
-                LOG.error("Cannot find fabric modloader jar in {}", fabricLoaderDir);
-                Gui.showErrorDialog("Cannot find fabric modloader jar in " + fabricLoaderDir);
-                return;
-            }
-
-            classpath.add(fabricJar.toString());
-
-            Path depsDir = fabricLoaderDir.resolve("deps");
-            if (!Files.exists(depsDir)) {
-                LOG.error("Cannot find fabric modloader dependencies in {}", depsDir);
-                Gui.showErrorDialog("Cannot find fabric modloader dependencies in " + depsDir);
-                return;
-            }
-
-            for (Path dep : FileUtils.list(depsDir)) {
-                classpath.add(dep.toString());
-            }
-
-            command.add(String.join(File.pathSeparator, classpath));
-
-            command.add(FabricProperties.MAIN_CLASS);
         }
-    }
-
-    private int runGameProcess(Path dir, List<String> command) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder = new ProcessBuilder(command);
-        processBuilder.directory(dir.toFile());
-        processBuilder.redirectErrorStream(true);
-
-        Process process = processBuilder.start();
-
-        InputStream inputStream = process.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-        String line;
-        while ((line = reader.readLine()) != null) {
-            LOG.info(line);
-        }
-
-        return process.waitFor();
     }
 }

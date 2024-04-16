@@ -22,13 +22,13 @@ import java.util.Objects;
 
 public class SystemProperty {
     private final String property;
-    private final String value;
+    private final Object value;
 
     public SystemProperty(String property) {
         this(property, null);
     }
 
-    public SystemProperty(String property, String value) {
+    public SystemProperty(String property, Object value) {
         this.property = property;
         this.value = value;
     }
@@ -44,6 +44,10 @@ public class SystemProperty {
     @Override
     public int hashCode() {
         return Objects.hash(this.property, this.value);
+    }
+
+    public SystemProperty copy(Object newValue) {
+        return new SystemProperty(this.property, newValue);
     }
 
     public String get() {

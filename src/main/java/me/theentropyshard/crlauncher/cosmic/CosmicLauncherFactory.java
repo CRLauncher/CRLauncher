@@ -21,9 +21,33 @@ package me.theentropyshard.crlauncher.cosmic;
 import java.nio.file.Path;
 
 public class CosmicLauncherFactory {
-    public static CosmicLauncher getLauncher(LaunchType type, Path runDir, Path gameFilesLocation, Path clientPath) {
+    public static CosmicLauncher getLauncher(LaunchType type,
+                                             Path runDir,
+                                             Path gameFilesLocation,
+                                             Path clientPath) {
+
+        return CosmicLauncherFactory.getLauncher(type, runDir, gameFilesLocation, clientPath, null);
+    }
+
+    public static CosmicLauncher getLauncher(LaunchType type,
+                                             Path runDir,
+                                             Path gameFilesLocation,
+                                             Path clientPath,
+                                             Path modsDir
+    ) {
+
         if (type == LaunchType.VANILLA) {
             return new VanillaCosmicLauncher(runDir, gameFilesLocation, clientPath);
+        } else {
+            if (modsDir == null) {
+                throw new IllegalArgumentException("Mods dir must not be null when launching with mods");
+            }
+
+            if (type == LaunchType.FABRIC) {
+                return new FabricCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir);
+            } else if (type == LaunchType.QUILT) {
+                return new QuiltCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir);
+            }
         }
 
         throw new IllegalArgumentException("Unknown launch type: " + type);

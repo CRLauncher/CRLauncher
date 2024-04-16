@@ -159,7 +159,11 @@ public class OldInstanceManager {
     }
 
     public Path getFabricModsDir(OldInstance oldInstance) {
-        return this.getCosmicDir(oldInstance).resolve("mods");
+        return this.getCosmicDir(oldInstance).resolve("fabricmods");
+    }
+
+    public Path getQuiltModsDir(OldInstance instance) {
+        return this.getCosmicDir(instance).resolve("quiltmods");
     }
 
     public OldInstance getInstanceByName(String name) {

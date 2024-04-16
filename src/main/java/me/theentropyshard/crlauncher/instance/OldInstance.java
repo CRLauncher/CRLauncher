@@ -42,6 +42,7 @@ public class OldInstance {
     private long totalPlayedForSeconds;
     private List<JarMod> jarMods;
     private List<FabricMod> fabricMods;
+    private InstanceType type = InstanceType.VANILLA;
 
     public OldInstance() {
 
@@ -55,6 +56,14 @@ public class OldInstance {
 
     public void save() throws IOException {
         CRLauncher.getInstance().getInstanceManager().save(this);
+    }
+
+    public InstanceType getType() {
+        return this.type;
+    }
+
+    public void setType(InstanceType type) {
+        this.type = type;
     }
 
     public String getName() {
