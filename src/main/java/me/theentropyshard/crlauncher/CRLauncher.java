@@ -43,7 +43,7 @@ public class CRLauncher {
     public static final int HEIGHT = 540;
 
     public static final String NAME = "CRLauncher";
-    public static final String VERSION = "0.1.0";
+    public static final String VERSION = "0.1.1";
     public static final String USER_AGENT = CRLauncher.NAME + "/" + CRLauncher.VERSION;
 
     public static AppWindow window;
