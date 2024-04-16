@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricSystemProperties;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.Gui;
@@ -244,8 +245,8 @@ public class CosmicRunner extends Thread {
                 }
             }
 
-            command.add("-Dfabric.skipMcProvider=true");
-            command.add("-Dfabric.gameJarPath=" + clientPath);
+            command.add(FabricSystemProperties.SKIP_MC_PROVIDER.asJvmArg(true));
+            command.add(FabricSystemProperties.GAME_JAR_PATH.asJvmArg(clientPath));
 
             command.add("-classpath");
 

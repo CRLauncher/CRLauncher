@@ -36,7 +36,7 @@ public enum OperatingSystem {
         return Platform.isLinux();
     }
 
-    public static boolean isOSX() {
+    public static boolean isMacOS() {
         return Platform.isMac();
     }
 
