@@ -22,7 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.playview.PlayView;
-import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.instance.OldInstanceManager;
 import me.theentropyshard.crlauncher.utils.SwingUtils;
 
 import javax.swing.*;
@@ -147,9 +147,9 @@ public class AddInstanceDialog extends AppDialog {
             selectedRow = versionsTable.convertRowIndexToModel(selectedRow);
             String mcVersion = String.valueOf(model.getValueAt(selectedRow, 0));
             CRLauncher.getInstance().doTask(() -> {
-                InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
+                OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
                 try {
-                    instanceManager.createInstance(instanceName, chosenGroupName, mcVersion);
+                    oldInstanceManager.createInstance(instanceName, chosenGroupName, mcVersion);
                 } catch (IOException ex) {
                     throw new RuntimeException("Unable to create new instance", ex);
                 }

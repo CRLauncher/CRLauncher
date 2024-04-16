@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.OldInstance;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 
 import javax.swing.*;
@@ -39,8 +39,8 @@ public class JarModsTab extends Tab {
     private final JarModsTableModel jarModsTableModel;
     private final JButton deleteModButton;
 
-    public JarModsTab(Instance instance, JDialog dialog) {
-        super("Jar Mods", instance, dialog);
+    public JarModsTab(OldInstance oldInstance, JDialog dialog) {
+        super("Jar Mods", oldInstance, dialog);
 
         JPanel root = this.getRoot();
         root.setLayout(new BorderLayout());
@@ -48,7 +48,7 @@ public class JarModsTab extends Tab {
         JButton addJarMod = new JButton("Add jar mod");
         root.add(addJarMod, BorderLayout.NORTH);
 
-        this.jarModsTableModel = new JarModsTableModel(instance);
+        this.jarModsTableModel = new JarModsTableModel(oldInstance);
 
         addJarMod.addActionListener(e -> {
             new SwingWorker<Void, Void>() {
@@ -72,10 +72,10 @@ public class JarModsTab extends Tab {
 
                         settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
 
-                        List<JarMod> jarMods = instance.getJarMods();
+                        List<JarMod> jarMods = oldInstance.getJarMods();
                         if (jarMods == null) {
                             jarMods = new ArrayList<>();
-                            instance.setJarMods(jarMods);
+                            oldInstance.setJarMods(jarMods);
                         }
 
                         Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
@@ -126,7 +126,7 @@ public class JarModsTab extends Tab {
 
             JarMod jarMod = this.jarModsTableModel.jarModAt(selectedRow);
             this.jarModsTableModel.removeRow(selectedRow);
-            instance.getJarMods().remove(jarMod);
+            oldInstance.getJarMods().remove(jarMod);
         });
 
         root.add(this.deleteModButton, BorderLayout.SOUTH);

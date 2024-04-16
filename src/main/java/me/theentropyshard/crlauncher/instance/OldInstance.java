@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class Instance {
+public class OldInstance {
     private String name;
     private String dirName;
     private String groupName;
@@ -43,11 +43,11 @@ public class Instance {
     private List<JarMod> jarMods;
     private List<FabricMod> fabricMods;
 
-    public Instance() {
+    public OldInstance() {
 
     }
 
-    public Instance(String name, String groupName, String crVersion) {
+    public OldInstance(String name, String groupName, String crVersion) {
         this.name = name;
         this.groupName = groupName;
         this.crVersion = crVersion;

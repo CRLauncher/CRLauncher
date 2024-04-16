@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.OldInstance;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -30,8 +30,8 @@ public class MainTab extends Tab {
     private final JTextField nameField;
     private final JTextField groupField;
 
-    public MainTab(String name, Instance instance, JDialog dialog) {
-        super(name, instance, dialog);
+    public MainTab(String name, OldInstance oldInstance, JDialog dialog) {
+        super(name, oldInstance, dialog);
 
         JPanel root = this.getRoot();
         root.setLayout(new GridBagLayout());
@@ -47,14 +47,14 @@ public class MainTab extends Tab {
         common.add(nameLabel);
 
         this.nameField = new JTextField();
-        this.nameField.setText(instance.getName());
+        this.nameField.setText(oldInstance.getName());
         common.add(this.nameField);
 
         JLabel groupLabel = new JLabel("Group:");
         common.add(groupLabel);
 
         this.groupField = new JTextField();
-        this.groupField.setText(instance.getGroupName());
+        this.groupField.setText(oldInstance.getGroupName());
         common.add(this.groupField);
 
         common.setBorder(new TitledBorder("Common"));
@@ -66,8 +66,8 @@ public class MainTab extends Tab {
 
     @Override
     public void save() throws IOException {
-        Instance instance = this.getInstance();
-        instance.setName(this.nameField.getText());
-        instance.setGroupName(this.groupField.getText());
+        OldInstance oldInstance = this.getInstance();
+        oldInstance.setName(this.nameField.getText());
+        oldInstance.setGroupName(this.groupField.getText());
     }
 }

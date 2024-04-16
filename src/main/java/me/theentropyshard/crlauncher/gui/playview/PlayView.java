@@ -25,8 +25,8 @@ import me.theentropyshard.crlauncher.gui.components.AddInstanceItem;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.InstanceSettingsDialog;
-import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.instance.OldInstance;
+import me.theentropyshard.crlauncher.instance.OldInstanceManager;
 import me.theentropyshard.crlauncher.utils.SwingUtils;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 
@@ -96,28 +96,28 @@ public class PlayView extends View {
 
         root.add(this.instanceInfoLabel, BorderLayout.SOUTH);
 
-        new SwingWorker<List<Instance>, Void>() {
+        new SwingWorker<List<OldInstance>, Void>() {
             @Override
-            protected List<Instance> doInBackground() throws Exception {
-                InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
-                instanceManager.reload();
-                return instanceManager.getInstances();
+            protected List<OldInstance> doInBackground() throws Exception {
+                OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
+                oldInstanceManager.reload();
+                return oldInstanceManager.getInstances();
             }
 
             @Override
             protected void done() {
                 try {
-                    List<Instance> instances = this.get();
-                    instances.sort((instance1, instance2) -> {
+                    List<OldInstance> oldInstances = this.get();
+                    oldInstances.sort((instance1, instance2) -> {
                         LocalDateTime lastTimePlayed1 = instance1.getLastTimePlayed();
                         LocalDateTime lastTimePlayed2 = instance2.getLastTimePlayed();
                         return lastTimePlayed2.compareTo(lastTimePlayed1);
                     });
 
-                    for (Instance instance : instances) {
+                    for (OldInstance oldInstance : oldInstances) {
                         Icon icon = SwingUtils.getIcon("/cosmic_logo_x32.png");
-                        InstanceItem item = new InstanceItem(icon, instance.getName());
-                        PlayView.this.addInstanceItem(item, instance.getGroupName());
+                        InstanceItem item = new InstanceItem(icon, oldInstance.getName());
+                        PlayView.this.addInstanceItem(item, oldInstance.getGroupName());
                     }
                 } catch (InterruptedException | ExecutionException e) {
                     e.printStackTrace();
@@ -161,10 +161,10 @@ public class PlayView extends View {
         item.addMouseEnteredListener(e -> {
             this.instanceInfoLabel.setVisible(true);
 
-            Instance instance = item.getAssociatedInstance();
+            OldInstance oldInstance = item.getAssociatedInstance();
 
-            String lastPlayedTime = TimeUtils.getHoursMinutesSeconds(instance.getLastPlayedForSeconds());
-            String totalPlayedTime = TimeUtils.getHoursMinutesSeconds(instance.getTotalPlayedForSeconds());
+            String lastPlayedTime = TimeUtils.getHoursMinutesSeconds(oldInstance.getLastPlayedForSeconds());
+            String totalPlayedTime = TimeUtils.getHoursMinutesSeconds(oldInstance.getTotalPlayedForSeconds());
 
             String timeString = "";
 
@@ -180,7 +180,7 @@ public class PlayView extends View {
                 }
             }
 
-            this.instanceInfoLabel.setText(instance.getName() + timeString);
+            this.instanceInfoLabel.setText(oldInstance.getName() + timeString);
         });
 
         item.addMouseExitedListener(e -> {

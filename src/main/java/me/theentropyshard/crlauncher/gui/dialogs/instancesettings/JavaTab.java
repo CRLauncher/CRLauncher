@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.OldInstance;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -29,8 +29,8 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class JavaTab extends Tab {
-    public JavaTab(String name, Instance instance, JDialog dialog) {
-        super(name, instance, dialog);
+    public JavaTab(String name, OldInstance oldInstance, JDialog dialog) {
+        super(name, oldInstance, dialog);
 
         JPanel root = this.getRoot();
         root.setLayout(new GridBagLayout());
@@ -42,7 +42,7 @@ public class JavaTab extends Tab {
 
         JPanel javaInstallation = new JPanel(new GridLayout(0, 1));
         JTextField javaPathTextField = new JTextField();
-        javaPathTextField.setText(instance.getJavaPath());
+        javaPathTextField.setText(oldInstance.getJavaPath());
         javaPathTextField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Path to java.exe");
         javaInstallation.add(javaPathTextField);
         javaInstallation.setBorder(new TitledBorder("Java Installation"));
@@ -51,10 +51,10 @@ public class JavaTab extends Tab {
         JLabel minMemoryLabel = new JLabel("Minimum memory (Megabytes):");
         JLabel maxMemoryLabel = new JLabel("Maximum memory (Megabytes):");
         JTextField minMemoryField = new JTextField();
-        minMemoryField.setText(String.valueOf(instance.getMinimumMemoryInMegabytes()));
+        minMemoryField.setText(String.valueOf(oldInstance.getMinimumMemoryInMegabytes()));
         minMemoryField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "512");
         JTextField maxMemoryField = new JTextField();
-        maxMemoryField.setText(String.valueOf(instance.getMaximumMemoryInMegabytes()));
+        maxMemoryField.setText(String.valueOf(oldInstance.getMaximumMemoryInMegabytes()));
         maxMemoryField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "2048");
         memorySettings.add(minMemoryLabel);
         memorySettings.add(minMemoryField);
@@ -72,7 +72,7 @@ public class JavaTab extends Tab {
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                instance.setJavaPath(javaPathTextField.getText());
+                oldInstance.setJavaPath(javaPathTextField.getText());
                 String minMemory = minMemoryField.getText();
                 if (minMemory.isEmpty()) {
                     minMemory = "512";
@@ -103,9 +103,9 @@ public class JavaTab extends Tab {
                     );
                 }
 
-                instance.setJavaPath(javaPathTextField.getText());
-                instance.setMinimumMemoryInMegabytes(minimumMemoryInMegabytes);
-                instance.setMaximumMemoryInMegabytes(maximumMemoryInMegabytes);
+                oldInstance.setJavaPath(javaPathTextField.getText());
+                oldInstance.setMinimumMemoryInMegabytes(minimumMemoryInMegabytes);
+                oldInstance.setMaximumMemoryInMegabytes(maximumMemoryInMegabytes);
             }
         });
     }

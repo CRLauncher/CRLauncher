@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.OldInstance;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
@@ -31,11 +31,11 @@ public class FabricModsTableModel extends AbstractTableModel {
 
     private final List<FabricMod> fabricMods;
 
-    public FabricModsTableModel(Instance instance) {
-        if (instance.getFabricMods() == null) {
+    public FabricModsTableModel(OldInstance oldInstance) {
+        if (oldInstance.getFabricMods() == null) {
             this.fabricMods = new ArrayList<>();
         } else {
-            this.fabricMods = new ArrayList<>(instance.getFabricMods());
+            this.fabricMods = new ArrayList<>(oldInstance.getFabricMods());
         }
     }
 

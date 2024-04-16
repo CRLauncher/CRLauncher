@@ -19,8 +19,8 @@
 package me.theentropyshard.crlauncher.gui.components;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.instance.OldInstance;
+import me.theentropyshard.crlauncher.instance.OldInstanceManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -124,9 +124,9 @@ public class InstanceItem extends JPanel {
         });
     }
 
-    public Instance getAssociatedInstance() {
-        InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
-        return instanceManager.getInstanceByName(this.getTextLabel().getText());
+    public OldInstance getAssociatedInstance() {
+        OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
+        return oldInstanceManager.getInstanceByName(this.getTextLabel().getText());
     }
 
     protected void paintBackground(Graphics g) {

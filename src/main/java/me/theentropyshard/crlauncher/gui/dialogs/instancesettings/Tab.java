@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.OldInstance;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -26,12 +26,12 @@ import java.io.IOException;
 public abstract class Tab {
     private final JDialog dialog;
     private final String name;
-    private final Instance instance;
+    private final OldInstance oldInstance;
     private final JPanel root;
 
-    public Tab(String name, Instance instance, JDialog dialog) {
+    public Tab(String name, OldInstance oldInstance, JDialog dialog) {
         this.name = name;
-        this.instance = instance;
+        this.oldInstance = oldInstance;
         this.dialog = dialog;
         this.root = new JPanel();
     }
@@ -42,8 +42,8 @@ public abstract class Tab {
         return this.name;
     }
 
-    public Instance getInstance() {
-        return this.instance;
+    public OldInstance getInstance() {
+        return this.oldInstance;
     }
 
     public JDialog getDialog() {

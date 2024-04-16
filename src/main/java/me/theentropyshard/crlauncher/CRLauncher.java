@@ -21,7 +21,7 @@ package me.theentropyshard.crlauncher;
 import me.theentropyshard.crlauncher.cosmic.VersionManager;
 import me.theentropyshard.crlauncher.gui.AppWindow;
 import me.theentropyshard.crlauncher.gui.Gui;
-import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.instance.OldInstanceManager;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import okhttp3.OkHttpClient;
@@ -55,7 +55,7 @@ public class CRLauncher {
     private final Settings settings;
     private final OkHttpClient httpClient;
     private final VersionManager versionManager;
-    private final InstanceManager instanceManager;
+    private final OldInstanceManager oldInstanceManager;
     private final Gui gui;
 
     private boolean shutdown;
@@ -89,9 +89,9 @@ public class CRLauncher {
 
         this.versionManager = new VersionManager(this.workDir.resolve("versions"));
 
-        this.instanceManager = new InstanceManager(this.workDir.resolve("instances"));
+        this.oldInstanceManager = new OldInstanceManager(this.workDir.resolve("instances"));
         try {
-            this.instanceManager.load();
+            this.oldInstanceManager.load();
         } catch (IOException e) {
             LOG.error("Unable to load instances", e);
         }
@@ -128,7 +128,7 @@ public class CRLauncher {
 
         this.taskPool.shutdown();
 
-        this.instanceManager.getInstances().forEach(instance -> {
+        this.oldInstanceManager.getInstances().forEach(instance -> {
             try {
                 instance.save();
             } catch (IOException e) {
@@ -163,8 +163,8 @@ public class CRLauncher {
         return this.versionManager;
     }
 
-    public InstanceManager getInstanceManager() {
-        return this.instanceManager;
+    public OldInstanceManager getInstanceManager() {
+        return this.oldInstanceManager;
     }
 
     public Gui getGui() {

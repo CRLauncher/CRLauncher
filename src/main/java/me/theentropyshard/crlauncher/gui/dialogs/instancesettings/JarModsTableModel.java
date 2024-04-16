@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.OldInstance;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 
 import javax.swing.table.AbstractTableModel;
@@ -31,11 +31,11 @@ public class JarModsTableModel extends AbstractTableModel {
 
     private final List<JarMod> jarMods;
 
-    public JarModsTableModel(Instance instance) {
-        if (instance.getJarMods() == null) {
+    public JarModsTableModel(OldInstance oldInstance) {
+        if (oldInstance.getJarMods() == null) {
             this.jarMods = new ArrayList<>();
         } else {
-            this.jarMods = new ArrayList<>(instance.getJarMods());
+            this.jarMods = new ArrayList<>(oldInstance.getJarMods());
         }
     }
 

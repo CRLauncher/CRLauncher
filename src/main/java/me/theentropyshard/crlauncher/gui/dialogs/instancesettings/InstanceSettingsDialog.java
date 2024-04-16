@@ -22,7 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.playview.InstancesPanel;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.OldInstance;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,17 +37,17 @@ public class InstanceSettingsDialog extends AppDialog {
     private final JTabbedPane tabbedPane;
     private final List<Tab> tabs;
 
-    public InstanceSettingsDialog(Instance instance) {
-        super(CRLauncher.window.getFrame(), "Instance Settings - " + instance.getName());
+    public InstanceSettingsDialog(OldInstance oldInstance) {
+        super(CRLauncher.window.getFrame(), "Instance Settings - " + oldInstance.getName());
 
         this.tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
 
         this.tabs = new ArrayList<>();
 
-        this.addTab(new MainTab("Main", instance, this.getDialog()));
-        this.addTab(new JavaTab("Java", instance, this.getDialog()));
-        this.addTab(new JarModsTab(instance, this.getDialog()));
-        this.addTab(new FabricModsTab(instance, this.getDialog()));
+        this.addTab(new MainTab("Main", oldInstance, this.getDialog()));
+        this.addTab(new JavaTab("Java", oldInstance, this.getDialog()));
+        this.addTab(new JarModsTab(oldInstance, this.getDialog()));
+        this.addTab(new FabricModsTab(oldInstance, this.getDialog()));
 
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
@@ -63,11 +63,11 @@ public class InstanceSettingsDialog extends AppDialog {
                 InstancesPanel instancesPanel = CRLauncher.getInstance().getGui().getPlayView().getCurrentInstancesPanel();
                 JPanel itemsPanel = instancesPanel.getInstancesPanel();
                 for (Component component : itemsPanel.getComponents()) {
-                    Instance associatedInstance = ((InstanceItem) component).getAssociatedInstance();
-                    if (associatedInstance == instance) {
-                        ((InstanceItem) component).getTextLabel().setText(instance.getName());
+                    OldInstance associatedOldInstance = ((InstanceItem) component).getAssociatedInstance();
+                    if (associatedOldInstance == oldInstance) {
+                        ((InstanceItem) component).getTextLabel().setText(oldInstance.getName());
                         try {
-                            instance.save();
+                            oldInstance.save();
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }

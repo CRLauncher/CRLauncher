@@ -29,14 +29,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class InstanceManager {
+public class OldInstanceManager {
     private final Path workDir;
-    private final List<Instance> instances;
-    private final Map<String, Instance> instancesByName;
+    private final List<OldInstance> oldInstances;
+    private final Map<String, OldInstance> instancesByName;
 
-    public InstanceManager(Path workDir) {
+    public OldInstanceManager(Path workDir) {
         this.workDir = workDir;
-        this.instances = new ArrayList<>();
+        this.oldInstances = new ArrayList<>();
         this.instancesByName = new HashMap<>();
     }
 
@@ -57,116 +57,116 @@ public class InstanceManager {
                 continue;
             }
 
-            Instance instance = Json.parse(FileUtils.readUtf8(instanceFile), Instance.class);
-            if (instance.getDirName() == null) {
-                instance.setDirName(instance.getName());
+            OldInstance oldInstance = Json.parse(FileUtils.readUtf8(instanceFile), OldInstance.class);
+            if (oldInstance.getDirName() == null) {
+                oldInstance.setDirName(oldInstance.getName());
             }
 
-            this.instances.add(instance);
-            this.instancesByName.put(instance.getName(), instance);
+            this.oldInstances.add(oldInstance);
+            this.instancesByName.put(oldInstance.getName(), oldInstance);
         }
     }
 
-    private void createDirName(Instance instance) {
-        if (Files.exists(this.getInstanceDir(instance))) {
-            instance.setDirName(instance.getDirName() + "_");
-            if (!Files.exists(this.getInstanceDir(instance))) {
+    private void createDirName(OldInstance oldInstance) {
+        if (Files.exists(this.getInstanceDir(oldInstance))) {
+            oldInstance.setDirName(oldInstance.getDirName() + "_");
+            if (!Files.exists(this.getInstanceDir(oldInstance))) {
                 return;
             }
 
-            this.createDirName(instance);
+            this.createDirName(oldInstance);
         }
     }
 
     public void reload() throws IOException {
-        this.instances.clear();
+        this.oldInstances.clear();
         this.instancesByName.clear();
         this.load();
     }
 
-    public void save(Instance instance) throws IOException {
-        Path instanceDir = this.getInstanceDir(instance);
+    public void save(OldInstance oldInstance) throws IOException {
+        Path instanceDir = this.getInstanceDir(oldInstance);
         FileUtils.createDirectoryIfNotExists(instanceDir);
 
         Path instanceFile = instanceDir.resolve("instance.json");
-        FileUtils.writeUtf8(instanceFile, Json.write(instance));
+        FileUtils.writeUtf8(instanceFile, Json.write(oldInstance));
     }
 
     public void createInstance(String name, String groupName, String minecraftVersion) throws IOException {
-        Instance instance = new Instance(name, groupName, minecraftVersion);
+        OldInstance oldInstance = new OldInstance(name, groupName, minecraftVersion);
 
-        instance.setDirName(instance.getName());
-        this.createDirName(instance);
+        oldInstance.setDirName(oldInstance.getName());
+        this.createDirName(oldInstance);
 
-        Path instanceDir = this.getInstanceDir(instance);
+        Path instanceDir = this.getInstanceDir(oldInstance);
         if (Files.exists(instanceDir)) {
             throw new IOException("Instance dir '" + instanceDir + "' already exists");
         }
 
-        this.instances.add(instance);
-        this.instancesByName.put(name, instance);
+        this.oldInstances.add(oldInstance);
+        this.instancesByName.put(name, oldInstance);
 
         FileUtils.createDirectoryIfNotExists(instanceDir);
         Path cosmicDir = instanceDir.resolve("cosmic-reach");
         FileUtils.createDirectoryIfNotExists(cosmicDir);
-        Path jarModsDir = this.getInstanceJarModsDir(instance);
+        Path jarModsDir = this.getInstanceJarModsDir(oldInstance);
         FileUtils.createDirectoryIfNotExists(jarModsDir);
         Path instanceFile = instanceDir.resolve("instance.json");
-        FileUtils.writeUtf8(instanceFile, Json.write(instance));
+        FileUtils.writeUtf8(instanceFile, Json.write(oldInstance));
     }
 
     public void removeInstance(String name) throws IOException {
-        Instance instance = this.getInstanceByName(name);
-        if (instance == null) {
+        OldInstance oldInstance = this.getInstanceByName(name);
+        if (oldInstance == null) {
             return;
         }
 
-        Path instanceDir = this.getInstanceDir(instance);
+        Path instanceDir = this.getInstanceDir(oldInstance);
         if (Files.exists(instanceDir)) {
             FileUtils.delete(instanceDir);
         }
 
-        this.instances.remove(instance);
+        this.oldInstances.remove(oldInstance);
         this.instancesByName.remove(name);
     }
 
     public boolean instanceExists(String name) {
-        Instance instance = this.getInstanceByName(name);
-        if (instance == null) {
+        OldInstance oldInstance = this.getInstanceByName(name);
+        if (oldInstance == null) {
             return false;
         }
 
-        Path instanceDir = this.getInstanceDir(instance);
+        Path instanceDir = this.getInstanceDir(oldInstance);
         if (Files.exists(instanceDir)) {
             return true;
         } else {
-            this.instances.remove(instance);
+            this.oldInstances.remove(oldInstance);
             this.instancesByName.remove(name);
             return false;
         }
     }
 
-    public Path getInstanceDir(Instance instance) {
-        return this.workDir.resolve(instance.getDirName());
+    public Path getInstanceDir(OldInstance oldInstance) {
+        return this.workDir.resolve(oldInstance.getDirName());
     }
 
-    public Path getCosmicDir(Instance instance) {
-        return this.workDir.resolve(instance.getDirName()).resolve("cosmic-reach");
+    public Path getCosmicDir(OldInstance oldInstance) {
+        return this.workDir.resolve(oldInstance.getDirName()).resolve("cosmic-reach");
     }
 
-    public Path getInstanceJarModsDir(Instance instance) {
-        return this.workDir.resolve(instance.getDirName()).resolve("jarmods");
+    public Path getInstanceJarModsDir(OldInstance oldInstance) {
+        return this.workDir.resolve(oldInstance.getDirName()).resolve("jarmods");
     }
 
-    public Path getFabricModsDir(Instance instance) {
-        return this.getCosmicDir(instance).resolve("mods");
+    public Path getFabricModsDir(OldInstance oldInstance) {
+        return this.getCosmicDir(oldInstance).resolve("mods");
     }
 
-    public Instance getInstanceByName(String name) {
+    public OldInstance getInstanceByName(String name) {
         return this.instancesByName.get(name);
     }
 
-    public List<Instance> getInstances() {
-        return this.instances;
+    public List<OldInstance> getInstances() {
+        return this.oldInstances;
     }
 }

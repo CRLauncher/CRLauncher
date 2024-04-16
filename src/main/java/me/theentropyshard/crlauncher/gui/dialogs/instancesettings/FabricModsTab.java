@@ -22,8 +22,8 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
-import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.instance.OldInstance;
+import me.theentropyshard.crlauncher.instance.OldInstanceManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.Json;
 import me.theentropyshard.crlauncher.utils.StreamUtils;
@@ -51,8 +51,8 @@ public class FabricModsTab extends Tab {
     private final FabricModsTableModel fabricModsModel;
     private final JButton deleteModButton;
 
-    public FabricModsTab(Instance instance, JDialog dialog) {
-        super("Fabric Mods", instance, dialog);
+    public FabricModsTab(OldInstance oldInstance, JDialog dialog) {
+        super("Fabric Mods", oldInstance, dialog);
 
         JPanel root = this.getRoot();
         root.setLayout(new BorderLayout());
@@ -60,7 +60,7 @@ public class FabricModsTab extends Tab {
         JButton addJarMod = new JButton("Add Fabric mod");
         root.add(addJarMod, BorderLayout.NORTH);
 
-        this.fabricModsModel = new FabricModsTableModel(instance);
+        this.fabricModsModel = new FabricModsTableModel(oldInstance);
 
         addJarMod.addActionListener(e -> {
             new SwingWorker<Void, Void>() {
@@ -84,10 +84,10 @@ public class FabricModsTab extends Tab {
 
                         settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
 
-                        List<FabricMod> fabricMods = instance.getFabricMods();
+                        List<FabricMod> fabricMods = oldInstance.getFabricMods();
                         if (fabricMods == null) {
                             fabricMods = new ArrayList<>();
-                            instance.setFabricMods(fabricMods);
+                            oldInstance.setFabricMods(fabricMods);
                         }
 
                         Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
@@ -115,8 +115,8 @@ public class FabricModsTab extends Tab {
                             FabricModsTab.this.fabricModsModel.add(mod);
                         }
 
-                        InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
-                        Path fabricModsDir = instanceManager.getFabricModsDir(instance);
+                        OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
+                        Path fabricModsDir = oldInstanceManager.getFabricModsDir(oldInstance);
                         FileUtils.createDirectoryIfNotExists(fabricModsDir);
 
                         Path modPathInFolder = fabricModsDir.resolve(jarModPath.getFileName());
@@ -164,7 +164,7 @@ public class FabricModsTab extends Tab {
 
             FabricMod fabricMod = this.fabricModsModel.fabricModAt(selectedRow);
             this.fabricModsModel.removeRow(selectedRow);
-            instance.getFabricMods().remove(fabricMod);
+            oldInstance.getFabricMods().remove(fabricMod);
 
             Path modFile = Paths.get(fabricMod.getFilePath());
 
@@ -182,14 +182,14 @@ public class FabricModsTab extends Tab {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                List<FabricMod> fabricMods = instance.getFabricMods();
+                List<FabricMod> fabricMods = oldInstance.getFabricMods();
                 if (fabricMods == null) {
                     fabricMods = new ArrayList<>();
-                    instance.setFabricMods(fabricMods);
+                    oldInstance.setFabricMods(fabricMods);
                 }
 
-                InstanceManager manager = CRLauncher.getInstance().getInstanceManager();
-                Path fabricModsDir = manager.getFabricModsDir(instance);
+                OldInstanceManager manager = CRLauncher.getInstance().getInstanceManager();
+                Path fabricModsDir = manager.getFabricModsDir(oldInstance);
 
                 for (Path modFile : FileUtils.list(fabricModsDir)) {
 
