@@ -18,7 +18,11 @@
 
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.CosmicQuiltProperties;
+
+import java.io.File;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
@@ -26,10 +30,26 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
         super(runDir, gameFilesLocation, clientPath, modsDir);
     }
 
+    private void downloadCosmicQuilt(Path cosmicQuiltDir) {
+
+    }
+
     @Override
     public void buildCommand(List<String> command) {
+        this.defineProperty(CosmicQuiltProperties.LAUNCH_DIR.copy(this.getGameFilesLocation()));
+        this.defineProperty(CosmicQuiltProperties.MODS_FOLDER.copy(this.getModsDir()));
+
         super.buildCommand(command);
 
+        Path cosmicQuiltDir = this.getGameFilesLocation().resolve("cosmic_quilt");
+        this.downloadCosmicQuilt(cosmicQuiltDir);
 
+        command.add("-classpath");
+
+        List<String> classpath = new ArrayList<>();
+        classpath.add(this.getClientPath().toString());
+
+        command.add(String.join(File.pathSeparator, classpath));
+        command.add(CosmicQuiltProperties.MAIN_CLASS);
     }
 }

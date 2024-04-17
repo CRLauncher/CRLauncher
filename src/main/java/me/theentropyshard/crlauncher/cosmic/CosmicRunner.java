@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
 import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
@@ -104,6 +105,8 @@ public class CosmicRunner extends Thread {
                         oldInstanceManager.getFabricModsDir(this.oldInstance)
                 );
             } else if (this.oldInstance.getType() == InstanceType.QUILT) {
+                this.updateQuiltMods();
+
                 launcher = CosmicLauncherFactory.getLauncher(
                         LaunchType.QUILT,
                         saveDirPath,
@@ -211,7 +214,7 @@ public class CosmicRunner extends Thread {
 
         if (fabricMods != null && !fabricMods.isEmpty() && fabricMods.stream().anyMatch(FabricMod::isActive)) {
             Path modsDir = oldInstanceManager.getFabricModsDir(this.oldInstance);
-            Path disabledModsDir = oldInstanceManager.getCosmicDir(this.oldInstance).resolve("disabledfabricmods");
+            Path disabledModsDir = oldInstanceManager.getCosmicDir(this.oldInstance).resolve("disabled_fabric_mods");
 
             FileUtils.createDirectoryIfNotExists(modsDir);
             FileUtils.createDirectoryIfNotExists(disabledModsDir);
@@ -225,6 +228,35 @@ public class CosmicRunner extends Thread {
             }
 
             for (FabricMod mod : fabricMods.stream().filter(FabricMod::isActive).toList()) {
+                Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
+                if (Files.exists(filePath)) {
+                    Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.delete(filePath);
+                }
+            }
+        }
+    }
+
+    private void updateQuiltMods() throws IOException {
+        OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
+        List<QuiltMod> quiltMods = this.oldInstance.getQuiltMods();
+
+        if (quiltMods != null && !quiltMods.isEmpty() && quiltMods.stream().anyMatch(QuiltMod::isActive)) {
+            Path modsDir = oldInstanceManager.getFabricModsDir(this.oldInstance);
+            Path disabledModsDir = oldInstanceManager.getCosmicDir(this.oldInstance).resolve("disabled_quilt_mods");
+
+            FileUtils.createDirectoryIfNotExists(modsDir);
+            FileUtils.createDirectoryIfNotExists(disabledModsDir);
+
+            for (QuiltMod mod : quiltMods.stream().filter(Predicate.not(QuiltMod::isActive)).toList()) {
+                Path filePath = Paths.get(mod.getFilePath());
+                if (Files.exists(filePath)) {
+                    Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.delete(filePath);
+                }
+            }
+
+            for (QuiltMod mod : quiltMods.stream().filter(QuiltMod::isActive).toList()) {
                 Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
                 if (Files.exists(filePath)) {
                     Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
