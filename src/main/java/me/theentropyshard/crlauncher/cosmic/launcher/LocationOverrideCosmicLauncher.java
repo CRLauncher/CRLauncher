@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
@@ -29,22 +29,22 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-public class VanillaCosmicLauncher extends AbstractCosmicLauncher {
-    private static final Logger LOG = LogManager.getLogger(VanillaCosmicLauncher.class);
+public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
+    private static final Logger LOG = LogManager.getLogger(LocationOverrideCosmicLauncher.class);
 
     private static final String CR_LOADER_VERSION = "0.0.1";
-    private static final String CR_LOADER_JAR = "CRLoader-" + VanillaCosmicLauncher.CR_LOADER_VERSION + ".jar";
+    private static final String CR_LOADER_JAR = "CRLoader-" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION + ".jar";
 
-    public VanillaCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath) {
+    public LocationOverrideCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath) {
         super(runDir, gameFilesLocation, clientPath);
     }
 
     private void extractLoader(Path path) {
         if (!Files.exists(path)) {
             try {
-                ResourceUtils.extractResource("/assets/" + VanillaCosmicLauncher.CR_LOADER_JAR, path);
+                ResourceUtils.extractResource("/assets/" + LocationOverrideCosmicLauncher.CR_LOADER_JAR, path);
             } catch (IOException e) {
-                LOG.error("Unable to extract {} to {}", VanillaCosmicLauncher.CR_LOADER_JAR, path);
+                LOG.error("Unable to extract {} to {}", LocationOverrideCosmicLauncher.CR_LOADER_JAR, path);
             }
         }
     }
@@ -55,7 +55,7 @@ public class VanillaCosmicLauncher extends AbstractCosmicLauncher {
 
         Path loaderPath = CRLauncher.getInstance().getWorkDir()
                 .resolve("libraries")
-                .resolve(VanillaCosmicLauncher.CR_LOADER_JAR);
+                .resolve(LocationOverrideCosmicLauncher.CR_LOADER_JAR);
 
         this.extractLoader(loaderPath);
 
@@ -65,8 +65,5 @@ public class VanillaCosmicLauncher extends AbstractCosmicLauncher {
         }
 
         command.add("-javaagent:" + loaderPath + "=" + gameFilesLocation);
-
-        command.add("-jar");
-        command.add(this.getClientPath().toString());
     }
 }

@@ -1,6 +1,8 @@
 package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.version.Version;
+import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
@@ -28,7 +30,7 @@ public class CosmicDownloader {
             FileUtils.writeUtf8(versionJson, Json.write(version));
         }
 
-        if (!Files.exists(filePath) || !HashUtils.murmur3(filePath).equals(version.getHash())) {
+        if (!Files.exists(filePath) || !HashUtils.sha256(filePath).equals(version.getSha256())) {
             if (Files.exists(filePath)) {
                 FileUtils.delete(filePath);
             }

@@ -21,7 +21,7 @@ package me.theentropyshard.crlauncher.utils;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import me.theentropyshard.crlauncher.cosmic.VersionType;
+import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 import me.theentropyshard.crlauncher.cosmic.gson.VersionTypeTypeAdapter;
 import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.instance.InstanceTypeTypeAdapter;

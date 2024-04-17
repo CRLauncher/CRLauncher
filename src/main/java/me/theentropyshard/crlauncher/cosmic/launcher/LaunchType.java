@@ -1,4 +1,4 @@
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.launcher;
 
 public enum LaunchType {
     VANILLA,

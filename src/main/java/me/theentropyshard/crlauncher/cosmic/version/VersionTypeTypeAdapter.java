@@ -16,38 +16,26 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.version;
 
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 
-import java.util.List;
+import java.io.IOException;
 
-public class VersionList {
-    private Latest latest;
-    private List<Version> versions;
-
-    public VersionList() {
+public class VersionTypeTypeAdapter extends TypeAdapter<VersionType> {
+    public VersionTypeTypeAdapter() {
 
     }
 
-    public static final class Latest {
-        @SerializedName("pre_alpha")
-        private String preAlpha;
-
-        public Latest() {
-
-        }
-
-        public String getPreAlpha() {
-            return this.preAlpha;
-        }
+    @Override
+    public void write(JsonWriter writer, VersionType type) throws IOException {
+        writer.value(type.getJsonName());
     }
 
-    public Latest getLatest() {
-        return this.latest;
-    }
-
-    public List<Version> getVersions() {
-        return this.versions;
+    @Override
+    public VersionType read(JsonReader reader) throws IOException {
+        return VersionType.getByJsonName(reader.nextString());
     }
 }

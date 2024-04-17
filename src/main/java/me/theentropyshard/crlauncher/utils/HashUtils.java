@@ -18,52 +18,25 @@
 
 package me.theentropyshard.crlauncher.utils;
 
-import org.apache.commons.codec.digest.MurmurHash3;
-
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
 
 public final class HashUtils {
-    public static String sha1(Path path) throws IOException {
-        try (InputStream inputStream = Files.newInputStream(path)) {
-            MessageDigest md = MessageDigest.getInstance("SHA-1");
+    public static String sha256(Path file) throws IOException {
+        try (InputStream inputStream = Files.newInputStream(file)) {
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
 
-            byte[] dataBytes = new byte[1024];
+            md.update(inputStream.readAllBytes());
 
-            int numRead;
-            while ((numRead = inputStream.read(dataBytes)) != -1) {
-                md.update(dataBytes, 0, numRead);
-            }
-
-            byte[] mdBytes = md.digest();
-
-            StringBuilder sb = new StringBuilder();
-            for (byte b : mdBytes) {
-                sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
-            }
-
-            return sb.toString();
+            return HexFormat.of().formatHex(md.digest());
         } catch (NoSuchAlgorithmException ex) {
-            throw new IOException("SHA-1 algorithm is not available in your JRE", ex);
+            throw new IOException("SHA-256 algorithm is not available in your JRE", ex);
         }
-    }
-
-    public static String murmur3(Path file) throws IOException {
-        long[] twoLongs = MurmurHash3.hash128x64(Files.readAllBytes(file));
-
-        byte[] bytes = new byte[Long.BYTES * 2];
-
-        ByteBuffer byteBuffer = ByteBuffer.wrap(bytes);
-        byteBuffer.putLong(twoLongs[0]);
-        byteBuffer.putLong(twoLongs[1]);
-
-        return new BigInteger(bytes).abs().toString(16);
     }
 
     private HashUtils() {

@@ -16,23 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
+package me.theentropyshard.crlauncher.cosmic.launcher;
 
-import me.theentropyshard.crlauncher.cosmic.version.VersionType;
+import java.nio.file.Path;
+import java.util.List;
 
-import javax.swing.*;
-
-public class VersionTypeRowFilter extends RowFilter<CRVersionsTableModel, Integer> {
-    private final JCheckBox checkBox;
-    private final VersionType versionType;
-
-    public VersionTypeRowFilter(JCheckBox checkBox, VersionType versionType) {
-        this.checkBox = checkBox;
-        this.versionType = versionType;
+public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
+    public QuiltCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
+        super(runDir, gameFilesLocation, clientPath, modsDir);
     }
 
     @Override
-    public boolean include(Entry<? extends CRVersionsTableModel, ? extends Integer> entry) {
-        return this.checkBox.isSelected() && entry.getValue(2) == this.versionType;
+    public void buildCommand(List<String> command) {
+        super.buildCommand(command);
+
+
     }
 }

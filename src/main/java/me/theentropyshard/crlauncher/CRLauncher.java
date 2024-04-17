@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher;
 
-import me.theentropyshard.crlauncher.cosmic.VersionManager;
+import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.AppWindow;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.instance.OldInstanceManager;

@@ -19,8 +19,8 @@
 package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.Version;
-import me.theentropyshard.crlauncher.cosmic.VersionType;
+import me.theentropyshard.crlauncher.cosmic.version.Version;
+import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

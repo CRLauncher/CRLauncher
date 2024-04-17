@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import java.nio.file.Path;
 

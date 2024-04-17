@@ -16,20 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import java.nio.file.Path;
-import java.util.List;
 
-public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
-    public QuiltCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
-        super(runDir, gameFilesLocation, clientPath, modsDir);
+public class ModdedLocationOverrideCosmicLauncher extends LocationOverrideCosmicLauncher {
+    private final Path modsDir;
+
+    public ModdedLocationOverrideCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
+        super(runDir, gameFilesLocation, clientPath);
+
+        this.modsDir = modsDir;
     }
 
-    @Override
-    public void buildCommand(List<String> command) {
-        super.buildCommand(command);
-
-
+    public Path getModsDir() {
+        return this.modsDir;
     }
 }

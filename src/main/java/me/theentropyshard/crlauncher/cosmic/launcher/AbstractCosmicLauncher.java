@@ -16,8 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.launcher;
 
+import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
+import me.theentropyshard.crlauncher.cosmic.launcher.LogConsumer;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.java.SystemProperty;
 import me.theentropyshard.crlauncher.utils.ProcessReader;

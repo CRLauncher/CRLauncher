@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricProperties;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
@@ -35,7 +35,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FabricCosmicLauncher extends ModdedCosmicLauncher {
+public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
     private static final Logger LOG = LogManager.getLogger(FabricCosmicLauncher.class);
 
     public FabricCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
@@ -126,6 +126,7 @@ public class FabricCosmicLauncher extends ModdedCosmicLauncher {
     public void buildCommand(List<String> command) {
         this.defineProperty(FabricProperties.SKIP_MC_PROVIDER.copy(true));
         this.defineProperty(FabricProperties.GAME_JAR_PATH.copy(this.getClientPath()));
+        this.defineProperty(FabricProperties.MODS_FOLDER.copy(this.getModsDir()));
 
         super.buildCommand(command);
 

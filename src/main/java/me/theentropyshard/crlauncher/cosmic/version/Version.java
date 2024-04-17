@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.version;
 
 import java.time.format.DateTimeFormatter;
 
@@ -44,9 +44,9 @@ public class Version {
     private String url;
 
     /**
-     * Murmur3 128x64 hash
+     * Version hash
      */
-    private String hash;
+    private String sha256;
 
     /**
      * File size in bytes
@@ -64,7 +64,7 @@ public class Version {
                 ", type=" + this.type +
                 ", releaseTime='" + this.releaseTime + '\'' +
                 ", url='" + this.url + '\'' +
-                ", hash='" + this.hash + '\'' +
+                ", hash='" + this.sha256 + '\'' +
                 ", size=" + this.size +
                 '}';
     }
@@ -85,8 +85,8 @@ public class Version {
         return this.url;
     }
 
-    public String getHash() {
-        return this.hash;
+    public String getSha256() {
+        return this.sha256;
     }
 
     public long getSize() {

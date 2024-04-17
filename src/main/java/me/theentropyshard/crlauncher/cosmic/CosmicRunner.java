@@ -19,8 +19,13 @@
 package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
+import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
+import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.cosmic.version.Version;
+import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.instance.OldInstance;

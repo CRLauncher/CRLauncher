@@ -16,9 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.version;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.CosmicDownloader;
 import me.theentropyshard.crlauncher.network.HttpRequest;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -30,7 +31,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 public class VersionManager {
-    private static final String REMOTE_VERSIONS = "https://raw.githubusercontent.com/CRModders/CosmicArchive/main/versions.json";
+    public static final String REMOTE_VERSIONS = "https://raw.githubusercontent.com/CRModders/CosmicArchive/main/versions.json";
 
     private final Path workDir;
 

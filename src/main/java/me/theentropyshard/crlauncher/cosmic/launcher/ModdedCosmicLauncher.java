@@ -16,26 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic;
+package me.theentropyshard.crlauncher.cosmic.launcher;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import java.nio.file.Path;
 
-import java.io.IOException;
+public class ModdedCosmicLauncher extends AbstractCosmicLauncher {
+    private final Path modsDir;
 
-public class VersionTypeTypeAdapter extends TypeAdapter<VersionType> {
-    public VersionTypeTypeAdapter() {
+    public ModdedCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
+        super(runDir, gameFilesLocation, clientPath);
 
+        this.modsDir = modsDir;
     }
 
-    @Override
-    public void write(JsonWriter writer, VersionType type) throws IOException {
-        writer.value(type.getJsonName());
-    }
-
-    @Override
-    public VersionType read(JsonReader reader) throws IOException {
-        return VersionType.getByJsonName(reader.nextString());
+    public Path getModsDir() {
+        return this.modsDir;
     }
 }

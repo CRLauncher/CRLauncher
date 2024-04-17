@@ -16,23 +16,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
+package me.theentropyshard.crlauncher.cosmic.version;
 
-import me.theentropyshard.crlauncher.cosmic.version.VersionType;
+import com.google.gson.annotations.SerializedName;
 
-import javax.swing.*;
+import java.util.List;
 
-public class VersionTypeRowFilter extends RowFilter<CRVersionsTableModel, Integer> {
-    private final JCheckBox checkBox;
-    private final VersionType versionType;
+public class VersionList {
+    private Latest latest;
+    private List<Version> versions;
 
-    public VersionTypeRowFilter(JCheckBox checkBox, VersionType versionType) {
-        this.checkBox = checkBox;
-        this.versionType = versionType;
+    public VersionList() {
+
     }
 
-    @Override
-    public boolean include(Entry<? extends CRVersionsTableModel, ? extends Integer> entry) {
-        return this.checkBox.isSelected() && entry.getValue(2) == this.versionType;
+    public static final class Latest {
+        @SerializedName("pre_alpha")
+        private String preAlpha;
+
+        public Latest() {
+
+        }
+
+        public String getPreAlpha() {
+            return this.preAlpha;
+        }
+    }
+
+    public Latest getLatest() {
+        return this.latest;
+    }
+
+    public List<Version> getVersions() {
+        return this.versions;
     }
 }
