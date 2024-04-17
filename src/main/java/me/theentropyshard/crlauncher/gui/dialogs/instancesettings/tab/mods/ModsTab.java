@@ -79,7 +79,7 @@ public class ModsTab extends Tab implements ItemListener {
 
         this.modsView = switch (instance.getType()) {
             case VANILLA -> new JarModsView(instance);
-            case FABRIC -> new FabricModsView();
+            case FABRIC -> new FabricModsView(instance);
             case QUILT -> new QuiltModsView();
         };
 

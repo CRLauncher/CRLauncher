@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.instance.OldInstance;

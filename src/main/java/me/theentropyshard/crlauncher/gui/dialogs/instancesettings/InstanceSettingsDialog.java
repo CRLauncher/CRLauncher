@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InstanceSettingsDialog extends AppDialog {
-
     private final JTabbedPane tabbedPane;
     private final List<Tab> tabs;
 
