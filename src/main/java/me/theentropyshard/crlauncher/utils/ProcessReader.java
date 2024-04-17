@@ -41,7 +41,7 @@ public class ProcessReader {
 
     public void read(Consumer<String> log) throws IOException {
         InputStream inputStream = this.process.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, this.charset));
         String line;
         while ((line = reader.readLine()) != null) {
             log.accept(line);
