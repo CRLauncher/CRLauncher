@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.instance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 
@@ -42,6 +43,7 @@ public class OldInstance {
     private long totalPlayedForSeconds;
     private List<JarMod> jarMods;
     private List<FabricMod> fabricMods;
+    private List<QuiltMod> quiltMods;
     private InstanceType type = InstanceType.VANILLA;
 
     public OldInstance() {
@@ -64,6 +66,14 @@ public class OldInstance {
 
     public void setType(InstanceType type) {
         this.type = type;
+    }
+
+    public List<QuiltMod> getQuiltMods() {
+        return this.quiltMods;
+    }
+
+    public void setQuiltMods(List<QuiltMod> quiltMods) {
+        this.quiltMods = quiltMods;
     }
 
     public String getName() {

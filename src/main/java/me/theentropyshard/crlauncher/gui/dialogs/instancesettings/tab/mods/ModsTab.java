@@ -80,7 +80,7 @@ public class ModsTab extends Tab implements ItemListener {
         this.modsView = switch (instance.getType()) {
             case VANILLA -> new JarModsView(instance);
             case FABRIC -> new FabricModsView(instance);
-            case QUILT -> new QuiltModsView();
+            case QUILT -> new QuiltModsView(instance);
         };
 
         if (this.mods.getComponentCount() > 0) {
