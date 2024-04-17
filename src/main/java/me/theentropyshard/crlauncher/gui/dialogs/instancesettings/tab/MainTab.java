@@ -16,9 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 
-import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.instance.OldInstance;
 
 import javax.swing.*;
@@ -30,7 +29,6 @@ public class MainTab extends Tab {
 
     private final JTextField nameField;
     private final JTextField groupField;
-    private final JComboBox<InstanceType> typeCombo;
 
     public MainTab(String name, OldInstance oldInstance, JDialog dialog) {
         super(name, oldInstance, dialog);
@@ -62,28 +60,8 @@ public class MainTab extends Tab {
         common.setBorder(new TitledBorder("Common"));
 
         gbc.gridy++;
-        root.add(common, gbc);
-
-        JPanel modding = new JPanel(new GridLayout(1, 1));
-
-        JLabel typeLabel = new JLabel("Instance type:");
-        modding.add(typeLabel);
-
-        this.typeCombo = new JComboBox<>(InstanceType.values());
-        for (int i = 0; i < this.typeCombo.getItemCount(); i++) {
-            if (this.typeCombo.getItemAt(i) == oldInstance.getType()) {
-                this.typeCombo.setSelectedIndex(i);
-                break;
-            }
-        }
-
-        modding.add(this.typeCombo);
-
-        modding.setBorder(new TitledBorder("Modding"));
-
-        gbc.gridy++;
         gbc.weighty = 1;
-        root.add(modding, gbc);
+        root.add(common, gbc);
     }
 
     @Override
@@ -91,6 +69,5 @@ public class MainTab extends Tab {
         OldInstance oldInstance = this.getInstance();
         oldInstance.setName(this.nameField.getText());
         oldInstance.setGroupName(this.groupField.getText());
-        oldInstance.setType((InstanceType) this.typeCombo.getSelectedItem());
     }
 }

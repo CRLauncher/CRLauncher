@@ -22,29 +22,31 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum InstanceType {
-    VANILLA("vanilla"),
-    FABRIC("fabric"),
-    QUILT("quilt");
+    VANILLA("vanilla", "Vanilla"),
+    FABRIC("fabric", "Fabric"),
+    QUILT("quilt", "Cosmic Quilt");
 
     private static final Map<String, InstanceType> lookup = new HashMap<>();
 
     static {
         for (InstanceType type : InstanceType.values()) {
-            lookup.put(type.getName(), type);
+            lookup.put(type.getType(), type);
         }
     }
 
+    private final String type;
     private final String name;
 
-    InstanceType(String name) {
+    InstanceType(String type, String name) {
+        this.type = type;
         this.name = name;
     }
 
-    public static InstanceType getByName(String jsonName) {
-        InstanceType type = lookup.get(jsonName);
+    public static InstanceType getByType(String jsonType) {
+        InstanceType type = lookup.get(jsonType);
 
         if (type == null) {
-            throw new IllegalArgumentException("Unknown instance type: " + jsonName);
+            throw new IllegalArgumentException("Unknown instance type: " + jsonType);
         }
 
         return type;
@@ -53,6 +55,10 @@ public enum InstanceType {
     @Override
     public String toString() {
         return this.name;
+    }
+
+    public String getType() {
+        return this.type;
     }
 
     public String getName() {

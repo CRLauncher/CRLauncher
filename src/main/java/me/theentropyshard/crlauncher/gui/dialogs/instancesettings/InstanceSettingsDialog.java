@@ -21,6 +21,8 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.*;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.instance.OldInstance;
 
@@ -47,8 +49,7 @@ public class InstanceSettingsDialog extends AppDialog {
 
         this.addTab(new MainTab("Main", oldInstance, this.getDialog()));
         this.addTab(new JavaTab("Java", oldInstance, this.getDialog()));
-        this.addTab(new JarModsTab(oldInstance, this.getDialog()));
-        this.addTab(new FabricModsTab(oldInstance, this.getDialog()));
+        this.addTab(new ModsTab(oldInstance, this.getDialog()));
 
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override

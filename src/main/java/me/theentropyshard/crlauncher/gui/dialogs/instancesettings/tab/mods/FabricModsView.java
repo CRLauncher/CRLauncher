@@ -16,26 +16,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.instance;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
-import com.google.gson.TypeAdapter;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
+import javax.swing.*;
+import java.awt.*;
 
-import java.io.IOException;
+public class FabricModsView extends JPanel {
+    public FabricModsView() {
+        super(new BorderLayout());
 
-public class InstanceTypeTypeAdapter extends TypeAdapter<InstanceType> {
-    public InstanceTypeTypeAdapter() {
-
-    }
-
-    @Override
-    public void write(JsonWriter writer, InstanceType type) throws IOException {
-        writer.value(type.getType());
-    }
-
-    @Override
-    public InstanceType read(JsonReader reader) throws IOException {
-        return InstanceType.getByType(reader.nextString());
+        this.add(new JLabel("fabric mods"));
     }
 }
