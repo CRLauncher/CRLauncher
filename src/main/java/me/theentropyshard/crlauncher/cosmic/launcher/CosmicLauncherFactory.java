@@ -26,14 +26,15 @@ public class CosmicLauncherFactory {
                                              Path gameFilesLocation,
                                              Path clientPath) {
 
-        return CosmicLauncherFactory.getLauncher(type, runDir, gameFilesLocation, clientPath, null);
+        return CosmicLauncherFactory.getLauncher(type, runDir, gameFilesLocation, clientPath, null, null);
     }
 
     public static CosmicLauncher getLauncher(LaunchType type,
                                              Path runDir,
                                              Path gameFilesLocation,
                                              Path clientPath,
-                                             Path modsDir
+                                             Path modsDir,
+                                             String version
     ) {
 
         if (type == LaunchType.VANILLA) {
@@ -43,8 +44,12 @@ public class CosmicLauncherFactory {
                 throw new IllegalArgumentException("Mods dir must not be null when launching with mods");
             }
 
+            if (version == null) {
+                throw new IllegalArgumentException("Mod loader version must not be null when launching with mods");
+            }
+
             if (type == LaunchType.FABRIC) {
-                return new FabricCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir);
+                return new FabricCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir, version);
             } else if (type == LaunchType.QUILT) {
                 return new QuiltCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir);
             }

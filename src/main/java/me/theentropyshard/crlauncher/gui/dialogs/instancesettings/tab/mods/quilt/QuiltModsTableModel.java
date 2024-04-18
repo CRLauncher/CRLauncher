@@ -16,58 +16,58 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt;
 
-import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.instance.OldInstance;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FabricModsTableModel extends AbstractTableModel {
+public class QuiltModsTableModel extends AbstractTableModel {
     private static final String[] COLUMN_NAMES = {"Name", "Version", "Description", "Active"};
     private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class, Boolean.class};
 
-    private final List<FabricMod> fabricMods;
+    private final List<QuiltMod> quiltMods;
 
-    public FabricModsTableModel(OldInstance oldInstance) {
-        if (oldInstance.getFabricMods() == null) {
-            this.fabricMods = new ArrayList<>();
+    public QuiltModsTableModel(OldInstance oldInstance) {
+        if (oldInstance.getQuiltMods() == null) {
+            this.quiltMods = new ArrayList<>();
         } else {
-            this.fabricMods = new ArrayList<>(oldInstance.getFabricMods());
+            this.quiltMods = new ArrayList<>(oldInstance.getQuiltMods());
         }
     }
 
     @Override
     public int getRowCount() {
-        return this.fabricMods.size();
+        return this.quiltMods.size();
     }
 
     @Override
     public int getColumnCount() {
-        return FabricModsTableModel.COLUMN_NAMES.length;
+        return QuiltModsTableModel.COLUMN_NAMES.length;
     }
 
     @Override
     public String getColumnName(int column) {
-        return FabricModsTableModel.COLUMN_NAMES[column];
+        return QuiltModsTableModel.COLUMN_NAMES[column];
     }
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return FabricModsTableModel.COLUMN_CLASSES[columnIndex];
+        return QuiltModsTableModel.COLUMN_CLASSES[columnIndex];
     }
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        FabricMod fabricMod = this.fabricMods.get(rowIndex);
+        QuiltMod quiltMod = this.quiltMods.get(rowIndex);
 
         return switch (columnIndex) {
-            case 0 -> fabricMod.getName();
-            case 1 -> fabricMod.getVersion();
-            case 2 -> fabricMod.getDescription();
-            case 3 -> fabricMod.isActive();
+            case 0 -> quiltMod.getName();
+            case 1 -> quiltMod.getVersion();
+            case 2 -> quiltMod.getDescription();
+            case 3 -> quiltMod.isActive();
             default -> null;
         };
     }
@@ -83,7 +83,7 @@ public class FabricModsTableModel extends AbstractTableModel {
         }
 
         boolean isSelected = (Boolean) aValue;
-        this.fabricModAt(rowIndex).setActive(isSelected);
+        this.quiltModAt(rowIndex).setActive(isSelected);
 
         this.fireTableCellUpdated(rowIndex, columnIndex);
     }
@@ -93,18 +93,18 @@ public class FabricModsTableModel extends AbstractTableModel {
         return columnIndex == 3;
     }
 
-    public void add(FabricMod fabricMod) {
-        int index = this.fabricMods.size();
-        this.fabricMods.add(fabricMod);
+    public void add(QuiltMod QuiltMod) {
+        int index = this.quiltMods.size();
+        this.quiltMods.add(QuiltMod);
         this.fireTableRowsInserted(index, index);
     }
 
-    public FabricMod fabricModAt(int rowIndex) {
-        return this.fabricMods.get(rowIndex);
+    public QuiltMod quiltModAt(int rowIndex) {
+        return this.quiltMods.get(rowIndex);
     }
 
     public void removeRow(int rowIndex) {
-        this.fabricMods.remove(rowIndex);
+        this.quiltMods.remove(rowIndex);
         this.fireTableStructureChanged();
     }
 }

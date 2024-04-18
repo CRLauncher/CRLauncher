@@ -28,17 +28,28 @@ import okhttp3.OkHttpClient;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GithubReleaseDownloader {
-    private static final String URL = "https://api.github.com/repos/%s/%s/releases/latest";
+    private static final String URL_LATEST = "https://api.github.com/repos/%s/%s/releases/latest";
+    private static final String URL = "https://api.github.com/repos/%s/%s/releases";
 
-    public GithubReleaseResponse getReleaseResponse(String owner, String repo) throws IOException {
+    public GithubReleaseResponse getLatestRelease(String owner, String repo) throws IOException {
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
-            return Json.parse(request.asString(String.format(GithubReleaseDownloader.URL, owner, repo)), GithubReleaseResponse.class);
+            return Json.parse(request.asString(String.format(GithubReleaseDownloader.URL_LATEST, owner, repo)), GithubReleaseResponse.class);
         }
     }
 
-    public void downloadLatestRelease(Path saveAs, GithubReleaseResponse release, int index, ProgressListener listener) throws IOException {
+    public List<GithubReleaseResponse> getAllReleases(String owner, String repo) throws IOException {
+        try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
+            String string = request.asString(URL.formatted(owner, repo));
+
+            return new ArrayList<>(List.of(Json.parse(string, GithubReleaseResponse[].class)));
+        }
+    }
+
+    public void downloadRelease(Path saveAs, GithubReleaseResponse release, int index, ProgressListener listener) throws IOException {
         GithubReleaseResponse.Asset asset = release.assets.get(index);
 
         OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient().newBuilder()

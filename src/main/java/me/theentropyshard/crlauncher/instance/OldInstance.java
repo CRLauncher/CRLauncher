@@ -45,6 +45,8 @@ public class OldInstance {
     private List<FabricMod> fabricMods;
     private List<QuiltMod> quiltMods;
     private InstanceType type = InstanceType.VANILLA;
+    private String fabricVersion;
+    private String quiltVersion;
 
     public OldInstance() {
 
@@ -194,5 +196,21 @@ public class OldInstance {
 
     public void setFabricMods(List<FabricMod> fabricMods) {
         this.fabricMods = fabricMods;
+    }
+
+    public String getFabricVersion() {
+        return this.fabricVersion;
+    }
+
+    public void setFabricVersion(String fabricVersion) {
+        this.fabricVersion = fabricVersion;
+    }
+
+    public String getQuiltVersion() {
+        return this.quiltVersion;
+    }
+
+    public void setQuiltVersion(String quiltVersion) {
+        this.quiltVersion = quiltVersion;
     }
 }

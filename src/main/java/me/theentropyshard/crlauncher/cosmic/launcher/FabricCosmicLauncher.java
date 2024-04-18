@@ -20,9 +20,11 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricProperties;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
+import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.ListUtils;
 import net.lingala.zip4j.ZipFile;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,14 +39,17 @@ import java.util.List;
 
 public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
     private static final Logger LOG = LogManager.getLogger(FabricCosmicLauncher.class);
+    private final String version;
 
-    public FabricCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
+    public FabricCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
         super(runDir, gameFilesLocation, clientPath, modsDir);
+
+        this.version = version;
     }
 
-    private void downloadFabricLoader(Path loaderDir) {
+    private void downloadFabricLoader(Path loaderDir, String version) {
         try {
-            Path loaderArchivePath = loaderDir.resolve("fabric_loader.zip");
+            Path loaderArchivePath = loaderDir.resolve("fabric_loader_%s.zip".formatted(version));
 
             if (!Files.exists(loaderDir)) {
                 FileUtils.createDirectoryIfNotExists(loaderDir);
@@ -55,9 +60,21 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
                 SwingUtilities.invokeLater(() -> downloadDialog.setVisible(true));
 
                 GithubReleaseDownloader downloader = new GithubReleaseDownloader();
-                downloader.downloadLatestRelease(
+
+                List<GithubReleaseResponse> allReleases = downloader.getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");
+                GithubReleaseResponse release = ListUtils.search(allReleases, resp -> resp.tag_name.equals(version));
+
+                if (release == null) {
+                    LOG.error("Could find version {}", version);
+
+                    SwingUtilities.invokeLater(() -> downloadDialog.getDialog().dispose());
+
+                    return;
+                }
+
+                downloader.downloadRelease(
                         loaderArchivePath,
-                        downloader.getReleaseResponse("ForwarD-NerN", "CosmicReach-Mod-Loader"),
+                        release,
                         0,
                         downloadDialog
                 );
@@ -130,8 +147,8 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
         super.buildCommand(command);
 
-        Path fabricLoaderDir = this.getGameFilesLocation().resolve("fabric_loader");
-        this.downloadFabricLoader(fabricLoaderDir);
+        Path fabricLoaderDir = this.getGameFilesLocation().resolve("fabric_loader_%s".formatted(this.version));
+        this.downloadFabricLoader(fabricLoaderDir, this.version);
 
         command.add("-classpath");
 

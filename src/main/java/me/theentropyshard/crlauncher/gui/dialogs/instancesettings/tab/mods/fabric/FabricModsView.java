@@ -16,11 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
+import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.instance.OldInstance;
 import me.theentropyshard.crlauncher.instance.OldInstanceManager;
@@ -45,19 +45,19 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-public class QuiltModsView extends JPanel {
-    private static final Logger LOG = LogManager.getLogger(QuiltModsView.class);
+public class FabricModsView extends JPanel {
+    private static final Logger LOG = LogManager.getLogger(FabricModsView.class);
 
-    private final QuiltModsTableModel quiltModsModel;
+    private final FabricModsTableModel fabricModsModel;
     private final JButton deleteModButton;
 
-    public QuiltModsView(OldInstance instance) {
+    public FabricModsView(OldInstance instance) {
         super(new BorderLayout());
 
-        JButton addJarMod = new JButton("Add Quilt mod");
+        JButton addJarMod = new JButton("Add Fabric mod");
         this.add(addJarMod, BorderLayout.NORTH);
 
-        this.quiltModsModel = new QuiltModsTableModel(instance);
+        this.fabricModsModel = new FabricModsTableModel(instance);
 
         addJarMod.addActionListener(e -> {
             new SwingWorker<Void, Void>() {
@@ -81,25 +81,25 @@ public class QuiltModsView extends JPanel {
 
                         settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
 
-                        List<QuiltMod> fabricMods = instance.getQuiltMods();
+                        java.util.List<FabricMod> fabricMods = instance.getFabricMods();
                         if (fabricMods == null) {
                             fabricMods = new ArrayList<>();
-                            instance.setQuiltMods(fabricMods);
+                            instance.setFabricMods(fabricMods);
                         }
 
                         Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
 
-                        QuiltMod mod;
+                        FabricMod mod;
                         try (ZipFile file = new ZipFile(jarModPath.toFile())) {
-                            FileHeader fileHeader = file.getFileHeader("quilt.mod.json");
+                            FileHeader fileHeader = file.getFileHeader("fabric.mod.json");
                             if (fileHeader == null) {
-                                LOG.warn("{} does not contain 'quilt.mod.json'", jarModPath);
-                                Gui.showErrorDialog(jarModPath + " is not a valid Quilt mod");
+                                LOG.warn("{} does not contain 'fabric.mod.json'", jarModPath);
+                                Gui.showErrorDialog(jarModPath + " is not a valid Fabric mod");
                                 return null;
                             }
 
                             String json = StreamUtils.readToString(file.getInputStream(fileHeader));
-                            mod = Json.parse(json, QuiltMod.class);
+                            mod = Json.parse(json, FabricMod.class);
 
                             if (fabricMods.stream().anyMatch(fabricMod -> fabricMod.getId().equals(mod.getId()))) {
                                 Gui.showErrorDialog("Mod with id '" + mod.getId() + "' already added!");
@@ -109,11 +109,11 @@ public class QuiltModsView extends JPanel {
                             mod.setActive(true);
                             fabricMods.add(mod);
 
-                            QuiltModsView.this.quiltModsModel.add(mod);
+                            FabricModsView.this.fabricModsModel.add(mod);
                         }
 
                         OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
-                        Path fabricModsDir = oldInstanceManager.getQuiltModsDir(instance);
+                        Path fabricModsDir = oldInstanceManager.getFabricModsDir(instance);
                         FileUtils.createDirectoryIfNotExists(fabricModsDir);
 
                         Path modPathInFolder = fabricModsDir.resolve(jarModPath.getFileName());
@@ -133,9 +133,9 @@ public class QuiltModsView extends JPanel {
             }.execute();
         });
 
-        this.deleteModButton = new JButton("Delete Quilt mod");
+        this.deleteModButton = new JButton("Delete Fabric mod");
 
-        JTable fabricModsTable = new JTable(this.quiltModsModel);
+        JTable fabricModsTable = new JTable(this.fabricModsModel);
         fabricModsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -144,7 +144,7 @@ public class QuiltModsView extends JPanel {
                     return;
                 }
 
-                QuiltModsView.this.deleteModButton.setEnabled(true);
+                FabricModsView.this.deleteModButton.setEnabled(true);
             }
         });
 
@@ -159,9 +159,9 @@ public class QuiltModsView extends JPanel {
                 return;
             }
 
-            QuiltMod fabricMod = this.quiltModsModel.quiltModAt(selectedRow);
-            this.quiltModsModel.removeRow(selectedRow);
-            instance.getQuiltMods().remove(fabricMod);
+            FabricMod fabricMod = this.fabricModsModel.fabricModAt(selectedRow);
+            this.fabricModsModel.removeRow(selectedRow);
+            instance.getFabricMods().remove(fabricMod);
 
             Path modFile = Paths.get(fabricMod.getFilePath());
 
@@ -169,7 +169,7 @@ public class QuiltModsView extends JPanel {
                 try {
                     FileUtils.delete(modFile);
                 } catch (IOException ex) {
-                    LOG.error("Exception while trying to delete Quilt Mod", ex);
+                    LOG.error("Exception while trying to delete Fabric Mod", ex);
                 }
             }
         });
@@ -179,26 +179,26 @@ public class QuiltModsView extends JPanel {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                List<QuiltMod> fabricMods = instance.getQuiltMods();
+                List<FabricMod> fabricMods = instance.getFabricMods();
                 if (fabricMods == null) {
                     fabricMods = new ArrayList<>();
-                    instance.setQuiltMods(fabricMods);
+                    instance.setFabricMods(fabricMods);
                 }
 
                 OldInstanceManager manager = CRLauncher.getInstance().getInstanceManager();
-                Path fabricModsDir = manager.getQuiltModsDir(instance);
+                Path fabricModsDir = manager.getFabricModsDir(instance);
 
                 for (Path modFile : FileUtils.list(fabricModsDir)) {
 
                     try (ZipFile file = new ZipFile(modFile.toFile())) {
-                        FileHeader fileHeader = file.getFileHeader("quilt.mod.json");
+                        FileHeader fileHeader = file.getFileHeader("fabric.mod.json");
                         if (fileHeader == null) {
-                            LOG.warn("{} does not contain 'quilt.mod.json'", modFile);
+                            LOG.warn("{} does not contain 'fabric.mod.json'", modFile);
                             continue;
                         }
 
                         String json = StreamUtils.readToString(file.getInputStream(fileHeader));
-                        QuiltMod mod = Json.parse(json, QuiltMod.class);
+                        FabricMod mod = Json.parse(json, FabricMod.class);
 
                         if (fabricMods.stream().anyMatch(fabricMod -> fabricMod.getId().equals(mod.getId()))) {
                             continue;
@@ -208,7 +208,7 @@ public class QuiltModsView extends JPanel {
                         mod.setFilePath(modFile.toString());
 
                         mod.setActive(true);
-                        QuiltModsView.this.quiltModsModel.add(mod);
+                        FabricModsView.this.fabricModsModel.add(mod);
                     }
                 }
 

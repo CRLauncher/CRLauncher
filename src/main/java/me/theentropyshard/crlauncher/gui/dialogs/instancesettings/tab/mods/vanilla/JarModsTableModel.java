@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
 
 import me.theentropyshard.crlauncher.instance.OldInstance;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;

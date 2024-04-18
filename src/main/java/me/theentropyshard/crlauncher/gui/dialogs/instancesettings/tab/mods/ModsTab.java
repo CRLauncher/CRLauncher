@@ -18,7 +18,13 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
+import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricVersionsLoaderWorker;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltVersionsLoaderWorker;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.JarModsView;
 import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.instance.OldInstance;
 
@@ -28,17 +34,26 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
+import java.util.Objects;
 
 public class ModsTab extends Tab implements ItemListener {
     private final JComboBox<InstanceType> typeCombo;
+    private final JComboBox<GithubReleaseResponse> loaderVersionCombo;
     private final JPanel mods;
+    private final JPanel root;
+    private final JPanel loaderVersionsPanel;
     private JPanel modsView;
+
+    private InstanceType lastType;
+    private boolean versionsLoaded;
 
     public ModsTab(OldInstance oldInstance, JDialog dialog) {
         super("Mods", oldInstance, dialog);
 
-        JPanel root = this.getRoot();
-        root.setLayout(new GridBagLayout());
+        this.lastType = oldInstance.getType();
+
+        this.root = this.getRoot();
+        this.root.setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 2;
@@ -59,7 +74,36 @@ public class ModsTab extends Tab implements ItemListener {
             modLoader.add(this.typeCombo);
 
             gbc.gridy++;
-            root.add(modLoader, gbc);
+            this.root.add(modLoader, gbc);
+        }
+
+        {
+            this.loaderVersionCombo = new JComboBox<>();
+
+            this.loaderVersionCombo.setRenderer(new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                    if (value instanceof GithubReleaseResponse release) {
+                        ((JLabel) c).setText(release.name + " (" + release.tag_name + ")");
+                    }
+
+                    return c;
+                }
+            });
+
+            this.loaderVersionsPanel = this.getTitledPanel("Loader version", 1, 1);
+            this.loaderVersionsPanel.setVisible(false);
+            this.loaderVersionsPanel.add(this.loaderVersionCombo);
+
+            if (this.getInstance().getType() != InstanceType.VANILLA) {
+                this.loadModloaderVersions();
+                this.loaderVersionsPanel.setVisible(true);
+            }
+
+            gbc.gridy++;
+            this.root.add(this.loaderVersionsPanel, gbc);
         }
 
         {
@@ -70,8 +114,34 @@ public class ModsTab extends Tab implements ItemListener {
 
             gbc.gridy++;
             gbc.weighty = 1;
-            root.add(this.mods, gbc);
+            this.root.add(this.mods, gbc);
         }
+    }
+
+    private void loadModloaderVersions() {
+        OldInstance instance = this.getInstance();
+
+        if (instance.getType() == InstanceType.VANILLA) {
+            this.loaderVersionsPanel.setVisible(false);
+
+            return;
+        }
+
+        if (this.versionsLoaded && instance.getType() == this.lastType) {
+            return;
+        }
+
+        this.loaderVersionCombo.removeAllItems();
+
+        if (instance.getType() == InstanceType.FABRIC) {
+            new FabricVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+        } else if (instance.getType() == InstanceType.QUILT) {
+            new QuiltVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+        }
+
+        this.versionsLoaded = true;
+
+        this.loaderVersionsPanel.setVisible(true);
     }
 
     private void updateModsView() {
@@ -82,6 +152,8 @@ public class ModsTab extends Tab implements ItemListener {
             case FABRIC -> new FabricModsView(instance);
             case QUILT -> new QuiltModsView(instance);
         };
+
+        this.loadModloaderVersions();
 
         if (this.mods.getComponentCount() > 0) {
             this.mods.remove(0);
@@ -96,7 +168,10 @@ public class ModsTab extends Tab implements ItemListener {
             return;
         }
 
-        this.getInstance().setType((InstanceType) e.getItem());
+        OldInstance instance = this.getInstance();
+
+        this.lastType = instance.getType();
+        instance.setType((InstanceType) e.getItem());
 
         this.updateModsView();
         this.getRoot().revalidate();
@@ -113,5 +188,18 @@ public class ModsTab extends Tab implements ItemListener {
     public void save() throws IOException {
         OldInstance instance = this.getInstance();
         instance.setType((InstanceType) this.typeCombo.getSelectedItem());
+        if (instance.getType() == InstanceType.FABRIC) {
+            instance.setFabricVersion(
+                    ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
+            );
+        } else if (instance.getType() == InstanceType.QUILT) {
+            instance.setQuiltVersion(
+                    ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
+            );
+        }
+    }
+
+    public JComboBox<GithubReleaseResponse> getLoaderVersionCombo() {
+        return this.loaderVersionCombo;
     }
 }

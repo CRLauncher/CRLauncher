@@ -102,7 +102,8 @@ public class CosmicRunner extends Thread {
                         saveDirPath,
                         saveDirPath,
                         clientPath,
-                        oldInstanceManager.getFabricModsDir(this.oldInstance)
+                        oldInstanceManager.getFabricModsDir(this.oldInstance),
+                        this.oldInstance.getFabricVersion()
                 );
             } else if (this.oldInstance.getType() == InstanceType.QUILT) {
                 this.updateQuiltMods();
@@ -112,7 +113,8 @@ public class CosmicRunner extends Thread {
                         saveDirPath,
                         saveDirPath,
                         clientPath,
-                        oldInstanceManager.getQuiltModsDir(this.oldInstance)
+                        oldInstanceManager.getQuiltModsDir(this.oldInstance),
+                        this.oldInstance.getQuiltVersion()
                 );
             } else {
                 throw new IllegalArgumentException("Unknown instance type: " + this.oldInstance.getType());
