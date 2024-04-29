@@ -81,8 +81,9 @@ public class CRLauncher {
 
         CRLauncher.setInstance(this);
 
+        this.librariesDir = this.workDir.resolve("libraries");
+
         Path cosmicDir = this.workDir.resolve("cosmic");
-        this.librariesDir = cosmicDir.resolve("libraries");
         this.instancesDir = cosmicDir.resolve("instances");
         this.versionsDir = cosmicDir.resolve("versions");
         this.createDirectories();
@@ -98,7 +99,7 @@ public class CRLauncher {
                 .protocols(Collections.singletonList(Protocol.HTTP_1_1))
                 .build();
 
-        this.versionManager = new VersionManager(this.workDir.resolve("versions"));
+        this.versionManager = new VersionManager(this.versionsDir);
         
         this.instanceManager = new InstanceManager(this.instancesDir);
         try {

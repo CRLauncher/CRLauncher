@@ -35,7 +35,17 @@ public class SelectIconDialog extends AppDialog {
 
         root.setPreferredSize(new Dimension(280, 180));
 
-        String grassPath = "/assets/icons/grass_icon.png";
+        String cosmicPath = "/assets/cosmic_logo_x32.png";
+        JButton cosmicButton = new JButton(SwingUtils.getIcon(cosmicPath));
+        cosmicButton.addActionListener(e -> {
+            instance.setIconPath(cosmicPath);
+            item.getIconLabel().setIcon(SwingUtils.getIcon(cosmicPath));
+
+            this.getDialog().dispose();
+        });
+        root.add(cosmicButton);
+
+        String grassPath = "/assets/grass_icon.png";
         JButton grassButton = new JButton(SwingUtils.getIcon(grassPath));
         grassButton.addActionListener(e -> {
             instance.setIconPath(grassPath);
@@ -45,7 +55,7 @@ public class SelectIconDialog extends AppDialog {
         });
         root.add(grassButton);
 
-        String craftingTablePath = "/assets/icons/crafting_table_icon.png";
+        String craftingTablePath = "/assets/crafting_table_icon.png";
         JButton craftingTableButton = new JButton(SwingUtils.getIcon(craftingTablePath));
         craftingTableButton.addActionListener(e -> {
             instance.setIconPath(craftingTablePath);

@@ -76,7 +76,7 @@ public class CosmicRunner extends Thread {
 
             Path saveDirPath = this.instance.getCosmicDir();
 
-            Path versionsDir = CRLauncher.getInstance().getWorkDir().resolve("versions");
+            Path versionsDir = CRLauncher.getInstance().getVersionsDir();
             Path clientPath = versionsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
 
             this.instance.setLastTimePlayed(LocalDateTime.now());
