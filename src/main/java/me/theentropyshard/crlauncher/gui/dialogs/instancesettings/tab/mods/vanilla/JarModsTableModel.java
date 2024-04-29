@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
 
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.instance.Instance;
@@ -31,11 +31,11 @@ public class JarModsTableModel extends AbstractTableModel {
 
     private final List<JarMod> jarMods;
 
-    public JarModsTableModel(Instance instance) {
-        if (instance.getJarMods() == null) {
+    public JarModsTableModel(Instance oldInstance) {
+        if (oldInstance.getJarMods() == null) {
             this.jarMods = new ArrayList<>();
         } else {
-            this.jarMods = new ArrayList<>(instance.getJarMods());
+            this.jarMods = new ArrayList<>(oldInstance.getJarMods());
         }
     }
 

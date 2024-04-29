@@ -16,10 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
 
-import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.instance.Instance;
 
@@ -29,30 +29,27 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class JarModsTab extends SettingsTab {
+public class JarModsView extends JPanel {
     private final JarModsTableModel jarModsTableModel;
     private final JButton deleteModButton;
 
-    public JarModsTab(Instance instance, JDialog dialog) {
-        super("Jar Mods", instance, dialog);
-
-        JPanel root = this.getRoot();
-        root.setLayout(new BorderLayout());
+    public JarModsView(Instance instance) {
+        super(new BorderLayout());
 
         JButton addJarMod = new JButton("Add jar mod");
-        root.add(addJarMod, BorderLayout.NORTH);
+        this.add(addJarMod, BorderLayout.NORTH);
 
         this.jarModsTableModel = new JarModsTableModel(instance);
 
         addJarMod.addActionListener(e -> {
             new SwingWorker<Void, Void>() {
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected Void doInBackground() {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
                     fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));
@@ -83,7 +80,7 @@ public class JarModsTab extends SettingsTab {
                         );
                         jarMods.add(jarMod);
 
-                        JarModsTab.this.jarModsTableModel.add(jarMod);
+                        JarModsView.this.jarModsTableModel.add(jarMod);
                     }
 
                     UIManager.put("FileChooser.readOnly", Boolean.FALSE);
@@ -92,7 +89,7 @@ public class JarModsTab extends SettingsTab {
             }.execute();
         });
 
-        this.deleteModButton = new JButton("Delete jar mode");
+        this.deleteModButton = new JButton("Delete jar mod");
 
         JTable jarModsTable = new JTable(this.jarModsTableModel);
         jarModsTable.addMouseListener(new MouseAdapter() {
@@ -103,14 +100,13 @@ public class JarModsTab extends SettingsTab {
                     return;
                 }
 
-                JarModsTab.this.deleteModButton.setEnabled(true);
+                JarModsView.this.deleteModButton.setEnabled(true);
             }
         });
 
         JScrollPane scrollPane = new JScrollPane(jarModsTable);
         scrollPane.setBorder(null);
-        root.add(scrollPane, BorderLayout.CENTER);
-
+        this.add(scrollPane, BorderLayout.CENTER);
 
         this.deleteModButton.setEnabled(false);
         this.deleteModButton.addActionListener(e -> {
@@ -124,11 +120,6 @@ public class JarModsTab extends SettingsTab {
             instance.getJarMods().remove(jarMod);
         });
 
-        root.add(this.deleteModButton, BorderLayout.SOUTH);
-    }
-
-    @Override
-    public void save() throws IOException {
-
+        this.add(this.deleteModButton, BorderLayout.SOUTH);
     }
 }

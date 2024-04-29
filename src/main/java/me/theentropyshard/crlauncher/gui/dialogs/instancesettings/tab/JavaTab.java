@@ -19,7 +19,6 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
@@ -29,7 +28,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 
-public class JavaTab extends SettingsTab {
+public class JavaTab extends Tab {
     public JavaTab(String name, Instance instance, JDialog dialog) {
         super(name, instance, dialog);
 
@@ -84,33 +83,24 @@ public class JavaTab extends SettingsTab {
                     maxMemory = "2048";
                 }
 
-                int minimumMemoryInMegabytes = 512;
-                try {
-                    minimumMemoryInMegabytes = Integer.parseInt(minMemory);
-                } catch (NumberFormatException ex) {
-                    MessageBox.showErrorMessage(JavaTab.this.getDialog(),
-                            "Too many megabytes! (" + ex.getMessage() + ")");
-                }
+                int minimumMemoryInMegabytes = Integer.parseInt(minMemory);
+                int maximumMemoryInMegabytes = Integer.parseInt(maxMemory);
 
-                int maximumMemoryInMegabytes = 2048;
-                try {
-                    maximumMemoryInMegabytes = Integer.parseInt(maxMemory);
-                } catch (NumberFormatException ex) {
-                    MessageBox.showErrorMessage(JavaTab.this.getDialog(),
-                            "Too many megabytes! (" + ex.getMessage() + ")");
-                }
-
-                if (minimumMemoryInMegabytes > maximumMemoryInMegabytes) {
-                    MessageBox.showErrorMessage(JavaTab.this.getDialog(),
-                            "Minimum amount of RAM cannot be larger than maximum");
+                if (minimumMemoryInMegabytes >= maximumMemoryInMegabytes) {
+                    JOptionPane.showMessageDialog(JavaTab.this.getDialog(),
+                            "Minimum amount of RAM cannot be larger than maximum",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 if (minimumMemoryInMegabytes < 512) {
-                    MessageBox.showErrorMessage(
+                    JOptionPane.showMessageDialog(
                             JavaTab.this.getDialog(),
-                            "Minimum amount of RAM cannot be less than 512 MiB");
-                    return;
+                            "Minimum amount of RAM cannot be less than 512 MiB",
+                            "Error",
+                            JOptionPane.ERROR_MESSAGE
+                    );
                 }
 
                 instance.setJavaPath(javaPathTextField.getText());

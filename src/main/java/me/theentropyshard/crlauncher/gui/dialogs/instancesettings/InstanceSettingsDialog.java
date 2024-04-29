@@ -21,16 +21,14 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.JarModsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.JavaTab;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.SettingsTab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -38,9 +36,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InstanceSettingsDialog extends AppDialog {
-
     private final JTabbedPane tabbedPane;
-    private final List<SettingsTab> tabs;
+    private final List<Tab> tabs;
 
     public InstanceSettingsDialog(Instance instance) {
         super(CRLauncher.frame, "Instance Settings - " + instance.getName());
@@ -48,21 +45,10 @@ public class InstanceSettingsDialog extends AppDialog {
         this.tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
         this.tabbedPane.setPreferredSize(new Dimension(900, 480));
 
-        InputMap inputMap = this.tabbedPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESCAPE");
-
-        ActionMap actionMap = this.tabbedPane.getActionMap();
-        actionMap.put("ESCAPE", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                InstanceSettingsDialog.this.getDialog().dispose();
-            }
-        });
-
         this.tabs = new ArrayList<>();
 
         this.addTab(new JavaTab("Java", instance, this.getDialog()));
-        this.addTab(new JarModsTab(instance, this.getDialog()));
+        this.addTab(new ModsTab(instance, this.getDialog()));
 
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
@@ -96,7 +82,7 @@ public class InstanceSettingsDialog extends AppDialog {
         this.setVisible(true);
     }
 
-    public void addTab(SettingsTab tab) {
+    public void addTab(Tab tab) {
         this.tabs.add(tab);
         this.tabbedPane.addTab(tab.getName(), tab.getRoot());
     }
