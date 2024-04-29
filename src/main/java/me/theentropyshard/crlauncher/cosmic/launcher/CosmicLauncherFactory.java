@@ -51,7 +51,7 @@ public class CosmicLauncherFactory {
             if (type == LaunchType.FABRIC) {
                 return new FabricCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir, version);
             } else if (type == LaunchType.QUILT) {
-                return new QuiltCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir);
+                return new QuiltCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir, version);
             }
         }
 

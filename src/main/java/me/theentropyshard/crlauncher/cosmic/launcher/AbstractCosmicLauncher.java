@@ -18,8 +18,6 @@
 
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
-import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
-import me.theentropyshard.crlauncher.cosmic.launcher.LogConsumer;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.java.SystemProperty;
 import me.theentropyshard.crlauncher.utils.ProcessReader;

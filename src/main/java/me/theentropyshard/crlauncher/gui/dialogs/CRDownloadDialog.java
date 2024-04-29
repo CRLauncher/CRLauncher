@@ -64,4 +64,8 @@ public class CRDownloadDialog extends AppDialog implements ProgressListener {
     public void setStage(String stage) {
         this.stageLabel.setText(stage);
     }
+
+    public JProgressBar getProgressBar() {
+        return this.progressBar;
+    }
 }

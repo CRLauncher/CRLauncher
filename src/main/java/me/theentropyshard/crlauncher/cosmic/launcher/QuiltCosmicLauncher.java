@@ -19,19 +19,37 @@
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.CosmicQuiltProperties;
+import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import javax.swing.*;
 import java.io.File;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
-    public QuiltCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
+    private static final Logger LOG = LogManager.getLogger(QuiltCosmicLauncher.class);
+
+    private final String version;
+
+    public QuiltCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
         super(runDir, gameFilesLocation, clientPath, modsDir);
+
+        this.version = version;
     }
 
-    private void downloadCosmicQuilt(Path cosmicQuiltDir) {
+    private void downloadCosmicQuilt(Path cosmicQuiltDir, String version) {
+        CRDownloadDialog dialog = new CRDownloadDialog();
+        dialog.getProgressBar().setIndeterminate(true);
+        dialog.setStage("Downloading Cosmic Quilt...");
 
+        SwingUtilities.invokeLater(() -> dialog.setVisible(true));
+
+
+        SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
     }
 
     @Override
@@ -41,8 +59,10 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
 
         super.buildCommand(command);
 
-        Path cosmicQuiltDir = this.getGameFilesLocation().resolve("cosmic_quilt");
-        this.downloadCosmicQuilt(cosmicQuiltDir);
+        Path cosmicQuiltDir = this.getGameFilesLocation().resolve("cosmic_quilt_%s".formatted(this.version));
+        if (!Files.exists(cosmicQuiltDir)) {
+            this.downloadCosmicQuilt(cosmicQuiltDir, this.version);
+        }
 
         command.add("-classpath");
 
