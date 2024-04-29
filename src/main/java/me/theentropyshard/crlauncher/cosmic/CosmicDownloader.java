@@ -8,7 +8,7 @@ import me.theentropyshard.crlauncher.network.progress.ProgressListener;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.HashUtils;
-import me.theentropyshard.crlauncher.utils.Json;
+import me.theentropyshard.crlauncher.utils.json.Json;
 import okhttp3.OkHttpClient;
 
 import java.io.IOException;

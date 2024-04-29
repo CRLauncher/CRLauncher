@@ -19,30 +19,21 @@
 package me.theentropyshard.crlauncher.gui.components;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.instance.OldInstance;
-import me.theentropyshard.crlauncher.instance.OldInstanceManager;
+import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.InstanceManager;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
-import java.util.HashSet;
-import java.util.Set;
 
 public class InstanceItem extends JPanel {
     private static final int SIDE_SIZE = 100;
     private static final Dimension PREFERRED_SIZE = new Dimension(InstanceItem.SIDE_SIZE, InstanceItem.SIDE_SIZE);
-
-    private final Set<ActionListener> listeners;
-    private final Set<ActionListener> mouseClickListeners;
-    private final Set<ActionListener> mouseEnteredListeners;
-    private final Set<ActionListener> mouseExitedListeners;
 
     private final JLabel iconLabel;
     private final JLabel textLabel;
@@ -59,11 +50,6 @@ public class InstanceItem extends JPanel {
 
     public InstanceItem(Icon icon, String text) {
         super(new BorderLayout(), true);
-
-        this.listeners = new HashSet<>();
-        this.mouseClickListeners = new HashSet<>();
-        this.mouseEnteredListeners = new HashSet<>();
-        this.mouseExitedListeners = new HashSet<>();
 
         this.iconLabel = new JLabel(icon);
         this.iconLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -87,27 +73,18 @@ public class InstanceItem extends JPanel {
             public void mouseEntered(MouseEvent e) {
                 InstanceItem.this.mouseOver = true;
                 InstanceItem.this.repaint();
-
-                ActionEvent event = new ActionEvent(InstanceItem.this, 1, String.valueOf(e.getButton()));
-                InstanceItem.this.mouseEnteredListeners.forEach(listener -> listener.actionPerformed(event));
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
                 InstanceItem.this.mouseOver = false;
                 InstanceItem.this.repaint();
-
-                ActionEvent event = new ActionEvent(InstanceItem.this, 1, String.valueOf(e.getButton()));
-                InstanceItem.this.mouseExitedListeners.forEach(listener -> listener.actionPerformed(event));
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
                 InstanceItem.this.mousePressed = true;
                 InstanceItem.this.repaint();
-
-                ActionEvent event = new ActionEvent(InstanceItem.this, 1, String.valueOf(e.getButton()));
-                InstanceItem.this.listeners.forEach(listener -> listener.actionPerformed(event));
             }
 
             @Override
@@ -115,18 +92,12 @@ public class InstanceItem extends JPanel {
                 InstanceItem.this.mousePressed = false;
                 InstanceItem.this.repaint();
             }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                ActionEvent event = new ActionEvent(InstanceItem.this, 1, String.valueOf(e.getButton()));
-                InstanceItem.this.mouseClickListeners.forEach(listener -> listener.actionPerformed(event));
-            }
         });
     }
 
-    public OldInstance getAssociatedInstance() {
-        OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
-        return oldInstanceManager.getInstanceByName(this.getTextLabel().getText());
+    public Instance getAssociatedInstance() {
+        InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
+        return instanceManager.getInstanceByName(this.getTextLabel().getText());
     }
 
     protected void paintBackground(Graphics g) {
@@ -144,13 +115,10 @@ public class InstanceItem extends JPanel {
         g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 10, 10);
     }
 
-    protected void paintArc(Graphics2D g2) {
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(this.arcColor);
-
+    private Area getArc(double progress) {
         Dimension size = this.getSize();
 
-        double degree = 360 * this.percentComplete;
+        double degree = 360 * progress;
 
         int arcSize = 48;
         Shape arc = new Arc2D.Double(
@@ -174,7 +142,19 @@ public class InstanceItem extends JPanel {
         Area area = new Area(arc);
         area.subtract(new Area(inner));
 
-        g2.fill(area);
+        return area;
+    }
+
+    protected void paintArc(Graphics2D g2) {
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        if (this.percentComplete > 0.0D) {
+            g2.setColor(Color.LIGHT_GRAY);
+            g2.fill(this.getArc(1.0D));
+        }
+
+        g2.setColor(this.arcColor);
+        g2.fill(this.getArc(this.percentComplete));
     }
 
     @Override
@@ -193,41 +173,13 @@ public class InstanceItem extends JPanel {
         this.arcColor = UIManager.getColor("AccountItem.borderColor");
     }
 
+    public void instanceChanged(Instance instance) {
+        this.textLabel.setText(instance.getName());
+    }
+
     @Override
     public Dimension getPreferredSize() {
         return InstanceItem.PREFERRED_SIZE;
-    }
-
-    public void addListener(ActionListener listener, boolean onMouseClick) {
-        if (onMouseClick) {
-            this.mouseClickListeners.add(listener);
-        } else {
-            this.listeners.add(listener);
-        }
-    }
-
-    public void removeListener(ActionListener listener, boolean onMouseClick) {
-        if (onMouseClick) {
-            this.mouseClickListeners.remove(listener);
-        } else {
-            this.listeners.remove(listener);
-        }
-    }
-
-    public void addMouseExitedListener(ActionListener listener) {
-        this.mouseExitedListeners.add(listener);
-    }
-
-    public void removeMouseExitedListener(ActionListener listener) {
-        this.mouseExitedListeners.remove(listener);
-    }
-
-    public void addMouseEnteredListener(ActionListener listener) {
-        this.mouseEnteredListeners.add(listener);
-    }
-
-    public void removeMouseEnteredListener(ActionListener listener) {
-        this.mouseEnteredListeners.remove(listener);
     }
 
     public JLabel getIconLabel() {

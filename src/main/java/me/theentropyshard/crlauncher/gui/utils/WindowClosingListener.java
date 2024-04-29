@@ -16,20 +16,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.utils;
+package me.theentropyshard.crlauncher.gui.utils;
 
-import java.io.IOException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
-public final class ResourceUtils {
-    public static byte[] readToByteArray(String path) throws IOException {
-        return StreamUtils.readToByteArray(ResourceUtils.class.getResourceAsStream(path));
+public class WindowClosingListener extends WindowAdapter {
+    private final Listener listener;
+
+    public WindowClosingListener(Listener listener) {
+        this.listener = listener;
     }
 
-    public static String readToString(String path) throws IOException {
-        return StreamUtils.readToString(ResourceUtils.class.getResourceAsStream(path));
+    @Override
+    public void windowClosing(WindowEvent e) {
+        this.listener.onWindowClosing(e);
     }
 
-    private ResourceUtils() {
-        throw new UnsupportedOperationException();
+    public interface Listener {
+        void onWindowClosing(WindowEvent e);
     }
 }

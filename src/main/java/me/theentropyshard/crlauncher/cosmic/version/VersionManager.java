@@ -23,7 +23,7 @@ import me.theentropyshard.crlauncher.cosmic.CosmicDownloader;
 import me.theentropyshard.crlauncher.network.HttpRequest;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
 import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.Json;
+import me.theentropyshard.crlauncher.utils.json.Json;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -75,8 +75,9 @@ public class VersionManager {
         return this.remoteVersions.get(id);
     }
 
-    public List<Version> getRemoteVersions() throws IOException {
-        if (this.remoteVersions.isEmpty()) {
+    public List<Version> getRemoteVersions(boolean forceNetwork) throws IOException {
+        if (this.remoteVersions.isEmpty() || forceNetwork) {
+            this.remoteVersions.clear();
             this.loadRemoteVersions();
         }
 

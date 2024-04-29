@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt;
 
-import me.theentropyshard.crlauncher.java.SystemProperty;
+import me.theentropyshard.crlauncher.utils.SystemProperty;
 
 public final class CosmicQuiltProperties {
     public static final String MAIN_CLASS = "org.quiltmc.loader.impl.launch.knot.KnotClient";

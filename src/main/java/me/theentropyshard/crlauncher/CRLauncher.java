@@ -18,10 +18,11 @@
 
 package me.theentropyshard.crlauncher;
 
+import me.theentropyshard.crlauncher.cli.Args;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
-import me.theentropyshard.crlauncher.gui.AppWindow;
 import me.theentropyshard.crlauncher.gui.Gui;
-import me.theentropyshard.crlauncher.instance.OldInstanceManager;
+import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
+import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import okhttp3.OkHttpClient;
@@ -29,6 +30,7 @@ import okhttp3.Protocol;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
@@ -39,84 +41,93 @@ import java.util.concurrent.TimeUnit;
 public class CRLauncher {
     private static final Logger LOG = LogManager.getLogger(CRLauncher.class);
 
+    public static final String USER_AGENT = BuildConfig.APP_NAME + "/" + BuildConfig.APP_VERSION;
+
     public static final int WIDTH = 960;
     public static final int HEIGHT = 540;
 
-    public static final String NAME = "CRLauncher";
-    public static final String VERSION = "0.1.1";
-    public static final String USER_AGENT = CRLauncher.NAME + "/" + CRLauncher.VERSION;
-
-    public static AppWindow window;
-
     private final Args args;
     private final Path workDir;
-    private final ExecutorService taskPool;
+
+    private final Path librariesDir;
+    private final Path instancesDir;
+    private final Path versionsDir;
+
     private final Path settingsFile;
     private final Settings settings;
+
     private final OkHttpClient httpClient;
+
     private final VersionManager versionManager;
-    private final OldInstanceManager oldInstanceManager;
+    private final InstanceManager instanceManager;
+
+    private final ExecutorService taskPool;
+
     private final Gui gui;
 
-    private boolean shutdown;
+    private volatile boolean shutdown;
+
+    public static JFrame frame;
 
     public CRLauncher(Args args, Path workDir) {
         this.args = args;
         this.workDir = workDir;
 
-        instance = this;
+        Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
-        try {
-            FileUtils.createDirectoryIfNotExists(this.workDir);
-        } catch (IOException e) {
-            LOG.error(e);
-            System.exit(1);
+        if (args.hasUnknownOptions()) {
+            LOG.warn("Unknown options: {}", args.getUnknownOptions());
         }
 
-        this.taskPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        CRLauncher.setInstance(this);
+
+        Path cosmicDir = this.workDir.resolve("cosmic");
+        this.librariesDir = cosmicDir.resolve("libraries");
+        this.instancesDir = cosmicDir.resolve("instances");
+        this.versionsDir = cosmicDir.resolve("versions");
+        this.createDirectories();
 
         this.settingsFile = this.workDir.resolve("settings.json");
+        this.settings = Settings.load(this.settingsFile);
 
-        Settings settings = new Settings();
-        try {
-            settings = settings.load(this.settingsFile);
-        } catch (IOException e) {
-            LOG.error("Unable to load settings, using defaults", e);
-        }
-        this.settings = settings;
-
-        this.httpClient = CRLauncher.createHttpClient(CRLauncher.USER_AGENT);
+        this.httpClient = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new UserAgentInterceptor(CRLauncher.USER_AGENT))
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(5, TimeUnit.MINUTES)
+                .writeTimeout(5, TimeUnit.MINUTES)
+                .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+                .build();
 
         this.versionManager = new VersionManager(this.workDir.resolve("versions"));
-
-        this.oldInstanceManager = new OldInstanceManager(this.workDir.resolve("instances"));
+        
+        this.instanceManager = new InstanceManager(this.instancesDir);
         try {
-            this.oldInstanceManager.load();
+            this.instanceManager.load();
         } catch (IOException e) {
             LOG.error("Unable to load instances", e);
         }
 
-        this.gui = new Gui(this.settings.darkTheme);
+        this.taskPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-        this.gui.getAppWindow().addWindowClosingListener(this::shutdown);
-
-        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+        this.gui = new Gui(BuildConfig.APP_NAME, this.settings.darkTheme);
+        this.gui.getFrame().addWindowListener(new WindowClosingListener(e -> CRLauncher.this.shutdown()));
 
         this.gui.showGui();
     }
 
-    private static OkHttpClient createHttpClient(String userAgent) {
-        return new OkHttpClient.Builder()
-                .addNetworkInterceptor(new UserAgentInterceptor(userAgent))
-                .connectTimeout(60L, TimeUnit.SECONDS)
-                .readTimeout(60L, TimeUnit.SECONDS)
-                .writeTimeout(60L, TimeUnit.SECONDS)
-                .protocols(Collections.singletonList(Protocol.HTTP_1_1))
-                .build();
+    private void createDirectories() {
+        try {
+            FileUtils.createDirectoryIfNotExists(this.workDir);
+            FileUtils.createDirectoryIfNotExists(this.librariesDir);
+            FileUtils.createDirectoryIfNotExists(this.instancesDir);
+            FileUtils.createDirectoryIfNotExists(this.versionsDir);
+        } catch (IOException e) {
+            LOG.error("Unable to create launcher directories", e);
+        }
     }
 
     public void doTask(Runnable r) {
-        this.taskPool.execute(r);
+        this.taskPool.submit(r);
     }
 
     public void shutdown() {
@@ -128,7 +139,7 @@ public class CRLauncher {
 
         this.taskPool.shutdown();
 
-        this.oldInstanceManager.getInstances().forEach(instance -> {
+        this.instanceManager.getInstances().forEach(instance -> {
             try {
                 instance.save();
             } catch (IOException e) {
@@ -136,23 +147,21 @@ public class CRLauncher {
             }
         });
 
-        try {
-            this.settings.save(this.settingsFile);
-        } catch (IOException e) {
-            LOG.error("Exception while saving settings", e);
-        }
+        this.settings.lastInstanceGroup = String.valueOf(this.gui.getPlayView().getModel().getSelectedItem());
+
+        this.settings.save(this.settingsFile);
+
+        System.exit(0);
     }
 
-    public Args getArgs() {
-        return this.args;
+    private static CRLauncher instance;
+
+    public static CRLauncher getInstance() {
+        return CRLauncher.instance;
     }
 
-    public Path getWorkDir() {
-        return this.workDir;
-    }
-
-    public Settings getSettings() {
-        return this.settings;
+    private static void setInstance(CRLauncher instance) {
+        CRLauncher.instance = instance;
     }
 
     public OkHttpClient getHttpClient() {
@@ -163,17 +172,35 @@ public class CRLauncher {
         return this.versionManager;
     }
 
-    public OldInstanceManager getInstanceManager() {
-        return this.oldInstanceManager;
+    public Settings getSettings() {
+        return this.settings;
+    }
+
+    public Args getArgs() {
+        return this.args;
+    }
+
+    public Path getWorkDir() {
+        return this.workDir;
+    }
+
+    public Path getLibrariesDir() {
+        return this.librariesDir;
+    }
+
+    public Path getInstancesDir() {
+        return this.instancesDir;
+    }
+
+    public Path getVersionsDir() {
+        return this.versionsDir;
+    }
+
+    public InstanceManager getInstanceManager() {
+        return this.instanceManager;
     }
 
     public Gui getGui() {
         return this.gui;
-    }
-
-    private static CRLauncher instance;
-
-    public static CRLauncher getInstance() {
-        return instance;
     }
 }

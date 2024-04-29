@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionType;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,19 +37,21 @@ import java.util.concurrent.ExecutionException;
 public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
     private static final Logger LOG = LogManager.getLogger(LoadVersionsWorker.class);
 
-    private final CRVersionsTableModel model;
+    private final CosmicVersionsTableModel model;
     private final AddInstanceDialog dialog;
     private final JTable table;
+    private final boolean forceNetwork;
 
-    public LoadVersionsWorker(CRVersionsTableModel model, AddInstanceDialog dialog, JTable table) {
+    public LoadVersionsWorker(CosmicVersionsTableModel model, AddInstanceDialog dialog, JTable table, boolean forceNetwork) {
         this.model = model;
         this.dialog = dialog;
         this.table = table;
+        this.forceNetwork = forceNetwork;
     }
 
     @Override
     protected List<Version> doInBackground() throws Exception {
-        return CRLauncher.getInstance().getVersionManager().getRemoteVersions();
+        return CRLauncher.getInstance().getVersionManager().getRemoteVersions(this.forceNetwork);
     }
 
     @Override
@@ -74,7 +77,7 @@ public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
             this.model.addRow(rowData);
         }
 
-        TableRowSorter<CRVersionsTableModel> rowSorter = new TableRowSorter<>(this.model);
+        TableRowSorter<CosmicVersionsTableModel> rowSorter = new TableRowSorter<>(this.model);
 
         this.dialog.getPreAlphasBox().addActionListener(e -> rowSorter.sort());
 
@@ -85,5 +88,7 @@ public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
         this.table.setRowSorter(rowSorter);
 
         this.dialog.getAddButton().setEnabled(true);
+
+        SwingUtils.setJTableColumnsWidth(this.table, 70, 15, 15);
     }
 }

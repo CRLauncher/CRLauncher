@@ -19,8 +19,8 @@
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.java.JavaLocator;
-import me.theentropyshard.crlauncher.java.SystemProperty;
 import me.theentropyshard.crlauncher.utils.ProcessReader;
+import me.theentropyshard.crlauncher.utils.SystemProperty;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

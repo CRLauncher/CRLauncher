@@ -19,14 +19,15 @@
 package me.theentropyshard.crlauncher.instance;
 
 import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.Json;
 import me.theentropyshard.crlauncher.utils.StringUtils;
+import me.theentropyshard.crlauncher.utils.json.Json;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -110,19 +111,19 @@ public class InstanceManager {
         return path;
     }
 
-    private Path getInstanceWorkDir(Instance instance) {
-        String cleanName = FileUtils.sanitizeFileName(instance.getName());
+    private Path getInstanceWorkDir(String suggestedName, String cosmicVersion) {
+        String cleanName = FileUtils.sanitizeFileName(suggestedName);
 
         if (cleanName.isEmpty()) {
-            cleanName = "instance" + instance.getCosmicVersion();
+            cleanName = "instance" + cosmicVersion;
         }
 
         Path freeName;
 
         try {
             freeName = this.findFreeName(cleanName);
-        } catch (Exception e) {
-            LOG.warn("Unable to find free name for instance");
+        } catch (StackOverflowError | Exception e) {
+            LOG.warn("Unable to find free name for instance", e);
 
             freeName = this.workDir.resolve(StringUtils.getRandomString(10));
         }
@@ -130,7 +131,7 @@ public class InstanceManager {
         return freeName;
     }
 
-    public void createInstance(String name, String groupName, String minecraftVersion) throws
+    public void createInstance(String name, String groupName, String cosmicVersion) throws
             IOException,
             InstanceAlreadyExistsException {
 
@@ -138,8 +139,8 @@ public class InstanceManager {
             throw new InstanceAlreadyExistsException(name);
         }
 
-        Instance instance = new Instance(name, groupName, minecraftVersion);
-        instance.setWorkDir(this.getInstanceWorkDir(instance));
+        Instance instance = new Instance(name, groupName, cosmicVersion);
+        instance.setWorkDir(this.getInstanceWorkDir(name, cosmicVersion));
 
         this.cacheInstance(instance);
 
@@ -147,7 +148,7 @@ public class InstanceManager {
         FileUtils.createDirectoryIfNotExists(instance.getCosmicDir());
         FileUtils.createDirectoryIfNotExists(instance.getJarModsDir());
 
-        FileUtils.writeUtf8(instance.getWorkDir().resolve("instance.json"), Json.write(instance));
+        instance.save();
     }
 
     public void removeInstance(String name) throws IOException {
@@ -162,19 +163,26 @@ public class InstanceManager {
         this.uncacheInstance(instance);
     }
 
-    public boolean instanceExists(String name) {
-        Instance instance = this.getInstanceByName(name);
-        if (instance == null) {
-            return false;
-        }
+    public boolean renameInstance(Instance instance, String newName) throws IOException {
+        this.uncacheInstance(instance);
 
-        if (Files.exists(instance.getWorkDir())) {
-            return true;
+        Path newInstanceDir = this.getInstanceWorkDir(newName, instance.getCosmicVersion());
+
+        Files.move(instance.getWorkDir(), newInstanceDir, StandardCopyOption.REPLACE_EXISTING);
+
+        instance.setWorkDir(newInstanceDir);
+
+        boolean invalidName = !newInstanceDir.endsWith(newName);
+
+        if (invalidName) {
+            instance.setName(newInstanceDir.getFileName().toString());
         } else {
-            this.uncacheInstance(instance);
-
-            return false;
+            instance.setName(newName);
         }
+
+        this.cacheInstance(instance);
+
+        return invalidName;
     }
 
     public Instance getInstanceByName(String name) {

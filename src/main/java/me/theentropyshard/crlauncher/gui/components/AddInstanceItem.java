@@ -18,15 +18,15 @@
 
 package me.theentropyshard.crlauncher.gui.components;
 
-import me.theentropyshard.crlauncher.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 
 import java.awt.*;
 
 public final class AddInstanceItem extends InstanceItem {
     public AddInstanceItem() {
-        super(SwingUtils.getIcon("/cross.png"), "");
+        super(SwingUtils.getIcon("/assets/cross.png"), "");
 
-        this.setToolTipText("Add new Cosmic Reach instance");
+        this.setToolTipText("Add new Cosmic instance");
     }
 
     @Override

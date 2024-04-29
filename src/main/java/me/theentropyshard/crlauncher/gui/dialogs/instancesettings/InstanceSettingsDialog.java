@@ -21,13 +21,16 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.*;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.playview.InstancesPanel;
-import me.theentropyshard.crlauncher.instance.OldInstance;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.JarModsTab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.JavaTab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.SettingsTab;
+import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
+import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -35,20 +38,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InstanceSettingsDialog extends AppDialog {
-    private final JTabbedPane tabbedPane;
-    private final List<Tab> tabs;
 
-    public InstanceSettingsDialog(OldInstance oldInstance) {
-        super(CRLauncher.window.getFrame(), "Instance Settings - " + oldInstance.getName());
+    private final JTabbedPane tabbedPane;
+    private final List<SettingsTab> tabs;
+
+    public InstanceSettingsDialog(Instance instance) {
+        super(CRLauncher.frame, "Instance Settings - " + instance.getName());
 
         this.tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
         this.tabbedPane.setPreferredSize(new Dimension(900, 480));
 
+        InputMap inputMap = this.tabbedPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESCAPE");
+
+        ActionMap actionMap = this.tabbedPane.getActionMap();
+        actionMap.put("ESCAPE", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                InstanceSettingsDialog.this.getDialog().dispose();
+            }
+        });
+
         this.tabs = new ArrayList<>();
 
-        this.addTab(new MainTab("Main", oldInstance, this.getDialog()));
-        this.addTab(new JavaTab("Java", oldInstance, this.getDialog()));
-        this.addTab(new ModsTab(oldInstance, this.getDialog()));
+        this.addTab(new JavaTab("Java", instance, this.getDialog()));
+        this.addTab(new JarModsTab(instance, this.getDialog()));
 
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
@@ -64,11 +78,11 @@ public class InstanceSettingsDialog extends AppDialog {
                 InstancesPanel instancesPanel = CRLauncher.getInstance().getGui().getPlayView().getCurrentInstancesPanel();
                 JPanel itemsPanel = instancesPanel.getInstancesPanel();
                 for (Component component : itemsPanel.getComponents()) {
-                    OldInstance associatedOldInstance = ((InstanceItem) component).getAssociatedInstance();
-                    if (associatedOldInstance == oldInstance) {
-                        ((InstanceItem) component).getTextLabel().setText(oldInstance.getName());
+                    Instance associatedInstance = ((InstanceItem) component).getAssociatedInstance();
+                    if (associatedInstance == instance) {
+                        ((InstanceItem) component).getTextLabel().setText(instance.getName());
                         try {
-                            oldInstance.save();
+                            instance.save();
                         } catch (IOException ex) {
                             ex.printStackTrace();
                         }
@@ -82,7 +96,7 @@ public class InstanceSettingsDialog extends AppDialog {
         this.setVisible(true);
     }
 
-    public void addTab(Tab tab) {
+    public void addTab(SettingsTab tab) {
         this.tabs.add(tab);
         this.tabbedPane.addTab(tab.getName(), tab.getRoot());
     }

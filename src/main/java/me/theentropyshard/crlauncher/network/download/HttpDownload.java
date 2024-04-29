@@ -19,17 +19,19 @@
 package me.theentropyshard.crlauncher.network.download;
 
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.HashUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -39,34 +41,66 @@ import java.util.Objects;
 public class HttpDownload {
     private static final Logger LOG = LogManager.getLogger(HttpDownload.class);
 
+    private static final long EXPECTED_SIZE_NOT_SET = -1L;
+
     private OkHttpClient httpClient;
     private final String url;
     private final Path saveAs;
+    private final Path copyTo;
     private final boolean forceDownload;
+    private final String sha256;
+    private final boolean executable;
     private final long expectedSize;
 
-    private HttpDownload(OkHttpClient httpClient, String url, Path saveAs, boolean forceDownload, long expectedSize) {
-        this.httpClient = httpClient;
-        this.url = url;
-        this.saveAs = saveAs;
+    private HttpDownload(OkHttpClient httpClient, String url, Path saveAs, Path copyTo, boolean forceDownload, String sha256, boolean executable, long expectedSize) {
+        this.httpClient = Objects.requireNonNull(httpClient, "httpClient == null");
+        this.url = Objects.requireNonNull(url, "url == null");
+        this.saveAs = Objects.requireNonNull(saveAs, "saveAs == null");
+        this.copyTo = copyTo;
         this.forceDownload = forceDownload;
+        this.sha256 = sha256;
+        this.executable = executable;
         this.expectedSize = expectedSize;
     }
 
+    public Path getSaveAs() {
+        return this.saveAs;
+    }
+
     public void execute() throws IOException {
-        if (this.saveAs == null) {
-            throw new NullPointerException("saveAs == null");
+        boolean needsDownload = false;
+
+        if (Files.exists(this.saveAs)) {
+            long size = Files.size(this.saveAs);
+            boolean hashMatches = HashUtils.sha256(this.saveAs).equals(this.sha256);
+
+            if (this.expectedSize == size) {
+                if (this.sha256 == null) {
+                    return;
+                } else {
+                    if (hashMatches) {
+                        return;
+                    } else {
+                        LOG.debug("File '{}' exists, size matches, but SHA-256 does not match", this.saveAs);
+                    }
+
+                    needsDownload = true;
+                }
+            } else if (this.expectedSize != HttpDownload.EXPECTED_SIZE_NOT_SET) {
+                if (hashMatches) {
+                    LOG.debug("File '{}' exists, SHA-256 matches, but size does not match", this.saveAs);
+                } else {
+                    LOG.debug("File '{}' exists, but size and SHA-256 do not match", this.saveAs);
+                }
+
+                needsDownload = true;
+            }
         }
 
         long size = this.size();
+        boolean partiallyDownloaded = this.expectedSize > size && Files.exists(this.saveAs);
 
-        if (size == this.expectedSize) {
-            return;
-        }
-
-        boolean partiallyDownloaded = this.expectedSize > size;
-
-        if (partiallyDownloaded || this.forceDownload) {
+        if (partiallyDownloaded || this.forceDownload || !Files.exists(this.saveAs) || needsDownload) {
             Request.Builder builder = new Request.Builder()
                     .url(this.url)
                     .get();
@@ -77,25 +111,59 @@ public class HttpDownload {
 
             FileUtils.createDirectoryIfNotExists(this.saveAs.getParent());
 
-            try (Response response = this.httpClient.newCall(builder.build()).execute();
-                 InputStream is = new BufferedInputStream(Objects.requireNonNull(response.body()).byteStream())) {
-                if (partiallyDownloaded && size >= 0) {
-                    try (FileChannel fileChannel = FileChannel.open(this.saveAs, StandardOpenOption.APPEND)) {
-                        fileChannel.transferFrom(Channels.newChannel(is), size, Long.MAX_VALUE);
-                    }
-                } else {
-                    Files.copy(is, this.saveAs, StandardCopyOption.REPLACE_EXISTING);
+            this.downloadFile(builder.build(), partiallyDownloaded, size);
+            this.checkHash();
+
+            if (this.executable) {
+                new File(this.saveAs.toString()).setExecutable(true);
+            }
+
+            this.copyFile();
+        }
+    }
+
+    public void downloadFile(Request request, boolean partiallyDownloaded, long size) throws IOException {
+        try (Response response = this.httpClient.newCall(request).execute();
+             InputStream is = Objects.requireNonNull(response.body()).byteStream()) {
+            if (partiallyDownloaded && size >= 0) {
+                try (FileChannel fileChannel = FileChannel.open(this.saveAs, StandardOpenOption.APPEND);
+                     ReadableByteChannel src = Channels.newChannel(is)) {
+                    fileChannel.transferFrom(src, size, Long.MAX_VALUE);
                 }
+            } else {
+                Files.copy(is, this.saveAs, StandardCopyOption.REPLACE_EXISTING);
             }
         }
     }
 
+    public void checkHash() throws IOException {
+        if (this.sha256 != null) {
+            String sha256 = HashUtils.sha256(this.saveAs);
+            if (!this.sha256.equals(sha256)) {
+                FileUtils.delete(this.saveAs);
+                throw new IOException("SHA-256 does not match for file '" + this.saveAs + "'. Bad file was deleted");
+            }
+        }
+    }
+
+    public void copyFile() throws IOException {
+        if (this.copyTo == null) {
+            return;
+        }
+
+        if (Files.exists(this.copyTo) && Files.size(this.copyTo) == this.expectedSize && HashUtils.sha256(this.copyTo).equals(this.sha256)) {
+            return;
+        }
+
+        Files.copy(this.saveAs, this.copyTo, StandardCopyOption.REPLACE_EXISTING);
+    }
+
     public long size() {
-        if (this.exists()) {
+        if (Files.exists(this.saveAs)) {
             try {
                 return Files.size(this.saveAs);
             } catch (IOException e) {
-                LOG.error(e);
+                LOG.error("Could not get file size of {}", this.saveAs, e);
             }
         }
 
@@ -110,16 +178,15 @@ public class HttpDownload {
         return this.expectedSize;
     }
 
-    public boolean exists() {
-        return this.saveAs != null && Files.exists(this.saveAs);
-    }
-
     public static final class Builder {
         private OkHttpClient httpClient;
         private String url;
         private Path saveAs;
+        private Path copyTo;
+        private String sha256;
         private boolean forceDownload;
-        private long expectedSize;
+        private boolean executable;
+        private long expectedSize = HttpDownload.EXPECTED_SIZE_NOT_SET;
 
         public Builder() {
 
@@ -140,8 +207,23 @@ public class HttpDownload {
             return this;
         }
 
+        public Builder copyTo(Path copyTo) {
+            this.copyTo = copyTo;
+            return this;
+        }
+
         public Builder forceDownload() {
             this.forceDownload = true;
+            return this;
+        }
+
+        public Builder executable(boolean executable) {
+            this.executable = executable;
+            return this;
+        }
+
+        public Builder sha256(String sha256) {
+            this.sha256 = sha256;
             return this;
         }
 
@@ -151,7 +233,11 @@ public class HttpDownload {
         }
 
         public HttpDownload build() {
-            return new HttpDownload(this.httpClient, this.url, this.saveAs, this.forceDownload, this.expectedSize);
+            return new HttpDownload(
+                    this.httpClient, this.url, this.saveAs,
+                    this.copyTo, this.forceDownload, this.sha256,
+                    this.executable, this.expectedSize
+            );
         }
     }
 }

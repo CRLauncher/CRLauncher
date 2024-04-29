@@ -16,23 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
+package me.theentropyshard.crlauncher.gui.view;
 
-import me.theentropyshard.crlauncher.cosmic.version.VersionType;
+import me.theentropyshard.crlauncher.BuildConfig;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class VersionTypeRowFilter extends RowFilter<CosmicVersionsTableModel, Integer> {
-    private final JCheckBox checkBox;
-    private final VersionType versionType;
+public class AboutView extends JPanel {
+    public AboutView() {
+        this.setLayout(new GridBagLayout());
 
-    public VersionTypeRowFilter(JCheckBox checkBox, VersionType versionType) {
-        this.checkBox = checkBox;
-        this.versionType = versionType;
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.fill = GridBagConstraints.VERTICAL;
+
+        this.addLine(this, gbc, String.format("CRLauncher %s - simple Cosmic launcher", BuildConfig.APP_VERSION));
+        this.addLine(this, gbc, "by TheEntropyShard");
+        this.addLine(this, gbc, "More at https://github.com/CRLauncher");
     }
 
-    @Override
-    public boolean include(Entry<? extends CosmicVersionsTableModel, ? extends Integer> entry) {
-        return this.checkBox.isSelected() && entry.getValue(2) == this.versionType;
+    private void addLine(JPanel panel, GridBagConstraints gbc, String text) {
+        gbc.gridy++;
+        panel.add(new JLabel(text), gbc);
     }
 }

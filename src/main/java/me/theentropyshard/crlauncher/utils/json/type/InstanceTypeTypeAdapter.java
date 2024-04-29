@@ -16,20 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.utils;
+package me.theentropyshard.crlauncher.utils.json.type;
+
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import me.theentropyshard.crlauncher.instance.InstanceType;
 
 import java.io.IOException;
 
-public final class ResourceUtils {
-    public static byte[] readToByteArray(String path) throws IOException {
-        return StreamUtils.readToByteArray(ResourceUtils.class.getResourceAsStream(path));
+public class InstanceTypeTypeAdapter extends TypeAdapter<InstanceType> {
+    public InstanceTypeTypeAdapter() {
+
     }
 
-    public static String readToString(String path) throws IOException {
-        return StreamUtils.readToString(ResourceUtils.class.getResourceAsStream(path));
+    @Override
+    public void write(JsonWriter writer, InstanceType type) throws IOException {
+        writer.value(type.getType());
     }
 
-    private ResourceUtils() {
-        throw new UnsupportedOperationException();
+    @Override
+    public InstanceType read(JsonReader reader) throws IOException {
+        return InstanceType.getByType(reader.nextString());
     }
 }

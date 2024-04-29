@@ -23,7 +23,7 @@ import me.theentropyshard.crlauncher.network.HttpRequest;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
-import me.theentropyshard.crlauncher.utils.Json;
+import me.theentropyshard.crlauncher.utils.json.Json;
 import okhttp3.OkHttpClient;
 
 import java.io.IOException;

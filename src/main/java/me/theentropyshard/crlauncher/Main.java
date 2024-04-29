@@ -18,40 +18,20 @@
 
 package me.theentropyshard.crlauncher;
 
-import com.beust.jcommander.JCommander;
+import me.theentropyshard.crlauncher.cli.Args;
 import org.apache.logging.log4j.LogManager;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class Main {
     public static void main(String[] args) {
-        Args theArgs = Main.parseArgs(args);
-        Path workDir = Main.resolveWorkDir(theArgs);
+        Args theArgs = Args.parse(args);
 
-        System.setProperty("crlauncher.logsDir", workDir.resolve("logs").toString());
+        LauncherProperties.LOGS_DIR.install(theArgs.getWorkDir().resolve("logs"));
 
         try {
-            new CRLauncher(theArgs, workDir);
+            new CRLauncher(theArgs, theArgs.getWorkDir());
         } catch (Throwable t) {
             LogManager.getLogger(Main.class).error("Unable to start the launcher", t);
             System.exit(1);
         }
-    }
-
-    private static Args parseArgs(String[] rawArgs) {
-        Args args = new Args();
-        JCommander.newBuilder().addObject(args).build().parse(rawArgs);
-
-        return args;
-    }
-
-    private static Path resolveWorkDir(Args args) {
-        String workDirPath = args.getWorkDirPath();
-
-        return (workDirPath == null || workDirPath.isEmpty() ?
-                Paths.get(System.getProperty("user.dir")) :
-                Paths.get(workDirPath)
-        ).normalize().toAbsolutePath();
     }
 }

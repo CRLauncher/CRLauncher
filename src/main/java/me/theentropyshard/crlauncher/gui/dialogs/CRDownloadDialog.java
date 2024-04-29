@@ -31,7 +31,7 @@ public class CRDownloadDialog extends AppDialog implements ProgressListener {
     private final JLabel stageLabel;
 
     public CRDownloadDialog() {
-        super(CRLauncher.window.getFrame(), "Downloading Cosmic Reach");
+        super(CRLauncher.frame, "Downloading Cosmic Reach");
 
         JPanel root = new JPanel(new BorderLayout());
         root.setPreferredSize(new Dimension(450, 270));

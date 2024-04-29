@@ -16,20 +16,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.utils;
+package me.theentropyshard.crlauncher.gui.utils;
 
-import java.io.IOException;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public final class ResourceUtils {
-    public static byte[] readToByteArray(String path) throws IOException {
-        return StreamUtils.readToByteArray(ResourceUtils.class.getResourceAsStream(path));
+public class MouseClickListener extends MouseAdapter {
+    private final Listener listener;
+
+    public MouseClickListener(Listener listener) {
+        this.listener = listener;
     }
 
-    public static String readToString(String path) throws IOException {
-        return StreamUtils.readToString(ResourceUtils.class.getResourceAsStream(path));
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        this.listener.onMouseClicked(e);
     }
 
-    private ResourceUtils() {
-        throw new UnsupportedOperationException();
+    public interface Listener {
+        void onMouseClicked(MouseEvent e);
     }
 }

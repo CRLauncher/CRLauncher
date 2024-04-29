@@ -16,20 +16,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.utils;
+package me.theentropyshard.crlauncher;
 
-import java.io.IOException;
+import me.theentropyshard.crlauncher.utils.SystemProperty;
 
-public final class ResourceUtils {
-    public static byte[] readToByteArray(String path) throws IOException {
-        return StreamUtils.readToByteArray(ResourceUtils.class.getResourceAsStream(path));
-    }
+public final class LauncherProperties {
+    public static final SystemProperty LOGS_DIR = new SystemProperty("crlauncher.logsDir");
 
-    public static String readToString(String path) throws IOException {
-        return StreamUtils.readToString(ResourceUtils.class.getResourceAsStream(path));
-    }
-
-    private ResourceUtils() {
+    private LauncherProperties() {
         throw new UnsupportedOperationException();
     }
 }

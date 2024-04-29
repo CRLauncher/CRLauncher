@@ -42,9 +42,10 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
     private void extractLoader(Path path) {
         if (!Files.exists(path)) {
             try {
-                ResourceUtils.extractResource("/assets/" + LocationOverrideCosmicLauncher.CR_LOADER_JAR, path);
+                byte[] bytes = ResourceUtils.readToByteArray("/assets/" + LocationOverrideCosmicLauncher.CR_LOADER_JAR);
+                Files.write(path, bytes);
             } catch (IOException e) {
-                LOG.error("Unable to extract {} to {}", LocationOverrideCosmicLauncher.CR_LOADER_JAR, path);
+                LOG.error("Unable to extract {} to {}", LocationOverrideCosmicLauncher.CR_LOADER_JAR, path, e);
             }
         }
     }
@@ -53,10 +54,7 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
     public void buildCommand(List<String> command) {
         super.buildCommand(command);
 
-        Path loaderPath = CRLauncher.getInstance().getWorkDir()
-                .resolve("libraries")
-                .resolve(LocationOverrideCosmicLauncher.CR_LOADER_JAR);
-
+        Path loaderPath = CRLauncher.getInstance().getLibrariesDir().resolve(LocationOverrideCosmicLauncher.CR_LOADER_JAR);
         this.extractLoader(loaderPath);
 
         String gameFilesLocation = this.getGameFilesLocation().toString();

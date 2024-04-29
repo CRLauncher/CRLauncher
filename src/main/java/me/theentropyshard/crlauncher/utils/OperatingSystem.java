@@ -19,14 +19,82 @@
 package me.theentropyshard.crlauncher.utils;
 
 import com.sun.jna.Platform;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Path;
 
 public enum OperatingSystem {
     WINDOWS,
     LINUX,
-    OSX;
+    MACOS,
+    UNKNOWN;
+
+    private static final Logger LOG = LogManager.getLogger(OperatingSystem.class);
+
+    public String getJavaExecutableName() {
+        if (this == OperatingSystem.WINDOWS) {
+            return "javaw.exe";
+        }
+
+        return "java";
+    }
+
+    public static OperatingSystem getCurrent() {
+        if (OperatingSystem.isWindows()) {
+            return OperatingSystem.WINDOWS;
+        } else if (OperatingSystem.isLinux()) {
+            return OperatingSystem.LINUX;
+        } else if (OperatingSystem.isMacOS()) {
+            return OperatingSystem.MACOS;
+        } else {
+            return OperatingSystem.UNKNOWN;
+        }
+    }
+
+    public static void open(Path path) {
+        if (Desktop.isDesktopSupported()) {
+            Desktop desktop = Desktop.getDesktop();
+
+            if (desktop.isSupported(Desktop.Action.OPEN)) {
+                try {
+                    desktop.open(path.toFile());
+                } catch (IllegalArgumentException e) {
+                    LOG.warn("File '{}' does not exist", path);
+                } catch (IOException e) {
+                    LOG.warn("Unable to open '{}' using java.awt.Desktop", path, e);
+                }
+            } else {
+                LOG.warn("Unable to open '{}' using java.awt.Desktop: action 'OPEN' not supported", path);
+            }
+        } else {
+            LOG.warn("java.awt.Desktop not supported. OS: {}", OperatingSystem.getCurrent());
+        }
+    }
+
+    public static void browse(String uri) {
+        if (Desktop.isDesktopSupported()) {
+            Desktop desktop = Desktop.getDesktop();
+
+            if (desktop.isSupported(Desktop.Action.BROWSE)) {
+                try {
+                    desktop.browse(URI.create(uri));
+                } catch (IllegalArgumentException e) {
+                    LOG.warn("URI cannot be converted to URL: {}", uri);
+                } catch (IOException e) {
+                    LOG.warn("Unable to browse '{}' using java.awt.Desktop", uri, e);
+                }
+            } else {
+                LOG.warn("Unable to browse '{}' using java.awt.Desktop: action 'BROWSE' not supported", uri);
+            }
+        } else {
+            LOG.warn("java.awt.Desktop not supported. OS: {}", OperatingSystem.getCurrent());
+        }
+    }
 
     public static boolean isWindows() {
         return Platform.isWindows();
@@ -58,6 +126,14 @@ public enum OperatingSystem {
         }
 
         return "x86";
+    }
+
+    public static String getBits() {
+        if (OperatingSystem.is64Bit()) {
+            return "64";
+        }
+
+        return "32";
     }
 
     public static void copyToClipboard(String text) {

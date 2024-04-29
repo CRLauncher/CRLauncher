@@ -52,10 +52,10 @@ public final class FileUtils {
             return;
         }
 
-        if (Files.isRegularFile(path)) {
-            Files.delete(path);
-        } else {
+        if (Files.isDirectory(path)) {
             Files.walkFileTree(path, FileUtils.DELETE_VISITOR);
+        } else {
+            Files.delete(path);
         }
     }
 
@@ -85,7 +85,7 @@ public final class FileUtils {
             throw new IOException(file + " exists, but is not a file");
         }
 
-        FileUtils.createDirectoryIfNotExists(file.getParent());
+        Files.createDirectories(file.getParent());
         Files.write(file, s.getBytes(StandardCharsets.UTF_8));
     }
 

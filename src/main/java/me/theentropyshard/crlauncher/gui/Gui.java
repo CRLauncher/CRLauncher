@@ -22,35 +22,51 @@ import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
-import me.theentropyshard.crlauncher.gui.playview.InstancesPanel;
-import me.theentropyshard.crlauncher.gui.playview.PlayView;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.view.AboutView;
+import me.theentropyshard.crlauncher.gui.view.SettingsView;
+import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
+import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
+import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
 
 public class Gui {
-    private JTabbedPane viewSelector;
-    private AppWindow appWindow;
+    private final JTabbedPane viewSelector;
+    private final JFrame frame;
+
     private PlayView playView;
 
     private boolean darkTheme;
     private boolean initialized;
 
-    public Gui(boolean darkTheme) {
+    public Gui(String title, boolean darkTheme) {
         this.darkTheme = darkTheme;
-        this.initGui();
-    }
 
-    public void initGui() {
         this.switchTheme();
 
         JDialog.setDefaultLookAndFeelDecorated(true);
         JFrame.setDefaultLookAndFeelDecorated(true);
 
         this.viewSelector = new JTabbedPane(JTabbedPane.LEFT);
-        CRLauncher.window = this.appWindow = new AppWindow(CRLauncher.NAME, CRLauncher.WIDTH, CRLauncher.HEIGHT, this.viewSelector);
-        this.appWindow.getFrame().setGlassPane(new BlockGlassPane());
+
+        CRLauncher.frame = this.frame = new JFrame(title);
+        this.frame.add(this.viewSelector, BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bottomPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, UIManager.getColor("Component.borderColor")));
+        JButton openFolderButton = new JButton("Open launcher folder");
+        openFolderButton.addActionListener(e -> {
+            OperatingSystem.open(CRLauncher.getInstance().getWorkDir());
+        });
+        bottomPanel.add(openFolderButton);
+        this.frame.add(bottomPanel, BorderLayout.SOUTH);
+
+        this.frame.getContentPane().setPreferredSize(new Dimension(CRLauncher.WIDTH, CRLauncher.HEIGHT));
+        this.frame.pack();
+        SwingUtils.centerWindow(this.frame, 0);
     }
 
     public void switchTheme() {
@@ -100,31 +116,11 @@ public class Gui {
         });
     }
 
-    public static void showErrorDialog(String msg) {
-        JOptionPane.showMessageDialog(
-                CRLauncher.window.getFrame(),
-                msg,
-                "Error", JOptionPane.ERROR_MESSAGE
-        );
-    }
-
-    public void enableAfterPlay() {
-        this.getViewSelector().setEnabled(true);
-        this.getPlayView().getHeader().getInstanceGroups().setEnabled(true);
-        this.appWindow.getFrame().getGlassPane().setVisible(false);
-    }
-
-    public void disableBeforePlay() {
-        this.getViewSelector().setEnabled(false);
-        this.getPlayView().getHeader().getInstanceGroups().setEnabled(false);
-        this.appWindow.getFrame().getGlassPane().setVisible(true);
-    }
-
     public void updateLookAndFeel() {
         this.switchTheme();
-        JFrame frame = CRLauncher.window.getFrame();
-        SwingUtilities.updateComponentTreeUI(frame);
-        frame.pack();
+
+        SwingUtilities.updateComponentTreeUI(this.frame);
+        this.frame.pack();
 
         InstancesPanel defaultInstancesPanel = this.playView.getDefaultInstancesPanel();
         defaultInstancesPanel.getScrollPane().setBorder(null);
@@ -138,22 +134,18 @@ public class Gui {
         SwingUtilities.invokeLater(() -> {
             this.playView = new PlayView();
 
-            this.viewSelector.addTab("Play", this.playView.getRoot());
-            this.viewSelector.addTab("Settings", new SettingsView().getRoot());
-            this.viewSelector.addTab("About", new AboutView().getRoot());
+            this.viewSelector.addTab("Play", this.playView);
+            this.viewSelector.addTab("Settings", new SettingsView());
+            this.viewSelector.addTab("About", new AboutView());
 
-            this.appWindow.setVisible(true);
+            this.frame.setVisible(true);
 
             this.initialized = true;
         });
     }
 
-    public JTabbedPane getViewSelector() {
-        return this.viewSelector;
-    }
-
-    public AppWindow getAppWindow() {
-        return this.appWindow;
+    public JFrame getFrame() {
+        return this.frame;
     }
 
     public boolean isDarkTheme() {

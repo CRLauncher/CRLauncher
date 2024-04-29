@@ -16,20 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.utils;
+package me.theentropyshard.crlauncher;
 
-import java.io.IOException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-public final class ResourceUtils {
-    public static byte[] readToByteArray(String path) throws IOException {
-        return StreamUtils.readToByteArray(ResourceUtils.class.getResourceAsStream(path));
+public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
+    private static final Logger LOG = LogManager.getLogger(ExceptionHandler.class);
+
+    public ExceptionHandler() {
+
     }
 
-    public static String readToString(String path) throws IOException {
-        return StreamUtils.readToString(ResourceUtils.class.getResourceAsStream(path));
-    }
-
-    private ResourceUtils() {
-        throw new UnsupportedOperationException();
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        LOG.error("Uncaught exception in thread [{}]", t, e);
     }
 }

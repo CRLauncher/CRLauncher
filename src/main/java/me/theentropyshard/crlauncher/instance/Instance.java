@@ -18,22 +18,34 @@
 
 package me.theentropyshard.crlauncher.instance;
 
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
+import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.Json;
+import me.theentropyshard.crlauncher.utils.json.Json;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Instance {
+    private static final String INSTANCE_FILE_NAME = "instance.json";
+    private static final String COSMIC_DIR_NAME = "cosmic-reach";
+    private static final String JARMODS_DIR_NAME = "jarmods";
+    private static final String FABRIC_MODS_DIR_NAME = "farbicmods";
+    private static final String DISABLED_FABRIC_MODS_DIR_NAME = "disabledfarbicmods";
+    private static final String QUILT_MODS_DIR_NAME = "quiltmods";
+    private static final String DISABLED_QUILT_MODS_DIR_NAME = "disabledquiltmods";
+
     private transient Path workDir;
 
     private String name;
     private String groupName;
     private String cosmicVersion;
     private String javaPath;
+    private String iconPath = "/assets/grass_icon.png";
     private int cosmicWindowWidth;
     private int cosmicWindowHeight;
     private String customWindowString;
@@ -42,25 +54,72 @@ public class Instance {
     private LocalDateTime lastTimePlayed = LocalDateTime.MIN;
     private long lastPlaytime;
     private long totalPlaytime;
-    private List<JarMod> jarMods;
+    private final List<JarMod> jarMods;
+    private List<FabricMod> fabricMods;
+    private List<QuiltMod> quiltMods;
+    private InstanceType type = InstanceType.VANILLA;
+    private String fabricVersion;
+    private String quiltVersion;
 
     public Instance() {
-
+        this(null, null, null);
     }
 
     public Instance(String name, String groupName, String cosmicVersion) {
         this.name = name;
         this.groupName = groupName;
         this.cosmicVersion = cosmicVersion;
+
+        this.jarMods = new ArrayList<>();
     }
 
     public void save() throws IOException {
-        FileUtils.writeUtf8(this.getWorkDir().resolve("instance.json"), Json.write(this));
+        FileUtils.writeUtf8(this.getWorkDir().resolve(Instance.INSTANCE_FILE_NAME), Json.write(this));
     }
 
     public void updatePlaytime(long seconds) {
         this.lastPlaytime = seconds;
         this.totalPlaytime += seconds;
+    }
+
+    public List<FabricMod> getFabricMods() {
+        return this.fabricMods;
+    }
+
+    public void setFabricMods(List<FabricMod> fabricMods) {
+        this.fabricMods = fabricMods;
+    }
+
+    public List<QuiltMod> getQuiltMods() {
+        return this.quiltMods;
+    }
+
+    public void setQuiltMods(List<QuiltMod> quiltMods) {
+        this.quiltMods = quiltMods;
+    }
+
+    public String getFabricVersion() {
+        return this.fabricVersion;
+    }
+
+    public void setFabricVersion(String fabricVersion) {
+        this.fabricVersion = fabricVersion;
+    }
+
+    public String getQuiltVersion() {
+        return this.quiltVersion;
+    }
+
+    public void setQuiltVersion(String quiltVersion) {
+        this.quiltVersion = quiltVersion;
+    }
+
+    public InstanceType getType() {
+        return this.type;
+    }
+
+    public void setType(InstanceType type) {
+        this.type = type;
     }
 
     public Path getWorkDir() {
@@ -72,23 +131,31 @@ public class Instance {
     }
 
     public Path getCosmicDir() {
-        return this.workDir.resolve("cosmic-reach");
+        return this.workDir.resolve(Instance.COSMIC_DIR_NAME);
     }
 
     public Path getJarModsDir() {
-        return this.workDir.resolve("jarmods");
-    }
-
-    public Path getFabricModsDir() {
-        return this.workDir.resolve("fabricmods");
+        return this.workDir.resolve(Instance.JARMODS_DIR_NAME);
     }
 
     public List<JarMod> getJarMods() {
         return this.jarMods;
     }
 
-    public void setJarMods(List<JarMod> jarMods) {
-        this.jarMods = jarMods;
+    public Path getFabricModsDir() {
+        return this.workDir.resolve(Instance.FABRIC_MODS_DIR_NAME);
+    }
+
+    public Path getDisabledFabricModsDir() {
+        return this.workDir.resolve(Instance.DISABLED_FABRIC_MODS_DIR_NAME);
+    }
+
+    public Path getQuiltModsDir() {
+        return this.workDir.resolve(Instance.QUILT_MODS_DIR_NAME);
+    }
+
+    public Path getDisabledQuiltModsDir() {
+        return this.workDir.resolve(Instance.DISABLED_QUILT_MODS_DIR_NAME);
     }
 
     public String getName() {
@@ -121,6 +188,14 @@ public class Instance {
 
     public void setJavaPath(String javaPath) {
         this.javaPath = javaPath;
+    }
+
+    public String getIconPath() {
+        return this.iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
     }
 
     public int getCosmicWindowWidth() {

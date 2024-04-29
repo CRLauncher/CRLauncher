@@ -24,19 +24,34 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.HexFormat;
 
 public final class HashUtils {
-    public static String sha256(Path file) throws IOException {
+    public static byte[] hash(Path file, String algorithm) throws IOException {
         try (InputStream inputStream = Files.newInputStream(file)) {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            MessageDigest md = MessageDigest.getInstance(algorithm);
 
-            md.update(inputStream.readAllBytes());
+            byte[] buffer = new byte[4096];
 
-            return HexFormat.of().formatHex(md.digest());
+            int numRead;
+            while ((numRead = inputStream.read(buffer)) != -1) {
+                md.update(buffer, 0, numRead);
+            }
+
+            return md.digest();
         } catch (NoSuchAlgorithmException ex) {
-            throw new IOException("SHA-256 algorithm is not available in your JRE", ex);
+            throw new IOException(algorithm + " algorithm is not available in your JRE", ex);
         }
+    }
+
+    public static String sha256(Path file) throws IOException {
+        byte[] mdBytes = HashUtils.hash(file, "SHA-256");
+
+        StringBuilder sb = new StringBuilder();
+        for (byte b : mdBytes) {
+            sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
+        }
+
+        return sb.toString();
     }
 
     private HashUtils() {

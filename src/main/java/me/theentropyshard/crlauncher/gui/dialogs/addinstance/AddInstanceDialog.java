@@ -21,26 +21,49 @@ package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
-import me.theentropyshard.crlauncher.gui.playview.PlayView;
-import me.theentropyshard.crlauncher.instance.OldInstanceManager;
-import me.theentropyshard.crlauncher.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
+import me.theentropyshard.crlauncher.instance.InstanceAlreadyExistsException;
+import me.theentropyshard.crlauncher.instance.InstanceManager;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class AddInstanceDialog extends AppDialog {
+    private static final Logger LOG = LogManager.getLogger(AddInstanceDialog.class);
+
     private final JTextField nameField;
     private final JTextField groupField;
     private final JButton addButton;
     private final JCheckBox preAlphasBox;
 
+    private boolean nameEdited;
+
     public AddInstanceDialog(PlayView playView, String groupName) {
-        super(CRLauncher.window.getFrame(), "Add New Instance");
+        super(CRLauncher.frame, "Add New Instance");
 
         JPanel root = new JPanel(new BorderLayout());
+
+        InputMap inputMap = root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESCAPE");
+
+        ActionMap actionMap = root.getActionMap();
+        actionMap.put("ESCAPE", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddInstanceDialog.this.getDialog().dispose();
+            }
+        });
 
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(new EmptyBorder(10, 10, 5, 10));
@@ -60,6 +83,12 @@ public class AddInstanceDialog extends AppDialog {
         headerPanelRightPanel.setLayout(new GridLayout(2, 1));
 
         this.nameField = new JTextField();
+        this.nameField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                AddInstanceDialog.this.nameEdited = true;
+            }
+        });
         headerPanelRightPanel.add(this.nameField);
 
         this.groupField = new JTextField(groupName);
@@ -71,18 +100,47 @@ public class AddInstanceDialog extends AppDialog {
         root.add(headerPanel, BorderLayout.NORTH);
 
         JTable versionsTable = new JTable();
-        CRVersionsTableModel tableModel = new CRVersionsTableModel(this, versionsTable);
+        versionsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+                if (c instanceof JLabel) {
+                    if (column == 0) {
+                        ((JLabel) c).setHorizontalAlignment(JLabel.LEFT);
+                    } else {
+                        ((JLabel) c).setHorizontalAlignment(JLabel.CENTER);
+                    }
+                }
+
+                return c;
+            }
+        });
+        SwingUtils.setJTableColumnsWidth(versionsTable, 70, 15, 15);
+        versionsTable.getTableHeader().setEnabled(false);
+        versionsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        CosmicVersionsTableModel tableModel = new CosmicVersionsTableModel(this, versionsTable);
         versionsTable.setModel(tableModel);
 
-        ListSelectionModel selectionModel = versionsTable.getSelectionModel();
-        selectionModel.addListSelectionListener(e -> {
+        versionsTable.getSelectionModel().addListSelectionListener(e -> {
+            if (this.nameEdited) {
+                return;
+            }
+
             int selectedRow = versionsTable.getSelectedRow();
-            selectedRow = versionsTable.convertRowIndexToModel(selectedRow);
-            String mcVersion = String.valueOf(versionsTable.getModel().getValueAt(selectedRow, 0));
-            this.nameField.setText(mcVersion);
+
+            if (selectedRow != -1) {
+                selectedRow = versionsTable.convertRowIndexToModel(selectedRow);
+                this.nameField.setText(String.valueOf(versionsTable.getModel().getValueAt(selectedRow, 0)));
+            }
         });
 
-        JScrollPane scrollPane = new JScrollPane(versionsTable);
+        JScrollPane scrollPane = new JScrollPane(
+                versionsTable,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
 
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new GridBagLayout());
@@ -98,7 +156,7 @@ public class AddInstanceDialog extends AppDialog {
 
         gbc.anchor = GridBagConstraints.WEST;
 
-        this.preAlphasBox = new JCheckBox("Pre-Alphas", true);
+        this.preAlphasBox = new JCheckBox("Pre-Alpha", true);
         JCheckBox experimentsBox = new JCheckBox("Experiments");
 
         gbc.gridy++;
@@ -114,58 +172,88 @@ public class AddInstanceDialog extends AppDialog {
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         centerPanel.add(filterPanel, BorderLayout.EAST);
 
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel buttonsPanel = new JPanel(new BorderLayout());
+
+        FlowLayout leftLayout = new FlowLayout(FlowLayout.LEFT);
+        leftLayout.setHgap(0);
+        leftLayout.setVgap(0);
+
+        JPanel leftButtonsPanel = new JPanel(leftLayout);
+        buttonsPanel.add(leftButtonsPanel, BorderLayout.WEST);
+
+        JButton refreshManifest = new JButton("Refresh");
+        refreshManifest.addActionListener(e -> {
+            tableModel.reload(true);
+            root.revalidate();
+        });
+
+        leftButtonsPanel.add(refreshManifest);
+
+        FlowLayout rightLayout = new FlowLayout(FlowLayout.RIGHT);
+        rightLayout.setHgap(10);
+        rightLayout.setVgap(0);
+
+        JPanel rightButtonsPanel = new JPanel(rightLayout);
+        buttonsPanel.add(rightButtonsPanel, BorderLayout.EAST);
+
         this.addButton = new JButton("Add");
+        this.getDialog().getRootPane().setDefaultButton(this.addButton);
         this.addButton.setEnabled(false);
         this.addButton.addActionListener(e -> {
             String instanceName = this.nameField.getText();
             if (instanceName.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(
+                MessageBox.showErrorMessage(
                         AddInstanceDialog.this.getDialog(),
-                        "Instance name cannot be empty",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
+                        "Instance name cannot be empty"
                 );
+
                 return;
             }
 
             if (versionsTable.getSelectedRow() == -1) {
-                JOptionPane.showMessageDialog(
+                MessageBox.showErrorMessage(
                         AddInstanceDialog.this.getDialog(),
-                        "Minecraft version is not selected",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
+                        "Cosmic version is not selected"
                 );
+
                 return;
             }
 
             String chosenGroupName = this.groupField.getText();
-            playView.addInstanceItem(new InstanceItem(SwingUtils.getIcon("/cosmic_logo_x32.png"), instanceName), chosenGroupName);
+            playView.addInstanceItem(new InstanceItem(SwingUtils.getIcon("/assets/grass_icon.png"), instanceName), chosenGroupName);
             this.getDialog().dispose();
             TableModel model = versionsTable.getModel();
             int selectedRow = versionsTable.getSelectedRow();
             selectedRow = versionsTable.convertRowIndexToModel(selectedRow);
             String mcVersion = String.valueOf(model.getValueAt(selectedRow, 0));
             CRLauncher.getInstance().doTask(() -> {
-                OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
+                InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
+
                 try {
-                    oldInstanceManager.createInstance(instanceName, chosenGroupName, mcVersion);
+                    instanceManager.createInstance(instanceName, chosenGroupName, mcVersion);
+                } catch (InstanceAlreadyExistsException ex) {
+                    MessageBox.showErrorMessage(
+                            AddInstanceDialog.this.getDialog(),
+                            ex.getMessage()
+                    );
+
+                    LOG.warn(ex);
                 } catch (IOException ex) {
-                    throw new RuntimeException("Unable to create new instance", ex);
+                    LOG.error("Unable to create new instance", ex);
                 }
             });
         });
-        buttonsPanel.add(this.addButton);
+        rightButtonsPanel.add(this.addButton);
         JButton cancelButton = new JButton("Cancel");
         cancelButton.addActionListener(e -> {
             this.getDialog().dispose();
         });
-        buttonsPanel.add(cancelButton);
-        buttonsPanel.setBorder(new EmptyBorder(0, 10, 6, 6));
+        rightButtonsPanel.add(cancelButton);
+        buttonsPanel.setBorder(new EmptyBorder(6, 10, 10, 0));
         root.add(buttonsPanel, BorderLayout.SOUTH);
 
         root.add(centerPanel, BorderLayout.CENTER);
-        root.setPreferredSize(new Dimension(800, 600));
+        root.setPreferredSize(new Dimension(900, 480));
 
         this.setResizable(false);
         this.setContent(root);

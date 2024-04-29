@@ -18,7 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs;
 
-import me.theentropyshard.crlauncher.utils.SwingUtils;
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -32,7 +33,11 @@ public abstract class AppDialog {
     }
 
     public void center(int screen) {
-        SwingUtils.centerWindow(this.dialog, screen);
+        if (CRLauncher.getInstance().getSettings().dialogRelativeToParent) {
+            this.dialog.setLocationRelativeTo(CRLauncher.frame);
+        } else {
+            SwingUtils.centerWindow(this.dialog, screen);
+        }
     }
 
     public void setVisible(boolean visible) {

@@ -18,11 +18,13 @@
 
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricProperties;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 import net.lingala.zip4j.ZipFile;
@@ -109,7 +111,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
         if (fabricJar == null) {
             LOG.error("Cannot find fabric modloader jar in {}", loaderDir);
-            Gui.showErrorDialog("Cannot find fabric modloader jar in " + loaderDir);
+            MessageBox.showErrorMessage(CRLauncher.frame, "Cannot find fabric modloader jar in " + loaderDir);
 
             return null;
         }
@@ -123,7 +125,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
         Path depsDir = loaderDir.resolve("deps");
         if (!Files.exists(depsDir)) {
             LOG.error("Cannot find fabric modloader dependencies in {}", depsDir);
-            Gui.showErrorDialog("Cannot find fabric modloader dependencies in " + depsDir);
+            MessageBox.showErrorMessage(CRLauncher.frame, "Cannot find fabric modloader dependencies in " + depsDir);
 
             return classpath;
         }

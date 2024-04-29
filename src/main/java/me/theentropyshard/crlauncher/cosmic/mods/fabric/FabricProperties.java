@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.fabric;
 
-import me.theentropyshard.crlauncher.java.SystemProperty;
+import me.theentropyshard.crlauncher.utils.SystemProperty;
 
 public final class FabricProperties {
     public static final String MAIN_CLASS = "net.fabricmc.loader.launch.knot.KnotClient";

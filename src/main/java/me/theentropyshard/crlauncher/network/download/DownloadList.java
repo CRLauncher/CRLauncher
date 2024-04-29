@@ -21,6 +21,8 @@ package me.theentropyshard.crlauncher.network.download;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
 import okhttp3.OkHttpClient;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class DownloadList {
+    private static final Logger LOG = LogManager.getLogger(DownloadList.class);
+
     public static final int MAX_CONNECTIONS = 8;
 
     private final DownloadListener downloadListener;
@@ -49,6 +53,11 @@ public class DownloadList {
 
     public synchronized void add(HttpDownload download) {
         this.totalSize += download.expectedSize();
+        if (download.size() != -1L) {
+            this.downloadedBytes.addAndGet(download.size());
+        }
+
+        this.downloads.removeIf(d -> d.getSaveAs().equals(download.getSaveAs()));
         this.downloads.add(download);
     }
 
@@ -64,9 +73,13 @@ public class DownloadList {
         return this.totalSize;
     }
 
-    public synchronized void downloadAll() throws IOException {
+    public synchronized void downloadAll() {
         if (this.finished) {
             throw new IllegalStateException("This download list has already finished downloading. Please consider creating a new one");
+        }
+
+        if (this.size() == 0) {
+            return;
         }
 
         ExecutorService executorService = Executors.newFixedThreadPool(DownloadList.MAX_CONNECTIONS);
@@ -77,8 +90,8 @@ public class DownloadList {
             OkHttpClient httpClient = parent.newBuilder()
                     .addNetworkInterceptor(new ProgressNetworkInterceptor((
                             (contentLength, bytesRead, bytesThisTime, done) -> {
-                                this.downloadListener.updateProgress(this.totalSize, this.downloadedBytes.addAndGet(bytesThisTime));
-                            })))
+                        this.downloadListener.updateProgress(this.totalSize, this.downloadedBytes.addAndGet(bytesThisTime));
+                    })))
                     .build();
             download.setHttpClient(httpClient);
 
@@ -86,7 +99,7 @@ public class DownloadList {
                 try {
                     download.execute();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    LOG.error("Download failed", e);
                 }
             };
 

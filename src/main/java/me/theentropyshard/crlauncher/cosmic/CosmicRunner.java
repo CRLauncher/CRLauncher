@@ -28,9 +28,8 @@ import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
-import me.theentropyshard.crlauncher.instance.OldInstance;
-import me.theentropyshard.crlauncher.instance.OldInstanceManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import net.lingala.zip4j.ZipFile;
@@ -53,12 +52,12 @@ import java.util.function.Predicate;
 public class CosmicRunner extends Thread {
     private static final Logger LOG = LogManager.getLogger(CosmicRunner.class);
 
-    private final OldInstance oldInstance;
+    private final Instance instance;
 
     private Path clientCopyTmp;
 
-    public CosmicRunner(OldInstance oldInstance) {
-        this.oldInstance = oldInstance;
+    public CosmicRunner(Instance instance) {
+        this.instance = instance;
 
         this.setName("Cosmic Reach run thread");
     }
@@ -68,24 +67,23 @@ public class CosmicRunner extends Thread {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
         try {
-            Version version = versionManager.getVersion(this.oldInstance.getCrVersion());
+            Version version = versionManager.getVersion(this.instance.getCosmicVersion());
 
             CRDownloadDialog dialog = new CRDownloadDialog();
             SwingUtilities.invokeLater(() -> dialog.setVisible(true));
             versionManager.downloadVersion(version, dialog);
             SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
 
-            OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
-            Path saveDirPath = oldInstanceManager.getCosmicDir(this.oldInstance);
+            Path saveDirPath = this.instance.getCosmicDir();
 
             Path versionsDir = CRLauncher.getInstance().getWorkDir().resolve("versions");
             Path clientPath = versionsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
 
-            this.oldInstance.setLastTimePlayed(LocalDateTime.now());
+            this.instance.setLastTimePlayed(LocalDateTime.now());
 
             CosmicLauncher launcher;
 
-            if (this.oldInstance.getType() == InstanceType.VANILLA) {
+            if (this.instance.getType() == InstanceType.VANILLA) {
                 clientPath = this.applyJarMods(version, versionsDir);
 
                 launcher = CosmicLauncherFactory.getLauncher(
@@ -94,7 +92,7 @@ public class CosmicRunner extends Thread {
                         saveDirPath,
                         clientPath
                 );
-            } else if (this.oldInstance.getType() == InstanceType.FABRIC) {
+            } else if (this.instance.getType() == InstanceType.FABRIC) {
                 this.updateFabricMods();
 
                 launcher = CosmicLauncherFactory.getLauncher(
@@ -102,10 +100,10 @@ public class CosmicRunner extends Thread {
                         saveDirPath,
                         saveDirPath,
                         clientPath,
-                        oldInstanceManager.getFabricModsDir(this.oldInstance),
-                        this.oldInstance.getFabricVersion()
+                        this.instance.getFabricModsDir(),
+                        this.instance.getFabricVersion()
                 );
-            } else if (this.oldInstance.getType() == InstanceType.QUILT) {
+            } else if (this.instance.getType() == InstanceType.QUILT) {
                 this.updateQuiltMods();
 
                 launcher = CosmicLauncherFactory.getLauncher(
@@ -113,11 +111,11 @@ public class CosmicRunner extends Thread {
                         saveDirPath,
                         saveDirPath,
                         clientPath,
-                        oldInstanceManager.getQuiltModsDir(this.oldInstance),
-                        this.oldInstance.getQuiltVersion()
+                        this.instance.getQuiltModsDir(),
+                        this.instance.getQuiltVersion()
                 );
             } else {
-                throw new IllegalArgumentException("Unknown instance type: " + this.oldInstance.getType());
+                throw new IllegalArgumentException("Unknown instance type: " + this.instance.getType());
             }
 
             long start = System.currentTimeMillis();
@@ -134,9 +132,8 @@ public class CosmicRunner extends Thread {
                 LOG.info("You played for " + timePlayed + "!");
             }
 
-            this.oldInstance.setTotalPlayedForSeconds(this.oldInstance.getTotalPlayedForSeconds() + timePlayedSeconds);
-            this.oldInstance.setLastPlayedForSeconds(timePlayedSeconds);
-            this.oldInstance.save();
+            this.instance.updatePlaytime(timePlayedSeconds);
+            this.instance.save();
         } catch (Exception e) {
             LOG.error("Exception occurred while trying to start Cosmic Reach", e);
         } finally {
@@ -153,17 +150,14 @@ public class CosmicRunner extends Thread {
     private Path applyJarMods(Version version, Path clientsDir) {
         Path originalClientPath = clientsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
 
-        List<JarMod> jarMods = this.oldInstance.getJarMods();
+        List<JarMod> jarMods = this.instance.getJarMods();
 
         if (jarMods == null || jarMods.isEmpty() || jarMods.stream().noneMatch(JarMod::isActive)) {
             return originalClientPath;
         } else {
             try {
-                OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
-                Path instanceDir = oldInstanceManager.getInstanceDir(this.oldInstance);
-                Path copyOfClient = Files.copy(originalClientPath, instanceDir
+                this.clientCopyTmp = Files.copy(originalClientPath, this.instance.getWorkDir()
                         .resolve(originalClientPath.getFileName().toString() + System.currentTimeMillis() + ".jar"));
-                this.clientCopyTmp = copyOfClient;
 
                 List<File> zipFilesToMerge = new ArrayList<>();
 
@@ -175,9 +169,9 @@ public class CosmicRunner extends Thread {
                     zipFilesToMerge.add(Paths.get(jarMod.getFullPath()).toFile());
                 }
 
-                try (ZipFile copyZip = new ZipFile(copyOfClient.toFile())) {
+                try (ZipFile copyZip = new ZipFile(this.clientCopyTmp.toFile())) {
                     for (File modFile : zipFilesToMerge) {
-                        Path unpackDir = instanceDir.resolve(modFile.getName().replace(".", "_"));
+                        Path unpackDir = this.instance.getWorkDir().resolve(modFile.getName().replace(".", "_"));
                         try (ZipFile modZip = new ZipFile(modFile)) {
                             if (Files.exists(unpackDir)) {
                                 FileUtils.delete(unpackDir);
@@ -201,7 +195,7 @@ public class CosmicRunner extends Thread {
                     }
                 }
 
-                return copyOfClient;
+                return this.clientCopyTmp;
             } catch (IOException e) {
                 LOG.error("Exception while applying jar mods", e);
             }
@@ -211,12 +205,11 @@ public class CosmicRunner extends Thread {
     }
 
     private void updateFabricMods() throws IOException {
-        OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
-        List<FabricMod> fabricMods = this.oldInstance.getFabricMods();
+        List<FabricMod> fabricMods = this.instance.getFabricMods();
 
         if (fabricMods != null && !fabricMods.isEmpty() && fabricMods.stream().anyMatch(FabricMod::isActive)) {
-            Path modsDir = oldInstanceManager.getFabricModsDir(this.oldInstance);
-            Path disabledModsDir = oldInstanceManager.getCosmicDir(this.oldInstance).resolve("disabled_fabric_mods");
+            Path modsDir = this.instance.getFabricModsDir();
+            Path disabledModsDir = this.instance.getDisabledFabricModsDir();
 
             FileUtils.createDirectoryIfNotExists(modsDir);
             FileUtils.createDirectoryIfNotExists(disabledModsDir);
@@ -240,12 +233,11 @@ public class CosmicRunner extends Thread {
     }
 
     private void updateQuiltMods() throws IOException {
-        OldInstanceManager oldInstanceManager = CRLauncher.getInstance().getInstanceManager();
-        List<QuiltMod> quiltMods = this.oldInstance.getQuiltMods();
+        List<QuiltMod> quiltMods = this.instance.getQuiltMods();
 
         if (quiltMods != null && !quiltMods.isEmpty() && quiltMods.stream().anyMatch(QuiltMod::isActive)) {
-            Path modsDir = oldInstanceManager.getFabricModsDir(this.oldInstance);
-            Path disabledModsDir = oldInstanceManager.getCosmicDir(this.oldInstance).resolve("disabled_quilt_mods");
+            Path modsDir = this.instance.getQuiltModsDir();
+            Path disabledModsDir = this.instance.getDisabledQuiltModsDir();
 
             FileUtils.createDirectoryIfNotExists(modsDir);
             FileUtils.createDirectoryIfNotExists(disabledModsDir);
