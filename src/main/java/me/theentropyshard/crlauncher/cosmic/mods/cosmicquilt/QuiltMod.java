@@ -18,63 +18,51 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt;
 
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+import java.util.Map;
+
 public class QuiltMod {
-    private String filePath;
-    private String name;
-    private String version;
-    private String description;
-    private String id;
-    private boolean active;
+    public String filePath;
+    public boolean active;
 
-    public QuiltMod() {
+    @SerializedName("schema_version")
+    public int schemaVersion;
 
-    }
+    @SerializedName("quilt_loader")
+    public QuiltLoader quiltLoader;
 
-    public String getFilePath() {
-        return this.filePath;
-    }
+    public String mixin;
 
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
+    public static final class QuiltLoader {
+        public String group;
+        public String id;
+        public String version;
+        public String intermediate_mappings;
+        public Metadata metadata;
+        public Map<String, String> entrypoints;
+        public List<Depend> depends;
 
-    public String getName() {
-        return this.name;
-    }
+        public static class Contact {
+            public String homepage;
+            public String issues;
+            public String sources;
+            public String wiki;
+        }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+        public static class Depend {
+            public String id;
+            public String versions;
+        }
 
-    public String getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public boolean isActive() {
-        return this.active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+        public static class Metadata {
+            public String name;
+            public String description;
+            public Map<String, String> contributors;
+            public String license;
+            public Contact contact;
+            public String icon;
+        }
     }
 }

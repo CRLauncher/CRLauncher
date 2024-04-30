@@ -21,7 +21,6 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quil
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
-import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -42,8 +41,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class QuiltModsView extends JPanel {
     private static final Logger LOG = LogManager.getLogger(QuiltModsView.class);
@@ -81,7 +80,7 @@ public class QuiltModsView extends JPanel {
 
                         settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
 
-                        List<QuiltMod> fabricMods = instance.getQuiltMods();
+                        List<QuiltMod> quiltMods = instance.getQuiltMods();
 
                         Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
 
@@ -90,22 +89,41 @@ public class QuiltModsView extends JPanel {
                             FileHeader fileHeader = file.getFileHeader("quilt.mod.json");
                             if (fileHeader == null) {
                                 LOG.warn("{} does not contain 'quilt.mod.json'", jarModPath);
-                                MessageBox.showErrorMessage(CRLauncher.frame, jarModPath + " is not a valid Quilt mod");
-                                return null;
+
+                                mod = new QuiltMod();
+                                mod.quiltLoader = new QuiltMod.QuiltLoader();
+                                mod.quiltLoader.metadata = new QuiltMod.QuiltLoader.Metadata();
+                                mod.quiltLoader.id = UUID.randomUUID().toString();
+                                mod.filePath = jarModPath.toString();
+                                mod.active = true;
+                                mod.quiltLoader.metadata.name = jarModPath.getFileName().toString();
+                                mod.quiltLoader.version = "<unknown>";
+                                mod.quiltLoader.metadata.description = "<unknown>";
+
+                                if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.id.equals(mod.quiltLoader.id))) {
+                                    MessageBox.showErrorMessage(CRLauncher.frame, "Mod with id '" + mod.quiltLoader.id + "' already added!");
+                                    return null;
+                                }
+
+                                quiltMods.add(mod);
+                                QuiltModsView.this.quiltModsModel.add(mod);
+                            } else {
+                                String json = StreamUtils.readToString(file.getInputStream(fileHeader));
+                                mod = Json.parse(json, QuiltMod.class);
+
+                                if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.id.equals(mod.quiltLoader.id))) {
+                                    MessageBox.showErrorMessage(CRLauncher.frame, "Mod with id '" + mod.quiltLoader.id + "' already added!");
+                                    return null;
+                                }
+
+                                mod.active = true;
+                                quiltMods.add(mod);
+
+                                QuiltModsView.this.quiltModsModel.add(mod);
                             }
-
-                            String json = StreamUtils.readToString(file.getInputStream(fileHeader));
-                            mod = Json.parse(json, QuiltMod.class);
-
-                            if (fabricMods.stream().anyMatch(fabricMod -> fabricMod.getId().equals(mod.getId()))) {
-                                MessageBox.showErrorMessage(CRLauncher.frame, "Mod with id '" + mod.getId() + "' already added!");
-                                return null;
-                            }
-
-                            mod.setActive(true);
-                            fabricMods.add(mod);
-
-                            QuiltModsView.this.quiltModsModel.add(mod);
+                        } catch (Exception e) {
+                            LOG.error("Unexpected error", e);
+                            return null;
                         }
 
                         Path quiltModsDir = instance.getQuiltModsDir();
@@ -117,7 +135,7 @@ public class QuiltModsView extends JPanel {
                             FileUtils.delete(modPathInFolder);
                         }
 
-                        mod.setFilePath(modPathInFolder.toString());
+                        mod.filePath = modPathInFolder.toString();
 
                         Files.copy(jarModPath, modPathInFolder);
                     }
@@ -158,7 +176,7 @@ public class QuiltModsView extends JPanel {
             this.quiltModsModel.removeRow(selectedRow);
             instance.getQuiltMods().remove(fabricMod);
 
-            Path modFile = Paths.get(fabricMod.getFilePath());
+            Path modFile = Paths.get(fabricMod.filePath);
 
             if (Files.exists(modFile)) {
                 try {
@@ -174,31 +192,46 @@ public class QuiltModsView extends JPanel {
         new SwingWorker<Void, Void>() {
             @Override
             protected Void doInBackground() throws Exception {
-                List<QuiltMod> fabricMods = instance.getQuiltMods();
+                List<QuiltMod> quiltMods = instance.getQuiltMods();
 
-                Path fabricModsDir = instance.getQuiltModsDir();
+                Path quiltModsDir = instance.getQuiltModsDir();
 
-                for (Path modFile : FileUtils.list(fabricModsDir)) {
-
+                for (Path modFile : FileUtils.list(quiltModsDir)) {
                     try (ZipFile file = new ZipFile(modFile.toFile())) {
                         FileHeader fileHeader = file.getFileHeader("quilt.mod.json");
                         if (fileHeader == null) {
                             LOG.warn("{} does not contain 'quilt.mod.json'", modFile);
-                            continue;
+
+                            QuiltMod mod = new QuiltMod();
+                            mod.quiltLoader = new QuiltMod.QuiltLoader();
+                            mod.quiltLoader.metadata = new QuiltMod.QuiltLoader.Metadata();
+                            mod.quiltLoader.id = UUID.randomUUID().toString();
+                            mod.filePath = modFile.toString();
+                            mod.active = true;
+                            mod.quiltLoader.metadata.name = modFile.getFileName().toString();
+                            mod.quiltLoader.version = "<unknown>";
+                            mod.quiltLoader.metadata.description = "<unknown>";
+
+                            if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.id.equals(mod.quiltLoader.id))) {
+                                continue;
+                            }
+
+                            quiltMods.add(mod);
+                            QuiltModsView.this.quiltModsModel.add(mod);
+                        } else {
+                            String json = StreamUtils.readToString(file.getInputStream(fileHeader));
+                            QuiltMod mod = Json.parse(json, QuiltMod.class);
+
+                            if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.id.equals(mod.quiltLoader.id))) {
+                                continue;
+                            }
+
+                            quiltMods.add(mod);
+                            mod.filePath = modFile.toString();
+                            mod.active = true;
+
+                            QuiltModsView.this.quiltModsModel.add(mod);
                         }
-
-                        String json = StreamUtils.readToString(file.getInputStream(fileHeader));
-                        QuiltMod mod = Json.parse(json, QuiltMod.class);
-
-                        if (fabricMods.stream().anyMatch(fabricMod -> fabricMod.getId().equals(mod.getId()))) {
-                            continue;
-                        }
-
-                        fabricMods.add(mod);
-                        mod.setFilePath(modFile.toString());
-
-                        mod.setActive(true);
-                        QuiltModsView.this.quiltModsModel.add(mod);
                     }
                 }
 

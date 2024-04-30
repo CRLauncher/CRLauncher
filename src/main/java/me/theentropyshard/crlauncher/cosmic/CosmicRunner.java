@@ -242,16 +242,16 @@ public class CosmicRunner extends Thread {
             FileUtils.createDirectoryIfNotExists(modsDir);
             FileUtils.createDirectoryIfNotExists(disabledModsDir);
 
-            for (QuiltMod mod : quiltMods.stream().filter(Predicate.not(QuiltMod::isActive)).toList()) {
-                Path filePath = Paths.get(mod.getFilePath());
+            for (QuiltMod mod : quiltMods.stream().filter(Predicate.not(q -> q.active)).toList()) {
+                Path filePath = Paths.get(mod.filePath);
                 if (Files.exists(filePath)) {
                     Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
                     Files.delete(filePath);
                 }
             }
 
-            for (QuiltMod mod : quiltMods.stream().filter(QuiltMod::isActive).toList()) {
-                Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
+            for (QuiltMod mod : quiltMods.stream().filter(q -> q.active).toList()) {
+                Path filePath = disabledModsDir.resolve(Paths.get(mod.filePath).getFileName());
                 if (Files.exists(filePath)) {
                     Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
                     Files.delete(filePath);

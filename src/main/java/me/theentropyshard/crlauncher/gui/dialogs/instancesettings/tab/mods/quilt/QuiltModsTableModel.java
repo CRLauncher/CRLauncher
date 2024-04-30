@@ -60,10 +60,10 @@ public class QuiltModsTableModel extends AbstractTableModel {
         QuiltMod quiltMod = this.quiltMods.get(rowIndex);
 
         return switch (columnIndex) {
-            case 0 -> quiltMod.getName();
-            case 1 -> quiltMod.getVersion();
-            case 2 -> quiltMod.getDescription();
-            case 3 -> quiltMod.isActive();
+            case 0 -> quiltMod.quiltLoader.metadata.name;
+            case 1 -> quiltMod.quiltLoader.version;
+            case 2 -> quiltMod.quiltLoader.metadata.description;
+            case 3 -> quiltMod.active;
             default -> null;
         };
     }
@@ -79,7 +79,7 @@ public class QuiltModsTableModel extends AbstractTableModel {
         }
 
         boolean isSelected = (Boolean) aValue;
-        this.quiltModAt(rowIndex).setActive(isSelected);
+        this.quiltModAt(rowIndex).active = isSelected;
 
         this.fireTableCellUpdated(rowIndex, columnIndex);
     }
