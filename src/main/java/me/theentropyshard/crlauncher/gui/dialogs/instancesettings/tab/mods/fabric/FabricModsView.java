@@ -82,10 +82,6 @@ public class FabricModsView extends JPanel {
                         settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
 
                         List<FabricMod> fabricMods = instance.getFabricMods();
-                        if (fabricMods == null) {
-                            fabricMods = new ArrayList<>();
-                            instance.setFabricMods(fabricMods);
-                        }
 
                         Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
 
@@ -179,10 +175,6 @@ public class FabricModsView extends JPanel {
             @Override
             protected Void doInBackground() throws Exception {
                 List<FabricMod> fabricMods = instance.getFabricMods();
-                if (fabricMods == null) {
-                    fabricMods = new ArrayList<>();
-                    instance.setFabricMods(fabricMods);
-                }
 
                 Path fabricModsDir = instance.getFabricModsDir();
 

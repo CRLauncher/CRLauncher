@@ -34,8 +34,8 @@ public class Instance {
     private static final String INSTANCE_FILE_NAME = "instance.json";
     private static final String COSMIC_DIR_NAME = "cosmic-reach";
     private static final String JARMODS_DIR_NAME = "jarmods";
-    private static final String FABRIC_MODS_DIR_NAME = "farbicmods";
-    private static final String DISABLED_FABRIC_MODS_DIR_NAME = "disabledfarbicmods";
+    private static final String FABRIC_MODS_DIR_NAME = "fabricmods";
+    private static final String DISABLED_FABRIC_MODS_DIR_NAME = "disabledfabricmods";
     private static final String QUILT_MODS_DIR_NAME = "quiltmods";
     private static final String DISABLED_QUILT_MODS_DIR_NAME = "disabledquiltmods";
 
@@ -55,8 +55,8 @@ public class Instance {
     private long lastPlaytime;
     private long totalPlaytime;
     private final List<JarMod> jarMods;
-    private List<FabricMod> fabricMods;
-    private List<QuiltMod> quiltMods;
+    private final List<FabricMod> fabricMods;
+    private final List<QuiltMod> quiltMods;
     private InstanceType type = InstanceType.VANILLA;
     private String fabricVersion;
     private String quiltVersion;
@@ -71,6 +71,8 @@ public class Instance {
         this.cosmicVersion = cosmicVersion;
 
         this.jarMods = new ArrayList<>();
+        this.fabricMods = new ArrayList<>();
+        this.quiltMods = new ArrayList<>();
     }
 
     public void save() throws IOException {
@@ -86,16 +88,8 @@ public class Instance {
         return this.fabricMods;
     }
 
-    public void setFabricMods(List<FabricMod> fabricMods) {
-        this.fabricMods = fabricMods;
-    }
-
     public List<QuiltMod> getQuiltMods() {
         return this.quiltMods;
-    }
-
-    public void setQuiltMods(List<QuiltMod> quiltMods) {
-        this.quiltMods = quiltMods;
     }
 
     public String getFabricVersion() {

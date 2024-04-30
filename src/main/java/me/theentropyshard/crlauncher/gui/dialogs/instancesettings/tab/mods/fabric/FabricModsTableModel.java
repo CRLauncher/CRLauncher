@@ -32,11 +32,7 @@ public class FabricModsTableModel extends AbstractTableModel {
     private final List<FabricMod> fabricMods;
 
     public FabricModsTableModel(Instance oldInstance) {
-        if (oldInstance.getFabricMods() == null) {
-            this.fabricMods = new ArrayList<>();
-        } else {
-            this.fabricMods = new ArrayList<>(oldInstance.getFabricMods());
-        }
+        this.fabricMods = new ArrayList<>(oldInstance.getFabricMods());
     }
 
     @Override

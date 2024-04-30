@@ -207,7 +207,7 @@ public class CosmicRunner extends Thread {
     private void updateFabricMods() throws IOException {
         List<FabricMod> fabricMods = this.instance.getFabricMods();
 
-        if (fabricMods != null && !fabricMods.isEmpty() && fabricMods.stream().anyMatch(FabricMod::isActive)) {
+        if (!fabricMods.isEmpty()) {
             Path modsDir = this.instance.getFabricModsDir();
             Path disabledModsDir = this.instance.getDisabledFabricModsDir();
 
@@ -235,7 +235,7 @@ public class CosmicRunner extends Thread {
     private void updateQuiltMods() throws IOException {
         List<QuiltMod> quiltMods = this.instance.getQuiltMods();
 
-        if (quiltMods != null && !quiltMods.isEmpty() && quiltMods.stream().anyMatch(QuiltMod::isActive)) {
+        if (!quiltMods.isEmpty()) {
             Path modsDir = this.instance.getQuiltModsDir();
             Path disabledModsDir = this.instance.getDisabledQuiltModsDir();
 

@@ -32,11 +32,7 @@ public class QuiltModsTableModel extends AbstractTableModel {
     private final List<QuiltMod> quiltMods;
 
     public QuiltModsTableModel(Instance oldInstance) {
-        if (oldInstance.getQuiltMods() == null) {
-            this.quiltMods = new ArrayList<>();
-        } else {
-            this.quiltMods = new ArrayList<>(oldInstance.getQuiltMods());
-        }
+        this.quiltMods = new ArrayList<>(oldInstance.getQuiltMods());
     }
 
     @Override
