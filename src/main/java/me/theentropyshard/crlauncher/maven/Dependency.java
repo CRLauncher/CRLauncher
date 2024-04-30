@@ -16,18 +16,8 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt;
+package me.theentropyshard.crlauncher.maven;
 
-import me.theentropyshard.crlauncher.utils.SystemProperty;
+public record Dependency(String groupId, String artifactId, String version) {
 
-public final class CosmicQuiltProperties {
-    public static final String MAIN_CLASS = "org.quiltmc.loader.impl.launch.knot.KnotClient";
-
-    public static final SystemProperty LAUNCH_DIR = new SystemProperty("cosmicquilt.launchDir");
-    public static final SystemProperty GAME_JAR_PATH = new SystemProperty("loader.gameJarPath");
-    public static final SystemProperty MODS_FOLDER = new SystemProperty("loader.modsDir");
-
-    private CosmicQuiltProperties() {
-        throw new UnsupportedOperationException();
-    }
 }
