@@ -9,24 +9,31 @@ CRLauncher - an unofficial launcher for [Cosmic Reach](https://finalforeach.itch
 
 ### Quick Start
 
-You can either download a prebuilt jar from [Releases](https://github.com/CRLauncher/CRLauncher/releases) page, or, build it yourself. To build CRLauncher you need at least JDK 17 and
-[Apache Maven](https://maven.apache.org/):
+You can either download a prebuilt jar from [Releases](https://github.com/CRLauncher/CRLauncher/releases) page, or build it yourself. To do that you will need at least JDK 17:
 ```shell
-git clone https://github.com/CRLauncher/CRLauncher
-cd CRLauncher
-mvn clean package
+$ git clone https://github.com/CRLauncher/CRLauncher
+$ cd CRLauncher
+$ gradlew shadowJar
+# Or, for clean build 
+$ gradlew clean shadowJar
 ```
 
 Done! To run the launcher, just do:
 ```shell
-java -jar target/CRLauncher-0.2.0.jar
+$ java -jar build/libs/CRLauncher-0.2.0.jar
 ```
 
 If you want to change the location of launcher's files, add `--workDir` argument:
 ```shell
-java -jar target/CRLauncher-0.2.0.jar --workDir C:\Users\User\Documents\CRLauncher
+$ java -jar build/libs/CRLauncher-0.2.0.jar --workDir C:\Users\User\Documents\CRLauncher
 ```
+
+Or you can use the `--useJarLocation` argument, which will make the launcher use the jar's location instead. In that case the `--workDir` argument will be ignored:
+```shell
+$ java -jar build/libs/CRLauncher-0.2.0.jar --useJarLocation
+```
+This way the launcher will create its files in build/libs
 
 
 ### Plans:
- - Add a way to automatically install fabric
+ - Add support for CRM-1 mod repositories
