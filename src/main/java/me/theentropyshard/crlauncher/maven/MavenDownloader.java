@@ -46,10 +46,12 @@ public class MavenDownloader {
     };
 
     public static void downloadRelease(String version, Path saveDir, Path cqPath, List<HttpDownload> downloads) throws IOException {
+        String jarUrl = MavenDownloader.QUILT_LOADER_DOWNLOAD.formatted(version, "cosmic-quilt-%s.jar".formatted(version));
+
         HttpDownload cqDownload = new HttpDownload.Builder()
                 .saveAs(cqPath)
                 .httpClient(CRLauncher.getInstance().getHttpClient())
-                .url(MavenDownloader.QUILT_LOADER_DOWNLOAD.formatted(version, "cosmic-quilt-%s.jar".formatted(version)))
+                .url(jarUrl)
                 .build();
 
         downloads.add(cqDownload);

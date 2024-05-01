@@ -49,6 +49,7 @@ public class CRLauncher {
     private final Args args;
     private final Path workDir;
 
+    private final Path cosmicDir;
     private final Path librariesDir;
     private final Path instancesDir;
     private final Path versionsDir;
@@ -83,9 +84,9 @@ public class CRLauncher {
 
         this.librariesDir = this.workDir.resolve("libraries");
 
-        Path cosmicDir = this.workDir.resolve("cosmic");
-        this.instancesDir = cosmicDir.resolve("instances");
-        this.versionsDir = cosmicDir.resolve("versions");
+        this.cosmicDir = this.workDir.resolve("cosmic");
+        this.instancesDir = this.cosmicDir.resolve("instances");
+        this.versionsDir = this.cosmicDir.resolve("versions");
         this.createDirectories();
 
         this.settingsFile = this.workDir.resolve("settings.json");
@@ -183,6 +184,10 @@ public class CRLauncher {
 
     public Path getWorkDir() {
         return this.workDir;
+    }
+
+    public Path getCosmicDir() {
+        return this.cosmicDir;
     }
 
     public Path getLibrariesDir() {

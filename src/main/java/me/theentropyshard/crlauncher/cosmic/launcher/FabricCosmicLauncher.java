@@ -51,44 +51,47 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
     private void downloadFabricLoader(Path loaderDir, String version) {
         try {
+            if (Files.exists(loaderDir) && FileUtils.countFiles(loaderDir) != 0) {
+                return;
+            }
+
             Path loaderArchivePath = loaderDir.resolve("fabric_loader_%s.zip".formatted(version));
 
-            if (!Files.exists(loaderDir)) {
-                FileUtils.createDirectoryIfNotExists(loaderDir);
+            FileUtils.createDirectoryIfNotExists(loaderDir);
 
-                CRDownloadDialog downloadDialog = new CRDownloadDialog();
-                downloadDialog.setStage("Downloading Fabric mod loader...");
+            CRDownloadDialog downloadDialog = new CRDownloadDialog();
+            downloadDialog.setStage("Downloading Fabric mod loader...");
 
-                SwingUtilities.invokeLater(() -> downloadDialog.setVisible(true));
+            SwingUtilities.invokeLater(() -> downloadDialog.setVisible(true));
 
-                GithubReleaseDownloader downloader = new GithubReleaseDownloader();
+            GithubReleaseDownloader downloader = new GithubReleaseDownloader();
 
-                List<GithubReleaseResponse> allReleases = downloader.getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");
-                GithubReleaseResponse release = ListUtils.search(allReleases, resp -> resp.tag_name.equals(version));
+            List<GithubReleaseResponse> allReleases =
+                    downloader.getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");
+            GithubReleaseResponse release = ListUtils.search(allReleases, resp -> resp.tag_name.equals(version));
 
-                if (release == null) {
-                    LOG.error("Could find version {}", version);
-
-                    SwingUtilities.invokeLater(() -> downloadDialog.getDialog().dispose());
-
-                    return;
-                }
-
-                downloader.downloadRelease(
-                        loaderArchivePath,
-                        release,
-                        0,
-                        downloadDialog
-                );
+            if (release == null) {
+                LOG.error("Could find version {}", version);
 
                 SwingUtilities.invokeLater(() -> downloadDialog.getDialog().dispose());
 
-                try (ZipFile loaderArchive = new ZipFile(loaderArchivePath.toFile())) {
-                    loaderArchive.removeFile("launch.bat");
-                    loaderArchive.removeFile("launch.sh");
+                return;
+            }
 
-                    loaderArchive.extractAll(loaderDir.toString());
-                }
+            downloader.downloadRelease(
+                    loaderArchivePath,
+                    release,
+                    0,
+                    downloadDialog
+            );
+
+            SwingUtilities.invokeLater(() -> downloadDialog.getDialog().dispose());
+
+            try (ZipFile loaderArchive = new ZipFile(loaderArchivePath.toFile())) {
+                loaderArchive.removeFile("launch.bat");
+                loaderArchive.removeFile("launch.sh");
+
+                loaderArchive.extractAll(loaderDir.toString());
             }
         } catch (IOException e) {
             LOG.error("Exception while downloading Fabric loader", e);
@@ -125,7 +128,8 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
         Path depsDir = loaderDir.resolve("deps");
         if (!Files.exists(depsDir)) {
             LOG.error("Cannot find fabric modloader dependencies in {}", depsDir);
-            MessageBox.showErrorMessage(CRLauncher.frame, "Cannot find fabric modloader dependencies in " + depsDir);
+            MessageBox.showErrorMessage(CRLauncher.frame,
+                    "Cannot find fabric modloader dependencies in " + depsDir);
 
             return classpath;
         }

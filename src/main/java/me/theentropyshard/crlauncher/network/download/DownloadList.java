@@ -52,7 +52,9 @@ public class DownloadList {
     }
 
     public synchronized void add(HttpDownload download) {
-        this.totalSize += download.expectedSize();
+        long totalSize = download.expectedSize();
+        this.totalSize += totalSize > 0 ? totalSize : 0;
+
         if (download.size() != -1L) {
             this.downloadedBytes.addAndGet(download.size());
         }

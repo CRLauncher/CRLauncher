@@ -51,8 +51,11 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
 
     private void downloadCosmicQuilt(Path quiltDir, String version) {
         try {
+            if (Files.exists(quiltDir) && FileUtils.countFiles(quiltDir) != 0) {
+                return;
+            }
+
             CRDownloadDialog dialog = new CRDownloadDialog();
-            dialog.setStage("Downloading Cosmic Quilt...");
 
             SwingUtilities.invokeLater(() -> dialog.setVisible(true));
 
@@ -62,9 +65,13 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
 
             List<HttpDownload> downloads = new ArrayList<>();
 
-            MavenDownloader.downloadRelease(version, quiltDir.resolve("deps"), quiltDir.resolve("cosmic-quilt-%s.jar".formatted(version)), downloads);
+            dialog.setStage("Collecting Cosmic Quilt...");
+            MavenDownloader.downloadRelease(version, quiltDir.resolve("deps"),
+                    quiltDir.resolve("cosmic-quilt-%s.jar".formatted(version)), downloads);
 
             downloadList.addAll(downloads);
+
+            dialog.setStage("Downloading Cosmic Quilt...");
             downloadList.downloadAll();
 
             SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
@@ -103,8 +110,7 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
 
         super.buildCommand(command);
 
-        // download CQ
-        Path cosmicQuiltDir = this.getGameFilesLocation().resolve("cosmic_quilt_%s".formatted(this.version));
+        Path cosmicQuiltDir = CRLauncher.getInstance().getCosmicDir().resolve("cosmic_quilt_%s".formatted(this.version));
         this.downloadCosmicQuilt(cosmicQuiltDir, this.version);
 
         command.add("-classpath");
@@ -112,8 +118,6 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
         List<String> classpath = new ArrayList<>();
         classpath.add(String.valueOf(cosmicQuiltDir.resolve("cosmic-quilt-%s.jar".formatted(this.version))));
         classpath.addAll(this.resolveDependencies(cosmicQuiltDir));
-
-        // add CQ classpath
 
         command.add(String.join(File.pathSeparator, classpath));
         command.add(CosmicQuiltProperties.MAIN_CLASS);

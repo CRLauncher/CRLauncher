@@ -57,8 +57,12 @@ public class CRDownloadDialog extends AppDialog implements ProgressListener {
         this.progressBar.setMinimum(0);
         this.progressBar.setMaximum((int) contentLength);
         this.progressBar.setValue((int) downloadedBytes);
-        this.progressBar.setString(MathUtils.round(downloadedBytes / 1024.0D / 1024.0D, 2) +
-                " MiB / " + MathUtils.round(contentLength / 1024.0D / 1024.0D, 2) + " MiB");
+
+        String current = String.valueOf(MathUtils.round(downloadedBytes / 1024.0D / 1024.0D, 2));
+        String total = contentLength == 0 ? "<unknown>" :
+                String.valueOf(MathUtils.round(contentLength / 1024.0D / 1024.0D, 2));
+
+        this.progressBar.setString(current + " MiB / " + total + " MiB");
     }
 
     public void setStage(String stage) {
