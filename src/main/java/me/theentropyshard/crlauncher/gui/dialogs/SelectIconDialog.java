@@ -48,7 +48,7 @@ public class SelectIconDialog extends AppDialog {
             }
         });
 
-        String cosmicPath = "/assets/cosmic_logo_x32.png";
+        String cosmicPath = "/assets/images/cosmic_logo_x32.png";
         JButton cosmicButton = new JButton(SwingUtils.getIcon(cosmicPath));
         cosmicButton.addActionListener(e -> {
             instance.setIconPath(cosmicPath);

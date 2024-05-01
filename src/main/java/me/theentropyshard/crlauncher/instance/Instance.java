@@ -45,7 +45,7 @@ public class Instance {
     private String groupName;
     private String cosmicVersion;
     private String javaPath;
-    private String iconPath = "/assets/cosmic_logo_x32.png";
+    private String iconPath = "/assets/images/cosmic_logo_x32.png";
     private int cosmicWindowWidth;
     private int cosmicWindowHeight;
     private String customWindowString;
