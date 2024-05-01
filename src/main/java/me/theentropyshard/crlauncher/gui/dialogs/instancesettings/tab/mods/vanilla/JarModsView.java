@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vani
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
@@ -30,12 +31,12 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class JarModsView extends JPanel {
     private final JarModsTableModel jarModsTableModel;
+    private final JTable jarModsTable;
     private final JButton deleteModButton;
 
     public JarModsView(Instance instance) {
@@ -45,6 +46,21 @@ public class JarModsView extends JPanel {
         this.add(addJarMod, BorderLayout.NORTH);
 
         this.jarModsTableModel = new JarModsTableModel(instance);
+
+        this.jarModsTable = new JTable(this.jarModsTableModel);
+        this.jarModsTable.getTableHeader().setEnabled(false);
+        this.jarModsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        this.jarModsTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedRow = JarModsView.this.jarModsTable.getSelectedRow();
+                if (selectedRow == -1) {
+                    return;
+                }
+
+                JarModsView.this.deleteModButton.setEnabled(true);
+            }
+        });
 
         addJarMod.addActionListener(e -> {
             new SwingWorker<Void, Void>() {
@@ -91,26 +107,13 @@ public class JarModsView extends JPanel {
 
         this.deleteModButton = new JButton("Delete jar mod");
 
-        JTable jarModsTable = new JTable(this.jarModsTableModel);
-        jarModsTable.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int selectedRow = jarModsTable.getSelectedRow();
-                if (selectedRow == -1) {
-                    return;
-                }
-
-                JarModsView.this.deleteModButton.setEnabled(true);
-            }
-        });
-
-        JScrollPane scrollPane = new JScrollPane(jarModsTable);
+        JScrollPane scrollPane = new JScrollPane(this.jarModsTable);
         scrollPane.setBorder(null);
         this.add(scrollPane, BorderLayout.CENTER);
 
         this.deleteModButton.setEnabled(false);
         this.deleteModButton.addActionListener(e -> {
-            int selectedRow = jarModsTable.getSelectedRow();
+            int selectedRow = this.jarModsTable.getSelectedRow();
             if (selectedRow == -1) {
                 return;
             }

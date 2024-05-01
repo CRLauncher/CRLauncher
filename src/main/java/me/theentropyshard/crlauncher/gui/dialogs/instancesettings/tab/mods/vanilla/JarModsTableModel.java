@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
 
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.table.AbstractTableModel;
@@ -31,11 +32,11 @@ public class JarModsTableModel extends AbstractTableModel {
 
     private final List<JarMod> jarMods;
 
-    public JarModsTableModel(Instance oldInstance) {
-        if (oldInstance.getJarMods() == null) {
+    public JarModsTableModel(Instance instance) {
+        if (instance.getJarMods() == null) {
             this.jarMods = new ArrayList<>();
         } else {
-            this.jarMods = new ArrayList<>(oldInstance.getJarMods());
+            this.jarMods = new ArrayList<>(instance.getJarMods());
         }
     }
 
@@ -62,13 +63,12 @@ public class JarModsTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         JarMod jarMod = this.jarMods.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return jarMod.getName();
-            case 1:
-                return jarMod.isActive();
-        }
-        return null;
+
+        return switch (columnIndex) {
+            case 0 -> jarMod.getName();
+            case 1 -> jarMod.isActive();
+            default -> null;
+        };
     }
 
     @Override
