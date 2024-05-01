@@ -105,11 +105,11 @@ public class AddInstanceDialog extends AppDialog {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                if (c instanceof JLabel) {
+                if (c instanceof JLabel label) {
                     if (column == 0) {
-                        ((JLabel) c).setHorizontalAlignment(JLabel.LEFT);
+                        label.setHorizontalAlignment(JLabel.LEFT);
                     } else {
-                        ((JLabel) c).setHorizontalAlignment(JLabel.CENTER);
+                        label.setHorizontalAlignment(JLabel.CENTER);
                     }
                 }
 

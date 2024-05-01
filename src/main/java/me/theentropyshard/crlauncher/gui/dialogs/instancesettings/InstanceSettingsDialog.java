@@ -29,6 +29,8 @@ import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -44,6 +46,17 @@ public class InstanceSettingsDialog extends AppDialog {
 
         this.tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
         this.tabbedPane.setPreferredSize(new Dimension(900, 480));
+
+        InputMap inputMap = this.tabbedPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESCAPE");
+
+        ActionMap actionMap = this.tabbedPane.getActionMap();
+        actionMap.put("ESCAPE", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                InstanceSettingsDialog.this.getDialog().dispose();
+            }
+        });
 
         this.tabs = new ArrayList<>();
 

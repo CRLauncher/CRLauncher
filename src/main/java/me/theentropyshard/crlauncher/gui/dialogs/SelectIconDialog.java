@@ -20,20 +20,33 @@ package me.theentropyshard.crlauncher.gui.dialogs;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
+import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
 import me.theentropyshard.crlauncher.gui.layouts.WrapLayout;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class SelectIconDialog extends AppDialog {
     public SelectIconDialog(InstanceItem item, Instance instance) {
         super(CRLauncher.frame, "Select an Icon - " + instance.getName());
 
         JPanel root = new JPanel(new WrapLayout(WrapLayout.LEFT, 8, 8));
-
         root.setPreferredSize(new Dimension(280, 180));
+
+        InputMap inputMap = root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "ESCAPE");
+
+        ActionMap actionMap = root.getActionMap();
+        actionMap.put("ESCAPE", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SelectIconDialog.this.getDialog().dispose();
+            }
+        });
 
         String cosmicPath = "/assets/cosmic_logo_x32.png";
         JButton cosmicButton = new JButton(SwingUtils.getIcon(cosmicPath));
@@ -44,26 +57,6 @@ public class SelectIconDialog extends AppDialog {
             this.getDialog().dispose();
         });
         root.add(cosmicButton);
-
-        String grassPath = "/assets/grass_icon.png";
-        JButton grassButton = new JButton(SwingUtils.getIcon(grassPath));
-        grassButton.addActionListener(e -> {
-            instance.setIconPath(grassPath);
-            item.getIconLabel().setIcon(SwingUtils.getIcon(grassPath));
-
-            this.getDialog().dispose();
-        });
-        root.add(grassButton);
-
-        String craftingTablePath = "/assets/crafting_table_icon.png";
-        JButton craftingTableButton = new JButton(SwingUtils.getIcon(craftingTablePath));
-        craftingTableButton.addActionListener(e -> {
-            instance.setIconPath(craftingTablePath);
-            item.getIconLabel().setIcon(SwingUtils.getIcon(craftingTablePath));
-
-            this.getDialog().dispose();
-        });
-        root.add(craftingTableButton);
 
         this.setResizable(false);
         this.setContent(root);
