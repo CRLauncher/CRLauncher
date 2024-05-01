@@ -150,11 +150,13 @@ public class QuiltModsView extends JPanel {
 
         this.deleteModButton = new JButton("Delete Quilt mod");
 
-        JTable fabricModsTable = new JTable(this.quiltModsModel);
-        fabricModsTable.addMouseListener(new MouseAdapter() {
+        JTable quiltModsTable = new JTable(this.quiltModsModel);
+        quiltModsTable.getTableHeader().setEnabled(false);
+        quiltModsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        quiltModsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int selectedRow = fabricModsTable.getSelectedRow();
+                int selectedRow = quiltModsTable.getSelectedRow();
                 if (selectedRow == -1) {
                     return;
                 }
@@ -163,22 +165,22 @@ public class QuiltModsView extends JPanel {
             }
         });
 
-        JScrollPane scrollPane = new JScrollPane(fabricModsTable);
+        JScrollPane scrollPane = new JScrollPane(quiltModsTable);
         scrollPane.setBorder(null);
         this.add(scrollPane, BorderLayout.CENTER);
 
         this.deleteModButton.setEnabled(false);
         this.deleteModButton.addActionListener(e -> {
-            int selectedRow = fabricModsTable.getSelectedRow();
+            int selectedRow = quiltModsTable.getSelectedRow();
             if (selectedRow == -1) {
                 return;
             }
 
-            QuiltMod fabricMod = this.quiltModsModel.quiltModAt(selectedRow);
+            QuiltMod quiltMod = this.quiltModsModel.quiltModAt(selectedRow);
             this.quiltModsModel.removeRow(selectedRow);
-            instance.getQuiltMods().remove(fabricMod);
+            instance.getQuiltMods().remove(quiltMod);
 
-            Path modFile = Paths.get(fabricMod.filePath);
+            Path modFile = Paths.get(quiltMod.filePath);
 
             if (Files.exists(modFile)) {
                 try {
@@ -239,11 +241,6 @@ public class QuiltModsView extends JPanel {
                 }
 
                 return null;
-            }
-
-            @Override
-            protected void done() {
-
             }
         }.execute();
     }

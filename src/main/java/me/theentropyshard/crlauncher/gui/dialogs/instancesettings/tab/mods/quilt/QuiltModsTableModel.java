@@ -31,8 +31,8 @@ public class QuiltModsTableModel extends AbstractTableModel {
 
     private final List<QuiltMod> quiltMods;
 
-    public QuiltModsTableModel(Instance oldInstance) {
-        this.quiltMods = new ArrayList<>(oldInstance.getQuiltMods());
+    public QuiltModsTableModel(Instance instance) {
+        this.quiltMods = new ArrayList<>(instance.getQuiltMods());
     }
 
     @Override
@@ -78,9 +78,7 @@ public class QuiltModsTableModel extends AbstractTableModel {
             return;
         }
 
-        boolean isSelected = (Boolean) aValue;
-        this.quiltModAt(rowIndex).active = isSelected;
-
+        this.quiltModAt(rowIndex).active = (boolean) aValue;
         this.fireTableCellUpdated(rowIndex, columnIndex);
     }
 
