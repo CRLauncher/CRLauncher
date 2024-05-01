@@ -23,6 +23,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,6 +43,25 @@ public final class FileUtils {
             return FileVisitResult.CONTINUE;
         }
     };
+
+    public static int countFiles(Path dir) throws IOException {
+        if (!Files.isDirectory(dir)) {
+            throw new IOException(dir + " expected to be a directory");
+        }
+
+        AtomicInteger count = new AtomicInteger(0);
+
+        Files.walkFileTree(dir, new SimpleFileVisitor<>() {
+            @Override
+            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                count.incrementAndGet();
+
+                return FileVisitResult.CONTINUE;
+            }
+        });
+
+        return count.get();
+    }
 
     public static String sanitizeFileName(String dirtyName) {
         return dirtyName.replaceAll("[^a-zA-Z0-9_.]", "");
