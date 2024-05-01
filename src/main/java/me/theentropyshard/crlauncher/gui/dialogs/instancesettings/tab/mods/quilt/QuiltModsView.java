@@ -100,8 +100,10 @@ public class QuiltModsView extends JPanel {
                                 mod.quiltLoader.version = "<unknown>";
                                 mod.quiltLoader.metadata.description = "<unknown>";
 
-                                if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.id.equals(mod.quiltLoader.id))) {
-                                    MessageBox.showErrorMessage(CRLauncher.frame, "Mod with id '" + mod.quiltLoader.id + "' already added!");
+                                if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.metadata.name
+                                        .equals(mod.quiltLoader.metadata.name))) {
+                                    MessageBox.showErrorMessage(CRLauncher.frame, "Mod with name '" +
+                                            mod.quiltLoader.metadata.name + "' already added!");
                                     return null;
                                 }
 
@@ -212,7 +214,8 @@ public class QuiltModsView extends JPanel {
                             mod.quiltLoader.version = "<unknown>";
                             mod.quiltLoader.metadata.description = "<unknown>";
 
-                            if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.id.equals(mod.quiltLoader.id))) {
+                            if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.metadata.name
+                                    .equals(mod.quiltLoader.metadata.name))) {
                                 continue;
                             }
 
