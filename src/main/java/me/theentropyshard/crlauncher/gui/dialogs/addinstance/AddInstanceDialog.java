@@ -220,7 +220,7 @@ public class AddInstanceDialog extends AppDialog {
             }
 
             String chosenGroupName = this.groupField.getText();
-            playView.addInstanceItem(new InstanceItem(SwingUtils.getIcon("/assets/cosmic_logo_x32.png"), instanceName), chosenGroupName);
+            playView.addInstanceItem(new InstanceItem(SwingUtils.getIcon("/assets/images/cosmic_logo_x32.png"), instanceName), chosenGroupName);
             this.getDialog().dispose();
             TableModel model = versionsTable.getModel();
             int selectedRow = versionsTable.getSelectedRow();
