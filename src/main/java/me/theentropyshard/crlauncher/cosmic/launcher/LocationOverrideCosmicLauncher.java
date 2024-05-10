@@ -19,11 +19,18 @@
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
+import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
+import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.utils.HashUtils;
+import me.theentropyshard.crlauncher.utils.ListUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import me.theentropyshard.crlauncher.utils.ResourceUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -34,20 +41,32 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
 
     private static final String CR_LOADER_VERSION = "0.0.1";
     private static final String CR_LOADER_JAR = "CRLoader-" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION + ".jar";
+    private static final String CR_LOADER_SHA256 = "213128b5e80280af873f1b91cbc4a44515294dc191bb0f46b297c982904dcdbe";
 
     public LocationOverrideCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath) {
         super(runDir, gameFilesLocation, clientPath);
     }
 
-    private void extractLoader(Path path) {
-        if (!Files.exists(path)) {
-            try {
-                byte[] bytes = ResourceUtils.readToByteArray("/assets/" + LocationOverrideCosmicLauncher.CR_LOADER_JAR);
-                Files.write(path, bytes);
-            } catch (IOException e) {
-                LOG.error("Unable to extract {} to {}", LocationOverrideCosmicLauncher.CR_LOADER_JAR, path, e);
-            }
+    private void downloadLoader(Path path) throws IOException {
+        if (Files.exists(path) && HashUtils.sha256(path).equals(LocationOverrideCosmicLauncher.CR_LOADER_SHA256)) {
+            return;
         }
+
+        GithubReleaseDownloader downloader = new GithubReleaseDownloader();
+        List<GithubReleaseResponse> allReleases = downloader.getAllReleases("CRLauncher", "CRLoader");
+        GithubReleaseResponse releaseResponse = ListUtils.search(allReleases, r -> r.tag_name.equals("v" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION));
+        if (releaseResponse == null) {
+            throw new IOException("Could not find release v" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION);
+        }
+
+        CRDownloadDialog dialog = new CRDownloadDialog();
+        dialog.setStage("Downloading " + LocationOverrideCosmicLauncher.CR_LOADER_JAR);
+        SwingUtilities.invokeLater(() -> dialog.setVisible(true));
+
+        GithubReleaseResponse.Asset asset = ListUtils.search(releaseResponse.assets, a -> a.name.equals(LocationOverrideCosmicLauncher.CR_LOADER_JAR));
+        downloader.downloadRelease(path, releaseResponse, releaseResponse.assets.indexOf(asset), dialog);
+
+        SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
     }
 
     @Override
@@ -55,7 +74,11 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
         super.buildCommand(command);
 
         Path loaderPath = CRLauncher.getInstance().getLibrariesDir().resolve(LocationOverrideCosmicLauncher.CR_LOADER_JAR);
-        this.extractLoader(loaderPath);
+        try {
+            this.downloadLoader(loaderPath);
+        } catch (IOException e) {
+            LOG.error("Could not download " + LocationOverrideCosmicLauncher.CR_LOADER_JAR, e);
+        }
 
         String gameFilesLocation = this.getGameFilesLocation().toString();
         if (OperatingSystem.isWindows()) {
