@@ -132,7 +132,7 @@ public class PlayView extends JPanel {
                         } catch (Exception e) {
                             LOG.warn("Could not load icon '{}' for instance '{}'", instance.getIconPath(), instance.getName());
 
-                            String validIconPath = "/assets/images/cosmic_logo_x32.png";
+                            String validIconPath = "/assets/images/icons/cosmic_logo_x32.png";
                             instance.setIconPath(validIconPath);
                             icon = SwingUtils.getIcon(validIconPath);
                         }

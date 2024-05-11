@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher;
 
 import me.theentropyshard.crlauncher.cli.Args;
+import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
@@ -61,6 +62,7 @@ public class CRLauncher {
 
     private final VersionManager versionManager;
     private final InstanceManager instanceManager;
+    private final IconManager iconManager;
 
     private final ExecutorService taskPool;
 
@@ -107,6 +109,16 @@ public class CRLauncher {
             this.instanceManager.load();
         } catch (IOException e) {
             LOG.error("Unable to load instances", e);
+        }
+
+        Path iconsDir = this.cosmicDir.resolve("icons");
+        this.iconManager = new IconManager(iconsDir);
+        try {
+            FileUtils.createDirectoryIfNotExists(iconsDir);
+            this.iconManager.loadIcons();
+            this.iconManager.saveBuiltinIcons();
+        } catch (IOException e) {
+            LOG.error("Unable to load icons", e);
         }
 
         this.taskPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
