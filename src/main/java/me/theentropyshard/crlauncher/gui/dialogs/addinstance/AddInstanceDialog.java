@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -219,8 +220,10 @@ public class AddInstanceDialog extends AppDialog {
                 return;
             }
 
+            IconManager iconManager = CRLauncher.getInstance().getIconManager();
+
             String chosenGroupName = this.groupField.getText();
-            playView.addInstanceItem(new InstanceItem(SwingUtils.getIcon("/assets/images/cosmic_logo_x32.png"), instanceName), chosenGroupName);
+            playView.addInstanceItem(new InstanceItem(iconManager.getIcon("cosmic_logo_x32.png").icon(), instanceName), chosenGroupName);
             this.getDialog().dispose();
             TableModel model = versionsTable.getModel();
             int selectedRow = versionsTable.getSelectedRow();
