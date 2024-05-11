@@ -19,10 +19,9 @@
 package me.theentropyshard.crlauncher.gui.dialogs;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.icon.CosmicIcon;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
-import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
 import me.theentropyshard.crlauncher.gui.layouts.WrapLayout;
-import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
@@ -34,7 +33,7 @@ public class SelectIconDialog extends AppDialog {
     public SelectIconDialog(InstanceItem item, Instance instance) {
         super(CRLauncher.frame, "Select an Icon - " + instance.getName());
 
-        JPanel root = new JPanel(new WrapLayout(WrapLayout.LEFT, 8, 8));
+        JPanel root = new JPanel(new BorderLayout());
         root.setPreferredSize(new Dimension(280, 180));
 
         InputMap inputMap = root.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -48,7 +47,30 @@ public class SelectIconDialog extends AppDialog {
             }
         });
 
-        String cosmicPath = "/assets/images/cosmic_logo_x32.png";
+        JPanel iconButtonsPanel = new JPanel(new WrapLayout(WrapLayout.LEFT, 8, 8));
+        root.add(iconButtonsPanel, BorderLayout.CENTER);
+
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        root.add(buttonsPanel, BorderLayout.SOUTH);
+
+        JButton addIconButton = new JButton("Add Icon");
+        buttonsPanel.add(addIconButton);
+        addIconButton.addActionListener(e -> {
+
+        });
+
+        for (CosmicIcon icon : CRLauncher.getInstance().getIconManager().getIcons()) {
+            JButton cosmicButton = new JButton(icon.icon());
+            cosmicButton.addActionListener(e -> {
+                instance.setIconFileName(icon.fileName());
+                item.getIconLabel().setIcon(icon.icon());
+
+                this.getDialog().dispose();
+            });
+            iconButtonsPanel.add(cosmicButton);
+        }
+
+        /*String cosmicPath = "/assets/images/cosmic_logo_x32.png";
         JButton cosmicButton = new JButton(SwingUtils.getIcon(cosmicPath));
         cosmicButton.addActionListener(e -> {
             instance.setIconPath(cosmicPath);
@@ -56,7 +78,7 @@ public class SelectIconDialog extends AppDialog {
 
             this.getDialog().dispose();
         });
-        root.add(cosmicButton);
+        root.add(cosmicButton);*/
 
         this.setResizable(false);
         this.setContent(root);

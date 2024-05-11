@@ -6,6 +6,8 @@ import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,7 +21,7 @@ public class IconManager {
     private static final Logger LOG = LogManager.getLogger(IconManager.class);
 
     private final Path workDir;
-    private final List<Icon> icons;
+    private final List<CosmicIcon> icons;
 
     public IconManager(Path workDir) {
         this.workDir = workDir;
@@ -64,8 +66,22 @@ public class IconManager {
         }
     }
 
+    public List<CosmicIcon> getIcons() {
+        return this.icons;
+    }
+
     public void loadIcon(Path path) throws IOException {
-        this.icons.add(new ImageIcon(ImageIO.read(Files.newInputStream(path))));
+        BufferedImage bufferedImage = ImageIO.read(Files.newInputStream(path));
+
+        if (bufferedImage.getWidth() != 32 || bufferedImage.getHeight() != 32) {
+            BufferedImage scaledImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = scaledImage.createGraphics();
+            g2d.drawImage(bufferedImage.getScaledInstance(32, 32, BufferedImage.SCALE_FAST), 0, 0, null);
+            g2d.dispose();
+            this.icons.add(new CosmicIcon(path.getFileName().toString(), new ImageIcon(scaledImage)));
+        } else {
+            this.icons.add(new CosmicIcon(path.getFileName().toString(), new ImageIcon(bufferedImage)));
+        }
     }
 
     public void saveIcon(Path iconPath) throws IOException {

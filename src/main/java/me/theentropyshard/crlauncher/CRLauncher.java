@@ -186,6 +186,10 @@ public class CRLauncher {
         return this.versionManager;
     }
 
+    public IconManager getIconManager() {
+        return this.iconManager;
+    }
+
     public Settings getSettings() {
         return this.settings;
     }

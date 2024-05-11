@@ -128,12 +128,12 @@ public class PlayView extends JPanel {
                     for (Instance instance : instances) {
                         Icon icon;
                         try {
-                            icon = SwingUtils.getIcon(instance.getIconPath());
+                            icon = SwingUtils.getIcon(instance.getIconFileName());
                         } catch (Exception e) {
-                            LOG.warn("Could not load icon '{}' for instance '{}'", instance.getIconPath(), instance.getName());
+                            LOG.warn("Could not load icon '{}' for instance '{}'", instance.getIconFileName(), instance.getName());
 
                             String validIconPath = "/assets/images/icons/cosmic_logo_x32.png";
-                            instance.setIconPath(validIconPath);
+                            instance.setIconFileName(validIconPath);
                             icon = SwingUtils.getIcon(validIconPath);
                         }
                         InstanceItem item = new InstanceItem(icon, instance.getName());
