@@ -2,6 +2,7 @@ package me.theentropyshard.crlauncher.cosmic.icon;
 
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -32,25 +33,27 @@ public class IconManager {
     }
 
     public void saveBuiltinIcons() throws IOException {
-        String iconsDir = "/assets/images/icons";
-
-        try {
-            URI uri = Objects.requireNonNull(IconManager.class.getResource(iconsDir)).toURI();
-            Path iconsDirPath;
-            if (uri.getScheme().equals("jar")) {
-                try (FileSystem fileSystem = FileSystems.newFileSystem(uri, Collections.emptyMap())) {
-                    iconsDirPath = fileSystem.getPath(iconsDir);
-                }
-            } else {
-                iconsDirPath = Paths.get(uri);
-            }
-
-            for (Path iconPath : FileUtils.list(iconsDirPath)) {
-                this.saveIcon(iconPath);
-            }
-        } catch (URISyntaxException e) {
-            throw new IOException(e);
+        String cosmicLogo = "cosmic_logo_x32.png";
+        if (Files.exists(this.workDir.resolve(cosmicLogo))) {
+            return;
         }
+
+        Path tempDir = this.workDir.resolve("temp_" + System.currentTimeMillis());
+
+        if (Files.exists(tempDir)) {
+            FileUtils.delete(tempDir);
+        }
+
+        Path tempFile = tempDir.resolve(cosmicLogo);
+        FileUtils.createDirectoryIfNotExists(tempFile.getParent());
+
+        try (InputStream resource = IconManager.class.getResourceAsStream("/assets/images/icons/" + cosmicLogo)) {
+            Files.write(tempFile, Objects.requireNonNull(resource).readAllBytes());
+        }
+
+        this.saveIcon(tempFile);
+
+        FileUtils.delete(tempDir);
     }
 
     public void loadIcons() throws IOException {
