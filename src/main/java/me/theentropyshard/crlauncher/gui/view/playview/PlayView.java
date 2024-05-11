@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.view.playview;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.CosmicRunner;
+import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.gui.components.AddInstanceItem;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.SelectIconDialog;
@@ -31,6 +32,7 @@ import me.theentropyshard.crlauncher.gui.utils.MouseEnterExitListener;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.utils.ListUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import org.apache.logging.log4j.LogManager;
@@ -125,16 +127,18 @@ public class PlayView extends JPanel {
                 try {
                     List<Instance> instances = this.get();
 
+                    IconManager iconManager = CRLauncher.getInstance().getIconManager();
+
                     for (Instance instance : instances) {
                         Icon icon;
                         try {
-                            icon = SwingUtils.getIcon(instance.getIconFileName());
+                            icon = iconManager.getIcon(instance.getIconFileName()).icon();
                         } catch (Exception e) {
                             LOG.warn("Could not load icon '{}' for instance '{}'", instance.getIconFileName(), instance.getName());
 
-                            String validIconPath = "/assets/images/icons/cosmic_logo_x32.png";
+                            String validIconPath = "cosmic_logo_x32.png";
                             instance.setIconFileName(validIconPath);
-                            icon = SwingUtils.getIcon(validIconPath);
+                            icon = iconManager.getIcon(validIconPath).icon();
                         }
                         InstanceItem item = new InstanceItem(icon, instance.getName());
                         PlayView.this.addInstanceItem(item, instance.getGroupName());

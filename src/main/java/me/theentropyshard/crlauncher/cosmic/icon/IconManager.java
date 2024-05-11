@@ -1,6 +1,7 @@
 package me.theentropyshard.crlauncher.cosmic.icon;
 
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.ListUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.*;
@@ -70,27 +73,43 @@ public class IconManager {
         return this.icons;
     }
 
-    public void loadIcon(Path path) throws IOException {
-        BufferedImage bufferedImage = ImageIO.read(Files.newInputStream(path));
+    public CosmicIcon getIcon(String fileName) {
+        return ListUtils.search(this.icons, ico -> ico.fileName().equals(fileName));
+    }
+
+    public CosmicIcon loadIcon(Path path) throws IOException {
+        BufferedImage bufferedImage;
+        try (InputStream input = Files.newInputStream(path)) {
+            bufferedImage = ImageIO.read(input);
+        }
 
         if (bufferedImage.getWidth() != 32 || bufferedImage.getHeight() != 32) {
             BufferedImage scaledImage = new BufferedImage(32, 32, BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2d = scaledImage.createGraphics();
             g2d.drawImage(bufferedImage.getScaledInstance(32, 32, BufferedImage.SCALE_FAST), 0, 0, null);
             g2d.dispose();
-            this.icons.add(new CosmicIcon(path.getFileName().toString(), new ImageIcon(scaledImage)));
+
+            try (OutputStream output = Files.newOutputStream(path)) {
+                ImageIO.write(scaledImage, "PNG", output);
+            }
+
+            CosmicIcon cosmicIcon = new CosmicIcon(path.getFileName().toString(), new ImageIcon(scaledImage));
+            this.icons.add(cosmicIcon);
+            return cosmicIcon;
         } else {
-            this.icons.add(new CosmicIcon(path.getFileName().toString(), new ImageIcon(bufferedImage)));
+            CosmicIcon cosmicIcon = new CosmicIcon(path.getFileName().toString(), new ImageIcon(bufferedImage));
+            this.icons.add(cosmicIcon);
+            return cosmicIcon;
         }
     }
 
-    public void saveIcon(Path iconPath) throws IOException {
+    public CosmicIcon saveIcon(Path iconPath) throws IOException {
         Path copiedIcon = this.workDir.resolve(iconPath.getFileName());
         if (Files.exists(copiedIcon)) {
-            return;
+            return ListUtils.search(this.icons, ico -> ico.fileName().equals(copiedIcon.getFileName().toString()));
         }
         Files.copy(iconPath, copiedIcon);
-        this.loadIcon(copiedIcon);
+        return this.loadIcon(copiedIcon);
     }
 
     public void deleteIcon(String fileName) throws IOException {

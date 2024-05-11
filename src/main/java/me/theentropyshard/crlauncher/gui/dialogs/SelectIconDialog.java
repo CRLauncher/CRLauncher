@@ -19,15 +19,20 @@
 package me.theentropyshard.crlauncher.gui.dialogs;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.icon.CosmicIcon;
+import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.layouts.WrapLayout;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.concurrent.ExecutionException;
 
 public class SelectIconDialog extends AppDialog {
     public SelectIconDialog(InstanceItem item, Instance instance) {
@@ -56,7 +61,58 @@ public class SelectIconDialog extends AppDialog {
         JButton addIconButton = new JButton("Add Icon");
         buttonsPanel.add(addIconButton);
         addIconButton.addActionListener(e -> {
+            new SwingWorker<CosmicIcon, Void>() {
+                @Override
+                protected CosmicIcon doInBackground() throws Exception {
+                    UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setFileFilter(new FileNameExtensionFilter("Images (*.png, *.jpg)", "png", "jpg"));
 
+                    Settings settings = CRLauncher.getInstance().getSettings();
+                    if (settings.lastDir != null && !settings.lastDir.isEmpty()) {
+                        fileChooser.setCurrentDirectory(new File(settings.lastDir));
+                    }
+
+                    int option = fileChooser.showOpenDialog(CRLauncher.frame);
+                    if (option == JFileChooser.APPROVE_OPTION) {
+                        File selectedFile = fileChooser.getSelectedFile();
+                        if (selectedFile == null) {
+                            return null;
+                        }
+
+                        settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
+
+                        IconManager iconManager = CRLauncher.getInstance().getIconManager();
+
+                        return iconManager.saveIcon(selectedFile.toPath());
+                    }
+
+                    UIManager.put("FileChooser.readOnly", Boolean.FALSE);
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+                    CosmicIcon icon;
+                    try {
+                        icon = this.get();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    instance.setIconFileName(icon.fileName());
+                    item.getIconLabel().setIcon(icon.icon());
+
+                    JButton cosmicButton = new JButton(icon.icon());
+                    cosmicButton.addActionListener(e -> {
+                        instance.setIconFileName(icon.fileName());
+                        item.getIconLabel().setIcon(icon.icon());
+
+                        SelectIconDialog.this.getDialog().dispose();
+                    });
+                    iconButtonsPanel.add(cosmicButton);
+                    iconButtonsPanel.revalidate();
+                }
+            }.execute();
         });
 
         for (CosmicIcon icon : CRLauncher.getInstance().getIconManager().getIcons()) {
@@ -69,16 +125,6 @@ public class SelectIconDialog extends AppDialog {
             });
             iconButtonsPanel.add(cosmicButton);
         }
-
-        /*String cosmicPath = "/assets/images/cosmic_logo_x32.png";
-        JButton cosmicButton = new JButton(SwingUtils.getIcon(cosmicPath));
-        cosmicButton.addActionListener(e -> {
-            instance.setIconPath(cosmicPath);
-            item.getIconLabel().setIcon(SwingUtils.getIcon(cosmicPath));
-
-            this.getDialog().dispose();
-        });
-        root.add(cosmicButton);*/
 
         this.setResizable(false);
         this.setContent(root);
