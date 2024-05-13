@@ -43,6 +43,7 @@ public class MavenDownloader {
             "https://maven.quiltmc.org/repository/release/",
             "https://maven.fabricmc.net/",
             "https://repo.spongepowered.org/maven/",
+            "https://jitpack.io/",
     };
 
     public static void downloadRelease(String version, Path saveDir, Path cqPath, List<HttpDownload> downloads) throws IOException {
