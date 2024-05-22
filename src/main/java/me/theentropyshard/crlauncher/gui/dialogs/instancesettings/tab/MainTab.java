@@ -85,7 +85,10 @@ public class MainTab extends Tab {
 
                     return;
                 }
+
+                String cosmicVersion = instance.getCosmicVersion();
                 versions.forEach(versionsCombo::addItem);
+                versionsCombo.setSelectedItem(cosmicVersion);
             }
         }.execute();
 
