@@ -54,6 +54,16 @@ public class CRDownloadDialog extends AppDialog implements ProgressListener {
 
     @Override
     public void update(long contentLength, long downloadedBytes, long bytesThisTime, boolean done) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            this.updateProgress(contentLength, downloadedBytes);
+        } else {
+            SwingUtilities.invokeLater(() -> {
+                this.updateProgress(contentLength, downloadedBytes);
+            });
+        }
+    }
+
+    private void updateProgress(long contentLength, long downloadedBytes) {
         this.progressBar.setMinimum(0);
         this.progressBar.setMaximum((int) contentLength);
         this.progressBar.setValue((int) downloadedBytes);

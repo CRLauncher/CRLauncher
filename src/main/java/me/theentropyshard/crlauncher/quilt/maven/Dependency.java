@@ -16,8 +16,14 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.maven;
+package me.theentropyshard.crlauncher.quilt.maven;
 
 public record Dependency(String groupId, String artifactId, String version) {
+    public String mavenJar() {
+        return this.artifactId + "-" + this.version + ".jar";
+    }
 
+    public String mavenPom() {
+        return this.artifactId + "-" + this.version + ".pom";
+    }
 }

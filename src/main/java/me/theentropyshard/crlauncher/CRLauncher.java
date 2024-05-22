@@ -25,6 +25,7 @@ import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
+import me.theentropyshard.crlauncher.quilt.QuiltManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
@@ -63,6 +64,7 @@ public class CRLauncher {
     private final VersionManager versionManager;
     private final InstanceManager instanceManager;
     private final IconManager iconManager;
+    private final QuiltManager quiltManager;
 
     private final ExecutorService taskPool;
 
@@ -120,6 +122,8 @@ public class CRLauncher {
         } catch (IOException e) {
             LOG.error("Unable to load icons", e);
         }
+
+        this.quiltManager = new QuiltManager(this.workDir.resolve("cosmic_quilt"));
 
         this.taskPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -188,6 +192,10 @@ public class CRLauncher {
 
     public IconManager getIconManager() {
         return this.iconManager;
+    }
+
+    public QuiltManager getQuiltManager() {
+        return this.quiltManager;
     }
 
     public Settings getSettings() {

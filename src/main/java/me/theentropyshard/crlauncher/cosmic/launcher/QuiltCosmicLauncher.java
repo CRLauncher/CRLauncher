@@ -22,9 +22,10 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.CosmicQuiltProperties;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
-import me.theentropyshard.crlauncher.maven.MavenDownloader;
+import me.theentropyshard.crlauncher.quilt.QuiltManager;
+import me.theentropyshard.crlauncher.quilt.maven.Dependency;
+import me.theentropyshard.crlauncher.quilt.maven.MavenDownloader;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
-import me.theentropyshard.crlauncher.network.download.DownloadListener;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import org.apache.logging.log4j.LogManager;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
@@ -49,59 +51,6 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
         this.version = version;
     }
 
-    private void downloadCosmicQuilt(Path quiltDir, String version) {
-        try {
-            if (Files.exists(quiltDir) && FileUtils.countFiles(quiltDir) != 0) {
-                return;
-            }
-
-            CRDownloadDialog dialog = new CRDownloadDialog();
-
-            SwingUtilities.invokeLater(() -> dialog.setVisible(true));
-
-            DownloadList downloadList = new DownloadList((totalSize, downloadedBytes) -> {
-                SwingUtilities.invokeLater(() -> dialog.update(totalSize, downloadedBytes, 0, false));
-            });
-
-            List<HttpDownload> downloads = new ArrayList<>();
-
-            dialog.setStage("Collecting Cosmic Quilt...");
-            MavenDownloader.downloadRelease(version, quiltDir.resolve("deps"),
-                    quiltDir.resolve("cosmic-quilt-%s.jar".formatted(version)), downloads);
-
-            downloadList.addAll(downloads);
-
-            dialog.setStage("Downloading Cosmic Quilt...");
-            downloadList.downloadAll();
-
-            SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
-        } catch (IOException e) {
-            LOG.error("Exception while downloading Cosmic Quilt", e);
-        }
-    }
-
-    private List<String> resolveDependencies(Path loaderDir) {
-        List<String> classpath = new ArrayList<>();
-
-        Path depsDir = loaderDir.resolve("deps");
-        if (!Files.exists(depsDir)) {
-            LOG.error("Cannot find Cosmic Quilt dependencies in {}", depsDir);
-            MessageBox.showErrorMessage(CRLauncher.frame, "Cannot find Cosmic Quilt dependencies in " + depsDir);
-
-            return classpath;
-        }
-
-        try {
-            for (Path dep : FileUtils.list(depsDir)) {
-                classpath.add(dep.toString());
-            }
-        } catch (IOException e) {
-            LOG.error("Cannot list files in {}", depsDir, e);
-        }
-
-        return classpath;
-    }
-
     @Override
     public void buildCommand(List<String> command) {
         this.defineProperty(CosmicQuiltProperties.LAUNCH_DIR.copy(this.getGameFilesLocation()));
@@ -110,16 +59,39 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
 
         super.buildCommand(command);
 
-        Path cosmicQuiltDir = CRLauncher.getInstance().getCosmicDir().resolve("cosmic_quilt_%s".formatted(this.version));
-        this.downloadCosmicQuilt(cosmicQuiltDir, this.version);
+        QuiltManager quiltManager = CRLauncher.getInstance().getQuiltManager();
+
+        try {
+            CRDownloadDialog dialog = new CRDownloadDialog();
+            dialog.setStage("Downloading Cosmic Quilt " + this.version);
+
+            SwingUtilities.invokeLater(() -> dialog.setVisible(true));
+            quiltManager.downloadCosmicQuilt(this.version, dialog);
+            SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
+        } catch (IOException e) {
+            LOG.error("Could not download Cosmic Quilt {}", this.version, e);
+
+            MessageBox.showErrorMessage(
+                    CRLauncher.frame,
+                    "Could not download Cosmic Quilt " + this.version + ": " + e.getMessage()
+            );
+
+            return;
+        }
 
         command.add("-classpath");
+        try {
+            command.add(quiltManager.getClasspathFor(this.version));
+        } catch (IOException e) {
+            LOG.error("Could not get classpath for " + this.version, e);
 
-        List<String> classpath = new ArrayList<>();
-        classpath.add(String.valueOf(cosmicQuiltDir.resolve("cosmic-quilt-%s.jar".formatted(this.version))));
-        classpath.addAll(this.resolveDependencies(cosmicQuiltDir));
+            MessageBox.showErrorMessage(
+                    CRLauncher.frame,
+                    "Could not get classpath for " + this.version + ": " + e.getMessage()
+            );
 
-        command.add(String.join(File.pathSeparator, classpath));
+            return;
+        }
         command.add(CosmicQuiltProperties.MAIN_CLASS);
     }
 }
