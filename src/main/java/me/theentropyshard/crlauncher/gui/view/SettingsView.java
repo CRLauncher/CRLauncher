@@ -68,7 +68,7 @@ public class SettingsView extends JPanel {
         }
 
         {
-            JPanel uiSettings = new JPanel(new GridLayout(1, 1));
+            JPanel uiSettings = new JPanel(new GridLayout(2, 2));
             uiSettings.setBorder(new TitledBorder("UI"));
 
             JLabel dialogPosition = new JLabel("Dialog position: ");
@@ -94,6 +94,14 @@ public class SettingsView extends JPanel {
 
             uiSettings.add(dialogPosition);
             uiSettings.add(position);
+
+            JCheckBox showConsole = new JCheckBox("Show console at startup");
+            showConsole.setSelected(CRLauncher.getInstance().getSettings().showConsoleAtStartup);
+            showConsole.addActionListener(e -> {
+                Settings settings = CRLauncher.getInstance().getSettings();
+                settings.showConsoleAtStartup = !settings.showConsoleAtStartup;
+            });
+            uiSettings.add(showConsole);
 
             gbc.gridy++;
             gbc.weighty = 1;

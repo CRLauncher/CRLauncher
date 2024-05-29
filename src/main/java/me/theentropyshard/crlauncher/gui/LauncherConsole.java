@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui;
 
+import me.theentropyshard.crlauncher.utils.OperatingSystem;
+
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
@@ -41,8 +43,14 @@ public class LauncherConsole {
 
         JScrollPane scrollPane = new JScrollPane(this.textPane);
 
+        JButton copyLogButton = new JButton("Copy log to clipboard");
+        copyLogButton.addActionListener(e -> {
+            OperatingSystem.copyToClipboard(this.textPane.getText());
+        });
+
         this.frame = new JFrame("CRLauncher console");
         this.frame.add(scrollPane, BorderLayout.CENTER);
+        this.frame.add(copyLogButton, BorderLayout.SOUTH);
         this.frame.pack();
         this.frame.setLocation(LauncherConsole.DEFAULT_X, LauncherConsole.DEFAULT_Y);
     }
