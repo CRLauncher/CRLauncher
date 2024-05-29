@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds;
 
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -43,7 +44,7 @@ public class WorldsTableModel extends AbstractTableModel {
 
     private final List<CosmicWorld> worlds;
 
-    public WorldsTableModel(Instance instance) {
+    public WorldsTableModel(JTable table, Instance instance) {
         this.worlds = new ArrayList<>();
 
         new SwingWorker<Void, CosmicWorld>() {
@@ -80,6 +81,7 @@ public class WorldsTableModel extends AbstractTableModel {
             @Override
             protected void done() {
                 WorldsTableModel.this.fireTableDataChanged();
+                SwingUtils.setJTableColumnsWidth(table, 60, 25, 15);
             }
         }.execute();
     }
@@ -120,6 +122,10 @@ public class WorldsTableModel extends AbstractTableModel {
         int index = this.worlds.size();
         this.worlds.add(world);
         this.fireTableRowsInserted(index, index);
+    }
+
+    public CosmicWorld worldAt(int rowIndex) {
+        return this.worlds.get(rowIndex);
     }
 
     public void removeRow(int rowIndex) {
