@@ -29,8 +29,8 @@ import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class JavaTab extends Tab {
-    public JavaTab(String name, Instance instance, JDialog dialog) {
-        super(name, instance, dialog);
+    public JavaTab(Instance instance, JDialog dialog) {
+        super("Java", instance, dialog);
 
         JPanel root = this.getRoot();
         root.setLayout(new GridBagLayout());

@@ -62,7 +62,7 @@ public class InstanceSettingsDialog extends AppDialog {
         this.tabs = new ArrayList<>();
 
         this.addTab(new MainTab(instance, this.getDialog()));
-        this.addTab(new JavaTab("Java", instance, this.getDialog()));
+        this.addTab(new JavaTab(instance, this.getDialog()));
         this.addTab(new ModsTab(instance, this.getDialog()));
 
         this.getDialog().addWindowListener(new WindowAdapter() {
