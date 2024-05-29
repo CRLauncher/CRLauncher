@@ -32,6 +32,8 @@ import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import javax.swing.*;
 import javax.swing.plaf.ColorUIResource;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class Gui {
     private final JTabbedPane viewSelector;
@@ -41,6 +43,7 @@ public class Gui {
 
     private boolean darkTheme;
     private boolean initialized;
+    private boolean consoleOpen;
 
     public Gui(String title, boolean darkTheme) {
         this.darkTheme = darkTheme;
@@ -62,6 +65,31 @@ public class Gui {
             OperatingSystem.open(CRLauncher.getInstance().getWorkDir());
         });
         bottomPanel.add(openFolderButton);
+
+        LauncherConsole console = new LauncherConsole();
+        LauncherConsole.instance = console;
+
+        if (CRLauncher.getInstance().getSettings().showConsoleAtStartup) {
+            console.setVisible(true);
+        }
+
+        JButton consoleButton = new JButton(this.consoleOpen ? "Hide console" : "Show console");
+        consoleButton.addActionListener(e -> {
+            this.consoleOpen = !this.consoleOpen;
+            consoleButton.setText(this.consoleOpen ? "Hide console" : "Show console");
+            console.setVisible(this.consoleOpen);
+        });
+
+        console.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                Gui.this.consoleOpen = !Gui.this.consoleOpen;
+                consoleButton.setText(Gui.this.consoleOpen ? "Hide console" : "Show console");
+            }
+        });
+
+        bottomPanel.add(consoleButton);
+
         this.frame.add(bottomPanel, BorderLayout.SOUTH);
 
         this.frame.getContentPane().setPreferredSize(new Dimension(CRLauncher.WIDTH, CRLauncher.HEIGHT));

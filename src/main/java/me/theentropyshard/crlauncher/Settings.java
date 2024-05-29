@@ -41,6 +41,7 @@ public class Settings {
     public String lastInstanceGroup = "<default>";
     public boolean dialogRelativeToParent = true;
     public boolean settingsDialogUpdateToLatest = true;
+    public boolean showConsoleAtStartup = true;
 
     public Settings() {
 
