@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui;
 import com.formdev.flatlaf.FlatDarculaLaf;
 import com.formdev.flatlaf.FlatIntelliJLaf;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.view.AboutView;
@@ -69,8 +70,10 @@ public class Gui {
         LauncherConsole console = new LauncherConsole();
         LauncherConsole.instance = console;
 
-        if (CRLauncher.getInstance().getSettings().showConsoleAtStartup) {
+        Settings settings = CRLauncher.getInstance().getSettings();
+        if (settings.showConsoleAtStartup) {
             console.setVisible(true);
+            this.consoleOpen = true;
         }
 
         JButton consoleButton = new JButton(this.consoleOpen ? "Hide console" : "Show console");
