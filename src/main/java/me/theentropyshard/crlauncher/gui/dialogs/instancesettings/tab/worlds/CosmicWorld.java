@@ -47,6 +47,10 @@ public class CosmicWorld {
         return this.worldDisplayName;
     }
 
+    public void setWorldDisplayName(String worldDisplayName) {
+        this.worldDisplayName = worldDisplayName;
+    }
+
     public long getWorldSeed() {
         return this.worldSeed;
     }
