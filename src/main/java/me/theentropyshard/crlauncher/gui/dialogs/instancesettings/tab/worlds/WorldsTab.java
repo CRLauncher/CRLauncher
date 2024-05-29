@@ -22,15 +22,24 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 
 public class WorldsTab extends Tab {
     public WorldsTab(Instance instance, JDialog dialog) {
         super("Worlds", instance, dialog);
 
+        JTable worldsTable = new JTable(new WorldsTableModel(instance));
+
+        JScrollPane scrollPane = new JScrollPane(
+                worldsTable,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+
         JPanel root = this.getRoot();
-
-
+        root.setLayout(new BorderLayout());
+        root.add(scrollPane, BorderLayout.CENTER);
     }
 
     @Override
