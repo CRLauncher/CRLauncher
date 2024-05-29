@@ -67,17 +67,7 @@ public class CosmicRunner extends Thread {
     public void run() {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
-        if (this.instance.isAutoUpdateToLatest()) {
-            VersionList versionList = versionManager.getVersionList();
-
-            if (versionList == null) {
-                LOG.warn("Version list is null");
-
-                return;
-            }
-
-            this.instance.setCosmicVersion(versionList.getLatest().getPreAlpha());
-        }
+        this.updateCosmicVersion();
 
         try {
             Version version = versionManager.getVersion(this.instance.getCosmicVersion());
@@ -157,6 +147,27 @@ public class CosmicRunner extends Thread {
                     LOG.error("Unable to delete temporary client", e);
                 }
             }
+        }
+    }
+
+    private void updateCosmicVersion() {
+        VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
+
+        if (this.instance.isAutoUpdateToLatest()) {
+            VersionList versionList = versionManager.getVersionList();
+
+            if (versionList == null) {
+                try {
+                    versionManager.loadRemoteVersions();
+                    versionList = versionManager.getVersionList();
+                } catch (IOException e) {
+                    LOG.error("Could not load remote versions, no auto-update performed", e);
+
+                    return;
+                }
+            }
+
+            this.instance.setCosmicVersion(versionList.getLatest().getPreAlpha());
         }
     }
 
