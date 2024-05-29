@@ -88,7 +88,7 @@ public class CRLauncher {
 
         this.librariesDir = this.workDir.resolve("libraries");
 
-        this.cosmicDir = this.workDir.resolve("cosmic");
+        this.cosmicDir = this.workDir.resolve("cosmic-reach");
         this.instancesDir = this.cosmicDir.resolve("instances");
         this.versionsDir = this.cosmicDir.resolve("versions");
         this.createDirectories();
