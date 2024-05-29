@@ -26,6 +26,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
+import me.theentropyshard.crlauncher.cosmic.version.VersionList;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.instance.Instance;
@@ -65,6 +66,18 @@ public class CosmicRunner extends Thread {
     @Override
     public void run() {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
+
+        if (this.instance.isAutoUpdateToLatest()) {
+            VersionList versionList = versionManager.getVersionList();
+
+            if (versionList == null) {
+                LOG.warn("Version list is null");
+
+                return;
+            }
+
+            this.instance.setCosmicVersion(versionList.getLatest().getPreAlpha());
+        }
 
         try {
             Version version = versionManager.getVersion(this.instance.getCosmicVersion());

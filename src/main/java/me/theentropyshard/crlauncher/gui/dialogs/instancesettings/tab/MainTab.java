@@ -49,6 +49,8 @@ public class MainTab extends Tab {
         gbc.anchor = GridBagConstraints.NORTH;
 
         JPanel crVersionSettings = new JPanel(new GridLayout(0, 1));
+        crVersionSettings.setBorder(new TitledBorder("Cosmic Reach version"));
+
         JComboBox<String> versionsCombo = new JComboBox<>();
         versionsCombo.addItemListener(e -> {
             if (e.getStateChange() != ItemEvent.SELECTED) {
@@ -59,7 +61,13 @@ public class MainTab extends Tab {
             instance.setCosmicVersion(crVersion);
         });
         crVersionSettings.add(versionsCombo);
-        crVersionSettings.setBorder(new TitledBorder("Cosmic Reach version"));
+
+        JCheckBox updateToLatestAutomatically = new JCheckBox("Automatically update to the latest version");
+        updateToLatestAutomatically.setSelected(instance.isAutoUpdateToLatest());
+        updateToLatestAutomatically.addActionListener(e -> {
+            instance.setAutoUpdateToLatest(!instance.isAutoUpdateToLatest());
+        });
+        crVersionSettings.add(updateToLatestAutomatically);
 
         new SwingWorker<List<String>, Void>() {
             @Override

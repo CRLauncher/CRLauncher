@@ -34,12 +34,12 @@ public class VersionManager {
     public static final String REMOTE_VERSIONS = "https://raw.githubusercontent.com/CRModders/CosmicArchive/main/versions.json";
 
     private final Path workDir;
-
     private final Map<String, Version> remoteVersions;
+
+    private VersionList versionList;
 
     public VersionManager(Path workDir) {
         this.workDir = workDir;
-
         this.remoteVersions = new LinkedHashMap<>();
     }
 
@@ -50,9 +50,9 @@ public class VersionManager {
 
     public void loadRemoteVersions() throws IOException {
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
-            VersionList versionList = Json.parse(request.asString(VersionManager.REMOTE_VERSIONS), VersionList.class);
+            this.versionList = Json.parse(request.asString(VersionManager.REMOTE_VERSIONS), VersionList.class);
 
-            for (Version version : versionList.getVersions()) {
+            for (Version version : this.versionList.getVersions()) {
                 this.remoteVersions.put(version.getId(), version);
             }
         }
@@ -86,5 +86,9 @@ public class VersionManager {
 
     public List<Version> getLocalAvailableVersions() throws IOException {
         return Collections.emptyList();
+    }
+
+    public VersionList getVersionList() {
+        return this.versionList;
     }
 }

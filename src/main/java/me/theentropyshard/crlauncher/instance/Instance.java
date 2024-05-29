@@ -60,6 +60,7 @@ public class Instance {
     private InstanceType type = InstanceType.VANILLA;
     private String fabricVersion;
     private String quiltVersion;
+    private boolean autoUpdateToLatest;
 
     public Instance() {
         this(null, null, null);
@@ -82,6 +83,14 @@ public class Instance {
     public void updatePlaytime(long seconds) {
         this.lastPlaytime = seconds;
         this.totalPlaytime += seconds;
+    }
+
+    public boolean isAutoUpdateToLatest() {
+        return this.autoUpdateToLatest;
+    }
+
+    public void setAutoUpdateToLatest(boolean autoUpdateToLatest) {
+        this.autoUpdateToLatest = autoUpdateToLatest;
     }
 
     public List<FabricMod> getFabricMods() {

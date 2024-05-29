@@ -131,7 +131,7 @@ public class InstanceManager {
         return freeName;
     }
 
-    public void createInstance(String name, String groupName, String cosmicVersion) throws
+    public void createInstance(String name, String groupName, String cosmicVersion, boolean autoUpdate) throws
             IOException,
             InstanceAlreadyExistsException {
 
@@ -141,6 +141,7 @@ public class InstanceManager {
 
         Instance instance = new Instance(name, groupName, cosmicVersion);
         instance.setWorkDir(this.getInstanceWorkDir(name, cosmicVersion));
+        instance.setAutoUpdateToLatest(autoUpdate);
 
         this.cacheInstance(instance);
 

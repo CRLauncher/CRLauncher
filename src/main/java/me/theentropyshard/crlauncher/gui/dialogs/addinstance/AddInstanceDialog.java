@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
@@ -67,7 +68,7 @@ public class AddInstanceDialog extends AppDialog {
         });
 
         JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBorder(new EmptyBorder(10, 10, 5, 10));
+        headerPanel.setBorder(new EmptyBorder(10, 10, 0, 10));
 
         JPanel headerPanelLeftPanel = new JPanel();
         headerPanelLeftPanel.setLayout(new GridLayout(2, 1));
@@ -97,6 +98,14 @@ public class AddInstanceDialog extends AppDialog {
 
         headerPanel.add(headerPanelLeftPanel, BorderLayout.WEST);
         headerPanel.add(headerPanelRightPanel, BorderLayout.CENTER);
+
+        JCheckBox updateToLatestAutomatically = new JCheckBox("Automatically update to the latest version");
+        updateToLatestAutomatically.setSelected(CRLauncher.getInstance().getSettings().settingsDialogUpdateToLatest);
+        updateToLatestAutomatically.addActionListener(e -> {
+            Settings settings = CRLauncher.getInstance().getSettings();
+            settings.settingsDialogUpdateToLatest = !settings.settingsDialogUpdateToLatest;
+        });
+        headerPanel.add(updateToLatestAutomatically, BorderLayout.SOUTH);
 
         root.add(headerPanel, BorderLayout.NORTH);
 
@@ -233,7 +242,8 @@ public class AddInstanceDialog extends AppDialog {
                 InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
 
                 try {
-                    instanceManager.createInstance(instanceName, chosenGroupName, mcVersion);
+                    instanceManager.createInstance(instanceName, chosenGroupName, mcVersion,
+                            CRLauncher.getInstance().getSettings().settingsDialogUpdateToLatest);
                 } catch (InstanceAlreadyExistsException ex) {
                     MessageBox.showErrorMessage(
                             AddInstanceDialog.this.getDialog(),
