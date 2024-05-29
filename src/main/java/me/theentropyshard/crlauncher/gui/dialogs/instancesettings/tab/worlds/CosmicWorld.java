@@ -29,7 +29,7 @@ public class CosmicWorld {
     /**
      * This is not present in worldInfo.json. This field is set to the last modified time of localPlayer.json for now
      */
-    private OffsetDateTime lastPlayed;
+    private transient OffsetDateTime lastPlayed;
 
     public CosmicWorld() {
 
