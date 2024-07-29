@@ -112,6 +112,11 @@ public class Gui {
 
             UIManager.put("AccountItem.borderColor", new ColorUIResource(Color.decode("#4B6EAF")));
 
+            UIManager.put("LauncherConsole.infoColor", new ColorUIResource(Color.WHITE));
+            UIManager.put("LauncherConsole.warnColor", new ColorUIResource(Color.YELLOW.darker()));
+            UIManager.put("LauncherConsole.errorColor", new ColorUIResource(Color.RED.darker()));
+            UIManager.put("LauncherConsole.debugColor", new ColorUIResource(Color.CYAN.darker()));
+
             FlatDarculaLaf.setup();
         } else {
             UIManager.put("InstanceItem.defaultColor", new ColorUIResource(222, 230, 237));
@@ -123,6 +128,11 @@ public class Gui {
             UIManager.put("ProgressBar.foreground", new ColorUIResource(222, 230, 237));
 
             UIManager.put("AccountItem.borderColor", new ColorUIResource(Color.decode("#2675BF")));
+
+            UIManager.put("LauncherConsole.infoColor", new ColorUIResource(Color.BLACK));
+            UIManager.put("LauncherConsole.warnColor", new ColorUIResource(Color.YELLOW.darker()));
+            UIManager.put("LauncherConsole.errorColor", new ColorUIResource(Color.RED.darker()));
+            UIManager.put("LauncherConsole.debugColor", new ColorUIResource(Color.CYAN.darker()));
 
             FlatIntelliJLaf.setup();
         }
@@ -152,6 +162,12 @@ public class Gui {
 
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.pack();
+
+        if (LauncherConsole.instance != null) {
+            JFrame frame = LauncherConsole.instance.getFrame();
+            SwingUtilities.updateComponentTreeUI(frame);
+            frame.pack();
+        }
 
         InstancesPanel defaultInstancesPanel = this.playView.getDefaultInstancesPanel();
         defaultInstancesPanel.getScrollPane().setBorder(null);

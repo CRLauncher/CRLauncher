@@ -18,12 +18,14 @@
 
 package me.theentropyshard.crlauncher.gui;
 
+import com.formdev.flatlaf.ui.FlatScrollPaneUI;
+import me.theentropyshard.crlauncher.BuildConfig;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
+import javax.swing.text.*;
 import java.awt.*;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowListener;
 
 public class LauncherConsole {
@@ -31,28 +33,51 @@ public class LauncherConsole {
     private static final int DEFAULT_Y = 80;
 
     private final JTextPane textPane;
+    private final SimpleAttributeSet attrs;
     private final JFrame frame;
 
     public static LauncherConsole instance;
 
     public LauncherConsole() {
-        this.textPane = new JTextPane();
+        this.textPane = new JTextPane() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                super.paintComponent(g);
+            }
+        };
         this.textPane.setPreferredSize(new Dimension(480, 280));
         this.textPane.setFont(this.textPane.getFont().deriveFont(14.0f));
+        this.textPane.setEditorKit(new WrapEditorKit());
         this.textPane.setEditable(false);
 
-        JScrollPane scrollPane = new JScrollPane(this.textPane);
+        this.attrs = new SimpleAttributeSet();
 
-        JButton copyLogButton = new JButton("Copy log to clipboard");
-        copyLogButton.addActionListener(e -> {
-            OperatingSystem.copyToClipboard(this.textPane.getText());
+        JScrollPane scrollPane = new JScrollPane(
+            this.textPane,
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        scrollPane.setUI(new FlatScrollPaneUI() {
+            @Override
+            protected MouseWheelListener createMouseWheelListener() {
+                if (this.isSmoothScrollingEnabled()) {
+                    return new SmoothScrollMouseWheelListener(this.scrollpane.getVerticalScrollBar());
+                } else {
+                    return super.createMouseWheelListener();
+                }
+            }
         });
 
-        this.frame = new JFrame("CRLauncher console");
+        this.frame = new JFrame(BuildConfig.APP_NAME + " console");
         this.frame.add(scrollPane, BorderLayout.CENTER);
-        this.frame.add(copyLogButton, BorderLayout.SOUTH);
         this.frame.pack();
         this.frame.setLocation(LauncherConsole.DEFAULT_X, LauncherConsole.DEFAULT_Y);
+    }
+
+    public JFrame getFrame() {
+        return this.frame;
     }
 
     public void setVisible(boolean visibility) {
@@ -63,18 +88,72 @@ public class LauncherConsole {
         this.frame.addWindowListener(listener);
     }
 
-    public void addLine(String line) {
+    public LauncherConsole setColor(Color c) {
+        StyleConstants.setForeground(this.attrs, c);
+
+        return this;
+    }
+
+    public LauncherConsole setBold(boolean bold) {
+        StyleConstants.setBold(this.attrs, bold);
+
+        return this;
+    }
+
+    public void write(String line) {
         Document document = this.textPane.getDocument();
+
         try {
-            int length = document.getLength();
-
-            if (!line.endsWith("\n")) {
-                line += "\n";
-            }
-
-            document.insertString(length, line, null);
+            document.insertString(document.getLength(), line, this.attrs);
         } catch (BadLocationException e) {
             e.printStackTrace();
+        }
+
+        this.textPane.setCaretPosition(document.getLength());
+    }
+
+    private static final class WrapEditorKit extends StyledEditorKit {
+        private final ViewFactory viewFactory;
+
+        public WrapEditorKit() {
+            this.viewFactory = new WrapColumnFactory();
+        }
+
+        @Override
+        public ViewFactory getViewFactory() {
+            return this.viewFactory;
+        }
+    }
+
+    private static final class WrapColumnFactory implements ViewFactory {
+        public View create(Element elem) {
+            String kind = elem.getName();
+
+            return switch (kind) {
+                case AbstractDocument.ContentElementName -> new WrapLabelView(elem);
+                case AbstractDocument.ParagraphElementName -> new ParagraphView(elem);
+                case AbstractDocument.SectionElementName -> new BoxView(elem, View.Y_AXIS);
+                case StyleConstants.ComponentElementName -> new ComponentView(elem);
+                case StyleConstants.IconElementName -> new IconView(elem);
+                default -> new LabelView(elem);
+            };
+        }
+    }
+
+    private static final class WrapLabelView extends LabelView {
+        public WrapLabelView(Element element) {
+            super(element);
+        }
+
+        public float getMinimumSpan(int axis) {
+            switch (axis) {
+                case View.X_AXIS:
+                    return 0;
+                case View.Y_AXIS:
+                    return super.getMinimumSpan(axis);
+                default:
+                    throw new IllegalArgumentException("Invalid axis: " + axis);
+            }
         }
     }
 }

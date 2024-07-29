@@ -16,24 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher;
+package me.theentropyshard.crlauncher.logging;
 
-import me.theentropyshard.crlauncher.cli.Args;
-import me.theentropyshard.crlauncher.logging.Log;
-import org.apache.logging.log4j.LogManager;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
-public class Main {
-    public static void main(String[] args) {
-        Args theArgs = Args.parse(args);
+public class SystemOutInterceptor extends PrintStream {
+    private final LogLevel level;
 
-        LauncherProperties.LOGS_DIR.install(theArgs.getWorkDir().resolve("logs"));
-        Log.start();
+    public SystemOutInterceptor(OutputStream out, LogLevel level) {
+        super(out, true);
 
-        try {
-            new CRLauncher(theArgs, theArgs.getWorkDir());
-        } catch (Throwable t) {
-            Log.error("Unable to start the launcher", t);
-            System.exit(1);
+        this.level = level;
+    }
+
+    @Override
+    public void print(String s) {
+        super.print(s);
+
+        if (this.level == LogLevel.ERROR) {
+            Log.error(s);
+        } else {
+            Log.debug(s);
         }
     }
 }

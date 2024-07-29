@@ -24,9 +24,7 @@ import java.nio.file.Paths;
 
 public final class JavaLocator {
     public static String getJavaPath() {
-        String exeName = OperatingSystem.isWindows() ? "javaw.exe" : "java";
-
-        return Paths.get(System.getProperty("java.home"), "bin", exeName).toString();
+        return Paths.get(System.getProperty("java.home"), "bin", OperatingSystem.getCurrent().getJavaExecutableName()).toString();
     }
 
     private JavaLocator() {

@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
-    private static final Logger LOG = LogManager.getLogger(LoadVersionsWorker.class);
+    
 
     private final CosmicVersionsTableModel model;
     private final AddInstanceDialog dialog;
@@ -61,7 +62,7 @@ public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
         try {
             versions = this.get();
         } catch (InterruptedException | ExecutionException e) {
-            LOG.error(e);
+            Log.error(e);
 
             return;
         }

@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.network.download;
 
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.HashUtils;
 import okhttp3.OkHttpClient;
@@ -39,7 +40,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.Objects;
 
 public class HttpDownload {
-    private static final Logger LOG = LogManager.getLogger(HttpDownload.class);
+    
 
     private static final long EXPECTED_SIZE_NOT_SET = -1L;
 
@@ -81,16 +82,16 @@ public class HttpDownload {
                     if (hashMatches) {
                         return;
                     } else {
-                        LOG.debug("File '{}' exists, size matches, but SHA-256 does not match", this.saveAs);
+                        Log.debug("File '" + this.saveAs + "' exists, size matches, but SHA-256 does not match");
                     }
 
                     needsDownload = true;
                 }
             } else if (this.expectedSize != HttpDownload.EXPECTED_SIZE_NOT_SET) {
                 if (hashMatches) {
-                    LOG.debug("File '{}' exists, SHA-256 matches, but size does not match", this.saveAs);
+                    Log.debug("File '" + this.saveAs + "' exists, SHA-256 matches, but size does not match");
                 } else {
-                    LOG.debug("File '{}' exists, but size and SHA-256 do not match", this.saveAs);
+                    Log.debug("File '" + this.saveAs + "' exists, but size and SHA-256 do not match");
                 }
 
                 needsDownload = true;
@@ -163,7 +164,7 @@ public class HttpDownload {
             try {
                 return Files.size(this.saveAs);
             } catch (IOException e) {
-                LOG.error("Could not get file size of {}", this.saveAs, e);
+                Log.error("Could not get file size of " + this.saveAs, e);
             }
         }
 

@@ -29,14 +29,11 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.InstanceSettin
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
 import me.theentropyshard.crlauncher.gui.utils.MouseEnterExitListener;
-import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
-import me.theentropyshard.crlauncher.utils.ListUtils;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -50,7 +47,7 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class PlayView extends JPanel {
-    private static final Logger LOG = LogManager.getLogger(PlayView.class);
+
 
     public static final String DEFAULT_GROUP_NAME = "<default>";
 
@@ -134,7 +131,7 @@ public class PlayView extends JPanel {
                         try {
                             icon = iconManager.getIcon(instance.getIconFileName()).icon();
                         } catch (Exception e) {
-                            LOG.warn("Could not load icon '{}' for instance '{}'", instance.getIconFileName(), instance.getName());
+                            Log.warn("Could not load icon '" + instance.getIconFileName() + "' for instance '" + instance.getName() + "'");
 
                             String validIconPath = "cosmic_logo_x32.png";
                             instance.setIconFileName(validIconPath);
@@ -213,7 +210,7 @@ public class PlayView extends JPanel {
                         }
                         item.instanceChanged(instance);
                     } catch (IOException ex) {
-                        LOG.error("Could not rename instance {} ({}) to {}", instance.getName(), instance.getWorkDir(), newName);
+                        Log.error("Could not rename instance " + instance.getName() + " (" + instance.getWorkDir() + ") to " + newName);
                     }
                 });
                 popupMenu.add(renameItem);
@@ -245,39 +242,39 @@ public class PlayView extends JPanel {
         }));
 
         item.addMouseListener(new MouseEnterExitListener(
-                enter -> {
-                    this.instanceInfoLabel.setVisible(true);
+            enter -> {
+                this.instanceInfoLabel.setVisible(true);
 
-                    Instance instance = item.getAssociatedInstance();
+                Instance instance = item.getAssociatedInstance();
 
-                    if (instance == null) {
-                        return;
-                    }
-
-                    String lastPlayedTime = TimeUtils.getHoursMinutesSeconds(instance.getLastPlaytime());
-                    String totalPlayedTime = TimeUtils.getHoursMinutesSeconds(instance.getTotalPlaytime());
-
-                    String timeString = "";
-
-                    if (!lastPlayedTime.isEmpty()) {
-                        timeString = " - Last played for " + lastPlayedTime;
-                    }
-
-                    if (!totalPlayedTime.isEmpty()) {
-                        if (lastPlayedTime.isEmpty()) {
-                            timeString = " - Total played for " + totalPlayedTime;
-                        } else {
-                            timeString = timeString + ", Total played for " + totalPlayedTime;
-                        }
-                    }
-
-                    this.instanceInfoLabel.setText(instance.getName() + timeString);
-                },
-
-                exit -> {
-                    this.instanceInfoLabel.setVisible(false);
-                    this.instanceInfoLabel.setText("");
+                if (instance == null) {
+                    return;
                 }
+
+                String lastPlayedTime = TimeUtils.getHoursMinutesSeconds(instance.getLastPlaytime());
+                String totalPlayedTime = TimeUtils.getHoursMinutesSeconds(instance.getTotalPlaytime());
+
+                String timeString = "";
+
+                if (!lastPlayedTime.isEmpty()) {
+                    timeString = " - Last played for " + lastPlayedTime;
+                }
+
+                if (!totalPlayedTime.isEmpty()) {
+                    if (lastPlayedTime.isEmpty()) {
+                        timeString = " - Total played for " + totalPlayedTime;
+                    } else {
+                        timeString = timeString + ", Total played for " + totalPlayedTime;
+                    }
+                }
+
+                this.instanceInfoLabel.setText(instance.getName() + timeString);
+            },
+
+            exit -> {
+                this.instanceInfoLabel.setVisible(false);
+                this.instanceInfoLabel.setText("");
+            }
         ));
     }
 
@@ -285,9 +282,9 @@ public class PlayView extends JPanel {
         Instance instance = item.getAssociatedInstance();
 
         boolean ok = MessageBox.showConfirmMessage(
-                CRLauncher.frame,
-                "Delete instance",
-                "Are you sure you want to delete instance '" + instance.getName() + "'?"
+            CRLauncher.frame,
+            "Delete instance",
+            "Are you sure you want to delete instance '" + instance.getName() + "'?"
         );
 
         if (ok) {
@@ -295,7 +292,7 @@ public class PlayView extends JPanel {
             try {
                 instanceManager.removeInstance(instance.getName());
             } catch (IOException ex) {
-                LOG.error("Could not remove instance instance {}", instance.getWorkDir(), ex);
+                Log.error("Could not remove instance instance " + instance.getWorkDir(), ex);
 
                 return;
             }

@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.utils;
 
 import com.sun.jna.Platform;
+import me.theentropyshard.crlauncher.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -33,8 +34,6 @@ public enum OperatingSystem {
     LINUX,
     MACOS,
     UNKNOWN;
-
-    private static final Logger LOG = LogManager.getLogger(OperatingSystem.class);
 
     public String getJavaExecutableName() {
         if (this == OperatingSystem.WINDOWS) {
@@ -64,15 +63,15 @@ public enum OperatingSystem {
                 try {
                     desktop.open(path.toFile());
                 } catch (IllegalArgumentException e) {
-                    LOG.warn("File '{}' does not exist", path);
+                    Log.warn("File '" + path + "' does not exist");
                 } catch (IOException e) {
-                    LOG.warn("Unable to open '{}' using java.awt.Desktop", path, e);
+                    Log.warn("Unable to open '" + path + "' using java.awt.Desktop: " + e.getMessage());
                 }
             } else {
-                LOG.warn("Unable to open '{}' using java.awt.Desktop: action 'OPEN' not supported", path);
+                Log.warn("Unable to open '" + path + "' using java.awt.Desktop: action 'OPEN' not supported");
             }
         } else {
-            LOG.warn("java.awt.Desktop not supported. OS: {}", OperatingSystem.getCurrent());
+            Log.warn("java.awt.Desktop not supported. OS: " + OperatingSystem.getCurrent());
         }
     }
 
@@ -84,15 +83,15 @@ public enum OperatingSystem {
                 try {
                     desktop.browse(URI.create(uri));
                 } catch (IllegalArgumentException e) {
-                    LOG.warn("URI cannot be converted to URL: {}", uri);
+                    Log.warn("URI cannot be converted to URL: " + uri);
                 } catch (IOException e) {
-                    LOG.warn("Unable to browse '{}' using java.awt.Desktop", uri, e);
+                    Log.warn("Unable to browse '" + uri + "' using java.awt.Desktop: " + e.getMessage());
                 }
             } else {
-                LOG.warn("Unable to browse '{}' using java.awt.Desktop: action 'BROWSE' not supported", uri);
+                Log.warn("Unable to browse '" + uri + "' using java.awt.Desktop: action 'BROWSE' not supported");
             }
         } else {
-            LOG.warn("java.awt.Desktop not supported. OS: {}", OperatingSystem.getCurrent());
+            Log.warn("java.awt.Desktop not supported. OS: " + OperatingSystem.getCurrent());
         }
     }
 

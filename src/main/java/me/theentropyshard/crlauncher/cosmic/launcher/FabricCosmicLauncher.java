@@ -25,6 +25,7 @@ import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 import net.lingala.zip4j.ZipFile;
@@ -40,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
-    private static final Logger LOG = LogManager.getLogger(FabricCosmicLauncher.class);
+    
     private final String version;
 
     public FabricCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
@@ -71,7 +72,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
             GithubReleaseResponse release = ListUtils.search(allReleases, resp -> resp.tag_name.equals(version));
 
             if (release == null) {
-                LOG.error("Could find version {}", version);
+                Log.error("Could find version " + version);
 
                 SwingUtilities.invokeLater(() -> downloadDialog.getDialog().dispose());
 
@@ -94,7 +95,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
                 loaderArchive.extractAll(loaderDir.toString());
             }
         } catch (IOException e) {
-            LOG.error("Exception while downloading Fabric loader", e);
+            Log.error("Exception while downloading Fabric loader", e);
         }
     }
 
@@ -109,11 +110,11 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
                 }
             }
         } catch (IOException e) {
-            LOG.error("Exception while listing files in {}", loaderDir, e);
+            Log.error("Exception while listing files in " + loaderDir, e);
         }
 
         if (fabricJar == null) {
-            LOG.error("Cannot find fabric modloader jar in {}", loaderDir);
+            Log.error("Cannot find fabric modloader jar in " + loaderDir);
             MessageBox.showErrorMessage(CRLauncher.frame, "Cannot find fabric modloader jar in " + loaderDir);
 
             return null;
@@ -127,7 +128,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
         Path depsDir = loaderDir.resolve("deps");
         if (!Files.exists(depsDir)) {
-            LOG.error("Cannot find fabric modloader dependencies in {}", depsDir);
+            Log.error("Cannot find fabric modloader dependencies in " + depsDir);
             MessageBox.showErrorMessage(CRLauncher.frame,
                     "Cannot find fabric modloader dependencies in " + depsDir);
 
@@ -139,7 +140,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
                 classpath.add(dep.toString());
             }
         } catch (IOException e) {
-            LOG.error("Cannot list files in {}", depsDir, e);
+            Log.error("Cannot list files in " + depsDir, e);
         }
 
         return classpath;

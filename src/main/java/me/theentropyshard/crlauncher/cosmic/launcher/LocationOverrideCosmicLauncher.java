@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.HashUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
@@ -37,7 +38,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
-    private static final Logger LOG = LogManager.getLogger(LocationOverrideCosmicLauncher.class);
+    
 
     private static final String CR_LOADER_VERSION = "0.0.1";
     private static final String CR_LOADER_JAR = "CRLoader-" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION + ".jar";
@@ -77,7 +78,7 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
         try {
             this.downloadLoader(loaderPath);
         } catch (IOException e) {
-            LOG.error("Could not download " + LocationOverrideCosmicLauncher.CR_LOADER_JAR, e);
+            Log.error("Could not download " + LocationOverrideCosmicLauncher.CR_LOADER_JAR, e);
         }
 
         String gameFilesLocation = this.getGameFilesLocation().toString();

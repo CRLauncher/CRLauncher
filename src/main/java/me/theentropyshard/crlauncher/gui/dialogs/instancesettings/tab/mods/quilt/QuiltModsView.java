@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.StreamUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -45,7 +46,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class QuiltModsView extends JPanel {
-    private static final Logger LOG = LogManager.getLogger(QuiltModsView.class);
+    
 
     private final QuiltModsTableModel quiltModsModel;
     private final JButton deleteModButton;
@@ -88,7 +89,7 @@ public class QuiltModsView extends JPanel {
                         try (ZipFile file = new ZipFile(jarModPath.toFile())) {
                             FileHeader fileHeader = file.getFileHeader("quilt.mod.json");
                             if (fileHeader == null) {
-                                LOG.warn("{} does not contain 'quilt.mod.json'", jarModPath);
+                                Log.warn(jarModPath + " does not contain 'quilt.mod.json'");
 
                                 mod = new QuiltMod();
                                 mod.quiltLoader = new QuiltMod.QuiltLoader();
@@ -124,7 +125,7 @@ public class QuiltModsView extends JPanel {
                                 QuiltModsView.this.quiltModsModel.add(mod);
                             }
                         } catch (Exception e) {
-                            LOG.error("Unexpected error", e);
+                            Log.error("Unexpected error", e);
                             return null;
                         }
 
@@ -186,7 +187,7 @@ public class QuiltModsView extends JPanel {
                 try {
                     FileUtils.delete(modFile);
                 } catch (IOException ex) {
-                    LOG.error("Exception while trying to delete Quilt Mod", ex);
+                    Log.error("Exception while trying to delete Quilt Mod", ex);
                 }
             }
         });
@@ -204,7 +205,7 @@ public class QuiltModsView extends JPanel {
                     try (ZipFile file = new ZipFile(modFile.toFile())) {
                         FileHeader fileHeader = file.getFileHeader("quilt.mod.json");
                         if (fileHeader == null) {
-                            LOG.warn("{} does not contain 'quilt.mod.json'", modFile);
+                            Log.warn(modFile + " does not contain 'quilt.mod.json'");
 
                             QuiltMod mod = new QuiltMod();
                             mod.quiltLoader = new QuiltMod.QuiltLoader();

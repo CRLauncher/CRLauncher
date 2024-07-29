@@ -24,6 +24,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.StreamUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -46,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FabricModsView extends JPanel {
-    private static final Logger LOG = LogManager.getLogger(FabricModsView.class);
+    
 
     private final FabricModsTableModel fabricModsModel;
     private final JButton deleteModButton;
@@ -89,7 +90,7 @@ public class FabricModsView extends JPanel {
                         try (ZipFile file = new ZipFile(jarModPath.toFile())) {
                             FileHeader fileHeader = file.getFileHeader("fabric.mod.json");
                             if (fileHeader == null) {
-                                LOG.warn("{} does not contain 'fabric.mod.json'", jarModPath);
+                                Log.warn(jarModPath + " does not contain 'fabric.mod.json'");
                                 MessageBox.showErrorMessage(CRLauncher.frame, jarModPath + " is not a valid Fabric mod");
                                 return null;
                             }
@@ -164,7 +165,7 @@ public class FabricModsView extends JPanel {
                 try {
                     FileUtils.delete(modFile);
                 } catch (IOException ex) {
-                    LOG.error("Exception while trying to delete Fabric Mod", ex);
+                    Log.error("Exception while trying to delete Fabric Mod", ex);
                 }
             }
         });
@@ -183,7 +184,7 @@ public class FabricModsView extends JPanel {
                     try (ZipFile file = new ZipFile(modFile.toFile())) {
                         FileHeader fileHeader = file.getFileHeader("fabric.mod.json");
                         if (fileHeader == null) {
-                            LOG.warn("{} does not contain 'fabric.mod.json'", modFile);
+                            Log.warn(modFile + " does not contain 'fabric.mod.json'");
                             continue;
                         }
 

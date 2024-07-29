@@ -24,13 +24,12 @@ import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.quilt.QuiltManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -41,7 +40,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class CRLauncher {
-    private static final Logger LOG = LogManager.getLogger(CRLauncher.class);
+
 
     public static final String USER_AGENT = BuildConfig.APP_NAME + "/" + BuildConfig.APP_VERSION;
 
@@ -81,7 +80,7 @@ public class CRLauncher {
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
         if (args.hasUnknownOptions()) {
-            LOG.warn("Unknown options: {}", args.getUnknownOptions());
+            Log.warn("Unknown options: " + args.getUnknownOptions());
         }
 
         CRLauncher.setInstance(this);
@@ -97,20 +96,20 @@ public class CRLauncher {
         this.settings = Settings.load(this.settingsFile);
 
         this.httpClient = new OkHttpClient.Builder()
-                .addNetworkInterceptor(new UserAgentInterceptor(CRLauncher.USER_AGENT))
-                .connectTimeout(30, TimeUnit.SECONDS)
-                .readTimeout(5, TimeUnit.MINUTES)
-                .writeTimeout(5, TimeUnit.MINUTES)
-                .protocols(Collections.singletonList(Protocol.HTTP_1_1))
-                .build();
+            .addNetworkInterceptor(new UserAgentInterceptor(CRLauncher.USER_AGENT))
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.MINUTES)
+            .writeTimeout(5, TimeUnit.MINUTES)
+            .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+            .build();
 
         this.versionManager = new VersionManager(this.versionsDir);
-        
+
         this.instanceManager = new InstanceManager(this.instancesDir);
         try {
             this.instanceManager.load();
         } catch (IOException e) {
-            LOG.error("Unable to load instances", e);
+            Log.error("Unable to load instances", e);
         }
 
         Path iconsDir = this.cosmicDir.resolve("icons");
@@ -120,7 +119,7 @@ public class CRLauncher {
             this.iconManager.loadIcons();
             this.iconManager.saveBuiltinIcons();
         } catch (IOException e) {
-            LOG.error("Unable to load icons", e);
+            Log.error("Unable to load icons", e);
         }
 
         this.quiltManager = new QuiltManager(this.workDir.resolve("cosmic_quilt"));
@@ -140,7 +139,7 @@ public class CRLauncher {
             FileUtils.createDirectoryIfNotExists(this.instancesDir);
             FileUtils.createDirectoryIfNotExists(this.versionsDir);
         } catch (IOException e) {
-            LOG.error("Unable to create launcher directories", e);
+            Log.error("Unable to create launcher directories", e);
         }
     }
 
@@ -161,7 +160,7 @@ public class CRLauncher {
             try {
                 instance.save();
             } catch (IOException e) {
-                LOG.error("Exception while saving instance '" + instance + "'", e);
+                Log.error("Exception while saving instance '" + instance + "'", e);
             }
         });
 

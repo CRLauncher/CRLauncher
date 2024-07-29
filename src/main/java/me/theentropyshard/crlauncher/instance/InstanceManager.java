@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.instance;
 
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.StringUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -34,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InstanceManager {
-    private static final Logger LOG = LogManager.getLogger(InstanceManager.class);
+    
 
     private final Path workDir;
     private final List<Instance> instances;
@@ -123,7 +124,7 @@ public class InstanceManager {
         try {
             freeName = this.findFreeName(cleanName);
         } catch (StackOverflowError | Exception e) {
-            LOG.warn("Unable to find free name for instance", e);
+            Log.warn("Unable to find free name for instance: " + e.getMessage());
 
             freeName = this.workDir.resolve(StringUtils.getRandomString(10));
         }

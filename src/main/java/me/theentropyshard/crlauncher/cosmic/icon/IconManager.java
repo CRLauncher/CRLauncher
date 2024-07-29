@@ -1,10 +1,8 @@
 package me.theentropyshard.crlauncher.cosmic.icon;
 
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -13,16 +11,14 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class IconManager {
-    private static final Logger LOG = LogManager.getLogger(IconManager.class);
+
 
     private final Path workDir;
     private final List<CosmicIcon> icons;
@@ -58,7 +54,7 @@ public class IconManager {
 
     public void loadIcons() throws IOException {
         if (!this.icons.isEmpty()) {
-            LOG.warn("Tried to load icons, but they are already loaded");
+            Log.warn("Tried to load icons, but they are already loaded");
 
             return;
         }
@@ -67,7 +63,7 @@ public class IconManager {
             try {
                 this.loadIcon(iconPath);
             } catch (IOException e) {
-                LOG.warn("Could not load icon from {}", iconPath, e);
+                Log.warn("Could not load icon from " + iconPath + ": " + e.getMessage());
             }
         }
     }

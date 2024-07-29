@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.network.download;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
 import okhttp3.OkHttpClient;
 import org.apache.logging.log4j.LogManager;
@@ -34,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class DownloadList {
-    private static final Logger LOG = LogManager.getLogger(DownloadList.class);
+    
 
     public static final int MAX_CONNECTIONS = 8;
 
@@ -101,7 +102,7 @@ public class DownloadList {
                 try {
                     download.execute();
                 } catch (IOException e) {
-                    LOG.error("Download failed", e);
+                    Log.error("Download failed", e);
                 }
             };
 

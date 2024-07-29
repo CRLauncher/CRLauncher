@@ -31,12 +31,11 @@ import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.io.File;
@@ -51,7 +50,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class CosmicRunner extends Thread {
-    private static final Logger LOG = LogManager.getLogger(CosmicRunner.class);
+
 
     private final Instance instance;
 
@@ -90,32 +89,32 @@ public class CosmicRunner extends Thread {
                 clientPath = this.applyJarMods(version, versionsDir);
 
                 launcher = CosmicLauncherFactory.getLauncher(
-                        LaunchType.VANILLA,
-                        saveDirPath,
-                        saveDirPath,
-                        clientPath
+                    LaunchType.VANILLA,
+                    saveDirPath,
+                    saveDirPath,
+                    clientPath
                 );
             } else if (this.instance.getType() == InstanceType.FABRIC) {
                 this.updateFabricMods();
 
                 launcher = CosmicLauncherFactory.getLauncher(
-                        LaunchType.FABRIC,
-                        saveDirPath,
-                        saveDirPath,
-                        clientPath,
-                        this.instance.getFabricModsDir(),
-                        this.instance.getFabricVersion()
+                    LaunchType.FABRIC,
+                    saveDirPath,
+                    saveDirPath,
+                    clientPath,
+                    this.instance.getFabricModsDir(),
+                    this.instance.getFabricVersion()
                 );
             } else if (this.instance.getType() == InstanceType.QUILT) {
                 this.updateQuiltMods();
 
                 launcher = CosmicLauncherFactory.getLauncher(
-                        LaunchType.QUILT,
-                        saveDirPath,
-                        saveDirPath,
-                        clientPath,
-                        this.instance.getQuiltModsDir(),
-                        this.instance.getQuiltVersion()
+                    LaunchType.QUILT,
+                    saveDirPath,
+                    saveDirPath,
+                    clientPath,
+                    this.instance.getQuiltModsDir(),
+                    this.instance.getQuiltVersion()
                 );
             } else {
                 throw new IllegalArgumentException("Unknown instance type: " + this.instance.getType());
@@ -123,28 +122,28 @@ public class CosmicRunner extends Thread {
 
             long start = System.currentTimeMillis();
 
-            int exitCode = launcher.launch(LOG::info);
+            int exitCode = launcher.launch(Log::info);
 
             long end = System.currentTimeMillis();
 
-            LOG.info("Cosmic Reach process finished with exit code {}", exitCode);
+            Log.info("Cosmic Reach process finished with exit code " + exitCode);
 
             long timePlayedSeconds = (end - start) / 1000;
             String timePlayed = TimeUtils.getHoursMinutesSeconds(timePlayedSeconds);
             if (!timePlayed.trim().isEmpty()) {
-                LOG.info("You played for " + timePlayed + "!");
+                Log.info("You played for " + timePlayed + "!");
             }
 
             this.instance.updatePlaytime(timePlayedSeconds);
             this.instance.save();
         } catch (Exception e) {
-            LOG.error("Exception occurred while trying to start Cosmic Reach", e);
+            Log.error("Exception occurred while trying to start Cosmic Reach", e);
         } finally {
             if (this.clientCopyTmp != null && Files.exists(this.clientCopyTmp)) {
                 try {
                     Files.delete(this.clientCopyTmp);
                 } catch (IOException e) {
-                    LOG.error("Unable to delete temporary client", e);
+                    Log.error("Unable to delete temporary client", e);
                 }
             }
         }
@@ -161,7 +160,7 @@ public class CosmicRunner extends Thread {
                     versionManager.loadRemoteVersions();
                     versionList = versionManager.getVersionList();
                 } catch (IOException e) {
-                    LOG.error("Could not load remote versions, no auto-update performed", e);
+                    Log.error("Could not load remote versions, no auto-update performed", e);
 
                     return;
                 }
@@ -181,7 +180,7 @@ public class CosmicRunner extends Thread {
         } else {
             try {
                 this.clientCopyTmp = Files.copy(originalClientPath, this.instance.getWorkDir()
-                        .resolve(originalClientPath.getFileName().toString() + System.currentTimeMillis() + ".jar"));
+                    .resolve(originalClientPath.getFileName().toString() + System.currentTimeMillis() + ".jar"));
 
                 List<File> zipFilesToMerge = new ArrayList<>();
 
@@ -221,7 +220,7 @@ public class CosmicRunner extends Thread {
 
                 return this.clientCopyTmp;
             } catch (IOException e) {
-                LOG.error("Exception while applying jar mods", e);
+                Log.error("Exception while applying jar mods", e);
             }
         }
 

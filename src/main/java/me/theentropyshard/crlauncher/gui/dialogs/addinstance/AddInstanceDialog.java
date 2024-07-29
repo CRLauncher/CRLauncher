@@ -28,6 +28,7 @@ import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
 import me.theentropyshard.crlauncher.instance.InstanceAlreadyExistsException;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -42,7 +43,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class AddInstanceDialog extends AppDialog {
-    private static final Logger LOG = LogManager.getLogger(AddInstanceDialog.class);
+    
 
     private final JTextField nameField;
     private final JTextField groupField;
@@ -250,9 +251,9 @@ public class AddInstanceDialog extends AppDialog {
                             ex.getMessage()
                     );
 
-                    LOG.warn(ex);
+                    Log.warn(ex.getMessage());
                 } catch (IOException ex) {
-                    LOG.error("Unable to create new instance", ex);
+                    Log.error("Unable to create new instance", ex);
                 }
             });
         });

@@ -16,24 +16,26 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher;
+package me.theentropyshard.crlauncher.logging;
 
-import me.theentropyshard.crlauncher.cli.Args;
-import me.theentropyshard.crlauncher.logging.Log;
-import org.apache.logging.log4j.LogManager;
+import javax.swing.*;
+import java.awt.*;
 
-public class Main {
-    public static void main(String[] args) {
-        Args theArgs = Args.parse(args);
+public enum LogLevel {
+    INFO, WARN, ERROR, DEBUG;
 
-        LauncherProperties.LOGS_DIR.install(theArgs.getWorkDir().resolve("logs"));
-        Log.start();
-
-        try {
-            new CRLauncher(theArgs, theArgs.getWorkDir());
-        } catch (Throwable t) {
-            Log.error("Unable to start the launcher", t);
-            System.exit(1);
+    public Color color() {
+        switch (this) {
+            case INFO:
+                return UIManager.getColor("LauncherConsole.infoColor");
+            case WARN:
+                return UIManager.getColor("LauncherConsole.warnColor");
+            case ERROR:
+                return UIManager.getColor("LauncherConsole.errorColor");
+            case DEBUG:
+                return UIManager.getColor("LauncherConsole.debugColor");
+            default:
+                throw new IllegalArgumentException("Unreachable");
         }
     }
 }

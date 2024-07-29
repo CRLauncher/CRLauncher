@@ -19,10 +19,9 @@
 package me.theentropyshard.crlauncher;
 
 
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,16 +31,17 @@ import java.nio.file.Path;
  * I don't usually like making fields public, but ok, those are settings
  */
 public class Settings {
-    private static final Logger LOG = LogManager.getLogger(Settings.class);
-
     public String language = "english";
     public boolean darkTheme = false;
     public String lastDir = System.getProperty("user.dir");
-    public boolean useDownloadDialog = true;
     public String lastInstanceGroup = "<default>";
     public boolean dialogRelativeToParent = true;
     public boolean settingsDialogUpdateToLatest = true;
     public boolean showConsoleAtStartup = true;
+    public boolean showAmountOfTime = false;
+    public boolean writePrettyJson = false;
+    public int whenCRLaunchesOption = 0;
+    public int whenCRExitsOption = 0;
 
     public Settings() {
 
@@ -55,7 +55,7 @@ public class Settings {
         try {
             return Json.parse(FileUtils.readUtf8(file), Settings.class);
         } catch (IOException e) {
-            LOG.error("Could not load settings from {}, using defaults", file, e);
+            Log.error("Could not load settings from " + file + ", using defaults", e);
         }
 
         return new Settings();
@@ -65,7 +65,7 @@ public class Settings {
         try {
             FileUtils.writeUtf8(file, Json.write(this));
         } catch (IOException e) {
-            LOG.error("Could not save settings to {}", file);
+            Log.error("Could not save settings to " + file);
         }
     }
 }

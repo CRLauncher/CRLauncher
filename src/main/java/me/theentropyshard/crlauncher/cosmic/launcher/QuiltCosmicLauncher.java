@@ -22,27 +22,15 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.CosmicQuiltProperties;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.quilt.QuiltManager;
-import me.theentropyshard.crlauncher.quilt.maven.Dependency;
-import me.theentropyshard.crlauncher.quilt.maven.MavenDownloader;
-import me.theentropyshard.crlauncher.network.download.DownloadList;
-import me.theentropyshard.crlauncher.network.download.HttpDownload;
-import me.theentropyshard.crlauncher.utils.FileUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
-    private static final Logger LOG = LogManager.getLogger(QuiltCosmicLauncher.class);
-
     private final String version;
 
     public QuiltCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
@@ -69,11 +57,10 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
             quiltManager.downloadCosmicQuilt(this.version, dialog);
             SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
         } catch (IOException e) {
-            LOG.error("Could not download Cosmic Quilt {}", this.version, e);
+            Log.error("Could not download Cosmic Quilt " + this.version, e);
 
             MessageBox.showErrorMessage(
-                    CRLauncher.frame,
-                    "Could not download Cosmic Quilt " + this.version + ": " + e.getMessage()
+                CRLauncher.frame, "Could not download Cosmic Quilt " + this.version + ": " + e.getMessage()
             );
 
             return;
@@ -83,11 +70,10 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
         try {
             command.add(quiltManager.getClasspathFor(this.version));
         } catch (IOException e) {
-            LOG.error("Could not get classpath for " + this.version, e);
+            Log.error("Could not get classpath for " + this.version, e);
 
             MessageBox.showErrorMessage(
-                    CRLauncher.frame,
-                    "Could not get classpath for " + this.version + ": " + e.getMessage()
+                CRLauncher.frame, "Could not get classpath for " + this.version + ": " + e.getMessage()
             );
 
             return;

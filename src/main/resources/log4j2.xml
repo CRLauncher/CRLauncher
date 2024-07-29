@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="ERROR" packages="me.theentropyshard.crlauncher.gui">
+<Configuration status="ERROR">
     <Appenders>
-        <Console name="ConsoleLogger" target="SYSTEM_OUT">
-            <PatternLayout disableAnsi="false"
-                           pattern="%highlight{%d{HH:mm:ss} [%t] %level %logger{36} - %msg%n}{INFO=default}"/>
-        </Console>
-
         <RollingRandomAccessFile name="FileLogger" fileName="${sys:crlauncher.logsDir}/latest.log"
                                  filePattern="${sys:crlauncher.logsDir}/$${date:MM-yyyy}/app-%d{dd-MM-yyyy}-%i.log.gz">
             <PatternLayout pattern="%d{HH:mm:ss} [%t] %level %logger - %msg%n" charset="866"/>
@@ -15,17 +10,11 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingRandomAccessFile>
-
-        <GuiConsoleAppender name="GuiConsole">
-            <PatternLayout pattern="%d{HH:mm:ss} [%t] %level %c{1.1.1.*} - %msg%n" />
-        </GuiConsoleAppender>
     </Appenders>
     <Loggers>
         <!-- avoid duplicated logs with additivity=false -->
         <Logger name="me.theentropyshard.crlauncher" level="debug" additivity="false">
-            <AppenderRef ref="ConsoleLogger"/>
             <AppenderRef ref="FileLogger"/>
-            <AppenderRef ref="GuiConsole"/>
         </Logger>
 
         <Root/>

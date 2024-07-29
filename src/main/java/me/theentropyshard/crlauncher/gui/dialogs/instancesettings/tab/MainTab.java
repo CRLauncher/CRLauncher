@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,7 +36,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class MainTab extends Tab {
-    private static final Logger LOG = LogManager.getLogger(MainTab.class);
+    
 
     public MainTab(Instance instance, JDialog dialog) {
         super("Main", instance, dialog);
@@ -84,7 +85,7 @@ public class MainTab extends Tab {
                 try {
                     versions = this.get();
                 } catch (InterruptedException | ExecutionException e) {
-                    LOG.error("Could not get versions", e);
+                    Log.error("Could not get versions", e);
 
                     MessageBox.showErrorMessage(
                             CRLauncher.frame,

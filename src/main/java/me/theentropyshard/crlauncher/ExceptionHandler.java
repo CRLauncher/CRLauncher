@@ -18,18 +18,15 @@
 
 package me.theentropyshard.crlauncher;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import me.theentropyshard.crlauncher.logging.Log;
 
 public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
-    private static final Logger LOG = LogManager.getLogger(ExceptionHandler.class);
-
     public ExceptionHandler() {
 
     }
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        LOG.error("Uncaught exception in thread [{}]", t, e);
+        Log.error("Uncaught exception in thread [" + t + "]", e);
     }
 }
