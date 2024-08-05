@@ -138,7 +138,7 @@ public class CosmicRunner extends Thread {
 
             long start = System.currentTimeMillis();
 
-            int exitCode = launcher.launch(Log::info);
+            int exitCode = launcher.launch(Log::info, launchOption == 3);
 
             long end = System.currentTimeMillis();
 

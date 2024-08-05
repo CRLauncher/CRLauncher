@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.utils.ProcessReader;
 import me.theentropyshard.crlauncher.utils.SystemProperty;
@@ -56,7 +57,7 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
     }
 
     @Override
-    public int launch(LogConsumer log) throws Exception {
+    public int launch(LogConsumer log, boolean exitAfterLaunch) throws Exception {
         this.buildCommand(this.command);
 
         ProcessBuilder processBuilder = new ProcessBuilder(this.command);
@@ -64,6 +65,10 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
         processBuilder.redirectErrorStream(true);
 
         Process process = processBuilder.start();
+
+        if (exitAfterLaunch) {
+            CRLauncher.getInstance().shutdown();
+        }
 
         new ProcessReader(process).read(log::line);
 
