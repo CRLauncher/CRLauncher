@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
 import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
@@ -28,6 +29,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
+import me.theentropyshard.crlauncher.gui.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
@@ -74,7 +76,7 @@ public class CosmicRunner extends Thread {
             CRDownloadDialog dialog = new CRDownloadDialog();
             SwingUtilities.invokeLater(() -> dialog.setVisible(true));
             versionManager.downloadVersion(version, dialog);
-            SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
+            dialog.getDialog().dispose();
 
             Path saveDirPath = this.instance.getCosmicDir();
 
@@ -120,11 +122,38 @@ public class CosmicRunner extends Thread {
                 throw new IllegalArgumentException("Unknown instance type: " + this.instance.getType());
             }
 
+            Settings settings = CRLauncher.getInstance().getSettings();
+
+            int launchOption = settings.whenCRLaunchesOption;
+
+            boolean consoleWasOpen = LauncherConsole.instance.getFrame().isVisible();
+
+            switch (launchOption) {
+                case 1 -> CRLauncher.frame.setVisible(false);
+                case 2 -> {
+                    CRLauncher.frame.setVisible(false);
+                    LauncherConsole.instance.setVisible(false);
+                }
+            }
+
             long start = System.currentTimeMillis();
 
             int exitCode = launcher.launch(Log::info);
 
             long end = System.currentTimeMillis();
+
+            int exitsOption = settings.whenCRExitsOption;
+            if (exitsOption == 0) {
+                switch (launchOption) {
+                    case 1 -> CRLauncher.frame.setVisible(true);
+                    case 2 -> {
+                        if (consoleWasOpen) {
+                            LauncherConsole.instance.setVisible(true);
+                        }
+                        CRLauncher.frame.setVisible(true);
+                    }
+                }
+            }
 
             Log.info("Cosmic Reach process finished with exit code " + exitCode);
 
@@ -136,6 +165,10 @@ public class CosmicRunner extends Thread {
 
             this.instance.updatePlaytime(timePlayedSeconds);
             this.instance.save();
+
+            if (exitCode == 0 && exitsOption == 1) {
+                CRLauncher.getInstance().shutdown();
+            }
         } catch (Exception e) {
             Log.error("Exception occurred while trying to start Cosmic Reach", e);
         } finally {
