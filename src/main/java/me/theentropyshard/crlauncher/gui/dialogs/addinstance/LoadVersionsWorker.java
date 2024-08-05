@@ -23,20 +23,20 @@ import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.logging.Log;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.table.TableRowSorter;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
-    
+
 
     private final CosmicVersionsTableModel model;
     private final AddInstanceDialog dialog;
@@ -67,12 +67,18 @@ public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
             return;
         }
 
+        boolean showAmountOfTime = CRLauncher.getInstance().getSettings().showAmountOfTime;
+
         for (Version version : versions) {
             Instant instant = Instant.ofEpochSecond(version.getReleaseTime());
+            OffsetDateTime releaseTime = OffsetDateTime.ofInstant(instant, ZoneId.of("UTC"));
+            String releasedDate = Version.FORMATTER.format(releaseTime) + (showAmountOfTime ?
+                " (" + this.getAgoFromNow(releaseTime) + ")" : "");
+
             Object[] rowData = {
-                    version.getId(),
-                    Version.FORMATTER.format(OffsetDateTime.ofInstant(instant, ZoneId.of("UTC"))),
-                    version.getType()
+                version.getId(),
+                releasedDate,
+                version.getType()
             };
 
             this.model.addRow(rowData);
@@ -83,13 +89,58 @@ public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
         this.dialog.getPreAlphasBox().addActionListener(e -> rowSorter.sort());
 
         rowSorter.setRowFilter(RowFilter.orFilter(Arrays.asList(
-                new VersionTypeRowFilter(this.dialog.getPreAlphasBox(), VersionType.PRE_ALPHA)
+            new VersionTypeRowFilter(this.dialog.getPreAlphasBox(), VersionType.PRE_ALPHA)
         )));
 
         this.table.setRowSorter(rowSorter);
 
         this.dialog.getAddButton().setEnabled(true);
 
-        SwingUtils.setJTableColumnsWidth(this.table, 70, 15, 15);
+        if (showAmountOfTime) {
+            SwingUtils.setJTableColumnsWidth(this.table, 55, 30, 15);
+        } else {
+            SwingUtils.setJTableColumnsWidth(this.table, 70, 15, 15);
+        }
+    }
+
+    private String getAgoFromNow(Temporal temporal) {
+        OffsetDateTime now = OffsetDateTime.now();
+
+        long years = ChronoUnit.YEARS.between(temporal, now);
+        if (years == 0) {
+            long months = ChronoUnit.MONTHS.between(temporal, now);
+            if (months == 0) {
+                long weeks = ChronoUnit.WEEKS.between(temporal, now);
+                if (weeks == 0) {
+                    int days = (int) ChronoUnit.DAYS.between(temporal, now);
+                    switch (days) {
+                        case 0:
+                            return "today";
+                        case 1:
+                            return "yesterday";
+                        default:
+                            return days + " days ago";
+                    }
+                } else {
+                    if (weeks == 1) {
+                        return "1 week ago";
+                    } else {
+                        return weeks + " weeks ago";
+                    }
+                }
+            } else {
+                if (months == 1) {
+                    return "1 month ago";
+                } else {
+                    return months + " months ago";
+                }
+            }
+        } else {
+            if (years == 1) {
+                return "1 year ago";
+            } else {
+                return years + " years ago";
+            }
+        }
     }
 }
