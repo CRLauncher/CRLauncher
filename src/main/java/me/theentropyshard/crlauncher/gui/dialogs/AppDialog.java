@@ -33,7 +33,7 @@ public abstract class AppDialog {
     }
 
     public void center(int screen) {
-        if (CRLauncher.getInstance().getSettings().dialogRelativeToParent) {
+        if (CRLauncher.getInstance().getSettings().dialogRelativeParent) {
             this.dialog.setLocationRelativeTo(CRLauncher.frame);
         } else {
             SwingUtils.centerWindow(this.dialog, screen);

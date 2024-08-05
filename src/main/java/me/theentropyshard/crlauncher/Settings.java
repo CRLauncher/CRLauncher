@@ -35,7 +35,7 @@ public class Settings {
     public boolean darkTheme = false;
     public String lastDir = System.getProperty("user.dir");
     public String lastInstanceGroup = "<default>";
-    public boolean dialogRelativeToParent = true;
+    public boolean dialogRelativeParent = true;
     public boolean settingsDialogUpdateToLatest = true;
     public boolean showConsoleAtStartup = true;
     public boolean showAmountOfTime = false;
@@ -63,7 +63,7 @@ public class Settings {
 
     public void save(Path file) {
         try {
-            FileUtils.writeUtf8(file, Json.write(this));
+            FileUtils.writeUtf8(file, this.writePrettyJson ? Json.writePretty(this) : Json.write(this));
         } catch (IOException e) {
             Log.error("Could not save settings to " + file);
         }

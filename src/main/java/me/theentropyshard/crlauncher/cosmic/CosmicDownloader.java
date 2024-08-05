@@ -27,7 +27,8 @@ public class CosmicDownloader {
         Path versionJson = filePath.getParent().resolve(version.getId() + ".json");
 
         if (!Files.exists(versionJson)) {
-            FileUtils.writeUtf8(versionJson, Json.write(version));
+            boolean pretty = CRLauncher.getInstance().getSettings().writePrettyJson;
+            FileUtils.writeUtf8(versionJson, pretty ? Json.writePretty(version) : Json.write(version));
         }
 
         if (!Files.exists(filePath) || !HashUtils.sha256(filePath).equals(version.getSha256())) {

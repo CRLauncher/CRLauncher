@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.quilt;
 
 import com.google.gson.reflect.TypeToken;
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
@@ -70,7 +71,8 @@ public class QuiltManager {
         downloadList.addAll(downloads);
         downloadList.downloadAll();
 
-        FileUtils.writeUtf8(versionDir.resolve(QuiltManager.DEPS_FILE), Json.write(deps));
+        boolean pretty = CRLauncher.getInstance().getSettings().writePrettyJson;
+        FileUtils.writeUtf8(versionDir.resolve(QuiltManager.DEPS_FILE), pretty ? Json.writePretty(deps) : Json.write(deps));
     }
 
     private boolean checkIfInstalled(String version) throws IOException {

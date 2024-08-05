@@ -74,7 +74,7 @@ public class SettingsView extends JPanel {
             JLabel dialogPosition = new JLabel("Dialog position: ");
 
             JComboBox<String> position = new JComboBox<>(new String[]{"Relative to parent", "Always centered"});
-            if (CRLauncher.getInstance().getSettings().dialogRelativeToParent) {
+            if (CRLauncher.getInstance().getSettings().dialogRelativeParent) {
                 position.setSelectedIndex(0);
             } else {
                 position.setSelectedIndex(1);
@@ -82,11 +82,9 @@ public class SettingsView extends JPanel {
 
             position.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    Settings settings = CRLauncher.getInstance().getSettings();
-
                     switch (e.getItem().toString()) {
-                        case "Relative to parent" -> settings.dialogRelativeToParent = true;
-                        case "Always centered" -> settings.dialogRelativeToParent = false;
+                        case "Relative to parent" -> CRLauncher.getInstance().getSettings().dialogRelativeParent = true;
+                        case "Always centered" -> CRLauncher.getInstance().getSettings().dialogRelativeParent = false;
                         default -> throw new RuntimeException("Unreachable");
                     }
                 }
@@ -95,17 +93,72 @@ public class SettingsView extends JPanel {
             uiSettings.add(dialogPosition);
             uiSettings.add(position);
 
-            JCheckBox showConsole = new JCheckBox("Show console at startup");
-            showConsole.setSelected(CRLauncher.getInstance().getSettings().showConsoleAtStartup);
-            showConsole.addActionListener(e -> {
-                Settings settings = CRLauncher.getInstance().getSettings();
-                settings.showConsoleAtStartup = !settings.showConsoleAtStartup;
+            JCheckBox showAmountOfTime = new JCheckBox("Show the amount of time that has passed since the release date");
+            showAmountOfTime.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().showAmountOfTime = showAmountOfTime.isSelected();
             });
-            uiSettings.add(showConsole);
+            showAmountOfTime.setSelected(CRLauncher.getInstance().getSettings().showAmountOfTime);
+            uiSettings.add(showAmountOfTime);
+
+            gbc.gridy++;
+            this.add(uiSettings, gbc);
+        }
+
+        {
+            JPanel otherSettings = new JPanel(new GridLayout(3, 3));
+            otherSettings.setBorder(new TitledBorder("Other"));
+
+            JCheckBox prettyJson = new JCheckBox("Write pretty JSON files (useful for development/debugging)");
+            prettyJson.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().writePrettyJson = prettyJson.isSelected();
+            });
+            prettyJson.setSelected(CRLauncher.getInstance().getSettings().writePrettyJson);
+            otherSettings.add(prettyJson);
+            otherSettings.add(Box.createHorizontalGlue());
+
+            JLabel whenCosmicLaunchesLabel = new JLabel("When Cosmic Reach launches: ");
+            otherSettings.add(whenCosmicLaunchesLabel);
+            String[] whenLaunchesOptions = {
+                "Do nothing",
+                "Hide launcher",
+                "Hide launcher and console",
+                "Exit launcher (Time spent on instance won't be counted)"
+            };
+            JComboBox<String> whenLaunchesBehavior = new JComboBox<>(whenLaunchesOptions);
+            whenLaunchesBehavior.addItemListener(e -> {
+                if (e.getStateChange() != ItemEvent.SELECTED) {
+                    return;
+                }
+
+                CRLauncher.getInstance().getSettings().whenCRLaunchesOption = whenLaunchesBehavior.getSelectedIndex();
+            });
+            int whenLaunchesIndex = CRLauncher.getInstance().getSettings().whenCRLaunchesOption;
+            if (whenLaunchesIndex < 0 || whenLaunchesIndex >= whenLaunchesOptions.length) {
+                whenLaunchesIndex = 0;
+            }
+            whenLaunchesBehavior.setSelectedIndex(whenLaunchesIndex);
+            otherSettings.add(whenLaunchesBehavior);
+
+            JLabel whenCosmicExits = new JLabel("When Cosmic Reach exits: ");
+            otherSettings.add(whenCosmicExits);
+            String[] whenExitsOptions = {
+                "Do nothing",
+                "Exit launcher if Cosmic Reach exit code is 0 (ok)"
+            };
+            JComboBox<String> whenExitsBehavior = new JComboBox<>(whenExitsOptions);
+            whenExitsBehavior.addItemListener(e -> {
+                CRLauncher.getInstance().getSettings().whenCRExitsOption = whenExitsBehavior.getSelectedIndex();
+            });
+            int whenExitsIndex = CRLauncher.getInstance().getSettings().whenCRExitsOption;
+            if (whenExitsIndex < 0 || whenExitsIndex >= whenExitsOptions.length) {
+                whenExitsIndex = 0;
+            }
+            whenExitsBehavior.setSelectedIndex(whenExitsIndex);
+            otherSettings.add(whenExitsBehavior);
 
             gbc.gridy++;
             gbc.weighty = 1;
-            this.add(uiSettings, gbc);
+            this.add(otherSettings, gbc);
         }
     }
 }

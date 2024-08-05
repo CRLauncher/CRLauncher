@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.instance;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
@@ -77,7 +78,9 @@ public class Instance {
     }
 
     public void save() throws IOException {
-        FileUtils.writeUtf8(this.getWorkDir().resolve(Instance.INSTANCE_FILE_NAME), Json.write(this));
+        Path file = this.getWorkDir().resolve(Instance.INSTANCE_FILE_NAME);
+        boolean pretty = CRLauncher.getInstance().getSettings().writePrettyJson;
+        FileUtils.writeUtf8(file, pretty ? Json.writePretty(this) : Json.write(this));
     }
 
     public void updatePlaytime(long seconds) {
