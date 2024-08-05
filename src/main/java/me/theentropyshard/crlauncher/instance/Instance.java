@@ -62,6 +62,7 @@ public class Instance {
     private String fabricVersion;
     private String quiltVersion;
     private boolean autoUpdateToLatest;
+    private transient volatile boolean running;
 
     public Instance() {
         this(null, null, null);
@@ -86,6 +87,14 @@ public class Instance {
     public void updatePlaytime(long seconds) {
         this.lastPlaytime = seconds;
         this.totalPlaytime += seconds;
+    }
+
+    public boolean isRunning() {
+        return this.running;
+    }
+
+    public void setRunning(boolean running) {
+        this.running = running;
     }
 
     public boolean isAutoUpdateToLatest() {

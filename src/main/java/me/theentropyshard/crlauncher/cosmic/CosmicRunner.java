@@ -65,6 +65,17 @@ public class CosmicRunner extends Thread {
     }
 
     @Override
+    public synchronized void start() {
+        if (this.instance.isRunning()) {
+            return;
+        }
+
+        this.instance.setRunning(true);
+
+        super.start();
+    }
+
+    @Override
     public void run() {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
@@ -172,6 +183,7 @@ public class CosmicRunner extends Thread {
         } catch (Exception e) {
             Log.error("Exception occurred while trying to start Cosmic Reach", e);
         } finally {
+            this.instance.setRunning(false);
             if (this.clientCopyTmp != null && Files.exists(this.clientCopyTmp)) {
                 try {
                     Files.delete(this.clientCopyTmp);
