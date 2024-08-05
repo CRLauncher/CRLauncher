@@ -46,8 +46,12 @@ public final class HashUtils {
     public static String sha256(Path file) throws IOException {
         byte[] mdBytes = HashUtils.hash(file, "SHA-256");
 
+        return HashUtils.toHex(mdBytes);
+    }
+
+    public static String toHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
-        for (byte b : mdBytes) {
+        for (byte b : bytes) {
             sb.append(Integer.toString((b & 0xff) + 0x100, 16).substring(1));
         }
 

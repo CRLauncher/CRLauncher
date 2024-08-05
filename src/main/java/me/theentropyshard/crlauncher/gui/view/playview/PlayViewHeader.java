@@ -18,11 +18,17 @@
 
 package me.theentropyshard.crlauncher.gui.view.playview;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.account.Account;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class PlayViewHeader extends JPanel {
     private final JComboBox<String> instanceGroups;
+    private final JLabel account;
 
     public static PlayViewHeader instance;
 
@@ -41,8 +47,25 @@ public class PlayViewHeader extends JPanel {
 
         JPanel rightSide = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
+        JLabel accountsLabel = new JLabel("Account:");
+        rightSide.add(accountsLabel);
+
+        this.account = new JLabel();
+        this.setCurrentAccount(CRLauncher.getInstance().getAccountManager().getCurrentAccount());
+        rightSide.add(this.account);
+
         this.add(leftSide, BorderLayout.WEST);
         this.add(rightSide, BorderLayout.EAST);
+    }
+
+    public void setCurrentAccount(Account account) {
+        if (account != null) {
+            BufferedImage image = SwingUtils.loadImageFromBase64(account.getHeadIcon());
+            this.account.setIcon(new ImageIcon(image.getScaledInstance(16, 16, BufferedImage.SCALE_FAST)));
+            this.account.setText(account.getUsername());
+        } else {
+            this.account.setText("No account selected");
+        }
     }
 
     public JComboBox<String> getInstanceGroups() {

@@ -16,23 +16,26 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher;
+package me.theentropyshard.crlauncher.cosmic.account;
 
-import me.theentropyshard.crlauncher.cli.Args;
-import me.theentropyshard.crlauncher.logging.Log;
+import java.util.Random;
 
-public class Main {
-    public static void main(String[] args) {
-        Args theArgs = Args.parse(args);
+public class OfflineAccount extends Account {
+    public OfflineAccount() {
 
-        LauncherProperties.LOGS_DIR.install(theArgs.getWorkDir().resolve("logs"));
-        Log.start();
+    }
 
-        try {
-            new CRLauncher(theArgs, theArgs.getWorkDir());
-        } catch (Throwable t) {
-            Log.error("Unable to start the launcher", t);
-            System.exit(1);
-        }
+    public OfflineAccount(String username) {
+        super(username);
+
+        Random random = new Random(username.hashCode());
+
+        this.setUniqueId(random.nextLong());
+        this.setHeadIcon(Account.DEFAULT_HEAD_ICON);
+    }
+
+    @Override
+    public void authenticate() {
+
     }
 }

@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher;
 
 import me.theentropyshard.crlauncher.cli.Args;
+import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.Gui;
@@ -64,6 +65,7 @@ public class CRLauncher {
     private final InstanceManager instanceManager;
     private final IconManager iconManager;
     private final QuiltManager quiltManager;
+    private final AccountManager accountManager;
 
     private final ExecutorService taskPool;
 
@@ -104,6 +106,13 @@ public class CRLauncher {
             .build();
 
         this.versionManager = new VersionManager(this.versionsDir);
+
+        this.accountManager = new AccountManager(this.cosmicDir);
+        try {
+            this.accountManager.load();
+        } catch (IOException e) {
+            Log.error("Unable to load accounts", e);
+        }
 
         this.instanceManager = new InstanceManager(this.instancesDir);
         try {
@@ -156,6 +165,12 @@ public class CRLauncher {
 
         this.taskPool.shutdown();
 
+        try {
+            this.accountManager.save();
+        } catch (IOException e) {
+            Log.error("Exception while saving accounts", e);
+        }
+
         this.instanceManager.getInstances().forEach(instance -> {
             try {
                 instance.save();
@@ -195,6 +210,10 @@ public class CRLauncher {
 
     public QuiltManager getQuiltManager() {
         return this.quiltManager;
+    }
+
+    public AccountManager getAccountManager() {
+        return this.accountManager;
     }
 
     public Settings getSettings() {

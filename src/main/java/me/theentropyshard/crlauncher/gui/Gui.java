@@ -26,6 +26,9 @@ import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.view.AboutView;
 import me.theentropyshard.crlauncher.gui.view.SettingsView;
+import me.theentropyshard.crlauncher.gui.view.accountsview.AccountItem;
+import me.theentropyshard.crlauncher.gui.view.accountsview.AccountsView;
+import me.theentropyshard.crlauncher.gui.view.accountsview.AddAccountItem;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
@@ -41,6 +44,7 @@ public class Gui {
     private final JFrame frame;
 
     private PlayView playView;
+    private AccountsView accountsView;
 
     private boolean darkTheme;
     private boolean initialized;
@@ -147,6 +151,16 @@ public class Gui {
             ((InstanceItem) component).updateColors();
         }
 
+        for (Component component : this.accountsView.getPanel().getComponents()) {
+            if (component instanceof AccountItem) {
+                ((AccountItem) component).updateColors();
+            }
+
+            if (component instanceof AddAccountItem) {
+                ((AddAccountItem) component).updateColors();
+            }
+        }
+
         defaultInstancesPanel.getScrollPane().setBorder(null);
         this.playView.getGroups().values().forEach(instancesPanel -> {
 
@@ -175,13 +189,17 @@ public class Gui {
         this.playView.getGroups().values().forEach(instancesPanel -> {
             instancesPanel.getScrollPane().setBorder(null);
         });
+
+        this.accountsView.getScrollPane().setBorder(null);
     }
 
     public void showGui() {
         SwingUtilities.invokeLater(() -> {
             this.playView = new PlayView();
+            this.accountsView = new AccountsView();
 
             this.viewSelector.addTab("Play", this.playView);
+            this.viewSelector.addTab("Accounts", this.accountsView);
             this.viewSelector.addTab("Settings", new SettingsView());
             this.viewSelector.addTab("About", new AboutView());
 
@@ -205,5 +223,9 @@ public class Gui {
 
     public PlayView getPlayView() {
         return this.playView;
+    }
+
+    public AccountsView getAccountsView() {
+        return this.accountsView;
     }
 }
