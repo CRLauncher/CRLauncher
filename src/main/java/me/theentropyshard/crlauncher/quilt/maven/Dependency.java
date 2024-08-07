@@ -26,4 +26,9 @@ public record Dependency(String groupId, String artifactId, String version) {
     public String mavenPom() {
         return this.artifactId + "-" + this.version + ".pom";
     }
+
+    public String mavenUrl() {
+        return this.groupId.replace(".", "/") + "/" + this.artifactId +
+            "/" + this.version + "/" + this.mavenJar();
+    }
 }

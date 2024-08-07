@@ -22,6 +22,8 @@ import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricModsView;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricVersionsLoaderWorker;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.JarModsView;
@@ -137,6 +139,8 @@ public class ModsTab extends Tab implements ItemListener {
             new FabricVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
         } else if (instance.getType() == InstanceType.QUILT) {
             new QuiltVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+        } else if (instance.getType() == InstanceType.PUZZLE) {
+            new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
         }
 
         this.versionsLoaded = true;
@@ -151,6 +155,7 @@ public class ModsTab extends Tab implements ItemListener {
             case VANILLA -> new JarModsView(instance);
             case FABRIC -> new FabricModsView(instance);
             case QUILT -> new QuiltModsView(instance);
+            case PUZZLE -> new PuzzleModsView(instance);
         };
 
         this.loadModloaderVersions();
@@ -190,11 +195,15 @@ public class ModsTab extends Tab implements ItemListener {
         instance.setType((InstanceType) this.typeCombo.getSelectedItem());
         if (instance.getType() == InstanceType.FABRIC) {
             instance.setFabricVersion(
-                    ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
+                ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
             );
         } else if (instance.getType() == InstanceType.QUILT) {
             instance.setQuiltVersion(
-                    ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
+                ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
+            );
+        } else if (instance.getType() == InstanceType.PUZZLE) {
+            instance.setPuzzleVersion(
+                ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
             );
         }
     }

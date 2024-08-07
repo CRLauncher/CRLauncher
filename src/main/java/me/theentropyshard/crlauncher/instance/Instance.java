@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 
@@ -39,6 +40,8 @@ public class Instance {
     private static final String DISABLED_FABRIC_MODS_DIR_NAME = "disabledfabricmods";
     private static final String QUILT_MODS_DIR_NAME = "quiltmods";
     private static final String DISABLED_QUILT_MODS_DIR_NAME = "disabledquiltmods";
+    private static final String PUZZLE_MODS_DIR_NAME = "pmods";
+    private static final String DISABLED_PUZZLE_MODS_DIR_NAME = "disabledpuzzlemods";
 
     private transient Path workDir;
 
@@ -58,9 +61,11 @@ public class Instance {
     private final List<JarMod> jarMods;
     private final List<FabricMod> fabricMods;
     private final List<QuiltMod> quiltMods;
+    private final List<PuzzleMod> puzzleMods;
     private InstanceType type = InstanceType.VANILLA;
     private String fabricVersion;
     private String quiltVersion;
+    private String puzzleVersion;
     private boolean autoUpdateToLatest;
     private transient volatile boolean running;
 
@@ -76,6 +81,7 @@ public class Instance {
         this.jarMods = new ArrayList<>();
         this.fabricMods = new ArrayList<>();
         this.quiltMods = new ArrayList<>();
+        this.puzzleMods = new ArrayList<>();
     }
 
     public void save() throws IOException {
@@ -113,6 +119,10 @@ public class Instance {
         return this.quiltMods;
     }
 
+    public List<PuzzleMod> getPuzzleMods() {
+        return this.puzzleMods;
+    }
+
     public String getFabricVersion() {
         return this.fabricVersion;
     }
@@ -127,6 +137,14 @@ public class Instance {
 
     public void setQuiltVersion(String quiltVersion) {
         this.quiltVersion = quiltVersion;
+    }
+
+    public String getPuzzleVersion() {
+        return this.puzzleVersion;
+    }
+
+    public void setPuzzleVersion(String puzzleVersion) {
+        this.puzzleVersion = puzzleVersion;
     }
 
     public InstanceType getType() {
@@ -171,6 +189,14 @@ public class Instance {
 
     public Path getDisabledQuiltModsDir() {
         return this.workDir.resolve(Instance.DISABLED_QUILT_MODS_DIR_NAME);
+    }
+
+    public Path getPuzzleModsDir() {
+        return this.getCosmicDir().resolve(Instance.PUZZLE_MODS_DIR_NAME);
+    }
+
+    public Path getDisabledPuzzleModsDir() {
+        return this.getCosmicDir().resolve(Instance.DISABLED_PUZZLE_MODS_DIR_NAME);
     }
 
     public String getName() {

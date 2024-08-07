@@ -26,6 +26,7 @@ import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
@@ -128,6 +129,17 @@ public class CosmicRunner extends Thread {
                     clientPath,
                     this.instance.getQuiltModsDir(),
                     this.instance.getQuiltVersion()
+                );
+            } else if (this.instance.getType() == InstanceType.PUZZLE) {
+                this.updatePuzzleMods();
+
+                launcher = CosmicLauncherFactory.getLauncher(
+                    LaunchType.PUZZLE,
+                    saveDirPath,
+                    saveDirPath,
+                    clientPath,
+                    this.instance.getPuzzleModsDir(),
+                    this.instance.getPuzzleVersion()
                 );
             } else {
                 throw new IllegalArgumentException("Unknown instance type: " + this.instance.getType());
@@ -320,6 +332,34 @@ public class CosmicRunner extends Thread {
 
             for (QuiltMod mod : quiltMods.stream().filter(q -> q.active).toList()) {
                 Path filePath = disabledModsDir.resolve(Paths.get(mod.filePath).getFileName());
+                if (Files.exists(filePath)) {
+                    Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.delete(filePath);
+                }
+            }
+        }
+    }
+
+    private void updatePuzzleMods() throws IOException {
+        List<PuzzleMod> puzzleMods = this.instance.getPuzzleMods();
+
+        if (!puzzleMods.isEmpty()) {
+            Path modsDir = this.instance.getPuzzleModsDir();
+            Path disabledModsDir = this.instance.getDisabledPuzzleModsDir();
+
+            FileUtils.createDirectoryIfNotExists(modsDir);
+            FileUtils.createDirectoryIfNotExists(disabledModsDir);
+
+            for (PuzzleMod mod : puzzleMods.stream().filter(Predicate.not(PuzzleMod::isActive)).toList()) {
+                Path filePath = Paths.get(mod.getFilePath());
+                if (Files.exists(filePath)) {
+                    Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                    Files.delete(filePath);
+                }
+            }
+
+            for (PuzzleMod mod : puzzleMods.stream().filter(PuzzleMod::isActive).toList()) {
+                Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
                 if (Files.exists(filePath)) {
                     Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
                     Files.delete(filePath);

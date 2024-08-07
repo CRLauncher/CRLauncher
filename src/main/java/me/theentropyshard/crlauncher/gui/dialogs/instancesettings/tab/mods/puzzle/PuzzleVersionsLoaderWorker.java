@@ -16,9 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.network.HttpRequest;
@@ -29,22 +30,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class QuiltVersionsLoaderWorker extends SwingWorker<List<GithubReleaseResponse>, Void> {
+public class PuzzleVersionsLoaderWorker extends SwingWorker<List<GithubReleaseResponse>, Void> {
     private final JComboBox<GithubReleaseResponse> versionsCombo;
     private final Instance instance;
 
-    public QuiltVersionsLoaderWorker(JComboBox<GithubReleaseResponse> versionsCombo, Instance instance) {
+    public PuzzleVersionsLoaderWorker(JComboBox<GithubReleaseResponse> versionsCombo, Instance instance) {
         this.versionsCombo = versionsCombo;
         this.instance = instance;
     }
 
     @Override
     protected List<GithubReleaseResponse> doInBackground() throws Exception {
-        try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
-            String string = request.asString("https://codeberg.org/api/v1/repos/CRModders/cosmic-quilt/releases");
-
-            return new ArrayList<>(List.of(Json.parse(string, GithubReleaseResponse[].class)));
-        }
+        return new GithubReleaseDownloader().getAllReleases("PuzzleLoader", "PuzzleLoader");
     }
 
     @Override
@@ -62,7 +59,7 @@ public class QuiltVersionsLoaderWorker extends SwingWorker<List<GithubReleaseRes
 
         for (int i = 0; i < this.versionsCombo.getItemCount(); i++) {
             GithubReleaseResponse release = this.versionsCombo.getItemAt(i);
-            if (release.tag_name.equals(this.instance.getQuiltVersion())) {
+            if (release.tag_name.equals(this.instance.getPuzzleVersion())) {
                 this.versionsCombo.setSelectedIndex(i);
                 break;
             }

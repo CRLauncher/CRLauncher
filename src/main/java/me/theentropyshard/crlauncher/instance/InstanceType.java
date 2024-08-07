@@ -24,7 +24,8 @@ import java.util.Map;
 public enum InstanceType {
     VANILLA("vanilla", "Vanilla"),
     FABRIC("fabric", "Fabric"),
-    QUILT("quilt", "Cosmic Quilt");
+    QUILT("quilt", "Cosmic Quilt"),
+    PUZZLE("puzzle", "Puzzle");
 
     private static final Map<String, InstanceType> lookup = new HashMap<>();
 
