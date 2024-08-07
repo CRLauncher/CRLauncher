@@ -20,17 +20,17 @@ $ gradlew clean build
 
 Done! To run the launcher, just do:
 ```shell
-$ java -jar dist/CRLauncher-0.3.0.jar
+$ java -jar dist/CRLauncher-0.4.0.jar
 ```
 
 If you want to change the location of launcher's files, add `--workDir` argument:
 ```shell
-$ java -jar dist/CRLauncher-0.3.0.jar --workDir C:\Users\User\Documents\CRLauncher
+$ java -jar dist/CRLauncher-0.4.0.jar --workDir C:\Users\User\Documents\CRLauncher
 ```
 
 Or you can use the `--useJarLocation` argument, which will make the launcher use the jar's location instead. In that case the `--workDir` argument will be ignored:
 ```shell
-$ java -jar dist/CRLauncher-0.3.0.jar --useJarLocation
+$ java -jar dist/CRLauncher-0.4.0.jar --useJarLocation
 ```
 This way the launcher will create its files in build/libs
 
