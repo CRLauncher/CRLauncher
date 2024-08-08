@@ -34,7 +34,9 @@ import okhttp3.Protocol;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -139,6 +141,18 @@ public class CRLauncher {
         this.gui.getFrame().addWindowListener(new WindowClosingListener(e -> CRLauncher.this.shutdown()));
 
         this.gui.showGui();
+    }
+
+    public static boolean isExe() {
+        Path path = Paths.get(URI.create(Args.class.getProtectionDomain().getCodeSource().getLocation().toString()));
+
+        return path.toString().endsWith(".exe");
+    }
+
+    public static boolean isJar() {
+        Path path = Paths.get(URI.create(Args.class.getProtectionDomain().getCodeSource().getLocation().toString()));
+
+        return path.toString().endsWith(".jar");
     }
 
     private void createDirectories() {
