@@ -70,8 +70,26 @@ public class LauncherConsole {
             }
         });
 
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(scrollPane, BorderLayout.CENTER);
+
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panel.add(buttonsPanel, BorderLayout.SOUTH);
+
+        JButton copyButton = new JButton("Copy");
+        copyButton.addActionListener(e -> {
+            OperatingSystem.copyToClipboard(this.textPane.getText());
+        });
+        buttonsPanel.add(copyButton);
+
+        JButton clearButton = new JButton("Clear");
+        clearButton.addActionListener(e -> {
+            this.textPane.setText("");
+        });
+        buttonsPanel.add(clearButton);
+
         this.frame = new JFrame(BuildConfig.APP_NAME + " console");
-        this.frame.add(scrollPane, BorderLayout.CENTER);
+        this.frame.add(panel, BorderLayout.CENTER);
         this.frame.pack();
         this.frame.setLocation(LauncherConsole.DEFAULT_X, LauncherConsole.DEFAULT_Y);
     }
