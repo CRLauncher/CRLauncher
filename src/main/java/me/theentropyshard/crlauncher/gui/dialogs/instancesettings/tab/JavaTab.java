@@ -86,7 +86,7 @@ public class JavaTab extends Tab {
                 int minimumMemoryInMegabytes = Integer.parseInt(minMemory);
                 int maximumMemoryInMegabytes = Integer.parseInt(maxMemory);
 
-                if (minimumMemoryInMegabytes >= maximumMemoryInMegabytes) {
+                if (minimumMemoryInMegabytes > maximumMemoryInMegabytes) {
                     JOptionPane.showMessageDialog(JavaTab.this.getDialog(),
                             "Minimum amount of RAM cannot be larger than maximum",
                             "Error",
