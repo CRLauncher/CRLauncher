@@ -34,26 +34,18 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PuzzleCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
-    private static final Map<String, List<PuzzleDependency>> LIBRARIES = new HashMap<>() {{
-        List<PuzzleDependency> list = List.of(
-            new PuzzleDependency("https://repo.spongepowered.org/repository/maven-public/", new Dependency("org.spongepowered", "mixin", "0.8.5")),
-            new PuzzleDependency("https://jitpack.io/", new Dependency("com.github.PuzzleLoader", "access_manipulators", "1.0.1")),
-            new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm", "9.6")),
-            new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-tree", "9.6")),
-            new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-util", "9.6")),
-            new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-analysis", "9.6")),
-            new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-commons", "9.6"))
-        );
-        this.put("1.0.3", list);
-        this.put("1.0.2", list);
-        this.put("1.0.1", list);
-        this.put("1.0.0", list);
-    }};
+    private static final List<PuzzleDependency> LIBRARIES = List.of(
+        new PuzzleDependency("https://repo.spongepowered.org/repository/maven-public/", new Dependency("org.spongepowered", "mixin", "0.8.5")),
+        new PuzzleDependency("https://jitpack.io/", new Dependency("com.github.PuzzleLoader", "access_manipulators", "1.0.1")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-tree", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-util", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-analysis", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-commons", "9.6"))
+    );
 
     private final String version;
 
@@ -101,10 +93,9 @@ public class PuzzleCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
         list.add(download);
 
-        List<PuzzleDependency> libraries = PuzzleCosmicLauncher.LIBRARIES.get(this.version);
         Path libsDir = downloadDir.resolve("libs");
         FileUtils.createDirectoryIfNotExists(libsDir);
-        for (PuzzleDependency pDep : libraries) {
+        for (PuzzleDependency pDep : PuzzleCosmicLauncher.LIBRARIES) {
             Dependency dep = pDep.dependency();
             String mavenJar = dep.mavenJar();
 
