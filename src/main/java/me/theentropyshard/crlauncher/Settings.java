@@ -40,6 +40,7 @@ public class Settings {
     public boolean showConsoleAtStartup = true;
     public boolean showAmountOfTime = false;
     public boolean writePrettyJson = false;
+    public boolean checkUpdatesStartup = true;
     public int whenCRLaunchesOption = 0;
     public int whenCRExitsOption = 0;
 

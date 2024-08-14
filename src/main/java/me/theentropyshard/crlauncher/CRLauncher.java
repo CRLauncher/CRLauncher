@@ -22,13 +22,17 @@ import me.theentropyshard.crlauncher.cli.Args;
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
+import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
+import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.Gui;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.quilt.QuiltManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 
@@ -139,6 +143,36 @@ public class CRLauncher {
 
         this.gui = new Gui(BuildConfig.APP_NAME, this.settings.darkTheme);
         this.gui.getFrame().addWindowListener(new WindowClosingListener(e -> CRLauncher.this.shutdown()));
+
+        if (this.settings.checkUpdatesStartup) {
+            this.taskPool.execute(() -> {
+                Log.info("Checking for updates...");
+
+                try {
+                    GithubReleaseResponse release = new GithubReleaseDownloader().getLatestRelease("CRLauncher", "CRLauncher");
+                    SemanticVersion latestVersion = SemanticVersion.parse(release.tag_name.substring(1));
+                    SemanticVersion currentVersion = SemanticVersion.parse(BuildConfig.APP_VERSION);
+
+                    if (latestVersion.compareTo(currentVersion) > 0) {
+                        String link = "https://github.com/CRLauncher/CRLauncher/releases/tag/" + release.tag_name;
+                        String baseText = "New version is available! (" + latestVersion.toVersionString() + "). Download here: ";
+
+                        Log.info(baseText + link);
+
+                        JTextPane message = new JTextPane();
+                        message.setContentType("text/html");
+                        message.setText(baseText + "<a href=\"" + link + "\">" + link + "</a>");
+                        message.setEditable(false);
+
+                        MessageBox.showPlainMessage(CRLauncher.frame, "Update", message);
+                    } else {
+                        Log.info("No updates are available");
+                    }
+                } catch (IOException e) {
+                    Log.error("Could not check for updates", e);
+                }
+            });
+        }
 
         this.gui.showGui();
     }

@@ -105,7 +105,7 @@ public class SettingsView extends JPanel {
         }
 
         {
-            JPanel otherSettings = new JPanel(new GridLayout(3, 3));
+            JPanel otherSettings = new JPanel(new GridLayout(4, 3));
             otherSettings.setBorder(new TitledBorder("Other"));
 
             JCheckBox prettyJson = new JCheckBox("Write pretty JSON files (useful for development/debugging)");
@@ -155,6 +155,13 @@ public class SettingsView extends JPanel {
             }
             whenExitsBehavior.setSelectedIndex(whenExitsIndex);
             otherSettings.add(whenExitsBehavior);
+
+            JCheckBox checkUpdates = new JCheckBox("Check for updates at startup");
+            checkUpdates.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().checkUpdatesStartup = checkUpdates.isSelected();
+            });
+            checkUpdates.setSelected(CRLauncher.getInstance().getSettings().checkUpdatesStartup);
+            otherSettings.add(checkUpdates);
 
             gbc.gridy++;
             gbc.weighty = 1;
