@@ -22,7 +22,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public final class MessageBox {
-    public static void showPlainMessage(Component parent, String title, String message) {
+    public static void showPlainMessage(Component parent, String title, Object message) {
         JOptionPane.showMessageDialog(parent, message, title, JOptionPane.PLAIN_MESSAGE);
     }
 
