@@ -91,7 +91,7 @@ jar {
 shadowJar {
     archiveClassifier = ''
     archiveBaseName = theName
-    archiveVersion = theVersion
+    archiveVersion = ''
 }
 
 buildConfig {
@@ -151,6 +151,22 @@ tasks.register('copyArtifacts', Copy) {
     into "${projectDir}/dist"
 }
 
+tasks.register('renameArtifacts', Copy) {
+    from "${projectDir}/dist"
+    destinationDir file("${projectDir}/dist")
+
+    include "$theName-${theVersion}.exe"
+    include "$theName-${theVersion}.zip"
+
+    rename "$theName-${theVersion}.exe", "${theName}.exe"
+    rename "$theName-${theVersion}.zip", "${theName}.zip"
+}
+
+tasks.register('removeArtifacts', Delete) {
+    delete file("${projectDir}/dist/$theName-${theVersion}.zip")
+    delete file("${projectDir}/dist/$theName-${theVersion}.exe")
+}
+
 tasks.register('downloadNewerUniversalJavaApplicationStub', Download) {
     description 'Downloads newer universalJavaApplicationStub'
     src 'https://raw.githubusercontent.com/tofi86/universalJavaApplicationStub/404f5c1b008d6296065de7a93406b387c9f3dce1/src/universalJavaApplicationStub'
@@ -178,7 +194,13 @@ clean.doFirst {
     delete "${projectDir}/dist"
 }
 
+removeArtifacts.doLast {
+    file("${projectDir}/dist/version.txt") << theVersion
+}
+
 build.finalizedBy copyArtifacts
+copyArtifacts.finalizedBy renameArtifacts
+renameArtifacts.finalizedBy removeArtifacts
 shadowJar.dependsOn jar
 build.dependsOn createExe, createMacApp
 startScripts.dependsOn shadowJar
