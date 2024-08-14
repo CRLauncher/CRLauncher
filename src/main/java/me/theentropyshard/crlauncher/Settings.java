@@ -36,7 +36,7 @@ public class Settings {
     public String lastDir = System.getProperty("user.dir");
     public String lastInstanceGroup = "<default>";
     public boolean dialogRelativeParent = true;
-    public boolean settingsDialogUpdateToLatest = true;
+    public boolean settingsDialogUpdateToLatest = false;
     public boolean showConsoleAtStartup = true;
     public boolean showAmountOfTime = false;
     public boolean writePrettyJson = false;
