@@ -81,6 +81,10 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
         }
     }
 
+    public String toVersionString() {
+        return this.major + "." + this.minor + "." + this.patch;
+    }
+
     @Override
     public String toString() {
         return "SemanticVersion{" +
