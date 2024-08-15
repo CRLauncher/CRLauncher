@@ -45,13 +45,14 @@ public class Updater {
             e.printStackTrace();
         }
 
+        Path newCopiedLauncherFile;
         try {
-            Files.move(oldLauncherFile, newLauncherFile);
+            newCopiedLauncherFile = Files.move(newLauncherFile, oldLauncherFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        new File(newLauncherFile.toAbsolutePath().toString()).setExecutable(true);
+        new File(newCopiedLauncherFile.toAbsolutePath().toString()).setExecutable(true);
 
         List<String> arguments = new ArrayList<>();
 
@@ -66,7 +67,7 @@ public class Updater {
             arguments.add(path);
             arguments.add("-Djna.nosys=true");
             arguments.add("-jar");
-            arguments.add(newLauncherFile.toString());
+            arguments.add(newCopiedLauncherFile.toString());
         }
 
         arguments.addAll(Arrays.asList(otherArgs));
