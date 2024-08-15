@@ -49,7 +49,7 @@ public class Updater {
             }
 
             FileUtils.delete(oldLauncherFile);
-            Files.move(newLauncherFile, oldLauncherFile, StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(newLauncherFile, oldLauncherFile, StandardCopyOption.REPLACE_EXISTING);
 
             new File(oldLauncherFile.toAbsolutePath().toString()).setExecutable(true);
 
