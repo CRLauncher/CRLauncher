@@ -193,7 +193,7 @@ public class CRLauncher {
                             FileUtils.createDirectoryIfNotExists(tmpDir);
                             Path newLauncherFile = tmpDir.resolve(BuildConfig.APP_NAME +  fileExtension);
 
-                            Files.delete(newLauncherFile);
+                            FileUtils.delete(newLauncherFile);
 
                             GithubReleaseResponse.Asset asset = ListUtils.search(release.assets, a -> a.name.endsWith(fileExtension));
 
