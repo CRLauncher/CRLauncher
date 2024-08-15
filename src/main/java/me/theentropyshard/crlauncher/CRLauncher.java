@@ -39,6 +39,7 @@ import okhttp3.Protocol;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.net.ServerSocket;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -203,9 +204,6 @@ public class CRLauncher {
 
                             Path currentPath = Paths.get(URI.create(Args.class.getProtectionDomain().getCodeSource().getLocation().toString()));
 
-                            Path pidFile = this.getWorkDir().resolve("pid_update");
-                            FileUtils.writeUtf8(pidFile, String.valueOf(ProcessHandle.current().pid()));
-
                             List<String> arguments = new ArrayList<>();
                             arguments.add(
                                 System.getProperty("java.home") + File.separator + "bin" + File.separator +
@@ -222,6 +220,16 @@ public class CRLauncher {
 
                             ProcessBuilder builder = new ProcessBuilder(arguments);
                             builder.start();
+
+                            Thread socketThread = new Thread(() -> {
+                                try (ServerSocket serverSocket = new ServerSocket(64686)) {
+                                    serverSocket.accept();
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            });
+                            socketThread.setName("Socket IPC thread");
+                            socketThread.setDaemon(true);
 
                             this.shutdown();
                         } else {
