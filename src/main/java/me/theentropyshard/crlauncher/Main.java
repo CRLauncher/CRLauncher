@@ -29,7 +29,7 @@ public class Main {
         Log.start();
 
         try {
-            new CRLauncher(theArgs, theArgs.getWorkDir());
+            new CRLauncher(theArgs, args, theArgs.getWorkDir());
         } catch (Throwable t) {
             Log.error("Unable to start the launcher", t);
             System.exit(1);
