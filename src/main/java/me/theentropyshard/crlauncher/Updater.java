@@ -21,11 +21,13 @@ package me.theentropyshard.crlauncher;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
+import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,55 +41,60 @@ public class Updater {
         Path oldLauncherFile = Paths.get(oldPath);
         Path newLauncherFile = Paths.get(newPath);
 
-        try {
-            FileUtils.delete(oldLauncherFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Path newCopiedLauncherFile;
-        try {
-            newCopiedLauncherFile = Files.move(newLauncherFile, oldLauncherFile);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            FileUtils.delete(newLauncherFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        new File(newCopiedLauncherFile.toAbsolutePath().toString()).setExecutable(true);
-
-        List<String> arguments = new ArrayList<>();
-
-        if (OperatingSystem.isMacApp()) {
-            arguments.add("open");
-            arguments.add("-n");
-            arguments.add(Paths.get(System.getProperty("user.dir")).getParent().getParent().toAbsolutePath().toString());
-            arguments.add("--args");
+        Path pidFile = Paths.get(System.getProperty("user.dir")).resolve("pid_update");
+        if (!Files.exists(pidFile)) {
+            System.out.println("warn: could not find pid update file: " + pidFile);
         } else {
-            String path = System.getProperty("java.home") + File.separator + "bin" + File.separator +
-                OperatingSystem.getCurrent().getJavaExecutableName();
-            arguments.add(path);
-            arguments.add("-Djna.nosys=true");
-            arguments.add("-jar");
-            arguments.add(newCopiedLauncherFile.toString());
+            try {
+                long pid = Long.parseLong(FileUtils.readUtf8(pidFile));
+                ProcessHandle.of(pid).ifPresent(handle -> {
+                    while (handle.isAlive()); // waiting
+                });
+
+                try {
+                    FileUtils.delete(pidFile);
+
+                    FileUtils.delete(oldLauncherFile);
+                    Files.move(newLauncherFile, oldLauncherFile, StandardCopyOption.REPLACE_EXISTING);
+
+                    new File(oldLauncherFile.toAbsolutePath().toString()).setExecutable(true);
+
+                    List<String> arguments = new ArrayList<>();
+
+                    if (OperatingSystem.isMacApp()) {
+                        arguments.add("open");
+                        arguments.add("-n");
+                        arguments.add(Paths.get(System.getProperty("user.dir")).getParent().getParent().toAbsolutePath().toString());
+                        arguments.add("--args");
+                    } else {
+                        String path = System.getProperty("java.home") + File.separator + "bin" + File.separator +
+                            OperatingSystem.getCurrent().getJavaExecutableName();
+                        arguments.add(path);
+                        arguments.add("-Djna.nosys=true");
+                        arguments.add("-jar");
+                        arguments.add(oldLauncherFile.toString());
+                    }
+
+                    arguments.addAll(Arrays.asList(otherArgs));
+
+                    ProcessBuilder processBuilder = new ProcessBuilder();
+                    processBuilder.directory(new File(System.getProperty("user.dir")));
+                    processBuilder.command(arguments);
+
+                    try {
+                        processBuilder.start();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
+                    e.printStackTrace();
+                }
+
+                System.exit(0);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(null, e.getMessage());
+            }
         }
-
-        arguments.addAll(Arrays.asList(otherArgs));
-
-        ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.directory(new File(System.getProperty("user.dir")));
-        processBuilder.command(arguments);
-
-        try {
-            processBuilder.start();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.exit(0);
     }
 }

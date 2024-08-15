@@ -32,10 +32,7 @@ import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.quilt.QuiltManager;
-import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.ListUtils;
-import me.theentropyshard.crlauncher.utils.OperatingSystem;
-import me.theentropyshard.crlauncher.utils.SemanticVersion;
+import me.theentropyshard.crlauncher.utils.*;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 
@@ -43,6 +40,8 @@ import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -203,6 +202,9 @@ public class CRLauncher {
                             SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
 
                             Path currentPath = Paths.get(URI.create(Args.class.getProtectionDomain().getCodeSource().getLocation().toString()));
+
+                            Path pidFile = this.getWorkDir().resolve("pid_update");
+                            FileUtils.writeUtf8(pidFile, String.valueOf(ProcessHandle.current().pid()));
 
                             List<String> arguments = new ArrayList<>();
                             arguments.add(
