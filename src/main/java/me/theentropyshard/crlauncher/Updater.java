@@ -52,6 +52,12 @@ public class Updater {
             throw new RuntimeException(e);
         }
 
+        try {
+            FileUtils.delete(newLauncherFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         new File(newCopiedLauncherFile.toAbsolutePath().toString()).setExecutable(true);
 
         List<String> arguments = new ArrayList<>();
