@@ -161,10 +161,16 @@ public class CRLauncher {
 
                         JTextPane message = new JTextPane();
                         message.setContentType("text/html");
-                        message.setText(baseText + "<a href=\"" + link + "\">" + link + "</a>");
+                        message.setText(baseText + "<a href=\"" + link + "\">" + link + "</a><br>" +
+                            "Update now?");
                         message.setEditable(false);
 
-                        MessageBox.showPlainMessage(CRLauncher.frame, "Update", message);
+                        boolean updateNow = MessageBox.showConfirmMessage(CRLauncher.frame, "Update", message);
+                        if (updateNow) {
+                            Log.info("Updating now");
+                        } else {
+                            Log.info("Not updating");
+                        }
                     } else {
                         Log.info("No updates are available");
                     }
