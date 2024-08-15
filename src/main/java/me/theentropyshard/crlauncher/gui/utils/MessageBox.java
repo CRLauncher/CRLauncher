@@ -26,15 +26,15 @@ public final class MessageBox {
         JOptionPane.showMessageDialog(parent, message, title, JOptionPane.PLAIN_MESSAGE);
     }
 
-    public static void showWarningMessage(Component parent, String message) {
+    public static void showWarningMessage(Component parent, Object message) {
         JOptionPane.showMessageDialog(parent, message, "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
-    public static void showErrorMessage(Component parent, String message) {
+    public static void showErrorMessage(Component parent, Object message) {
         JOptionPane.showMessageDialog(parent, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static boolean showConfirmMessage(Component parent, String title, String message) {
+    public static boolean showConfirmMessage(Component parent, String title, Object message) {
         return JOptionPane.showConfirmDialog(
                 parent,
                 message,
@@ -44,7 +44,7 @@ public final class MessageBox {
         ) == JOptionPane.YES_OPTION;
     }
 
-    public static String showInputMessage(Component parent, String title, String message) {
+    public static String showInputMessage(Component parent, String title, Object message) {
         return JOptionPane.showInputDialog(parent, message, title, JOptionPane.PLAIN_MESSAGE);
     }
 
