@@ -43,7 +43,9 @@ public class Updater {
 
         try {
             try (Socket socket = new Socket("127.0.0.1", 64686)) {
-                while (!socket.isClosed()) ;
+                while (!socket.isClosed());
+            } catch (Exception e) {
+
             }
 
             FileUtils.delete(oldLauncherFile);
