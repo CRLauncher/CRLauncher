@@ -23,11 +23,9 @@ import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,13 +40,12 @@ public class Updater {
         Path newLauncherFile = Paths.get(newPath);
 
         try {
-            try (Socket socket = new Socket("127.0.0.1", 64686)) {
-                while (!socket.isClosed());
-            } catch (Exception e) {
+            try {
+                FileUtils.delete(oldLauncherFile);
+            } catch (IOException e) {
 
             }
 
-            FileUtils.delete(oldLauncherFile);
             Files.copy(newLauncherFile, oldLauncherFile, StandardCopyOption.REPLACE_EXISTING);
 
             new File(oldLauncherFile.toAbsolutePath().toString()).setExecutable(true);

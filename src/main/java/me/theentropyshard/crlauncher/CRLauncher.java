@@ -32,18 +32,17 @@ import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.quilt.QuiltManager;
-import me.theentropyshard.crlauncher.utils.*;
+import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.ListUtils;
+import me.theentropyshard.crlauncher.utils.OperatingSystem;
+import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -191,7 +190,7 @@ public class CRLauncher {
 
                             Path tmpDir = this.getWorkDir().resolve("tmp");
                             FileUtils.createDirectoryIfNotExists(tmpDir);
-                            Path newLauncherFile = tmpDir.resolve(BuildConfig.APP_NAME +  fileExtension);
+                            Path newLauncherFile = tmpDir.resolve(BuildConfig.APP_NAME + fileExtension);
 
                             FileUtils.delete(newLauncherFile);
 
@@ -223,16 +222,6 @@ public class CRLauncher {
 
                             ProcessBuilder builder = new ProcessBuilder(arguments);
                             builder.start();
-
-                            Thread socketThread = new Thread(() -> {
-                                try (ServerSocket serverSocket = new ServerSocket(64686)) {
-                                    serverSocket.accept();
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-                            });
-                            socketThread.setName("Socket IPC thread");
-                            socketThread.setDaemon(true);
 
                             this.shutdown();
                         } else {
