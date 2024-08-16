@@ -28,7 +28,7 @@ plugins {
 }
 
 group = 'me.theentropyshard'
-version = '0.4.12'
+version = '0.4.13'
 description = 'CRLauncher'
 
 def theMainClass = 'me.theentropyshard.crlauncher.Main'
