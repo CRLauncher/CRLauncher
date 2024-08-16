@@ -40,10 +40,14 @@ public class Updater {
         Path newLauncherFile = Paths.get(newPath);
 
         try {
-            try {
-                FileUtils.delete(oldLauncherFile);
-            } catch (IOException e) {
+            while (true) {
+                try {
+                    FileUtils.delete(oldLauncherFile);
 
+                    break;
+                } catch (IOException e) {
+
+                }
             }
 
             Files.copy(newLauncherFile, oldLauncherFile, StandardCopyOption.REPLACE_EXISTING);
