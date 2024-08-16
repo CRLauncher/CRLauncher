@@ -91,7 +91,7 @@ jar {
 shadowJar {
     archiveClassifier = ''
     archiveBaseName = theName
-    archiveVersion = ''
+    archiveVersion = theVersion
 }
 
 buildConfig {
@@ -157,14 +157,17 @@ tasks.register('renameArtifacts', Copy) {
 
     include "$theName-${theVersion}.exe"
     include "$theName-${theVersion}.zip"
+    include "$theName-${theVersion}.jar"
 
     rename "$theName-${theVersion}.exe", "${theName}.exe"
     rename "$theName-${theVersion}.zip", "${theName}.zip"
+    rename "$theName-${theVersion}.jar", "${theName}.jar"
 }
 
 tasks.register('removeArtifacts', Delete) {
     delete file("${projectDir}/dist/$theName-${theVersion}.zip")
     delete file("${projectDir}/dist/$theName-${theVersion}.exe")
+    delete file("${projectDir}/dist/$theName-${theVersion}.jar")
 }
 
 tasks.register('downloadNewerUniversalJavaApplicationStub', Download) {
