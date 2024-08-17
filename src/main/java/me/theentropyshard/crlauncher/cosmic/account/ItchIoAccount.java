@@ -41,7 +41,6 @@ public class ItchIoAccount extends Account {
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
             Headers headers = Headers.of("Authorization", "Bearer " + this.itchIoApiKey);
             String json = request.asString("https://itch.io/api/1/key/me", headers);
-            System.out.println(json);
             JsonObject userObject = Json.parse(json, JsonObject.class).getAsJsonObject("user");
             this.itchProfile = Json.parse(userObject, ItchProfile.class);
             this.setUsername(this.itchProfile.getUsername());
