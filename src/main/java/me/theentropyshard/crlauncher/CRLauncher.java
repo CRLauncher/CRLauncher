@@ -28,6 +28,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.quilt.QuiltManager;
@@ -206,10 +207,7 @@ public class CRLauncher {
                             Path currentPath = Paths.get(URI.create(Args.class.getProtectionDomain().getCodeSource().getLocation().toString()));
 
                             List<String> arguments = new ArrayList<>();
-                            arguments.add(
-                                System.getProperty("java.home") + File.separator + "bin" + File.separator +
-                                    OperatingSystem.getCurrent().getJavaExecutableName()
-                            );
+                            arguments.add(JavaLocator.getJavaPath());
                             arguments.add("-classpath");
                             arguments.add(newLauncherFile.toString());
                             arguments.add("me.theentropyshard.crlauncher.Updater");

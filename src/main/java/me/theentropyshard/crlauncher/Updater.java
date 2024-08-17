@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher;
 
+import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
@@ -62,9 +63,7 @@ public class Updater {
                 arguments.add(Paths.get(System.getProperty("user.dir")).getParent().getParent().toAbsolutePath().toString());
                 arguments.add("--args");
             } else {
-                String path = System.getProperty("java.home") + File.separator + "bin" + File.separator +
-                    OperatingSystem.getCurrent().getJavaExecutableName();
-                arguments.add(path);
+                arguments.add(JavaLocator.getJavaPath());
                 arguments.add("-Djna.nosys=true");
                 arguments.add("-jar");
                 arguments.add(oldLauncherFile.toString());
