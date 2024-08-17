@@ -21,7 +21,7 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
-import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
@@ -77,7 +77,7 @@ public class PuzzleCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
         Path filePath = downloadDir.resolve(fileName);
         classpath.add(filePath.toString());
 
-        CRDownloadDialog dialog = new CRDownloadDialog();
+        ProgressDialog dialog = new ProgressDialog();
         dialog.setStage("Downloading Puzzle " + this.version);
 
         DownloadList list = new DownloadList((totalSize, downloadedBytes) -> {

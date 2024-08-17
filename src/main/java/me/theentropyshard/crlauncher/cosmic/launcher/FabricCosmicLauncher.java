@@ -22,15 +22,12 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricProperties;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
-import me.theentropyshard.crlauncher.gui.Gui;
-import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 import net.lingala.zip4j.ZipFile;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.io.File;
@@ -60,7 +57,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
             FileUtils.createDirectoryIfNotExists(loaderDir);
 
-            CRDownloadDialog downloadDialog = new CRDownloadDialog();
+            ProgressDialog downloadDialog = new ProgressDialog();
             downloadDialog.setStage("Downloading Fabric mod loader...");
 
             SwingUtilities.invokeLater(() -> downloadDialog.setVisible(true));

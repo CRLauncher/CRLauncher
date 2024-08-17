@@ -31,7 +31,7 @@ import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.LauncherConsole;
-import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -85,7 +85,7 @@ public class CosmicRunner extends Thread {
         try {
             Version version = versionManager.getVersion(this.instance.getCosmicVersion());
 
-            CRDownloadDialog dialog = new CRDownloadDialog();
+            ProgressDialog dialog = new ProgressDialog();
             SwingUtilities.invokeLater(() -> dialog.setVisible(true));
             versionManager.downloadVersion(version, dialog);
             dialog.getDialog().dispose();

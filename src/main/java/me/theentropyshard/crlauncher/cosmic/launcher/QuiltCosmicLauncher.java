@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.CosmicQuiltProperties;
-import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.quilt.QuiltManager;
@@ -50,7 +50,7 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
         QuiltManager quiltManager = CRLauncher.getInstance().getQuiltManager();
 
         try {
-            CRDownloadDialog dialog = new CRDownloadDialog();
+            ProgressDialog dialog = new ProgressDialog();
             dialog.setStage("Downloading Cosmic Quilt " + this.version);
 
             SwingUtilities.invokeLater(() -> dialog.setVisible(true));

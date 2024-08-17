@@ -24,7 +24,7 @@ import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.Gui;
-import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
@@ -34,13 +34,11 @@ import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.quilt.QuiltManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
-import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 
 import javax.swing.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
@@ -196,7 +194,7 @@ public class CRLauncher {
 
                             GithubReleaseResponse.Asset asset = ListUtils.search(release.assets, a -> a.name.endsWith(fileExtension));
 
-                            CRDownloadDialog dialog = new CRDownloadDialog();
+                            ProgressDialog dialog = new ProgressDialog();
                             dialog.getDialog().setTitle("Updating CRLauncher to " + latestVersion.toVersionString());
 
                             SwingUtilities.invokeLater(() -> dialog.setVisible(true));

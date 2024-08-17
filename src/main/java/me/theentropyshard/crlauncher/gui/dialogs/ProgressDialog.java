@@ -26,12 +26,16 @@ import me.theentropyshard.crlauncher.utils.MathUtils;
 import javax.swing.*;
 import java.awt.*;
 
-public class CRDownloadDialog extends AppDialog implements ProgressListener {
+public class ProgressDialog extends AppDialog implements ProgressListener {
     private final JProgressBar progressBar;
     private final JLabel stageLabel;
 
-    public CRDownloadDialog() {
-        super(CRLauncher.frame, "Downloading Cosmic Reach");
+    public ProgressDialog() {
+        this("Downloading Cosmic Reach");
+    }
+
+    public ProgressDialog(String title) {
+        super(CRLauncher.frame, title);
 
         JPanel root = new JPanel(new BorderLayout());
         root.setPreferredSize(new Dimension(450, 270));

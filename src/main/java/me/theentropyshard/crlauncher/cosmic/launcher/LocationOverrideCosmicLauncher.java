@@ -21,15 +21,11 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
-import me.theentropyshard.crlauncher.gui.dialogs.CRDownloadDialog;
-import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.HashUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
-import me.theentropyshard.crlauncher.utils.ResourceUtils;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -60,7 +56,7 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
             throw new IOException("Could not find release v" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION);
         }
 
-        CRDownloadDialog dialog = new CRDownloadDialog();
+        ProgressDialog dialog = new ProgressDialog();
         dialog.setStage("Downloading " + LocationOverrideCosmicLauncher.CR_LOADER_JAR);
         SwingUtilities.invokeLater(() -> dialog.setVisible(true));
 
