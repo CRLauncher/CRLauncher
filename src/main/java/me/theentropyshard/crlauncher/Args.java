@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cli;
+package me.theentropyshard.crlauncher;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;

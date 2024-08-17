@@ -18,7 +18,6 @@
 
 package me.theentropyshard.crlauncher;
 
-import me.theentropyshard.crlauncher.cli.Args;
 import me.theentropyshard.crlauncher.logging.Log;
 
 public class Main {

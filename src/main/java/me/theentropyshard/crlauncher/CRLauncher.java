@@ -18,7 +18,6 @@
 
 package me.theentropyshard.crlauncher;
 
-import me.theentropyshard.crlauncher.cli.Args;
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
