@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui;
 
 import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.BuildConfig;
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
@@ -32,11 +33,11 @@ public class LauncherConsole {
     private static final int DEFAULT_X = 80;
     private static final int DEFAULT_Y = 80;
 
+    private final JCheckBox scrollDown;
+    public static LauncherConsole instance;
     private final JTextPane textPane;
     private final SimpleAttributeSet attrs;
     private final JFrame frame;
-
-    public static LauncherConsole instance;
 
     public LauncherConsole() {
         this.textPane = new JTextPane() {
@@ -73,25 +74,44 @@ public class LauncherConsole {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        panel.add(buttonsPanel, BorderLayout.SOUTH);
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        panel.add(bottomPanel, BorderLayout.SOUTH);
+
+        this.scrollDown = new JCheckBox("Scroll down");
+        this.scrollDown.setSelected(CRLauncher.getInstance().getSettings().consoleScrollDown);
+        this.scrollDown.addActionListener(e -> {
+            CRLauncher.getInstance().getSettings().consoleScrollDown = this.scrollDown.isSelected();
+            this.scrollToBottom();
+        });
+
+        bottomPanel.add(this.scrollDown);
 
         JButton copyButton = new JButton("Copy");
         copyButton.addActionListener(e -> {
             OperatingSystem.copyToClipboard(this.textPane.getText());
         });
-        buttonsPanel.add(copyButton);
+        bottomPanel.add(copyButton);
 
         JButton clearButton = new JButton("Clear");
         clearButton.addActionListener(e -> {
             this.textPane.setText("");
         });
-        buttonsPanel.add(clearButton);
+        bottomPanel.add(clearButton);
 
         this.frame = new JFrame(BuildConfig.APP_NAME + " console");
         this.frame.add(panel, BorderLayout.CENTER);
         this.frame.pack();
         this.frame.setLocation(LauncherConsole.DEFAULT_X, LauncherConsole.DEFAULT_Y);
+    }
+
+    private void scrollToBottom() {
+        if (this.scrollDown.isSelected()) {
+            this.textPane.setCaretPosition(this.textPane.getDocument().getLength());
+        }
+    }
+
+    public JCheckBox getScrollDown() {
+        return this.scrollDown;
     }
 
     public JFrame getFrame() {
@@ -127,7 +147,7 @@ public class LauncherConsole {
             e.printStackTrace();
         }
 
-        this.textPane.setCaretPosition(document.getLength());
+        this.scrollToBottom();
     }
 
     private static final class WrapEditorKit extends StyledEditorKit {

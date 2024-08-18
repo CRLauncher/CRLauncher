@@ -43,6 +43,7 @@ public class Settings {
     public boolean checkUpdatesStartup = true;
     public int whenCRLaunchesOption = 0;
     public int whenCRExitsOption = 0;
+    public boolean consoleScrollDown = true;
 
     public Settings() {
 
