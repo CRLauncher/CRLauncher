@@ -24,24 +24,40 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AnsiParser {
-    public static List<AnsiPart> splitAnsiString(String inputString) {
-        List<AnsiPart> result = new ArrayList<>();
-        Pattern ansiEscape = Pattern.compile("(\033\\[[0-9;]*m)");
-        Matcher matcher = ansiEscape.matcher(inputString);
+    private static final String ANSI_COLOR_REGEX = "\\u001B\\[(\\d+;)?\\d+m";
+
+    public static List<AnsiPart> parseAnsiString(String input) {
+        List<AnsiPart> parts = new ArrayList<>();
+        Pattern pattern = Pattern.compile(AnsiParser.ANSI_COLOR_REGEX);
+        Matcher matcher = pattern.matcher(input);
+
+        AnsiColor currentColor = AnsiColor.NONE;
 
         int lastEnd = 0;
+
         while (matcher.find()) {
+            // Append text before the current match
             if (lastEnd < matcher.start()) {
-                result.add(new AnsiPart(AnsiColor.of(""), inputString.substring(lastEnd, matcher.start())));
+                String textSegment = input.substring(lastEnd, matcher.start());
+                if (!textSegment.isEmpty()) {
+                    parts.add(new AnsiPart(currentColor, textSegment));
+                }
             }
-            result.add(new AnsiPart(AnsiColor.of(matcher.group(1)), matcher.group(0)));
+
+            // Update the current color based on the ANSI code
+            currentColor = AnsiColor.of(matcher.group());
+
             lastEnd = matcher.end();
         }
 
-        if (lastEnd < inputString.length()) {
-            result.add(new AnsiPart(AnsiColor.of(""), inputString.substring(lastEnd)));
+        // Append any remaining text after the last match
+        if (lastEnd < input.length()) {
+            String textSegment = input.substring(lastEnd);
+            if (!textSegment.isEmpty()) {
+                parts.add(new AnsiPart(currentColor, textSegment));
+            }
         }
 
-        return result;
+        return parts;
     }
 }
