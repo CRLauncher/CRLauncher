@@ -85,7 +85,7 @@ public class CosmicRunner extends Thread {
         try {
             Version version = versionManager.getVersion(this.instance.getCosmicVersion());
 
-            ProgressDialog dialog = new ProgressDialog();
+            ProgressDialog dialog = new ProgressDialog("Downloading Cosmic Reach");
             SwingUtilities.invokeLater(() -> dialog.setVisible(true));
             versionManager.downloadVersion(version, dialog);
             dialog.getDialog().dispose();

@@ -50,7 +50,7 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
         QuiltManager quiltManager = CRLauncher.getInstance().getQuiltManager();
 
         try {
-            ProgressDialog dialog = new ProgressDialog();
+            ProgressDialog dialog = new ProgressDialog("Downloading Cosmic Quilt");
             dialog.setStage("Downloading Cosmic Quilt " + this.version);
 
             SwingUtilities.invokeLater(() -> dialog.setVisible(true));

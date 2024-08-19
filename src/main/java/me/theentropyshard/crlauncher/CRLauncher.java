@@ -194,8 +194,7 @@ public class CRLauncher {
 
                             GithubReleaseResponse.Asset asset = ListUtils.search(release.assets, a -> a.name.endsWith(fileExtension));
 
-                            ProgressDialog dialog = new ProgressDialog();
-                            dialog.getDialog().setTitle("Updating CRLauncher to " + latestVersion.toVersionString());
+                            ProgressDialog dialog = new ProgressDialog("Updating CRLauncher to " + latestVersion.toVersionString());
 
                             SwingUtilities.invokeLater(() -> dialog.setVisible(true));
                             Log.info("Downloading new version");

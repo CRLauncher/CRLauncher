@@ -30,10 +30,6 @@ public class ProgressDialog extends AppDialog implements ProgressListener {
     private final JProgressBar progressBar;
     private final JLabel stageLabel;
 
-    public ProgressDialog() {
-        this("Downloading Cosmic Reach");
-    }
-
     public ProgressDialog(String title) {
         super(CRLauncher.frame, title);
 

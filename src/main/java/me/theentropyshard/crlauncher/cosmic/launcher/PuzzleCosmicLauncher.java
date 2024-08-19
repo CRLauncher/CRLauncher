@@ -77,7 +77,7 @@ public class PuzzleCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
         Path filePath = downloadDir.resolve(fileName);
         classpath.add(filePath.toString());
 
-        ProgressDialog dialog = new ProgressDialog();
+        ProgressDialog dialog = new ProgressDialog("Downloading Puzzle");
         dialog.setStage("Downloading Puzzle " + this.version);
 
         DownloadList list = new DownloadList((totalSize, downloadedBytes) -> {

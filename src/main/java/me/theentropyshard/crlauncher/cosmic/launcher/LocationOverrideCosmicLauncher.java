@@ -56,7 +56,7 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
             throw new IOException("Could not find release v" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION);
         }
 
-        ProgressDialog dialog = new ProgressDialog();
+        ProgressDialog dialog = new ProgressDialog("Downloading CRLoader");
         dialog.setStage("Downloading " + LocationOverrideCosmicLauncher.CR_LOADER_JAR);
         SwingUtilities.invokeLater(() -> dialog.setVisible(true));
 

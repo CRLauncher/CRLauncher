@@ -57,7 +57,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
             FileUtils.createDirectoryIfNotExists(loaderDir);
 
-            ProgressDialog downloadDialog = new ProgressDialog();
+            ProgressDialog downloadDialog = new ProgressDialog("Downloading Fabric");
             downloadDialog.setStage("Downloading Fabric mod loader...");
 
             SwingUtilities.invokeLater(() -> downloadDialog.setVisible(true));
