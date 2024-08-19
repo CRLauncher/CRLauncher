@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public final class LogEvent {
+public class LogEvent {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     public static final int APP_CONSOLE = 0xA;
@@ -42,30 +42,30 @@ public final class LogEvent {
 
     public void post(Logger log) {
         if ((this.flags & LogEvent.APP_CONSOLE) == LogEvent.APP_CONSOLE) {
-            this.appConsole();
+            this.appConsole(this.message);
         }
 
         if ((this.flags & LogEvent.FILE_LOG4J) == LogEvent.FILE_LOG4J) {
-            this.fileLog4j(log);
+            this.fileLog4j(log, this.message);
         }
     }
 
-    public void appConsole() {
+    public void appConsole(String message) {
         if (LauncherConsole.instance == null) {
             return;
         }
 
         LauncherConsole c = LauncherConsole.instance;
         c.setColor(this.level.color()).setBold(true).write("[" + LogEvent.currentTime() + "]: ");
-        c.setColor(this.level.color()).setBold(false).write(this.message);
+        c.setColor(this.level.color()).setBold(false).write(message);
     }
 
-    public void fileLog4j(Logger log) {
+    public void fileLog4j(Logger log, String message) {
         switch (this.level) {
-            case WARN -> log.warn(this.message);
-            case ERROR -> log.error(this.message);
-            case DEBUG -> log.debug(this.message);
-            case INFO -> log.info(this.message);
+            case WARN -> log.warn(message);
+            case ERROR -> log.error(message);
+            case DEBUG -> log.debug(message);
+            case INFO -> log.info(message);
             default -> throw new IllegalArgumentException("Unknown log type: " + this.level);
         }
     }

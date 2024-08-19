@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.logging;
 
+import me.theentropyshard.crlauncher.cosmic.CosmicLogEvent;
+
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -32,7 +34,7 @@ public final class Log {
     public static void start() {
         new LogQueueProcessor(Log.EVENT_QUEUE).start();
 
-        System.setOut(new SystemOutInterceptor(System.out, LogLevel.DEBUG));
+        //System.setOut(new SystemOutInterceptor(System.out, LogLevel.DEBUG));
 
         if (Log.WRAP_ERR) {
             System.setErr(new SystemOutInterceptor(System.err, LogLevel.ERROR));
@@ -70,5 +72,9 @@ public final class Log {
             t.printStackTrace(new PrintWriter(writer));
             Log.error(writer.toString());
         }
+    }
+
+    public static void cosmicReach(String line) {
+        Log.EVENT_QUEUE.offer(new CosmicLogEvent(line));
     }
 }

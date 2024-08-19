@@ -37,6 +37,8 @@ import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
+import me.theentropyshard.crlauncher.utils.ansi.AnsiParser;
+import me.theentropyshard.crlauncher.utils.ansi.AnsiPart;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
 
@@ -161,7 +163,13 @@ public class CosmicRunner extends Thread {
 
             long start = System.currentTimeMillis();
 
-            int exitCode = launcher.launch(Log::info, launchOption == 3);
+            int exitCode = launcher.launch(line -> {
+                if (this.instance.getType() == InstanceType.VANILLA) {
+                    Log.info(line);
+                } else {
+                    Log.cosmicReach(line);
+                }
+            }, launchOption == 3);
 
             long end = System.currentTimeMillis();
 
