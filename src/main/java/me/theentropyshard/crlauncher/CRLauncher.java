@@ -142,7 +142,7 @@ public class CRLauncher {
             Log.error("Unable to load icons", e);
         }
 
-        this.quiltManager = new QuiltManager(this.workDir.resolve("cosmic_quilt"));
+        this.quiltManager = new QuiltManager(this.cosmicDir.resolve("cosmic-quilt"));
 
         this.taskPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
