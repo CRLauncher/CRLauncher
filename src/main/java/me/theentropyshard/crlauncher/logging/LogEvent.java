@@ -50,7 +50,7 @@ public final class LogEvent {
         }
     }
 
-    private void appConsole() {
+    public void appConsole() {
         if (LauncherConsole.instance == null) {
             return;
         }
@@ -60,7 +60,7 @@ public final class LogEvent {
         c.setColor(this.level.color()).setBold(false).write(this.message);
     }
 
-    private void fileLog4j(Logger log) {
+    public void fileLog4j(Logger log) {
         switch (this.level) {
             case WARN -> log.warn(this.message);
             case ERROR -> log.error(this.message);
