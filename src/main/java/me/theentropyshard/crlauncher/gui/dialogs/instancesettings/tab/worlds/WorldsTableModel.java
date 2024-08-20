@@ -21,15 +21,16 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import me.theentropyshard.crlauncher.utils.json.Json;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -39,8 +40,8 @@ import java.util.List;
 public class WorldsTableModel extends AbstractTableModel {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
 
-    private static final String[] COLUMN_NAMES = {"Name", "Seed", "Last played"};
-    private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class};
+    private static final String[] COLUMN_NAMES = {"Name", "Seed", "Last played", "Created"};
+    private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class, String.class};
 
     private final List<CosmicWorld> worlds;
 
@@ -50,21 +51,34 @@ public class WorldsTableModel extends AbstractTableModel {
         new SwingWorker<Void, CosmicWorld>() {
             @Override
             protected Void doInBackground() throws Exception {
+                SemanticVersion cosmicVersion = SemanticVersion.parse(instance.getCosmicVersion());
+
                 Path worldsDir = instance.getCosmicDir().resolve("worlds");
                 List<Path> worldDirs = FileUtils.list(worldsDir);
 
                 for (Path worldDir : worldDirs) {
                     Path worldInfoFile = worldDir.resolve("worldInfo.json");
-                    String content = FileUtils.readUtf8(worldInfoFile);
 
-                    CosmicWorld world = Json.parse(content, CosmicWorld.class);
+                    String content;
 
-                    Path playerFile = worldDir.resolve("players").resolve("localPlayer.json");
-                    if (Files.exists(playerFile)) {
-                        BasicFileAttributes attribs = Files.readAttributes(playerFile, BasicFileAttributes.class);
-                        OffsetDateTime lastModified = Instant.ofEpochMilli(attribs.lastModifiedTime().toMillis())
-                                .atZone(ZoneId.systemDefault()).toOffsetDateTime();
-                        world.setLastPlayed(lastModified);
+                    if (cosmicVersion.getPatch() < 40) {
+                        content = FileUtils.read(worldInfoFile, Charset.defaultCharset());
+                    } else {
+                        content = FileUtils.readUtf8(worldInfoFile);
+                    }
+
+                    CosmicWorld world;
+
+                    if (cosmicVersion.getPatch() < 34) {
+                        world = Json.parse(content, CosmicWorld.class);
+
+                        Path playerFile = worldDir.resolve("players").resolve("localPlayer.json");
+                        if (Files.exists(playerFile)) {
+                            BasicFileAttributes attribs = Files.readAttributes(playerFile, BasicFileAttributes.class);
+                            world.setLastPlayed(WorldsTableModel.fromEpochMillis(attribs.lastModifiedTime().toMillis()));
+                        }
+                    } else {
+                        world = Json.parse(content, UpdatedCosmicWorld.class);
                     }
 
                     this.publish(world);
@@ -81,9 +95,13 @@ public class WorldsTableModel extends AbstractTableModel {
             @Override
             protected void done() {
                 WorldsTableModel.this.fireTableDataChanged();
-                SwingUtils.setJTableColumnsWidth(table, 60, 25, 15);
+                SwingUtils.setJTableColumnsWidth(table, 45, 25, 15, 15);
             }
         }.execute();
+    }
+
+    private static OffsetDateTime fromEpochMillis(long epochMillis) {
+        return Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault()).toOffsetDateTime();
     }
 
     @Override
@@ -113,7 +131,14 @@ public class WorldsTableModel extends AbstractTableModel {
         return switch (columnIndex) {
             case 0 -> world.getWorldDisplayName();
             case 1 -> world.getWorldSeed();
-            case 2 -> WorldsTableModel.FORMATTER.format(world.getLastPlayed());
+            case 2 -> WorldsTableModel.FORMATTER.format(
+                world instanceof UpdatedCosmicWorld updatedWorld ?
+                    WorldsTableModel.fromEpochMillis(updatedWorld.getLastPlayedEpochMillis()) : world.getLastPlayed()
+            );
+            case 3 -> world instanceof UpdatedCosmicWorld updatedWorld ?
+                WorldsTableModel.FORMATTER.format(
+                    WorldsTableModel.fromEpochMillis(updatedWorld.getWorldCreatedEpochMillis())
+                ) : "N/A";
             default -> null;
         };
     }
