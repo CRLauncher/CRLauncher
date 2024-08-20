@@ -41,8 +41,8 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
     
     private final String version;
 
-    public FabricCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
-        super(runDir, gameFilesLocation, clientPath, modsDir);
+    public FabricCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
+        super(javaPath, runDir, gameFilesLocation, clientPath, modsDir);
 
         this.version = version;
     }

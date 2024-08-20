@@ -28,13 +28,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractCosmicLauncher implements CosmicLauncher {
+    private final String javaPath;
     private final Path runDir;
     private final Path gameFilesLocation;
     private final Path clientPath;
     private final List<String> command;
     private final List<SystemProperty> properties;
 
-    public AbstractCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath) {
+    public AbstractCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
+        this.javaPath = javaPath;
         this.runDir = runDir;
         this.gameFilesLocation = gameFilesLocation;
         this.clientPath = clientPath;
@@ -76,7 +78,7 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
     }
 
     public String getJavaPath() {
-        return JavaLocator.getJavaPath();
+        return this.javaPath;
     }
 
     public Path getRunDir() {

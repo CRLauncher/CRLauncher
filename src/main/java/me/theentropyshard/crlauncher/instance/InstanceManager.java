@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.instance;
 
+import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.StringUtils;
@@ -143,6 +144,7 @@ public class InstanceManager {
         Instance instance = new Instance(name, groupName, cosmicVersion);
         instance.setWorkDir(this.getInstanceWorkDir(name, cosmicVersion));
         instance.setAutoUpdateToLatest(autoUpdate);
+        instance.setJavaPath(JavaLocator.getJavaPath());
 
         this.cacheInstance(instance);
 

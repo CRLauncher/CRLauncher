@@ -23,8 +23,8 @@ import java.nio.file.Path;
 public class ModdedCosmicLauncher extends AbstractCosmicLauncher {
     private final Path modsDir;
 
-    public ModdedCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
-        super(runDir, gameFilesLocation, clientPath);
+    public ModdedCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
+        super(javaPath, runDir, gameFilesLocation, clientPath);
 
         this.modsDir = modsDir;
     }

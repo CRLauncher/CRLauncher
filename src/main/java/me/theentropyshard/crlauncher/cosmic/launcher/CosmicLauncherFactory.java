@@ -21,15 +21,17 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 import java.nio.file.Path;
 
 public class CosmicLauncherFactory {
-    public static CosmicLauncher getLauncher(LaunchType type,
+    public static CosmicLauncher getLauncher(String javaPath,
+                                             LaunchType type,
                                              Path runDir,
                                              Path gameFilesLocation,
                                              Path clientPath) {
 
-        return CosmicLauncherFactory.getLauncher(type, runDir, gameFilesLocation, clientPath, null, null);
+        return CosmicLauncherFactory.getLauncher(javaPath, type, runDir, gameFilesLocation, clientPath, null, null);
     }
 
-    public static CosmicLauncher getLauncher(LaunchType type,
+    public static CosmicLauncher getLauncher(String javaPath,
+                                             LaunchType type,
                                              Path runDir,
                                              Path gameFilesLocation,
                                              Path clientPath,
@@ -38,7 +40,7 @@ public class CosmicLauncherFactory {
     ) {
 
         if (type == LaunchType.VANILLA) {
-            return new VanillaCosmicLauncher(runDir, gameFilesLocation, clientPath);
+            return new VanillaCosmicLauncher(javaPath, runDir, gameFilesLocation, clientPath);
         } else {
             if (modsDir == null) {
                 throw new IllegalArgumentException("Mods dir must not be null when launching with mods");
@@ -49,11 +51,11 @@ public class CosmicLauncherFactory {
             }
 
             if (type == LaunchType.FABRIC) {
-                return new FabricCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir, version);
+                return new FabricCosmicLauncher(javaPath, runDir, gameFilesLocation, clientPath, modsDir, version);
             } else if (type == LaunchType.QUILT) {
-                return new QuiltCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir, version);
+                return new QuiltCosmicLauncher(javaPath, runDir, gameFilesLocation, clientPath, modsDir, version);
             } else if (type == LaunchType.PUZZLE) {
-                return new PuzzleCosmicLauncher(runDir, gameFilesLocation, clientPath, modsDir, version);
+                return new PuzzleCosmicLauncher(javaPath, runDir, gameFilesLocation, clientPath, modsDir, version);
             }
         }
 

@@ -53,8 +53,8 @@ public class PuzzleCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
     }
 
-    public PuzzleCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
-        super(runDir, gameFilesLocation, clientPath, modsDir);
+    public PuzzleCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
+        super(javaPath, runDir, gameFilesLocation, clientPath, modsDir);
 
         this.version = version;
     }

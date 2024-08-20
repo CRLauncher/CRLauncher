@@ -22,8 +22,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class VanillaCosmicLauncher extends LocationOverrideCosmicLauncher {
-    public VanillaCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath) {
-        super(runDir, gameFilesLocation, clientPath);
+    public VanillaCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
+        super(javaPath, runDir, gameFilesLocation, clientPath);
     }
 
     @Override

@@ -40,8 +40,8 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
     private static final String CR_LOADER_JAR = "CRLoader-" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION + ".jar";
     private static final String CR_LOADER_SHA256 = "213128b5e80280af873f1b91cbc4a44515294dc191bb0f46b297c982904dcdbe";
 
-    public LocationOverrideCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath) {
-        super(runDir, gameFilesLocation, clientPath);
+    public LocationOverrideCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
+        super(javaPath, runDir, gameFilesLocation, clientPath);
     }
 
     private void downloadLoader(Path path) throws IOException {

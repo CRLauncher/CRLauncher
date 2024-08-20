@@ -33,8 +33,8 @@ import java.util.List;
 public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
     private final String version;
 
-    public QuiltCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
-        super(runDir, gameFilesLocation, clientPath, modsDir);
+    public QuiltCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
+        super(javaPath, runDir, gameFilesLocation, clientPath, modsDir);
 
         this.version = version;
     }

@@ -23,8 +23,8 @@ import java.nio.file.Path;
 public class ModdedLocationOverrideCosmicLauncher extends LocationOverrideCosmicLauncher {
     private final Path modsDir;
 
-    public ModdedLocationOverrideCosmicLauncher(Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
-        super(runDir, gameFilesLocation, clientPath);
+    public ModdedLocationOverrideCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
+        super(javaPath, runDir, gameFilesLocation, clientPath);
 
         this.modsDir = modsDir;
     }

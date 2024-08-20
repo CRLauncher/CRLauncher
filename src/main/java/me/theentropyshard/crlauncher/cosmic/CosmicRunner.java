@@ -34,6 +34,7 @@ import me.theentropyshard.crlauncher.gui.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
+import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
@@ -101,10 +102,17 @@ public class CosmicRunner extends Thread {
 
             CosmicLauncher launcher;
 
+            String javaPath = this.instance.getJavaPath();
+            if (javaPath == null || javaPath.isEmpty()) {
+                javaPath = JavaLocator.getJavaPath();
+                this.instance.setJavaPath(javaPath);
+            }
+
             if (this.instance.getType() == InstanceType.VANILLA) {
                 clientPath = this.applyJarMods(version, versionsDir);
 
                 launcher = CosmicLauncherFactory.getLauncher(
+                    javaPath,
                     LaunchType.VANILLA,
                     saveDirPath,
                     saveDirPath,
@@ -114,6 +122,7 @@ public class CosmicRunner extends Thread {
                 this.updateFabricMods();
 
                 launcher = CosmicLauncherFactory.getLauncher(
+                    javaPath,
                     LaunchType.FABRIC,
                     saveDirPath,
                     saveDirPath,
@@ -125,6 +134,7 @@ public class CosmicRunner extends Thread {
                 this.updateQuiltMods();
 
                 launcher = CosmicLauncherFactory.getLauncher(
+                    javaPath,
                     LaunchType.QUILT,
                     saveDirPath,
                     saveDirPath,
@@ -136,6 +146,7 @@ public class CosmicRunner extends Thread {
                 this.updatePuzzleMods();
 
                 launcher = CosmicLauncherFactory.getLauncher(
+                    javaPath,
                     LaunchType.PUZZLE,
                     saveDirPath,
                     saveDirPath,
