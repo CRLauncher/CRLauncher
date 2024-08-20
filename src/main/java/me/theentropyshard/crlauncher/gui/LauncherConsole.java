@@ -32,6 +32,10 @@ import java.awt.event.WindowListener;
 public class LauncherConsole {
     private static final int DEFAULT_X = 80;
     private static final int DEFAULT_Y = 80;
+    private static final int INITIAL_WIDTH = 480;
+    private static final int INITIAL_HEIGHT = 280;
+    private static final int INITIAL_FONT_SIZE = 14;
+    private static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, LauncherConsole.INITIAL_FONT_SIZE);
 
     private final JCheckBox scrollDown;
     public static LauncherConsole instance;
@@ -48,8 +52,8 @@ public class LauncherConsole {
                 super.paintComponent(g);
             }
         };
-        this.textPane.setPreferredSize(new Dimension(480, 280));
-        this.textPane.setFont(this.textPane.getFont().deriveFont(14.0f));
+        this.textPane.setPreferredSize(new Dimension(LauncherConsole.INITIAL_WIDTH, LauncherConsole.INITIAL_HEIGHT));
+        this.textPane.setFont(LauncherConsole.FONT);
         this.textPane.setEditorKit(new WrapEditorKit());
         this.textPane.setEditable(false);
 
