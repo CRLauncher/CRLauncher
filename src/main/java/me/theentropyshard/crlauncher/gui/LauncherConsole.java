@@ -42,6 +42,7 @@ public class LauncherConsole {
     private final JTextPane textPane;
     private final SimpleAttributeSet attrs;
     private final JFrame frame;
+    private final JScrollPane scrollPane;
 
     public LauncherConsole() {
         this.textPane = new JTextPane() {
@@ -54,17 +55,17 @@ public class LauncherConsole {
         };
         this.textPane.setPreferredSize(new Dimension(LauncherConsole.INITIAL_WIDTH, LauncherConsole.INITIAL_HEIGHT));
         this.textPane.setFont(LauncherConsole.FONT);
-        this.textPane.setEditorKit(new WrapEditorKit());
+        //this.textPane.setEditorKit(new WrapEditorKit());
         this.textPane.setEditable(false);
 
         this.attrs = new SimpleAttributeSet();
 
-        JScrollPane scrollPane = new JScrollPane(
+        this.scrollPane = new JScrollPane(
             this.textPane,
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+            JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
         );
-        scrollPane.setUI(new FlatScrollPaneUI() {
+        this.scrollPane.setUI(new FlatScrollPaneUI() {
             @Override
             protected MouseWheelListener createMouseWheelListener() {
                 if (this.isSmoothScrollingEnabled()) {
@@ -76,7 +77,7 @@ public class LauncherConsole {
         });
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(scrollPane, BorderLayout.CENTER);
+        panel.add(this.scrollPane, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel.add(bottomPanel, BorderLayout.SOUTH);
@@ -110,7 +111,8 @@ public class LauncherConsole {
 
     private void scrollToBottom() {
         if (this.scrollDown.isSelected()) {
-            this.textPane.setCaretPosition(this.textPane.getDocument().getLength());
+            JScrollBar scrollBar = this.scrollPane.getVerticalScrollBar();
+            scrollBar.setValue(scrollBar.getMaximum());
         }
     }
 
@@ -127,27 +129,33 @@ public class LauncherConsole {
     }
 
     public LauncherConsole setColor(Color c) {
-        StyleConstants.setForeground(this.attrs, c);
+        SwingUtilities.invokeLater(() -> {
+            StyleConstants.setForeground(this.attrs, c);
+        });
 
         return this;
     }
 
     public LauncherConsole setBold(boolean bold) {
-        StyleConstants.setBold(this.attrs, bold);
+        SwingUtilities.invokeLater(() -> {
+            StyleConstants.setBold(this.attrs, bold);
+        });
 
         return this;
     }
 
     public void write(String line) {
-        Document document = this.textPane.getDocument();
+        SwingUtilities.invokeLater(() -> {
+            Document document = this.textPane.getDocument();
 
-        try {
-            document.insertString(document.getLength(), line, this.attrs);
-        } catch (BadLocationException e) {
-            e.printStackTrace();
-        }
+            try {
+                document.insertString(document.getLength(), line, this.attrs);
+            } catch (BadLocationException e) {
+                e.printStackTrace();
+            }
 
-        this.scrollToBottom();
+            this.scrollToBottom();
+        });
     }
 
     private static final class WrapEditorKit extends StyledEditorKit {
