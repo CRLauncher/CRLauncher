@@ -18,8 +18,13 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
@@ -28,6 +33,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
 
 public class WorldsTab extends Tab {
     public WorldsTab(Instance instance, JDialog dialog) {
@@ -53,6 +60,7 @@ public class WorldsTab extends Tab {
                 return c;
             }
         });
+        worldsTable.setAutoCreateColumnsFromModel(false);
 
         worldsTable.addMouseListener(new MouseAdapter() {
             @Override
@@ -77,6 +85,64 @@ public class WorldsTab extends Tab {
         });
 
         popupMenu.add(copyItem);
+
+        JMenuItem deleteItem = new JMenuItem("Delete");
+        deleteItem.addActionListener(e -> {
+            int selectedRow = worldsTable.getSelectedRow();
+            if (selectedRow == -1) {
+                return;
+            }
+
+            CosmicWorld world = worldsModel.worldAt(selectedRow);
+
+            boolean ok = MessageBox.showConfirmMessage(CRLauncher.frame, "Deleting world",
+                "Are you sure that you want to delete world '" + world.getWorldDisplayName() + "'?");
+
+            if (!ok) {
+                return;
+            }
+
+            Path worldDir = world.getWorldDir();
+
+            new SwingWorker<Boolean, Void>() {
+                @Override
+                protected Boolean doInBackground() {
+                    try {
+                        FileUtils.delete(worldDir);
+
+                        return true;
+                    } catch (IOException ex) {
+                        Log.error("Could not delete world '" + world.getWorldDisplayName() + "' located at '" +
+                            worldDir, ex);
+
+                        MessageBox.showErrorMessage(CRLauncher.frame,
+                            "Could not delete world '" + world.getWorldDisplayName() + "' located at '" +
+                                worldDir);
+                    }
+
+                    return false;
+                }
+
+                @Override
+                protected void done() {
+                    boolean successfullyDeleted;
+                    try {
+                        successfullyDeleted = this.get();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        Log.error("Unexpected error", ex);
+
+                        return;
+                    }
+
+                    if (successfullyDeleted) {
+                        worldsModel.removeRow(selectedRow);
+                    }
+                }
+            }.execute();
+        });
+
+        popupMenu.add(deleteItem);
+
         worldsTable.setComponentPopupMenu(popupMenu);
 
         JScrollPane scrollPane = new JScrollPane(

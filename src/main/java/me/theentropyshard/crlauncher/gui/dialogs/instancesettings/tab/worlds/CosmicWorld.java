@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds;
 
+import java.nio.file.Path;
 import java.time.OffsetDateTime;
 
 public class CosmicWorld {
@@ -31,8 +32,21 @@ public class CosmicWorld {
      */
     private transient OffsetDateTime lastPlayed;
 
+    /**
+     * This is not present in worldInfo.json
+     */
+    private transient Path worldDir;
+
     public CosmicWorld() {
 
+    }
+
+    public Path getWorldDir() {
+        return this.worldDir;
+    }
+
+    public void setWorldDir(Path worldDir) {
+        this.worldDir = worldDir;
     }
 
     public int getLatestRegionFileVersion() {

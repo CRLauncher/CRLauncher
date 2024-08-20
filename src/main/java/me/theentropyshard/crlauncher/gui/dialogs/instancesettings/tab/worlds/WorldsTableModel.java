@@ -81,6 +81,8 @@ public class WorldsTableModel extends AbstractTableModel {
                         world = Json.parse(content, UpdatedCosmicWorld.class);
                     }
 
+                    world.setWorldDir(worldDir);
+
                     this.publish(world);
                 }
 
