@@ -25,7 +25,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
-import me.theentropyshard.crlauncher.quilt.maven.Dependency;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.Dependency;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 

@@ -23,7 +23,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.CosmicQuiltProperti
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.logging.Log;
-import me.theentropyshard.crlauncher.quilt.QuiltManager;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltManager;
 
 import javax.swing.*;
 import java.io.IOException;

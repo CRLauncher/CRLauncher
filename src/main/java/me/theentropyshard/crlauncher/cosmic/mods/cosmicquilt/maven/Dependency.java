@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.quilt.maven;
+package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven;
 
 public record Dependency(String groupId, String artifactId, String version) {
     public String mavenJar() {

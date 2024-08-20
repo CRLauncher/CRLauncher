@@ -16,15 +16,15 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.quilt;
+package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt;
 
 import com.google.gson.reflect.TypeToken;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
-import me.theentropyshard.crlauncher.quilt.maven.Dependency;
-import me.theentropyshard.crlauncher.quilt.maven.MavenDownloader;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.Dependency;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.MavenDownloader;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 

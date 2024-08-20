@@ -31,7 +31,7 @@ import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
-import me.theentropyshard.crlauncher.quilt.QuiltManager;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 import me.theentropyshard.crlauncher.utils.SemanticVersion;
