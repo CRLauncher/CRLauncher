@@ -23,7 +23,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.Dependency;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.MavenArtifact;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.MavenDownloader;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -66,7 +66,7 @@ public class QuiltManager {
 
         String cosmicQuiltJar = QuiltManager.COSMIC_QUILT_FILE_NAME.formatted(version);
 
-        List<Dependency> deps = MavenDownloader.downloadRelease(version, this.depsDir, versionDir.resolve(cosmicQuiltJar), downloads);
+        List<MavenArtifact> deps = MavenDownloader.downloadRelease(version, this.depsDir, versionDir.resolve(cosmicQuiltJar), downloads);
 
         downloadList.addAll(downloads);
         downloadList.downloadAll();
@@ -91,9 +91,9 @@ public class QuiltManager {
             return false;
         }
 
-        List<Dependency> deps = Json.parse(FileUtils.readUtf8(depsFile), new TypeToken<List<Dependency>>() {}.getType());
-        for (Dependency dep : deps) {
-            Path depFile = this.depsDir.resolve(dep.mavenJar());
+        List<MavenArtifact> deps = Json.parse(FileUtils.readUtf8(depsFile), new TypeToken<List<MavenArtifact>>() {}.getType());
+        for (MavenArtifact dep : deps) {
+            Path depFile = this.depsDir.resolve(dep.jar());
             if (!Files.exists(depFile)) {
                 return false;
             }
@@ -109,9 +109,9 @@ public class QuiltManager {
         classpath.add(versionDir.resolve(QuiltManager.COSMIC_QUILT_FILE_NAME.formatted(version)).toString());
 
         Path depsFile = versionDir.resolve(QuiltManager.DEPS_FILE);
-        List<Dependency> deps = Json.parse(FileUtils.readUtf8(depsFile), new TypeToken<List<Dependency>>() {}.getType());
-        for (Dependency dep : deps) {
-            Path depFile = this.depsDir.resolve(dep.mavenJar());
+        List<MavenArtifact> deps = Json.parse(FileUtils.readUtf8(depsFile), new TypeToken<List<MavenArtifact>>() {}.getType());
+        for (MavenArtifact dep : deps) {
+            Path depFile = this.depsDir.resolve(dep.jar());
             classpath.add(depFile.toString());
         }
 

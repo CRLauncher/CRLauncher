@@ -47,7 +47,7 @@ public class MavenDownloader {
             "https://jitpack.io/",
     };
 
-    public static List<Dependency> downloadRelease(String version, Path saveDir, Path cqPath, List<HttpDownload> downloads) throws IOException {
+    public static List<MavenArtifact> downloadRelease(String version, Path saveDir, Path cqPath, List<HttpDownload> downloads) throws IOException {
         String jarUrl = MavenDownloader.QUILT_LOADER_DOWNLOAD.formatted(version, "cosmic-quilt-%s.jar".formatted(version));
 
         HttpDownload cqDownload = new HttpDownload.Builder()
@@ -58,22 +58,22 @@ public class MavenDownloader {
 
         downloads.add(cqDownload);
 
-        Map<String, Dependency> deps = new HashMap<>();
+        Map<String, MavenArtifact> deps = new HashMap<>();
 
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
             String pomURL = MavenDownloader.QUILT_LOADER_DOWNLOAD.formatted(version, "cosmic-quilt-%s.pom".formatted(version));
             String pomContent = request.asString(pomURL);
 
             MavenDownloader.getDependencies(deps, pomContent, null, 0);
-            for (Dependency dependency : deps.values()) {
-                MavenDownloader.downloadDependencies(dependency, MavenDownloader.MAVEN_REPOSITORIES, downloads, saveDir);
+            for (MavenArtifact mavenArtifact : deps.values()) {
+                MavenDownloader.downloadDependencies(mavenArtifact, MavenDownloader.MAVEN_REPOSITORIES, downloads, saveDir);
             }
         }
 
         return new ArrayList<>(deps.values());
     }
 
-    private static void getDependencies(Map<String, Dependency> dependencies, String pom, String search, int depth) throws IOException {
+    private static void getDependencies(Map<String, MavenArtifact> dependencies, String pom, String search, int depth) throws IOException {
         if (pom == null || depth > 9) return;
         try {
             Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(pom)));
@@ -100,7 +100,7 @@ public class MavenDownloader {
                             artifactId.equals("slf4j-api"))) && (!dependencies.containsKey(artifactId) ||
                             MavenDownloader.compare(dependencies.get(artifactId).version(), version) == 1) &&
                             !artifactId.equalsIgnoreCase("cosmicreach")) {
-                        dependencies.put(artifactId, new Dependency(groupId, artifactId, version));
+                        dependencies.put(artifactId, new MavenArtifact(groupId, artifactId, version));
                         for (String repository : MavenDownloader.MAVEN_REPOSITORIES) {
                             try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
                                 String url = repository + groupId.replace('.', '/') +
@@ -140,17 +140,17 @@ public class MavenDownloader {
         }
     }
 
-    private static void downloadDependencies(Dependency dependency, String[] repositories, List<HttpDownload> downloads, Path saveDir) throws IOException {
-        if (dependency == null) {
+    private static void downloadDependencies(MavenArtifact mavenArtifact, String[] repositories, List<HttpDownload> downloads, Path saveDir) throws IOException {
+        if (mavenArtifact == null) {
             return;
         }
 
-        String groupId = dependency.groupId();
-        String artifactId = dependency.artifactId();
-        String version = dependency.version();
+        String groupId = mavenArtifact.groupId();
+        String artifactId = mavenArtifact.artifactId();
+        String version = mavenArtifact.version();
         for (String repository : repositories) {
             String pomURL = repository + groupId.replace('.', '/') + "/" + artifactId +
-                    "/" + version + "/" + dependency.mavenPom();
+                    "/" + version + "/" + mavenArtifact.pom();
 
             try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
                 request.asString(pomURL);
@@ -161,8 +161,8 @@ public class MavenDownloader {
 
                 HttpDownload download = new HttpDownload.Builder()
                         .url(repository + groupId.replace('.', '/') + "/" + artifactId +
-                                "/" + version + "/" + dependency.mavenJar())
-                        .saveAs(saveDir.resolve(dependency.mavenJar()))
+                                "/" + version + "/" + mavenArtifact.jar())
+                        .saveAs(saveDir.resolve(mavenArtifact.jar()))
                         .httpClient(CRLauncher.getInstance().getHttpClient())
                         .build();
 

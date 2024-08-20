@@ -18,17 +18,16 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven;
 
-public record Dependency(String groupId, String artifactId, String version) {
-    public String mavenJar() {
+public record MavenArtifact(String groupId, String artifactId, String version) {
+    public String jar() {
         return this.artifactId + "-" + this.version + ".jar";
     }
 
-    public String mavenPom() {
+    public String pom() {
         return this.artifactId + "-" + this.version + ".pom";
     }
 
-    public String mavenUrl() {
-        return this.groupId.replace(".", "/") + "/" + this.artifactId +
-            "/" + this.version + "/" + this.mavenJar();
+    public String url() {
+        return this.groupId.replace(".", "/") + "/" + this.artifactId + "/" + this.version + "/" + this.jar();
     }
 }

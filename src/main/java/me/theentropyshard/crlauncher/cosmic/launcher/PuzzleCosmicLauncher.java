@@ -25,7 +25,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.Dependency;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.MavenArtifact;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 
@@ -38,18 +38,18 @@ import java.util.List;
 
 public class PuzzleCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
     private static final List<PuzzleDependency> LIBRARIES = List.of(
-        new PuzzleDependency("https://repo.spongepowered.org/repository/maven-public/", new Dependency("org.spongepowered", "mixin", "0.8.5")),
-        new PuzzleDependency("https://jitpack.io/", new Dependency("com.github.PuzzleLoader", "access_manipulators", "1.0.1")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-tree", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-util", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-analysis", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new Dependency("org.ow2.asm", "asm-commons", "9.6"))
+        new PuzzleDependency("https://repo.spongepowered.org/repository/maven-public/", new MavenArtifact("org.spongepowered", "mixin", "0.8.5")),
+        new PuzzleDependency("https://jitpack.io/", new MavenArtifact("com.github.PuzzleLoader", "access_manipulators", "1.0.1")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-tree", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-util", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-analysis", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-commons", "9.6"))
     );
 
     private final String version;
 
-    private record PuzzleDependency(String baseRepoURL, Dependency dependency) {
+    private record PuzzleDependency(String baseRepoURL, MavenArtifact mavenArtifact) {
 
     }
 
@@ -96,14 +96,14 @@ public class PuzzleCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
         Path libsDir = downloadDir.resolve("libs");
         FileUtils.createDirectoryIfNotExists(libsDir);
         for (PuzzleDependency pDep : PuzzleCosmicLauncher.LIBRARIES) {
-            Dependency dep = pDep.dependency();
-            String mavenJar = dep.mavenJar();
+            MavenArtifact dep = pDep.mavenArtifact();
+            String mavenJar = dep.jar();
 
             Path libPath = libsDir.resolve(mavenJar);
             HttpDownload libDownload = new HttpDownload.Builder()
                 .httpClient(CRLauncher.getInstance().getHttpClient())
                 .saveAs(libPath)
-                .url(pDep.baseRepoURL() + dep.mavenUrl())
+                .url(pDep.baseRepoURL() + dep.url())
                 // todo add sha 1 to download and verify
                 .build();
 
