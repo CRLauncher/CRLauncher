@@ -151,7 +151,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
         super.buildCommand(command);
 
-        Path fabricLoaderDir = this.getGameFilesLocation().resolve("fabric_loader_%s".formatted(this.version));
+        Path fabricLoaderDir = CRLauncher.getInstance().getCosmicDir().resolve("fabric-loader-%s".formatted(this.version));
         this.downloadFabricLoader(fabricLoaderDir, this.version);
 
         command.add("-classpath");
