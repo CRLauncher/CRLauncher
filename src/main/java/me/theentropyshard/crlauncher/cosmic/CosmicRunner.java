@@ -164,7 +164,8 @@ public class CosmicRunner extends Thread {
             long start = System.currentTimeMillis();
 
             int exitCode = launcher.launch(line -> {
-                if (this.instance.getType() == InstanceType.VANILLA) {
+                InstanceType type = this.instance.getType();
+                if (type == InstanceType.VANILLA || type == InstanceType.FABRIC) {
                     Log.info(line);
                 } else {
                     Log.cosmicReach(line);
