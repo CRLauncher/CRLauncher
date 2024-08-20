@@ -184,14 +184,11 @@ public class LauncherConsole {
         }
 
         public float getMinimumSpan(int axis) {
-            switch (axis) {
-                case View.X_AXIS:
-                    return 0;
-                case View.Y_AXIS:
-                    return super.getMinimumSpan(axis);
-                default:
-                    throw new IllegalArgumentException("Invalid axis: " + axis);
-            }
+            return switch (axis) {
+                case View.X_AXIS -> 0;
+                case View.Y_AXIS -> super.getMinimumSpan(axis);
+                default -> throw new IllegalArgumentException("Invalid axis: " + axis);
+            };
         }
     }
 }
