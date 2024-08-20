@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher;
 
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
+import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
@@ -76,6 +77,7 @@ public class CRLauncher {
     private final InstanceManager instanceManager;
     private final IconManager iconManager;
     private final QuiltManager quiltManager;
+    private final PuzzleManager puzzleManager;
     private final AccountManager accountManager;
 
     private final ExecutorService taskPool;
@@ -143,6 +145,7 @@ public class CRLauncher {
         }
 
         this.quiltManager = new QuiltManager(this.cosmicDir.resolve("cosmic-quilt"));
+        this.puzzleManager = new PuzzleManager(this.cosmicDir.resolve("puzzle"));
 
         this.taskPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -314,6 +317,10 @@ public class CRLauncher {
 
     public QuiltManager getQuiltManager() {
         return this.quiltManager;
+    }
+
+    public PuzzleManager getPuzzleManager() {
+        return this.puzzleManager;
     }
 
     public AccountManager getAccountManager() {
