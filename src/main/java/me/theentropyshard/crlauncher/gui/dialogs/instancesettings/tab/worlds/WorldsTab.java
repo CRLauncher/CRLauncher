@@ -34,6 +34,7 @@ public class WorldsTab extends Tab {
         super("Worlds", instance, dialog);
 
         JTable worldsTable = new JTable();
+        worldsTable.getTableHeader().setEnabled(false);
         WorldsTableModel worldsModel = new WorldsTableModel(worldsTable, instance);
         worldsTable.setModel(worldsModel);
         worldsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
