@@ -110,10 +110,6 @@ public class LauncherConsole {
         }
     }
 
-    public JCheckBox getScrollDown() {
-        return this.scrollDown;
-    }
-
     public JFrame getFrame() {
         return this.frame;
     }
