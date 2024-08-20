@@ -104,6 +104,7 @@ public class LauncherConsole {
         bottomPanel.add(clearButton);
 
         this.frame = new JFrame(BuildConfig.APP_NAME + " console");
+        this.frame.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         this.frame.add(panel, BorderLayout.CENTER);
         this.frame.pack();
         this.frame.setLocation(LauncherConsole.DEFAULT_X, LauncherConsole.DEFAULT_Y);
