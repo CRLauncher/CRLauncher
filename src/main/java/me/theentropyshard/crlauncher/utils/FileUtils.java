@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.utils;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
@@ -110,7 +111,11 @@ public final class FileUtils {
     }
 
     public static String readUtf8(Path file) throws IOException {
-        return new String(Files.readAllBytes(file), StandardCharsets.UTF_8);
+        return FileUtils.read(file, StandardCharsets.UTF_8);
+    }
+
+    public static String read(Path file, Charset charset) throws IOException {
+        return new String(Files.readAllBytes(file), charset);
     }
 
     public static List<Path> list(Path dir) throws IOException {
