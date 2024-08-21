@@ -29,8 +29,6 @@ import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
 import me.theentropyshard.crlauncher.instance.InstanceAlreadyExistsException;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -43,7 +41,7 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class AddInstanceDialog extends AppDialog {
-    
+
 
     private final JTextField nameField;
     private final JTextField groupField;
@@ -148,9 +146,9 @@ public class AddInstanceDialog extends AppDialog {
         });
 
         JScrollPane scrollPane = new JScrollPane(
-                versionsTable,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+            versionsTable,
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
 
         JPanel filterPanel = new JPanel();
@@ -213,26 +211,26 @@ public class AddInstanceDialog extends AppDialog {
         this.addButton.addActionListener(e -> {
             String instanceName = this.nameField.getText();
             if (instanceName.trim().isEmpty()) {
-                MessageBox.showErrorMessage(
-                        AddInstanceDialog.this.getDialog(),
-                        "Instance name cannot be empty"
-                );
+                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(), "Instance name cannot be empty");
+
+                return;
+            }
+
+            String chosenGroupName = this.groupField.getText();
+            if (chosenGroupName.trim().isEmpty()) {
+                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(), "Group name cannot be empty!");
 
                 return;
             }
 
             if (versionsTable.getSelectedRow() == -1) {
-                MessageBox.showErrorMessage(
-                        AddInstanceDialog.this.getDialog(),
-                        "Cosmic version is not selected"
-                );
+                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(), "Cosmic version is not selected");
 
                 return;
             }
 
             IconManager iconManager = CRLauncher.getInstance().getIconManager();
 
-            String chosenGroupName = this.groupField.getText();
             playView.addInstanceItem(new InstanceItem(iconManager.getIcon("cosmic_logo_x32.png").icon(), instanceName), chosenGroupName);
             this.getDialog().dispose();
             TableModel model = versionsTable.getModel();
@@ -244,11 +242,11 @@ public class AddInstanceDialog extends AppDialog {
 
                 try {
                     instanceManager.createInstance(instanceName, chosenGroupName, mcVersion,
-                            CRLauncher.getInstance().getSettings().settingsDialogUpdateToLatest);
+                        CRLauncher.getInstance().getSettings().settingsDialogUpdateToLatest);
                 } catch (InstanceAlreadyExistsException ex) {
                     MessageBox.showErrorMessage(
-                            AddInstanceDialog.this.getDialog(),
-                            ex.getMessage()
+                        AddInstanceDialog.this.getDialog(),
+                        ex.getMessage()
                     );
 
                     Log.warn(ex.getMessage());
