@@ -52,7 +52,7 @@ public class Instance {
     private String iconFileName = "/assets/images/icons/cosmic_logo_x32.png";
     private int cosmicWindowWidth;
     private int cosmicWindowHeight;
-    private String customWindowString;
+    private String customWindowTitle;
     private int minimumMemoryInMegabytes = 512;
     private int maximumMemoryInMegabytes = 2048;
     private LocalDateTime lastTimePlayed = LocalDateTime.MIN;
@@ -255,12 +255,12 @@ public class Instance {
         this.cosmicWindowHeight = cosmicWindowHeight;
     }
 
-    public String getCustomWindowString() {
-        return this.customWindowString;
+    public String getCustomWindowTitle() {
+        return this.customWindowTitle;
     }
 
-    public void setCustomWindowString(String customWindowString) {
-        this.customWindowString = customWindowString;
+    public void setCustomWindowTitle(String customWindowTitle) {
+        this.customWindowTitle = customWindowTitle;
     }
 
     public int getMinimumMemoryInMegabytes() {

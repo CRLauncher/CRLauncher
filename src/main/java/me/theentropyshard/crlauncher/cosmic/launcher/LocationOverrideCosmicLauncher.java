@@ -80,7 +80,6 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
         }
 
         this.defineProperty(new SystemProperty("crloader.saveDirPath", gameFilesLocation));
-        //this.defineProperty(new SystemProperty("crloader.windowTitle", "Cosmic Reach"));
 
         super.buildCommand(command);
 

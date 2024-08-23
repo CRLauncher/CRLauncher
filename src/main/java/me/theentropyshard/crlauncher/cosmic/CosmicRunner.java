@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
+import me.theentropyshard.crlauncher.cosmic.launcher.AbstractCosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
 import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
@@ -37,6 +38,7 @@ import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.SystemProperty;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import me.theentropyshard.crlauncher.utils.ansi.AnsiParser;
 import me.theentropyshard.crlauncher.utils.ansi.AnsiPart;
@@ -169,6 +171,14 @@ public class CosmicRunner extends Thread {
                 case 2 -> {
                     CRLauncher.frame.setVisible(false);
                     LauncherConsole.instance.setVisible(false);
+                }
+            }
+
+            if (launcher instanceof AbstractCosmicLauncher abstractLauncher) {
+                String title = this.instance.getCustomWindowTitle();
+
+                if (title != null && !title.trim().isEmpty()) {
+                    abstractLauncher.defineProperty(new SystemProperty("crloader.windowTitle", title));
                 }
             }
 

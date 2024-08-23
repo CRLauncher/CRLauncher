@@ -18,14 +18,13 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -33,10 +32,13 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class MainTab extends Tab {
-    
+    private final JComboBox<String> versionsCombo;
+    private final JTextField windowTitleField;
+    private final String oldWindowTitle;
 
     public MainTab(Instance instance, JDialog dialog) {
         super("Main", instance, dialog);
@@ -49,26 +51,47 @@ public class MainTab extends Tab {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.NORTH;
 
-        JPanel crVersionSettings = new JPanel(new GridLayout(0, 1));
-        crVersionSettings.setBorder(new TitledBorder("Cosmic Reach version"));
+        {
+            JPanel crVersionSettings = new JPanel(new GridLayout(0, 1));
+            crVersionSettings.setBorder(new TitledBorder("Cosmic Reach version"));
 
-        JComboBox<String> versionsCombo = new JComboBox<>();
-        versionsCombo.addItemListener(e -> {
-            if (e.getStateChange() != ItemEvent.SELECTED) {
-                return;
-            }
+            this.versionsCombo = new JComboBox<>();
+            this.versionsCombo.addItemListener(e -> {
+                if (e.getStateChange() != ItemEvent.SELECTED) {
+                    return;
+                }
 
-            String crVersion = String.valueOf(e.getItem());
-            instance.setCosmicVersion(crVersion);
-        });
-        crVersionSettings.add(versionsCombo);
+                String crVersion = String.valueOf(e.getItem());
+                instance.setCosmicVersion(crVersion);
+            });
+            crVersionSettings.add(this.versionsCombo);
 
-        JCheckBox updateToLatestAutomatically = new JCheckBox("Automatically update to the latest version");
-        updateToLatestAutomatically.setSelected(instance.isAutoUpdateToLatest());
-        updateToLatestAutomatically.addActionListener(e -> {
-            instance.setAutoUpdateToLatest(!instance.isAutoUpdateToLatest());
-        });
-        crVersionSettings.add(updateToLatestAutomatically);
+            JCheckBox updateToLatestAutomatically = new JCheckBox("Automatically update to the latest version");
+            updateToLatestAutomatically.setSelected(instance.isAutoUpdateToLatest());
+            updateToLatestAutomatically.addActionListener(e -> {
+                instance.setAutoUpdateToLatest(!instance.isAutoUpdateToLatest());
+            });
+            crVersionSettings.add(updateToLatestAutomatically);
+
+            gbc.gridy++;
+            root.add(crVersionSettings, gbc);
+        }
+
+        {
+            this.oldWindowTitle = instance.getCustomWindowTitle();
+
+            this.windowTitleField = new JTextField(instance.getCustomWindowTitle());
+            this.windowTitleField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Set custom window title here");
+
+            JPanel otherSettings = new JPanel(new GridLayout(1, 1));
+            otherSettings.setBorder(new TitledBorder("Other"));
+
+            otherSettings.add(this.windowTitleField);
+
+            gbc.gridy++;
+            gbc.weighty = 1;
+            root.add(otherSettings, gbc);
+        }
 
         new SwingWorker<List<String>, Void>() {
             @Override
@@ -96,18 +119,20 @@ public class MainTab extends Tab {
                 }
 
                 String cosmicVersion = instance.getCosmicVersion();
-                versions.forEach(versionsCombo::addItem);
-                versionsCombo.setSelectedItem(cosmicVersion);
+                versions.forEach(MainTab.this.versionsCombo::addItem);
+                MainTab.this.versionsCombo.setSelectedItem(cosmicVersion);
             }
         }.execute();
-
-        gbc.gridy++;
-        gbc.weighty = 1;
-        root.add(crVersionSettings, gbc);
     }
 
     @Override
     public void save() throws IOException {
+        String windowTitle = this.windowTitleField.getText();
 
+        if (Objects.equals(this.oldWindowTitle, windowTitle)) {
+            return;
+        }
+
+        this.getInstance().setCustomWindowTitle(windowTitle);
     }
 }
