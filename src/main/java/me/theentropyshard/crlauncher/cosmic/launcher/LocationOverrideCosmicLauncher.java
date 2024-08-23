@@ -23,9 +23,7 @@ import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
 import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.logging.Log;
-import me.theentropyshard.crlauncher.utils.HashUtils;
-import me.theentropyshard.crlauncher.utils.ListUtils;
-import me.theentropyshard.crlauncher.utils.OperatingSystem;
+import me.theentropyshard.crlauncher.utils.*;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -34,11 +32,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
-    
-
-    private static final String CR_LOADER_VERSION = "0.0.1";
-    private static final String CR_LOADER_JAR = "CRLoader-" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION + ".jar";
-    private static final String CR_LOADER_SHA256 = "213128b5e80280af873f1b91cbc4a44515294dc191bb0f46b297c982904dcdbe";
+    private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.0");
+    private static final String CR_LOADER_JAR = "CRLoader-" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION.toVersionString() + ".jar";
+    private static final String CR_LOADER_SHA256 = "8147f23d15599d5ce9b7bb98983989b0e59a1402409731ec3228873ef4c17f66";
 
     public LocationOverrideCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
         super(javaPath, runDir, gameFilesLocation, clientPath);
@@ -49,11 +45,14 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
             return;
         }
 
+        String loaderVersion = LocationOverrideCosmicLauncher.CR_LOADER_VERSION.toVersionString();
+
         GithubReleaseDownloader downloader = new GithubReleaseDownloader();
         List<GithubReleaseResponse> allReleases = downloader.getAllReleases("CRLauncher", "CRLoader");
-        GithubReleaseResponse releaseResponse = ListUtils.search(allReleases, r -> r.tag_name.equals("v" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION));
+        GithubReleaseResponse releaseResponse = ListUtils.search(allReleases, r -> r.tag_name.equals("v" + loaderVersion));
+
         if (releaseResponse == null) {
-            throw new IOException("Could not find release v" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION);
+            throw new IOException("Could not find release v" + loaderVersion);
         }
 
         ProgressDialog dialog = new ProgressDialog("Downloading CRLoader");
@@ -68,8 +67,6 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
 
     @Override
     public void buildCommand(List<String> command) {
-        super.buildCommand(command);
-
         Path loaderPath = CRLauncher.getInstance().getLibrariesDir().resolve(LocationOverrideCosmicLauncher.CR_LOADER_JAR);
         try {
             this.downloadLoader(loaderPath);
@@ -82,6 +79,11 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
             gameFilesLocation = gameFilesLocation.replace("\\", "\\\\");
         }
 
-        command.add("-javaagent:" + loaderPath + "=" + gameFilesLocation);
+        this.defineProperty(new SystemProperty("crloader.saveDirPath", gameFilesLocation));
+        //this.defineProperty(new SystemProperty("crloader.windowTitle", "Cosmic Reach"));
+
+        super.buildCommand(command);
+
+        command.add("-javaagent:" + loaderPath);
     }
 }
