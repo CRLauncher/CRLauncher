@@ -151,6 +151,7 @@ public class InstanceManager {
         FileUtils.createDirectoryIfNotExists(instance.getWorkDir());
         FileUtils.createDirectoryIfNotExists(instance.getCosmicDir());
         FileUtils.createDirectoryIfNotExists(instance.getJarModsDir());
+        FileUtils.createDirectoryIfNotExists(instance.getCosmicDir().resolve("mods").resolve("assets"));
 
         instance.save();
     }
