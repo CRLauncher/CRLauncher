@@ -64,6 +64,10 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
         return new SemanticVersion(major, minor, patch);
     }
 
+    public boolean isGreaterThan(SemanticVersion other) {
+        return this.compareTo(other) > 0;
+    }
+
     @Override
     public int compareTo(SemanticVersion version) {
         int majorCompare = Integer.compare(this.major, version.getMajor());
