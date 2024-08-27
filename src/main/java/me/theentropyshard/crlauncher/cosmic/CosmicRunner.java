@@ -24,10 +24,8 @@ import me.theentropyshard.crlauncher.cosmic.launcher.AbstractCosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
 import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
-import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
-import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
@@ -40,8 +38,6 @@ import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.SystemProperty;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
-import me.theentropyshard.crlauncher.utils.ansi.AnsiParser;
-import me.theentropyshard.crlauncher.utils.ansi.AnsiPart;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
 
@@ -55,7 +51,6 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 public class CosmicRunner extends Thread {
 
@@ -120,44 +115,49 @@ public class CosmicRunner extends Thread {
                     saveDirPath,
                     clientPath
                 );
-            } else if (this.instance.getType() == InstanceType.FABRIC) {
-                this.updateFabricMods();
-
-                launcher = CosmicLauncherFactory.getLauncher(
-                    javaPath,
-                    LaunchType.FABRIC,
-                    saveDirPath,
-                    saveDirPath,
-                    clientPath,
-                    this.instance.getFabricModsDir(),
-                    this.instance.getFabricVersion()
-                );
-            } else if (this.instance.getType() == InstanceType.QUILT) {
-                this.updateQuiltMods();
-
-                launcher = CosmicLauncherFactory.getLauncher(
-                    javaPath,
-                    LaunchType.QUILT,
-                    saveDirPath,
-                    saveDirPath,
-                    clientPath,
-                    this.instance.getQuiltModsDir(),
-                    this.instance.getQuiltVersion()
-                );
-            } else if (this.instance.getType() == InstanceType.PUZZLE) {
-                this.updatePuzzleMods();
-
-                launcher = CosmicLauncherFactory.getLauncher(
-                    javaPath,
-                    LaunchType.PUZZLE,
-                    saveDirPath,
-                    saveDirPath,
-                    clientPath,
-                    this.instance.getPuzzleModsDir(),
-                    this.instance.getPuzzleVersion()
-                );
             } else {
-                throw new IllegalArgumentException("Unknown instance type: " + this.instance.getType());
+                launcher = switch (this.instance.getType()) {
+                    case FABRIC -> CosmicLauncherFactory.getLauncher(
+                        javaPath,
+                        LaunchType.FABRIC,
+                        saveDirPath,
+                        saveDirPath,
+                        clientPath,
+                        this.instance.getFabricModsDir(),
+                        this.instance.getFabricVersion()
+                    );
+                    case QUILT -> CosmicLauncherFactory.getLauncher(
+                        javaPath,
+                        LaunchType.QUILT,
+                        saveDirPath,
+                        saveDirPath,
+                        clientPath,
+                        this.instance.getQuiltModsDir(),
+                        this.instance.getQuiltVersion()
+                    );
+                    case PUZZLE -> CosmicLauncherFactory.getLauncher(
+                        javaPath,
+                        LaunchType.PUZZLE,
+                        saveDirPath,
+                        saveDirPath,
+                        clientPath,
+                        this.instance.getPuzzleModsDir(),
+                        this.instance.getPuzzleVersion()
+                    );
+                    default -> throw new IllegalArgumentException("Unknown instance type: " + this.instance.getType());
+                };
+
+                switch (this.instance.getType()) {
+                    case VANILLA -> {
+
+                    }
+                    case FABRIC ->
+                        this.updateMods(this.instance.getFabricMods(), this.instance.getFabricModsDir(), this.instance.getDisabledFabricModsDir());
+                    case QUILT ->
+                        this.updateMods(this.instance.getQuiltMods(), this.instance.getQuiltModsDir(), this.instance.getDisabledQuiltModsDir());
+                    case PUZZLE ->
+                        this.updateMods(this.instance.getPuzzleMods(), this.instance.getPuzzleModsDir(), this.instance.getDisabledPuzzleModsDir());
+                }
             }
 
             Settings settings = CRLauncher.getInstance().getSettings();
@@ -314,93 +314,39 @@ public class CosmicRunner extends Thread {
         return originalClientPath;
     }
 
-    private void updateFabricMods() throws IOException {
-        List<FabricMod> fabricMods = this.instance.getFabricMods();
-
-        if (fabricMods.isEmpty()) {
+    private void updateMods(List<? extends Mod> mods, Path enabledModsDir, Path disabledModsDir) throws IOException {
+        if (mods.isEmpty()) {
             return;
         }
 
-        Path modsDir = this.instance.getFabricModsDir();
-        Path disabledModsDir = this.instance.getDisabledFabricModsDir();
-
-        FileUtils.createDirectoryIfNotExists(modsDir);
+        FileUtils.createDirectoryIfNotExists(enabledModsDir);
         FileUtils.createDirectoryIfNotExists(disabledModsDir);
 
-        for (FabricMod mod : fabricMods.stream().filter(Predicate.not(FabricMod::isActive)).toList()) {
+        for (Mod mod : mods) {
             Path filePath = Paths.get(mod.getFilePath());
-            if (Files.exists(filePath)) {
-                Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                Files.delete(filePath);
+
+            if (!Files.exists(filePath)) {
+                Log.warn("Mod at '" + filePath + "' does not exist!");
+
+                continue;
             }
-        }
 
-        for (FabricMod mod : fabricMods.stream().filter(FabricMod::isActive).toList()) {
-            Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
-            if (Files.exists(filePath)) {
-                Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                Files.delete(filePath);
+            if ((mod.isActive() && filePath.startsWith(enabledModsDir)) ||
+                (!mod.isActive() && filePath.startsWith(disabledModsDir))) {
+
+                continue;
             }
-        }
-    }
 
-    private void updateQuiltMods() throws IOException {
-        List<QuiltMod> quiltMods = this.instance.getQuiltMods();
+            Path destinationDir;
 
-        if (quiltMods.isEmpty()) {
-            return;
-        }
-
-        Path modsDir = this.instance.getQuiltModsDir();
-        Path disabledModsDir = this.instance.getDisabledQuiltModsDir();
-
-        FileUtils.createDirectoryIfNotExists(modsDir);
-        FileUtils.createDirectoryIfNotExists(disabledModsDir);
-
-        for (QuiltMod mod : quiltMods.stream().filter(Predicate.not(q -> q.active)).toList()) {
-            Path filePath = Paths.get(mod.filePath);
-            if (Files.exists(filePath)) {
-                Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                Files.delete(filePath);
+            if (mod.isActive()) {
+                destinationDir = enabledModsDir.resolve(filePath.getFileName());
+            } else {
+                destinationDir = disabledModsDir.resolve(filePath.getFileName());
             }
-        }
 
-        for (QuiltMod mod : quiltMods.stream().filter(q -> q.active).toList()) {
-            Path filePath = disabledModsDir.resolve(Paths.get(mod.filePath).getFileName());
-            if (Files.exists(filePath)) {
-                Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                Files.delete(filePath);
-            }
-        }
-    }
-
-    private void updatePuzzleMods() throws IOException {
-        List<PuzzleMod> puzzleMods = this.instance.getPuzzleMods();
-
-        if (puzzleMods.isEmpty()) {
-            return;
-        }
-
-        Path modsDir = this.instance.getPuzzleModsDir();
-        Path disabledModsDir = this.instance.getDisabledPuzzleModsDir();
-
-        FileUtils.createDirectoryIfNotExists(modsDir);
-        FileUtils.createDirectoryIfNotExists(disabledModsDir);
-
-        for (PuzzleMod mod : puzzleMods.stream().filter(Predicate.not(PuzzleMod::isActive)).toList()) {
-            Path filePath = Paths.get(mod.getFilePath());
-            if (Files.exists(filePath)) {
-                Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                Files.delete(filePath);
-            }
-        }
-
-        for (PuzzleMod mod : puzzleMods.stream().filter(PuzzleMod::isActive).toList()) {
-            Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
-            if (Files.exists(filePath)) {
-                Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                Files.delete(filePath);
-            }
+            filePath = Files.move(filePath, destinationDir, StandardCopyOption.REPLACE_EXISTING);
+            mod.setFilePath(filePath.toString());
         }
     }
 }
