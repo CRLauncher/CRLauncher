@@ -170,8 +170,7 @@ public class CRLauncher {
 
                         JTextPane message = new JTextPane();
                         message.setContentType("text/html");
-                        message.setText(baseText + "<a href=\"" + link + "\">" + link + "</a><br>" +
-                            "Update now?");
+                        message.setText(baseText + "<a href=\"" + link + "\">" + link + "</a><br>Update now?");
                         message.setEditable(false);
 
                         boolean updateNow = MessageBox.showConfirmMessage(CRLauncher.frame, "Update", message);
