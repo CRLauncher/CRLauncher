@@ -25,7 +25,6 @@ import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.Socket;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,54 +32,60 @@ import java.util.List;
 
 public class Updater {
     public static void main(String[] args) {
-        String oldPath = args[0];
-        String newPath = args[1];
+        if (args.length < 2) {
+            System.err.println("At least two arguments required: <old jar> <new jar>");
+
+            System.exit(1);
+        }
+
+        Path oldJar = Paths.get(args[0]);
+        Path newJar = Paths.get(args[1]);
         String[] otherArgs = Arrays.copyOfRange(args, 2, args.length);
 
-        Path oldLauncherFile = Paths.get(oldPath);
-        Path newLauncherFile = Paths.get(newPath);
-
         try {
-            while (true) {
-                try {
-                    FileUtils.delete(oldLauncherFile);
-
-                    break;
-                } catch (IOException e) {
-
-                }
-            }
-
-            Files.copy(newLauncherFile, oldLauncherFile, StandardCopyOption.REPLACE_EXISTING);
-
-            new File(oldLauncherFile.toAbsolutePath().toString()).setExecutable(true);
-
-            List<String> arguments = new ArrayList<>();
-
-            if (OperatingSystem.isMacApp()) {
-                arguments.add("open");
-                arguments.add("-n");
-                arguments.add(Paths.get(System.getProperty("user.dir")).getParent().getParent().toAbsolutePath().toString());
-                arguments.add("--args");
-            } else {
-                arguments.add(JavaLocator.getJavaPath());
-                arguments.add("-Djna.nosys=true");
-                arguments.add("-jar");
-                arguments.add(oldLauncherFile.toString());
-            }
-
-            arguments.addAll(Arrays.asList(otherArgs));
-
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.directory(new File(System.getProperty("user.dir")));
-            processBuilder.command(arguments);
-
-            processBuilder.start();
+            Updater.update(oldJar, newJar, otherArgs);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
             e.printStackTrace();
+
+            System.exit(1);
+        }
+    }
+
+    public static void update(Path oldJar, Path newJar, String[] otherArgs) throws Exception {
+        while (true) {
+            try {
+                FileUtils.delete(oldJar);
+
+                break;
+            } catch (IOException ignored) {
+
+            }
         }
 
-        System.exit(0);
+        Files.copy(newJar, oldJar, StandardCopyOption.REPLACE_EXISTING);
+
+        new File(oldJar.toAbsolutePath().toString()).setExecutable(true);
+
+        List<String> arguments = new ArrayList<>();
+
+        if (OperatingSystem.isMacApp()) {
+            arguments.add("open");
+            arguments.add("-n");
+            arguments.add(Paths.get(System.getProperty("user.dir")).getParent().getParent().toAbsolutePath().toString());
+            arguments.add("--args");
+        } else {
+            arguments.add(JavaLocator.getJavaPath());
+            arguments.add("-Djna.nosys=true");
+            arguments.add("-jar");
+            arguments.add(oldJar.toString());
+        }
+
+        arguments.addAll(Arrays.asList(otherArgs));
+
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        processBuilder.directory(new File(System.getProperty("user.dir")));
+        processBuilder.command(arguments);
+        processBuilder.start();
     }
 }
