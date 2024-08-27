@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.github;
 
 import java.util.ArrayList;
 
-public class GithubReleaseResponse {
+public class GithubRelease {
     public String url;
     public String assets_url;
     public String upload_url;

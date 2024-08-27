@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
-import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
+import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricModsView;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricVersionsLoaderWorker;
@@ -40,7 +40,7 @@ import java.util.Objects;
 
 public class ModsTab extends Tab implements ItemListener {
     private final JComboBox<InstanceType> typeCombo;
-    private final JComboBox<GithubReleaseResponse> loaderVersionCombo;
+    private final JComboBox<GithubRelease> loaderVersionCombo;
     private final JPanel mods;
     private final JPanel root;
     private final JPanel loaderVersionsPanel;
@@ -87,7 +87,7 @@ public class ModsTab extends Tab implements ItemListener {
                 public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                     Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
-                    if (value instanceof GithubReleaseResponse release) {
+                    if (value instanceof GithubRelease release) {
                         ((JLabel) c).setText(release.name + " (" + release.tag_name + ")");
                     }
 
@@ -195,20 +195,20 @@ public class ModsTab extends Tab implements ItemListener {
         instance.setType((InstanceType) this.typeCombo.getSelectedItem());
         if (instance.getType() == InstanceType.FABRIC) {
             instance.setFabricVersion(
-                ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
+                ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
             );
         } else if (instance.getType() == InstanceType.QUILT) {
             instance.setQuiltVersion(
-                ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
+                ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
             );
         } else if (instance.getType() == InstanceType.PUZZLE) {
             instance.setPuzzleVersion(
-                ((GithubReleaseResponse) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
+                ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
             );
         }
     }
 
-    public JComboBox<GithubReleaseResponse> getLoaderVersionCombo() {
+    public JComboBox<GithubRelease> getLoaderVersionCombo() {
         return this.loaderVersionCombo;
     }
 }

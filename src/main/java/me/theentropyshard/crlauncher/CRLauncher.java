@@ -23,7 +23,7 @@ import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
-import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
+import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -158,7 +158,7 @@ public class CRLauncher {
 
                 try {
                     GithubReleaseDownloader downloader = new GithubReleaseDownloader();
-                    GithubReleaseResponse release = downloader.getLatestRelease("CRLauncher", "CRLauncher");
+                    GithubRelease release = downloader.getLatestRelease("CRLauncher", "CRLauncher");
                     SemanticVersion latestVersion = SemanticVersion.parse(release.tag_name.substring(1));
                     SemanticVersion currentVersion = SemanticVersion.parse(BuildConfig.APP_VERSION);
 
@@ -194,7 +194,7 @@ public class CRLauncher {
 
                             FileUtils.delete(newLauncherFile);
 
-                            GithubReleaseResponse.Asset asset = ListUtils.search(release.assets, a -> a.name.endsWith(fileExtension));
+                            GithubRelease.Asset asset = ListUtils.search(release.assets, a -> a.name.endsWith(fileExtension));
 
                             ProgressDialog dialog = new ProgressDialog("Updating CRLauncher to " + latestVersion.toVersionString());
 

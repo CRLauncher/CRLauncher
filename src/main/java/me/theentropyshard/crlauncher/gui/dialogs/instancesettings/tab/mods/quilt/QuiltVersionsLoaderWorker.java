@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
+import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.network.HttpRequest;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -29,39 +29,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class QuiltVersionsLoaderWorker extends SwingWorker<List<GithubReleaseResponse>, Void> {
-    private final JComboBox<GithubReleaseResponse> versionsCombo;
+public class QuiltVersionsLoaderWorker extends SwingWorker<List<GithubRelease>, Void> {
+    private final JComboBox<GithubRelease> versionsCombo;
     private final Instance instance;
 
-    public QuiltVersionsLoaderWorker(JComboBox<GithubReleaseResponse> versionsCombo, Instance instance) {
+    public QuiltVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, Instance instance) {
         this.versionsCombo = versionsCombo;
         this.instance = instance;
     }
 
     @Override
-    protected List<GithubReleaseResponse> doInBackground() throws Exception {
+    protected List<GithubRelease> doInBackground() throws Exception {
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
             String string = request.asString("https://codeberg.org/api/v1/repos/CRModders/cosmic-quilt/releases");
 
-            return new ArrayList<>(List.of(Json.parse(string, GithubReleaseResponse[].class)));
+            return new ArrayList<>(List.of(Json.parse(string, GithubRelease[].class)));
         }
     }
 
     @Override
     protected void done() {
-        List<GithubReleaseResponse> releases;
+        List<GithubRelease> releases;
         try {
             releases = this.get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
 
-        for (GithubReleaseResponse release : releases) {
+        for (GithubRelease release : releases) {
             this.versionsCombo.addItem(release);
         }
 
         for (int i = 0; i < this.versionsCombo.getItemCount(); i++) {
-            GithubReleaseResponse release = this.versionsCombo.getItemAt(i);
+            GithubRelease release = this.versionsCombo.getItemAt(i);
             if (release.tag_name.equals(this.instance.getQuiltVersion())) {
                 this.versionsCombo.setSelectedIndex(i);
                 break;

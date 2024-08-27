@@ -21,7 +21,7 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricProperties;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
-import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
+import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -64,9 +64,9 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
             GithubReleaseDownloader downloader = new GithubReleaseDownloader();
 
-            List<GithubReleaseResponse> allReleases =
+            List<GithubRelease> allReleases =
                     downloader.getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");
-            GithubReleaseResponse release = ListUtils.search(allReleases, resp -> resp.tag_name.equals(version));
+            GithubRelease release = ListUtils.search(allReleases, resp -> resp.tag_name.equals(version));
 
             if (release == null) {
                 Log.error("Could find version " + version);

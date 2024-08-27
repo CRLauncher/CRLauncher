@@ -18,47 +18,43 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle;
 
-import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
-import me.theentropyshard.crlauncher.github.GithubReleaseResponse;
+import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.network.HttpRequest;
-import me.theentropyshard.crlauncher.utils.json.Json;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class PuzzleVersionsLoaderWorker extends SwingWorker<List<GithubReleaseResponse>, Void> {
-    private final JComboBox<GithubReleaseResponse> versionsCombo;
+public class PuzzleVersionsLoaderWorker extends SwingWorker<List<GithubRelease>, Void> {
+    private final JComboBox<GithubRelease> versionsCombo;
     private final Instance instance;
 
-    public PuzzleVersionsLoaderWorker(JComboBox<GithubReleaseResponse> versionsCombo, Instance instance) {
+    public PuzzleVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, Instance instance) {
         this.versionsCombo = versionsCombo;
         this.instance = instance;
     }
 
     @Override
-    protected List<GithubReleaseResponse> doInBackground() throws Exception {
+    protected List<GithubRelease> doInBackground() throws Exception {
         return new GithubReleaseDownloader().getAllReleases("PuzzleLoader", "PuzzleLoader");
     }
 
     @Override
     protected void done() {
-        List<GithubReleaseResponse> releases;
+        List<GithubRelease> releases;
         try {
             releases = this.get();
         } catch (InterruptedException | ExecutionException e) {
             throw new RuntimeException(e);
         }
 
-        for (GithubReleaseResponse release : releases) {
+        for (GithubRelease release : releases) {
             this.versionsCombo.addItem(release);
         }
 
         for (int i = 0; i < this.versionsCombo.getItemCount(); i++) {
-            GithubReleaseResponse release = this.versionsCombo.getItemAt(i);
+            GithubRelease release = this.versionsCombo.getItemAt(i);
             if (release.tag_name.equals(this.instance.getPuzzleVersion())) {
                 this.versionsCombo.setSelectedIndex(i);
                 break;
