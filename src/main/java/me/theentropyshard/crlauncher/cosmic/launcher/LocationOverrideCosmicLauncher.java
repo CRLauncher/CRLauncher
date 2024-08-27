@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
+import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -47,7 +47,7 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
 
         String loaderVersion = LocationOverrideCosmicLauncher.CR_LOADER_VERSION.toVersionString();
 
-        GithubReleaseDownloader downloader = new GithubReleaseDownloader();
+        GithubApi downloader = new GithubApi();
         List<GithubRelease> allReleases = downloader.getAllReleases("CRLauncher", "CRLoader");
         GithubRelease releaseResponse = ListUtils.search(allReleases, r -> r.tag_name.equals("v" + loaderVersion));
 

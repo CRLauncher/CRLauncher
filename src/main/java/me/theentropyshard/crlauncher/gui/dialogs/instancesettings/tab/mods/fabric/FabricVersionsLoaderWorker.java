@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric;
 
-import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
+import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.instance.Instance;
 
@@ -37,7 +37,7 @@ public class FabricVersionsLoaderWorker extends SwingWorker<List<GithubRelease>,
 
     @Override
     protected List<GithubRelease> doInBackground() throws Exception {
-        return new GithubReleaseDownloader().getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");
+        return new GithubApi().getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");
     }
 
     @Override

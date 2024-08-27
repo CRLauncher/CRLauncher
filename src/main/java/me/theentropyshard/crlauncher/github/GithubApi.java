@@ -31,13 +31,13 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GithubReleaseDownloader {
+public class GithubApi {
     private static final String URL_LATEST = "https://api.github.com/repos/%s/%s/releases/latest";
     private static final String URL = "https://api.github.com/repos/%s/%s/releases";
 
     public GithubRelease getLatestRelease(String owner, String repo) throws IOException {
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
-            return Json.parse(request.asString(String.format(GithubReleaseDownloader.URL_LATEST, owner, repo)), GithubRelease.class);
+            return Json.parse(request.asString(String.format(GithubApi.URL_LATEST, owner, repo)), GithubRelease.class);
         }
     }
 

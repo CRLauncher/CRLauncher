@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.cosmic.mods.puzzle;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.MavenArtifact;
-import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
+import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
@@ -61,7 +61,7 @@ public class PuzzleManager {
             return;
         }
 
-        GithubReleaseDownloader downloader = new GithubReleaseDownloader();
+        GithubApi downloader = new GithubApi();
         List<GithubRelease> allReleases = downloader.getAllReleases("PuzzleLoader", "PuzzleLoader");
         GithubRelease release = ListUtils.search(allReleases, r -> r.tag_name.equals(version));
         if (release == null) {

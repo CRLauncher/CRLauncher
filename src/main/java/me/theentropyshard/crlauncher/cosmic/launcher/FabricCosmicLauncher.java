@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricProperties;
-import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
+import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -62,7 +62,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
             SwingUtilities.invokeLater(() -> downloadDialog.setVisible(true));
 
-            GithubReleaseDownloader downloader = new GithubReleaseDownloader();
+            GithubApi downloader = new GithubApi();
 
             List<GithubRelease> allReleases =
                     downloader.getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");

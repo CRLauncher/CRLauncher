@@ -22,7 +22,7 @@ import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
-import me.theentropyshard.crlauncher.github.GithubReleaseDownloader;
+import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
@@ -157,7 +157,7 @@ public class CRLauncher {
                 Log.info("Checking for updates...");
 
                 try {
-                    GithubReleaseDownloader downloader = new GithubReleaseDownloader();
+                    GithubApi downloader = new GithubApi();
                     GithubRelease release = downloader.getLatestRelease("CRLauncher", "CRLauncher");
                     SemanticVersion latestVersion = SemanticVersion.parse(release.tag_name.substring(1));
                     SemanticVersion currentVersion = SemanticVersion.parse(BuildConfig.APP_VERSION);
