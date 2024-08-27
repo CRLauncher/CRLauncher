@@ -317,27 +317,29 @@ public class CosmicRunner extends Thread {
     private void updateFabricMods() throws IOException {
         List<FabricMod> fabricMods = this.instance.getFabricMods();
 
-        if (!fabricMods.isEmpty()) {
-            Path modsDir = this.instance.getFabricModsDir();
-            Path disabledModsDir = this.instance.getDisabledFabricModsDir();
+        if (fabricMods.isEmpty()) {
+            return;
+        }
 
-            FileUtils.createDirectoryIfNotExists(modsDir);
-            FileUtils.createDirectoryIfNotExists(disabledModsDir);
+        Path modsDir = this.instance.getFabricModsDir();
+        Path disabledModsDir = this.instance.getDisabledFabricModsDir();
 
-            for (FabricMod mod : fabricMods.stream().filter(Predicate.not(FabricMod::isActive)).toList()) {
-                Path filePath = Paths.get(mod.getFilePath());
-                if (Files.exists(filePath)) {
-                    Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                    Files.delete(filePath);
-                }
+        FileUtils.createDirectoryIfNotExists(modsDir);
+        FileUtils.createDirectoryIfNotExists(disabledModsDir);
+
+        for (FabricMod mod : fabricMods.stream().filter(Predicate.not(FabricMod::isActive)).toList()) {
+            Path filePath = Paths.get(mod.getFilePath());
+            if (Files.exists(filePath)) {
+                Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                Files.delete(filePath);
             }
+        }
 
-            for (FabricMod mod : fabricMods.stream().filter(FabricMod::isActive).toList()) {
-                Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
-                if (Files.exists(filePath)) {
-                    Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                    Files.delete(filePath);
-                }
+        for (FabricMod mod : fabricMods.stream().filter(FabricMod::isActive).toList()) {
+            Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
+            if (Files.exists(filePath)) {
+                Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                Files.delete(filePath);
             }
         }
     }
@@ -345,27 +347,29 @@ public class CosmicRunner extends Thread {
     private void updateQuiltMods() throws IOException {
         List<QuiltMod> quiltMods = this.instance.getQuiltMods();
 
-        if (!quiltMods.isEmpty()) {
-            Path modsDir = this.instance.getQuiltModsDir();
-            Path disabledModsDir = this.instance.getDisabledQuiltModsDir();
+        if (quiltMods.isEmpty()) {
+            return;
+        }
 
-            FileUtils.createDirectoryIfNotExists(modsDir);
-            FileUtils.createDirectoryIfNotExists(disabledModsDir);
+        Path modsDir = this.instance.getQuiltModsDir();
+        Path disabledModsDir = this.instance.getDisabledQuiltModsDir();
 
-            for (QuiltMod mod : quiltMods.stream().filter(Predicate.not(q -> q.active)).toList()) {
-                Path filePath = Paths.get(mod.filePath);
-                if (Files.exists(filePath)) {
-                    Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                    Files.delete(filePath);
-                }
+        FileUtils.createDirectoryIfNotExists(modsDir);
+        FileUtils.createDirectoryIfNotExists(disabledModsDir);
+
+        for (QuiltMod mod : quiltMods.stream().filter(Predicate.not(q -> q.active)).toList()) {
+            Path filePath = Paths.get(mod.filePath);
+            if (Files.exists(filePath)) {
+                Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                Files.delete(filePath);
             }
+        }
 
-            for (QuiltMod mod : quiltMods.stream().filter(q -> q.active).toList()) {
-                Path filePath = disabledModsDir.resolve(Paths.get(mod.filePath).getFileName());
-                if (Files.exists(filePath)) {
-                    Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                    Files.delete(filePath);
-                }
+        for (QuiltMod mod : quiltMods.stream().filter(q -> q.active).toList()) {
+            Path filePath = disabledModsDir.resolve(Paths.get(mod.filePath).getFileName());
+            if (Files.exists(filePath)) {
+                Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                Files.delete(filePath);
             }
         }
     }
@@ -373,27 +377,29 @@ public class CosmicRunner extends Thread {
     private void updatePuzzleMods() throws IOException {
         List<PuzzleMod> puzzleMods = this.instance.getPuzzleMods();
 
-        if (!puzzleMods.isEmpty()) {
-            Path modsDir = this.instance.getPuzzleModsDir();
-            Path disabledModsDir = this.instance.getDisabledPuzzleModsDir();
+        if (puzzleMods.isEmpty()) {
+            return;
+        }
 
-            FileUtils.createDirectoryIfNotExists(modsDir);
-            FileUtils.createDirectoryIfNotExists(disabledModsDir);
+        Path modsDir = this.instance.getPuzzleModsDir();
+        Path disabledModsDir = this.instance.getDisabledPuzzleModsDir();
 
-            for (PuzzleMod mod : puzzleMods.stream().filter(Predicate.not(PuzzleMod::isActive)).toList()) {
-                Path filePath = Paths.get(mod.getFilePath());
-                if (Files.exists(filePath)) {
-                    Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                    Files.delete(filePath);
-                }
+        FileUtils.createDirectoryIfNotExists(modsDir);
+        FileUtils.createDirectoryIfNotExists(disabledModsDir);
+
+        for (PuzzleMod mod : puzzleMods.stream().filter(Predicate.not(PuzzleMod::isActive)).toList()) {
+            Path filePath = Paths.get(mod.getFilePath());
+            if (Files.exists(filePath)) {
+                Files.copy(filePath, disabledModsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                Files.delete(filePath);
             }
+        }
 
-            for (PuzzleMod mod : puzzleMods.stream().filter(PuzzleMod::isActive).toList()) {
-                Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
-                if (Files.exists(filePath)) {
-                    Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                    Files.delete(filePath);
-                }
+        for (PuzzleMod mod : puzzleMods.stream().filter(PuzzleMod::isActive).toList()) {
+            Path filePath = disabledModsDir.resolve(Paths.get(mod.getFilePath()).getFileName());
+            if (Files.exists(filePath)) {
+                Files.copy(filePath, modsDir.resolve(filePath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
+                Files.delete(filePath);
             }
         }
     }
