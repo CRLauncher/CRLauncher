@@ -18,9 +18,11 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.puzzle;
 
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+
 import java.util.List;
 
-public class PuzzleMod {
+public class PuzzleMod implements Mod {
     private String id;
     private String version;
     private String name;
@@ -33,16 +35,6 @@ public class PuzzleMod {
 
     }
 
-    public PuzzleMod(String id, String version, String name, String description, List<String> authors, String filePath, boolean active) {
-        this.id = id;
-        this.version = version;
-        this.name = name;
-        this.description = description;
-        this.authors = authors;
-        this.filePath = filePath;
-        this.active = active;
-    }
-
     public String getId() {
         return this.id;
     }
@@ -51,6 +43,7 @@ public class PuzzleMod {
         this.id = id;
     }
 
+    @Override
     public String getVersion() {
         return this.version;
     }
@@ -59,6 +52,7 @@ public class PuzzleMod {
         this.version = version;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
@@ -67,6 +61,7 @@ public class PuzzleMod {
         this.name = name;
     }
 
+    @Override
     public String getDescription() {
         return this.description;
     }
@@ -83,18 +78,22 @@ public class PuzzleMod {
         this.authors = authors;
     }
 
+    @Override
     public String getFilePath() {
         return this.filePath;
     }
 
+    @Override
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
+    @Override
     public boolean isActive() {
         return this.active;
     }
 
+    @Override
     public void setActive(boolean active) {
         this.active = active;
     }

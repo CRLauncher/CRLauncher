@@ -19,11 +19,12 @@
 package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt;
 
 import com.google.gson.annotations.SerializedName;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 
 import java.util.List;
 import java.util.Map;
 
-public class QuiltMod {
+public class QuiltMod implements Mod {
     public String filePath;
     public boolean active;
 
@@ -34,6 +35,41 @@ public class QuiltMod {
     public QuiltLoader quiltLoader;
 
     public String mixin;
+
+    @Override
+    public String getName() {
+        return this.quiltLoader.metadata.name;
+    }
+
+    @Override
+    public String getVersion() {
+        return this.quiltLoader.version;
+    }
+
+    @Override
+    public String getDescription() {
+        return this.quiltLoader.metadata.description;
+    }
+
+    @Override
+    public String getFilePath() {
+        return this.filePath;
+    }
+
+    @Override
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
+
+    @Override
+    public boolean isActive() {
+        return this.active;
+    }
+
+    @Override
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 
     public static final class QuiltLoader {
         public String group;

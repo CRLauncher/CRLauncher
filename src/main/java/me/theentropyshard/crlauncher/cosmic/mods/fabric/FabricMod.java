@@ -18,7 +18,9 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.fabric;
 
-public class FabricMod {
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+
+public class FabricMod implements Mod {
     private String filePath;
     private String name;
     private String version;
@@ -30,14 +32,17 @@ public class FabricMod {
 
     }
 
+    @Override
     public String getFilePath() {
         return this.filePath;
     }
 
+    @Override
     public void setFilePath(String filePath) {
         this.filePath = filePath;
     }
 
+    @Override
     public String getName() {
         return this.name;
     }
@@ -46,6 +51,7 @@ public class FabricMod {
         this.name = name;
     }
 
+    @Override
     public String getVersion() {
         return this.version;
     }
@@ -54,6 +60,7 @@ public class FabricMod {
         this.version = version;
     }
 
+    @Override
     public String getDescription() {
         return this.description;
     }
@@ -70,10 +77,12 @@ public class FabricMod {
         this.id = id;
     }
 
+    @Override
     public boolean isActive() {
         return this.active;
     }
 
+    @Override
     public void setActive(boolean active) {
         this.active = active;
     }
