@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.utils;
 
+import java.util.Objects;
+
 public class SemanticVersion implements Comparable<SemanticVersion> {
     private final int major;
     private final int minor;
@@ -83,6 +85,19 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
         } else {
             return majorCompare;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || this.getClass() != o.getClass()) return false;
+        SemanticVersion version = (SemanticVersion) o;
+        return this.major == version.major && this.minor == version.minor && this.patch == version.patch;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.major, this.minor, this.patch);
     }
 
     public String toVersionString() {
