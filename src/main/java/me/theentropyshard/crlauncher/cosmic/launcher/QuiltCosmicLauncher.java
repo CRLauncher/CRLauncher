@@ -24,6 +24,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltManager;
+import me.theentropyshard.crlauncher.utils.SemanticVersion;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -78,6 +79,14 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
 
             return;
         }
-        command.add(CosmicQuiltProperties.MAIN_CLASS);
+
+        SemanticVersion quiltVersion = SemanticVersion.parse(this.version);
+        SemanticVersion newMainClass = new SemanticVersion(2, 2, 0);
+
+        if (quiltVersion.equals(newMainClass) || quiltVersion.isGreaterThan(newMainClass)) {
+            command.add(CosmicQuiltProperties.MAIN_CLASS);
+        } else {
+            command.add(CosmicQuiltProperties.LEGACY_MAIN_CLASS);
+        }
     }
 }

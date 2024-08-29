@@ -21,7 +21,8 @@ package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt;
 import me.theentropyshard.crlauncher.utils.SystemProperty;
 
 public final class CosmicQuiltProperties {
-    public static final String MAIN_CLASS = "org.quiltmc.loader.impl.launch.knot.KnotClient";
+    public static final String LEGACY_MAIN_CLASS = "org.quiltmc.loader.impl.launch.knot.KnotClient";
+    public static final String MAIN_CLASS = "dev.crmodders.cosmicquilt.loader.knot.KnotClient";
 
     public static final SystemProperty LAUNCH_DIR = new SystemProperty("cosmicquilt.launchDir");
     public static final SystemProperty GAME_JAR_PATH = new SystemProperty("loader.gameJarPath");

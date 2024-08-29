@@ -67,6 +67,7 @@ public class QuiltManager {
         String cosmicQuiltJar = QuiltManager.COSMIC_QUILT_FILE_NAME.formatted(version);
 
         List<MavenArtifact> deps = MavenDownloader.downloadRelease(version, this.depsDir, versionDir.resolve(cosmicQuiltJar), downloads);
+        deps.removeIf(mavenArtifact -> mavenArtifact.artifactId().equals("quilt-loader-dependencies"));
 
         downloadList.addAll(downloads);
         downloadList.downloadAll();
@@ -94,6 +95,11 @@ public class QuiltManager {
         List<MavenArtifact> deps = Json.parse(FileUtils.readUtf8(depsFile), new TypeToken<List<MavenArtifact>>() {}.getType());
         for (MavenArtifact dep : deps) {
             Path depFile = this.depsDir.resolve(dep.jar());
+
+            if (depFile.getFileName().toString().contains("quilt-loader-dependencies")) {
+                FileUtils.delete(depFile);
+            }
+
             if (!Files.exists(depFile)) {
                 return false;
             }
