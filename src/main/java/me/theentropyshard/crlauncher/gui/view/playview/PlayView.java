@@ -177,7 +177,7 @@ public class PlayView extends JPanel {
             if (mouseButton == MouseEvent.BUTTON1) { // left mouse button
                 finalPanel.makeItemFirst(item);
 
-                new CosmicRunner(item.getAssociatedInstance()).start();
+                new CosmicRunner(item.getAssociatedInstance(), item).start();
             } else if (mouseButton == MouseEvent.BUTTON3) { // right mouse button
                 Instance instance = item.getAssociatedInstance();
 

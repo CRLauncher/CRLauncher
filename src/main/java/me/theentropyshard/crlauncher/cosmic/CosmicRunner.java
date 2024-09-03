@@ -30,6 +30,7 @@ import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.LauncherConsole;
+import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
@@ -56,11 +57,13 @@ public class CosmicRunner extends Thread {
 
 
     private final Instance instance;
+    private final InstanceItem item;
 
     private Path clientCopyTmp;
 
-    public CosmicRunner(Instance instance) {
+    public CosmicRunner(Instance instance, InstanceItem item) {
         this.instance = instance;
+        this.item = item;
 
         this.setName("Cosmic Reach run thread");
     }
@@ -72,6 +75,7 @@ public class CosmicRunner extends Thread {
         }
 
         this.instance.setRunning(true);
+        this.item.setEnabled(false);
 
         super.start();
     }
@@ -226,6 +230,8 @@ public class CosmicRunner extends Thread {
             Log.error("Exception occurred while trying to start Cosmic Reach", e);
         } finally {
             this.instance.setRunning(false);
+            this.item.setEnabled(true);
+
             if (this.clientCopyTmp != null && Files.exists(this.clientCopyTmp)) {
                 try {
                     Files.delete(this.clientCopyTmp);
