@@ -19,13 +19,12 @@
 package me.theentropyshard.crlauncher.logging;
 
 import me.theentropyshard.crlauncher.cosmic.CosmicLogEvent;
+import me.theentropyshard.crlauncher.cosmic.TimeCosmicLogEvent;
 
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public final class Log {
     private static final BlockingQueue<LogEvent> EVENT_QUEUE = new ArrayBlockingQueue<>(128);
@@ -74,7 +73,11 @@ public final class Log {
         }
     }
 
-    public static void cosmicReach(String line) {
+    public static void cosmicReachModded(String line) {
         Log.EVENT_QUEUE.offer(new CosmicLogEvent(line));
+    }
+
+    public static void cosmicReachVanilla(String line) {
+        Log.EVENT_QUEUE.offer(new TimeCosmicLogEvent(line));
     }
 }

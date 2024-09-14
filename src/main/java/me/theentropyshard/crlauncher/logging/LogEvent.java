@@ -75,7 +75,11 @@ public class LogEvent {
         return "[" + LogEvent.currentTime() + "] [" + this.level.name() + "]: " + this.message;
     }
 
-    private static String currentTime() {
+    public LogLevel getLevel() {
+        return this.level;
+    }
+
+    public static String currentTime() {
         return LogEvent.FORMATTER.format(LocalDateTime.now());
     }
 }
