@@ -19,20 +19,19 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
 
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
-import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JarModsTableModel extends AbstractTableModel {
+public class VanillaModsTableModel extends AbstractTableModel {
     private static final String[] COLUMN_NAMES = {"Name", "Active"};
     private static final Class<?>[] COLUMN_CLASSES = {String.class, Boolean.class};
 
     private final List<JarMod> jarMods;
 
-    public JarModsTableModel(Instance instance) {
+    public VanillaModsTableModel(Instance instance) {
         if (instance.getJarMods() == null) {
             this.jarMods = new ArrayList<>();
         } else {
@@ -47,17 +46,17 @@ public class JarModsTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return JarModsTableModel.COLUMN_NAMES.length;
+        return VanillaModsTableModel.COLUMN_NAMES.length;
     }
 
     @Override
     public String getColumnName(int column) {
-        return JarModsTableModel.COLUMN_NAMES[column];
+        return VanillaModsTableModel.COLUMN_NAMES[column];
     }
 
     @Override
     public Class<?> getColumnClass(int columnIndex) {
-        return JarModsTableModel.COLUMN_CLASSES[columnIndex];
+        return VanillaModsTableModel.COLUMN_CLASSES[columnIndex];
     }
 
     @Override

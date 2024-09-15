@@ -21,7 +21,6 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vani
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
-import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
@@ -34,31 +33,31 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
-public class JarModsView extends JPanel {
-    private final JarModsTableModel jarModsTableModel;
+public class OldVanillaModsView extends JPanel {
+    private final VanillaModsTableModel vanillaModsTableModel;
     private final JTable jarModsTable;
     private final JButton deleteModButton;
 
-    public JarModsView(Instance instance) {
+    public OldVanillaModsView(Instance instance) {
         super(new BorderLayout());
 
         JButton addJarMod = new JButton("Add jar mod");
         this.add(addJarMod, BorderLayout.NORTH);
 
-        this.jarModsTableModel = new JarModsTableModel(instance);
+        this.vanillaModsTableModel = new VanillaModsTableModel(instance);
 
-        this.jarModsTable = new JTable(this.jarModsTableModel);
+        this.jarModsTable = new JTable(this.vanillaModsTableModel);
         this.jarModsTable.getTableHeader().setEnabled(false);
         this.jarModsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.jarModsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int selectedRow = JarModsView.this.jarModsTable.getSelectedRow();
+                int selectedRow = OldVanillaModsView.this.jarModsTable.getSelectedRow();
                 if (selectedRow == -1) {
                     return;
                 }
 
-                JarModsView.this.deleteModButton.setEnabled(true);
+                OldVanillaModsView.this.deleteModButton.setEnabled(true);
             }
         });
 
@@ -96,7 +95,7 @@ public class JarModsView extends JPanel {
                         );
                         jarMods.add(jarMod);
 
-                        JarModsView.this.jarModsTableModel.add(jarMod);
+                        OldVanillaModsView.this.vanillaModsTableModel.add(jarMod);
                     }
 
                     UIManager.put("FileChooser.readOnly", Boolean.FALSE);
@@ -118,8 +117,8 @@ public class JarModsView extends JPanel {
                 return;
             }
 
-            JarMod jarMod = this.jarModsTableModel.jarModAt(selectedRow);
-            this.jarModsTableModel.removeRow(selectedRow);
+            JarMod jarMod = this.vanillaModsTableModel.jarModAt(selectedRow);
+            this.vanillaModsTableModel.removeRow(selectedRow);
             instance.getJarMods().remove(jarMod);
         });
 

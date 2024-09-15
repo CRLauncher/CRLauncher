@@ -26,7 +26,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzl
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltVersionsLoaderWorker;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.JarModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.VanillaModsView;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
 
@@ -152,7 +152,7 @@ public class ModsTab extends Tab implements ItemListener {
         Instance instance = this.getInstance();
 
         this.modsView = switch (instance.getType()) {
-            case VANILLA -> new JarModsView(instance);
+            case VANILLA -> new VanillaModsView(instance);
             case FABRIC -> new FabricModsView(instance);
             case QUILT -> new QuiltModsView(instance);
             case PUZZLE -> new PuzzleModsView(instance);
