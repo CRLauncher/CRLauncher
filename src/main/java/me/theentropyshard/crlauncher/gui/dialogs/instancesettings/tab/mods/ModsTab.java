@@ -29,6 +29,8 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.VanillaModsView;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
+import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -36,6 +38,7 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
 
 public class ModsTab extends Tab implements ItemListener {
@@ -117,6 +120,25 @@ public class ModsTab extends Tab implements ItemListener {
             gbc.gridy++;
             gbc.weighty = 1;
             this.root.add(this.mods, gbc);
+        }
+
+        {
+            JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+            JButton openModsFolderButton = new JButton("Open mods folder");
+            openModsFolderButton.addActionListener(e -> {
+                switch (instance.getType()) {
+                    case VANILLA -> OperatingSystem.open(instance.getCosmicDir().resolve("mods"));
+                    case FABRIC -> OperatingSystem.open(instance.getFabricModsDir());
+                    case QUILT -> OperatingSystem.open(instance.getQuiltModsDir());
+                    case PUZZLE -> OperatingSystem.open(instance.getPuzzleModsDir());
+                }
+            });
+            bottomPanel.add(openModsFolderButton);
+
+            gbc.gridy++;
+            gbc.weighty = 0;
+            this.root.add(bottomPanel, gbc);
         }
     }
 
