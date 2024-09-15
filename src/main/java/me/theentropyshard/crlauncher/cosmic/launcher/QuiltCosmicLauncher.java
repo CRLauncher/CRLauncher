@@ -83,7 +83,7 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
         SemanticVersion quiltVersion = SemanticVersion.parse(this.version);
         SemanticVersion newMainClass = new SemanticVersion(2, 2, 0);
 
-        if (quiltVersion.equals(newMainClass) || quiltVersion.isGreaterThan(newMainClass)) {
+        if (quiltVersion.equals(newMainClass) || quiltVersion.isHigherThan(newMainClass)) {
             command.add(CosmicQuiltProperties.MAIN_CLASS);
         } else {
             command.add(CosmicQuiltProperties.LEGACY_MAIN_CLASS);

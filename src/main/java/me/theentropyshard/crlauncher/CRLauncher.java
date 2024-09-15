@@ -162,7 +162,7 @@ public class CRLauncher {
                     SemanticVersion latestVersion = SemanticVersion.parse(release.tag_name.substring(1));
                     SemanticVersion currentVersion = SemanticVersion.parse(BuildConfig.APP_VERSION);
 
-                    if (latestVersion.isGreaterThan(currentVersion)) {
+                    if (latestVersion.isHigherThan(currentVersion)) {
                         String link = "https://github.com/CRLauncher/CRLauncher/releases/tag/" + release.tag_name;
                         String baseText = "New version is available! (" + latestVersion.toVersionString() + "). Download here: ";
 

@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.instance;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import me.theentropyshard.crlauncher.utils.StringUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 import org.apache.logging.log4j.LogManager;
@@ -151,7 +152,19 @@ public class InstanceManager {
         FileUtils.createDirectoryIfNotExists(instance.getWorkDir());
         FileUtils.createDirectoryIfNotExists(instance.getCosmicDir());
         FileUtils.createDirectoryIfNotExists(instance.getJarModsDir());
-        FileUtils.createDirectoryIfNotExists(instance.getCosmicDir().resolve("mods").resolve("assets"));
+
+        Path modsDir = instance.getCosmicDir().resolve("mods");
+        FileUtils.createDirectoryIfNotExists(modsDir);
+
+        try {
+            SemanticVersion version = SemanticVersion.parse(cosmicVersion);
+
+            if (version.isLowerThan(SemanticVersion.parse("0.3.0"))) {
+                FileUtils.createDirectoryIfNotExists(modsDir.resolve("assets"));
+            }
+        } catch (Exception ignored) {
+
+        }
 
         instance.save();
     }
