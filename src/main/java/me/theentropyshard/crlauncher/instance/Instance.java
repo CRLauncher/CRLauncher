@@ -42,6 +42,7 @@ public class Instance {
     private static final String DISABLED_QUILT_MODS_DIR_NAME = "disabledquiltmods";
     private static final String PUZZLE_MODS_DIR_NAME = "pmods";
     private static final String DISABLED_PUZZLE_MODS_DIR_NAME = "disabledpuzzlemods";
+    public static final String DATA_MODS_DIR_NAME = "mods";
 
     private transient Path workDir;
 
@@ -165,6 +166,10 @@ public class Instance {
 
     public Path getCosmicDir() {
         return this.workDir.resolve(Instance.COSMIC_DIR_NAME);
+    }
+
+    public Path getDataModsDir() {
+        return this.getCosmicDir().resolve(Instance.DATA_MODS_DIR_NAME);
     }
 
     public Path getJarModsDir() {

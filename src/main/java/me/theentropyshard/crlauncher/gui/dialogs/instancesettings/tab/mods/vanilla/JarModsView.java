@@ -33,31 +33,31 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 
-public class OldVanillaModsView extends JPanel {
-    private final VanillaModsTableModel vanillaModsTableModel;
+public class JarModsView extends JPanel {
+    private final JarModsTableModel jarModsTableModel;
     private final JTable jarModsTable;
     private final JButton deleteModButton;
 
-    public OldVanillaModsView(Instance instance) {
+    public JarModsView(Instance instance) {
         super(new BorderLayout());
 
         JButton addJarMod = new JButton("Add jar mod");
         this.add(addJarMod, BorderLayout.NORTH);
 
-        this.vanillaModsTableModel = new VanillaModsTableModel(instance);
+        this.jarModsTableModel = new JarModsTableModel(instance);
 
-        this.jarModsTable = new JTable(this.vanillaModsTableModel);
+        this.jarModsTable = new JTable(this.jarModsTableModel);
         this.jarModsTable.getTableHeader().setEnabled(false);
         this.jarModsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.jarModsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int selectedRow = OldVanillaModsView.this.jarModsTable.getSelectedRow();
+                int selectedRow = JarModsView.this.jarModsTable.getSelectedRow();
                 if (selectedRow == -1) {
                     return;
                 }
 
-                OldVanillaModsView.this.deleteModButton.setEnabled(true);
+                JarModsView.this.deleteModButton.setEnabled(true);
             }
         });
 
@@ -95,7 +95,7 @@ public class OldVanillaModsView extends JPanel {
                         );
                         jarMods.add(jarMod);
 
-                        OldVanillaModsView.this.vanillaModsTableModel.add(jarMod);
+                        JarModsView.this.jarModsTableModel.add(jarMod);
                     }
 
                     UIManager.put("FileChooser.readOnly", Boolean.FALSE);
@@ -117,8 +117,8 @@ public class OldVanillaModsView extends JPanel {
                 return;
             }
 
-            JarMod jarMod = this.vanillaModsTableModel.jarModAt(selectedRow);
-            this.vanillaModsTableModel.removeRow(selectedRow);
+            JarMod jarMod = this.jarModsTableModel.jarModAt(selectedRow);
+            this.jarModsTableModel.removeRow(selectedRow);
             instance.getJarMods().remove(jarMod);
         });
 

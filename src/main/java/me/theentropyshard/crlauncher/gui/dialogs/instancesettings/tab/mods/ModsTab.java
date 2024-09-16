@@ -26,10 +26,9 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzl
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltVersionsLoaderWorker;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.VanillaModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.DataModsView;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
-import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
@@ -38,7 +37,6 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Objects;
 
 public class ModsTab extends Tab implements ItemListener {
@@ -174,7 +172,7 @@ public class ModsTab extends Tab implements ItemListener {
         Instance instance = this.getInstance();
 
         this.modsView = switch (instance.getType()) {
-            case VANILLA -> new VanillaModsView(instance);
+            case VANILLA -> new DataModsView(instance);
             case FABRIC -> new FabricModsView(instance);
             case QUILT -> new QuiltModsView(instance);
             case PUZZLE -> new PuzzleModsView(instance);
