@@ -20,12 +20,12 @@ package me.theentropyshard.crlauncher.crmm;
 
 import me.theentropyshard.crlauncher.crmm.model.SearchModsResponse;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface CrmmHttpApi {
     @GET("search?type=mod")
     SearchModsResponse searchMods();
 
-    @GET("search?type=mod&q={query}")
-    SearchModsResponse searchMods(@Path("query") String query);
+    @GET("search?type=mod")
+    SearchModsResponse searchMods(@Query("q") String query);
 }
