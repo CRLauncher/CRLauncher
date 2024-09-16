@@ -50,6 +50,7 @@ ext {
     okhttp = '4.12.0'
     jna = '5.14.0'
     log4j = '2.20.0'
+    retrofit = '2.11.0'
 }
 
 dependencies {
@@ -63,6 +64,8 @@ dependencies {
     implementation "net.java.dev.jna:jna-platform:$jna"
     implementation "org.apache.logging.log4j:log4j-api:$log4j"
     implementation "org.apache.logging.log4j:log4j-core:$log4j"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit"
 }
 
 java {

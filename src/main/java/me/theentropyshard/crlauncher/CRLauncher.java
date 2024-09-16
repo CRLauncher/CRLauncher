@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
+import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.Gui;
@@ -72,6 +73,7 @@ public class CRLauncher {
     private final Settings settings;
 
     private final OkHttpClient httpClient;
+    private final CrmmApi crmmApi;
 
     private final VersionManager versionManager;
     private final InstanceManager instanceManager;
@@ -117,6 +119,8 @@ public class CRLauncher {
             .writeTimeout(5, TimeUnit.MINUTES)
             .protocols(Collections.singletonList(Protocol.HTTP_1_1))
             .build();
+
+        this.crmmApi = new CrmmApi(this.httpClient);
 
         this.versionManager = new VersionManager(this.versionsDir);
 
@@ -304,6 +308,10 @@ public class CRLauncher {
 
     public OkHttpClient getHttpClient() {
         return this.httpClient;
+    }
+
+    public CrmmApi getCrmmApi() {
+        return this.crmmApi;
     }
 
     public VersionManager getVersionManager() {
