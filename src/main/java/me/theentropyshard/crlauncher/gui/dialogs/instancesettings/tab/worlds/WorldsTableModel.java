@@ -61,7 +61,7 @@ public class WorldsTableModel extends AbstractTableModel {
 
                     String content;
 
-                    if (cosmicVersion.getPatch() < 40) {
+                    if (cosmicVersion.getMinor() < 2 && cosmicVersion.getPatch() < 40) {
                         content = FileUtils.read(worldInfoFile, Charset.defaultCharset());
                     } else {
                         content = FileUtils.readUtf8(worldInfoFile);
@@ -69,7 +69,7 @@ public class WorldsTableModel extends AbstractTableModel {
 
                     CosmicWorld world;
 
-                    if (cosmicVersion.getPatch() < 34) {
+                    if (cosmicVersion.getMinor() < 2 && cosmicVersion.getPatch() < 34) {
                         world = Json.parse(content, CosmicWorld.class);
 
                         Path playerFile = worldDir.resolve("players").resolve("localPlayer.json");
