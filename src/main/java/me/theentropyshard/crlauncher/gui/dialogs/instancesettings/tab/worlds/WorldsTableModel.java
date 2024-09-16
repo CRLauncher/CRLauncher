@@ -55,6 +55,11 @@ public class WorldsTableModel extends AbstractTableModel {
                 SemanticVersion cosmicVersion = SemanticVersion.parse(instance.getCosmicVersion());
 
                 Path worldsDir = instance.getCosmicDir().resolve("worlds");
+
+                if (!Files.exists(worldsDir)) {
+                    return null;
+                }
+
                 List<Path> worldDirs = FileUtils.list(worldsDir);
 
                 for (Path worldDir : worldDirs) {
