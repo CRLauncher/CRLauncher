@@ -56,10 +56,15 @@ public class DataModsView extends JPanel {
             }
         });
 
+        Path dataModsDir = instance.getDataModsDir();
         new Worker<Void, String>("loading data mods") {
             @Override
             protected Void work() throws Exception {
-                for (Path dataModDir : FileUtils.list(instance.getDataModsDir())) {
+                if (!Files.exists(dataModsDir)) {
+                    return null;
+                }
+
+                for (Path dataModDir : FileUtils.list(dataModsDir)) {
                     if (!Files.isDirectory(dataModDir)) {
                         continue;
                     }
@@ -76,14 +81,22 @@ public class DataModsView extends JPanel {
                     DataModsView.this.dataModsTableModel.addRow(dataModDir);
                 }
             }
-        }.execute();
+        }.
+
+            execute();
 
         JScrollPane scrollPane = new JScrollPane(this.dataModsTable);
         scrollPane.setBorder(null);
-        this.add(scrollPane, BorderLayout.CENTER);
+        this.
 
-        this.deleteDataModButton = new JButton("Delete data mod");
-        this.deleteDataModButton.addActionListener(e -> {
+            add(scrollPane, BorderLayout.CENTER);
+
+        this.deleteDataModButton = new
+
+            JButton("Delete data mod");
+        this.deleteDataModButton.addActionListener(e ->
+
+        {
             int selectedRow = this.dataModsTable.getSelectedRow();
             if (selectedRow == -1) {
                 return;
@@ -95,13 +108,15 @@ public class DataModsView extends JPanel {
             new Worker<Void, Void>("deleting data mod") {
                 @Override
                 protected Void work() throws Exception {
-                    FileUtils.delete(instance.getDataModsDir().resolve(dataMod));
+                    FileUtils.delete(dataModsDir.resolve(dataMod));
 
                     return null;
                 }
             }.execute();
         });
 
-        this.add(this.deleteDataModButton, BorderLayout.SOUTH);
+        this.
+
+            add(this.deleteDataModButton, BorderLayout.SOUTH);
     }
 }

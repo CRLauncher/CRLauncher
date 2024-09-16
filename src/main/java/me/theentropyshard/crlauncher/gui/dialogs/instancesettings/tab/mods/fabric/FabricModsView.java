@@ -180,6 +180,10 @@ public class FabricModsView extends JPanel {
 
                 Path fabricModsDir = instance.getFabricModsDir();
 
+                if (!Files.exists(fabricModsDir)) {
+                    return null;
+                }
+
                 for (Path modFile : FileUtils.list(fabricModsDir)) {
 
                     try (ZipFile file = new ZipFile(modFile.toFile())) {

@@ -194,6 +194,10 @@ public class PuzzleModsView extends JPanel {
 
                 Path puzzleModsDir = instance.getPuzzleModsDir();
 
+                if (!Files.exists(puzzleModsDir)) {
+                    return null;
+                }
+
                 for (Path modFile : FileUtils.list(puzzleModsDir)) {
                     try (ZipFile file = new ZipFile(modFile.toFile())) {
                         FileHeader fileHeader = file.getFileHeader("puzzle.mod.json");

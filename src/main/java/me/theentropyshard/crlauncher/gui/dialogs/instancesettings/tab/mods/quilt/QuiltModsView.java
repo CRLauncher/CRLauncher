@@ -202,6 +202,10 @@ public class QuiltModsView extends JPanel {
 
                 Path quiltModsDir = instance.getQuiltModsDir();
 
+                if (!Files.exists(quiltModsDir)) {
+                    return null;
+                }
+
                 for (Path modFile : FileUtils.list(quiltModsDir)) {
                     try (ZipFile file = new ZipFile(modFile.toFile())) {
                         FileHeader fileHeader = file.getFileHeader("quilt.mod.json");
