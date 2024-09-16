@@ -5,6 +5,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.account.ItchIoAccount;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AccountItem;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AccountsView;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -32,21 +33,14 @@ public class ItchIoAccountCreationView extends JPanel {
                 return;
             }
 
-            new SwingWorker<ItchIoAccount, Void>() {
+            new Worker<ItchIoAccount, Void>("authenticating Itch.io account") {
                 @Override
-                protected ItchIoAccount doInBackground() {
-                    try {
-                        ItchIoAccount account = new ItchIoAccount(text);
+                protected ItchIoAccount work() {
+                    ItchIoAccount account = new ItchIoAccount(text);
 
-                        account.authenticate();
+                    account.authenticate();
 
-                        return account;
-                    } catch (Exception e) {
-                        MessageBox.showErrorMessage(CRLauncher.frame, "Unexpected error: " + e.getMessage());
-                        Log.error(e);
-                    }
-
-                    return null;
+                    return account;
                 }
 
                 @Override

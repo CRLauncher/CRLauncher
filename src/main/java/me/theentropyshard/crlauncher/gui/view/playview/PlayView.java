@@ -29,6 +29,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.InstanceSettin
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
 import me.theentropyshard.crlauncher.gui.utils.MouseEnterExitListener;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -104,9 +105,9 @@ public class PlayView extends JPanel {
 
         this.add(this.instanceInfoLabel, BorderLayout.SOUTH);
 
-        new SwingWorker<List<Instance>, Void>() {
+        new Worker<List<Instance>, Void>("loading instances") {
             @Override
-            protected List<Instance> doInBackground() {
+            protected List<Instance> work() throws Exception {
                 InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
 
                 List<Instance> instances = instanceManager.getInstances();

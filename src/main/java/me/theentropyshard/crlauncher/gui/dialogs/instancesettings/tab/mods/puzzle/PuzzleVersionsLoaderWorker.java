@@ -20,23 +20,26 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzz
 
 import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class PuzzleVersionsLoaderWorker extends SwingWorker<List<GithubRelease>, Void> {
+public class PuzzleVersionsLoaderWorker extends Worker<List<GithubRelease>, Void> {
     private final JComboBox<GithubRelease> versionsCombo;
     private final Instance instance;
 
     public PuzzleVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, Instance instance) {
+        super("loading Puzzle versions");
+
         this.versionsCombo = versionsCombo;
         this.instance = instance;
     }
 
     @Override
-    protected List<GithubRelease> doInBackground() throws Exception {
+    protected List<GithubRelease> work() throws Exception {
         return new GithubApi().getAllReleases("PuzzleLoader", "PuzzleLoader");
     }
 

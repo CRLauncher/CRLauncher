@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
@@ -35,7 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
+public class LoadVersionsWorker extends Worker<List<Version>, Void> {
 
 
     private final CosmicVersionsTableModel model;
@@ -44,6 +45,8 @@ public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
     private final boolean forceNetwork;
 
     public LoadVersionsWorker(CosmicVersionsTableModel model, AddInstanceDialog dialog, JTable table, boolean forceNetwork) {
+        super("loading Cosmic Reach versions");
+
         this.model = model;
         this.dialog = dialog;
         this.table = table;
@@ -51,7 +54,7 @@ public class LoadVersionsWorker extends SwingWorker<List<Version>, Void> {
     }
 
     @Override
-    protected List<Version> doInBackground() throws Exception {
+    protected List<Version> work() throws Exception {
         return CRLauncher.getInstance().getVersionManager().getRemoteVersions(this.forceNetwork);
     }
 

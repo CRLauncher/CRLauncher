@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -104,9 +105,9 @@ public class WorldsTab extends Tab {
 
             Path worldDir = world.getWorldDir();
 
-            new SwingWorker<Boolean, Void>() {
+            new Worker<Boolean, Void>("deleting world") {
                 @Override
-                protected Boolean doInBackground() {
+                protected Boolean work() throws Exception {
                     try {
                         FileUtils.delete(worldDir);
 

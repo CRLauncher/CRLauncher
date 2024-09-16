@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 
@@ -93,9 +94,9 @@ public class MainTab extends Tab {
             root.add(otherSettings, gbc);
         }
 
-        new SwingWorker<List<String>, Void>() {
+        new Worker<List<String>, Void>("getting remote versions") {
             @Override
-            protected List<String> doInBackground() throws Exception {
+            protected List<String> work() throws Exception {
                 VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
                 List<Version> remoteVersions = versionManager.getRemoteVersions(false);
 

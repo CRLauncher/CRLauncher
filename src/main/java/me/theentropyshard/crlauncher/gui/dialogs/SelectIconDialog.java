@@ -24,7 +24,9 @@ import me.theentropyshard.crlauncher.cosmic.icon.CosmicIcon;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.layouts.WrapLayout;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -61,9 +63,9 @@ public class SelectIconDialog extends AppDialog {
         JButton addIconButton = new JButton("Add Icon");
         buttonsPanel.add(addIconButton);
         addIconButton.addActionListener(e -> {
-            new SwingWorker<CosmicIcon, Void>() {
+            new Worker<CosmicIcon, Void>("picking icon") {
                 @Override
-                protected CosmicIcon doInBackground() throws Exception {
+                protected CosmicIcon work() throws Exception {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
                     fileChooser.setFileFilter(new FileNameExtensionFilter("Images (*.png, *.jpg)", "png", "jpg"));
@@ -93,12 +95,16 @@ public class SelectIconDialog extends AppDialog {
 
                 @Override
                 protected void done() {
-                    CosmicIcon icon;
+                    CosmicIcon gotIcon = null;
                     try {
-                        icon = this.get();
+                        gotIcon = this.get();
                     } catch (InterruptedException | ExecutionException ex) {
-                        throw new RuntimeException(ex);
+                        Log.error(ex);
                     }
+                    if (gotIcon == null) {
+                        return;
+                    }
+                    CosmicIcon icon = gotIcon;
                     instance.setIconFileName(icon.fileName());
                     item.getIconLabel().setIcon(icon.icon());
 

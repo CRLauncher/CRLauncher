@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -61,9 +62,9 @@ public class FabricModsView extends JPanel {
         this.fabricModsModel = new FabricModsTableModel(instance);
 
         addJarMod.addActionListener(e -> {
-            new SwingWorker<Void, Void>() {
+            new Worker<Void, Void>("picking Fabric mod") {
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected Void work() throws Exception {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
                     fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));
@@ -172,9 +173,9 @@ public class FabricModsView extends JPanel {
 
         this.add(this.deleteModButton, BorderLayout.SOUTH);
 
-        new SwingWorker<Void, Void>() {
+        new Worker<Void, Void>("loading fabric mods") {
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void work() throws Exception {
                 List<FabricMod> fabricMods = instance.getFabricMods();
 
                 Path fabricModsDir = instance.getFabricModsDir();

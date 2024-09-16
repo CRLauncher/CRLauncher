@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vani
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
@@ -62,9 +63,9 @@ public class JarModsView extends JPanel {
         });
 
         addJarMod.addActionListener(e -> {
-            new SwingWorker<Void, Void>() {
+            new Worker<Void, Void>("picking jar mod") {
                 @Override
-                protected Void doInBackground() {
+                protected Void work() throws Exception {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
                     fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));

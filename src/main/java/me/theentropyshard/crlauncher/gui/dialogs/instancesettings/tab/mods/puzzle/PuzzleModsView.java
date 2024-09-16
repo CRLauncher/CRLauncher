@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -56,9 +57,9 @@ public class PuzzleModsView extends JPanel {
         this.puzzleModsModel = new PuzzleModsTableModel(instance);
 
         addJarMod.addActionListener(e -> {
-            new SwingWorker<Void, Void>() {
+            new Worker<Void, Void>("picking Puzzle mod") {
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected Void work() throws Exception {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
                     fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));
@@ -186,9 +187,9 @@ public class PuzzleModsView extends JPanel {
 
         this.add(this.deleteModButton, BorderLayout.SOUTH);
 
-        new SwingWorker<Void, Void>() {
+        new Worker<Void, Void>("loading Puzzle mods") {
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void work() throws Exception {
                 List<PuzzleMod> puzzleMods = instance.getPuzzleMods();
 
                 Path puzzleModsDir = instance.getPuzzleModsDir();

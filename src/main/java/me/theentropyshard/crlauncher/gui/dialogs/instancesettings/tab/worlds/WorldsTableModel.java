@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds;
 
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.SemanticVersion;
@@ -48,9 +49,9 @@ public class WorldsTableModel extends AbstractTableModel {
     public WorldsTableModel(JTable table, Instance instance) {
         this.worlds = new ArrayList<>();
 
-        new SwingWorker<Void, CosmicWorld>() {
+        new Worker<Void, CosmicWorld>("loading worlds") {
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void work() throws Exception {
                 SemanticVersion cosmicVersion = SemanticVersion.parse(instance.getCosmicVersion());
 
                 Path worldsDir = instance.getCosmicDir().resolve("worlds");

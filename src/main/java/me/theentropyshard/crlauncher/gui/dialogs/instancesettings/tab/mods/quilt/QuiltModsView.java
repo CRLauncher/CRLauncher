@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -60,9 +61,9 @@ public class QuiltModsView extends JPanel {
         this.quiltModsModel = new QuiltModsTableModel(instance);
 
         addJarMod.addActionListener(e -> {
-            new SwingWorker<Void, Void>() {
+            new Worker<Void, Void>("picking Quilt mod") {
                 @Override
-                protected Void doInBackground() throws Exception {
+                protected Void work() throws Exception {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
                     fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));
@@ -194,9 +195,9 @@ public class QuiltModsView extends JPanel {
 
         this.add(this.deleteModButton, BorderLayout.SOUTH);
 
-        new SwingWorker<Void, Void>() {
+        new Worker<Void, Void>("loading Quilt mods") {
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void work() throws Exception {
                 List<QuiltMod> quiltMods = instance.getQuiltMods();
 
                 Path quiltModsDir = instance.getQuiltModsDir();
