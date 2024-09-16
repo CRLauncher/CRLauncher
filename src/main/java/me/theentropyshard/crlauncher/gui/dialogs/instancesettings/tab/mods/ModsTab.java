@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
 import me.theentropyshard.crlauncher.github.GithubRelease;
+import me.theentropyshard.crlauncher.gui.dialogs.crmm.SearchCrmmModsDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricModsView;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricVersionsLoaderWorker;
@@ -27,6 +28,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzl
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.DataModsView;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
@@ -133,6 +135,19 @@ public class ModsTab extends Tab implements ItemListener {
                 }
             });
             bottomPanel.add(openModsFolderButton);
+
+            JButton searchModsButton = new JButton("Search mods on CRMM");
+            searchModsButton.addActionListener(e -> {
+                new Worker<Void, Void>("searching mods") {
+                    @Override
+                    protected Void work() throws Exception {
+                        new SearchCrmmModsDialog(instance);
+
+                        return null;
+                    }
+                }.execute();
+            });
+            bottomPanel.add(searchModsButton);
 
             gbc.gridy++;
             gbc.weighty = 0;
