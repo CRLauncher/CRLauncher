@@ -76,7 +76,7 @@ public class LoadVersionsWorker extends Worker<List<Version>, Void> {
             Instant instant = Instant.ofEpochSecond(version.getReleaseTime());
             OffsetDateTime releaseTime = OffsetDateTime.ofInstant(instant, ZoneId.of("UTC"));
             String releasedDate = Version.FORMATTER.format(releaseTime) + (showAmountOfTime ?
-                " (" + this.getAgoFromNow(releaseTime) + ")" : "");
+                " (" + LoadVersionsWorker.getAgoFromNow(releaseTime) + ")" : "");
 
             Object[] rowData = {
                 version.getId(),
@@ -106,7 +106,7 @@ public class LoadVersionsWorker extends Worker<List<Version>, Void> {
         }
     }
 
-    private String getAgoFromNow(Temporal temporal) {
+    public static String getAgoFromNow(Temporal temporal) {
         OffsetDateTime now = OffsetDateTime.now();
 
         long years = ChronoUnit.YEARS.between(temporal, now);
