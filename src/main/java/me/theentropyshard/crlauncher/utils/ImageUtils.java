@@ -18,26 +18,21 @@
 
 package me.theentropyshard.crlauncher.utils;
 
-public final class StringUtils {
-    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
-    public static String getRandomString(int length) {
-        StringBuilder builder = new StringBuilder();
+public final class ImageUtils {
+    public static BufferedImage toBufferedImage(Image image) {
+        BufferedImage resultImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
-        for (int i = 0; i < length; i++) {
-            builder.append(StringUtils.ALPHABET.charAt(
-                    (int) (Math.random() * StringUtils.ALPHABET.length())
-            ));
-        }
+        Graphics2D g2d = resultImage.createGraphics();
+        g2d.drawImage(image, 0, 0, null);
+        g2d.dispose();
 
-        return builder.toString();
+        return resultImage;
     }
 
-    public static String capitalize(String s) {
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
-    }
-
-    public StringUtils() {
+    private ImageUtils() {
         throw new UnsupportedOperationException();
     }
 }

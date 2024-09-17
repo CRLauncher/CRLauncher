@@ -23,6 +23,7 @@ import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -92,6 +93,12 @@ public final class SwingUtils {
     public static void removeActionListeners(AbstractButton button) {
         for (ActionListener listener : button.getActionListeners()) {
             button.removeActionListener(listener);
+        }
+    }
+
+    public static void removeMouseListeners(Component component) {
+        for (MouseListener listener : component.getMouseListeners()) {
+            component.removeMouseListener(listener);
         }
     }
 

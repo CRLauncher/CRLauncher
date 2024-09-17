@@ -16,28 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.utils;
+package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 
-public final class StringUtils {
-    private static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+import me.theentropyshard.crlauncher.crmm.model.Mod;
 
-    public static String getRandomString(int length) {
-        StringBuilder builder = new StringBuilder();
+import javax.swing.*;
+import java.awt.*;
 
-        for (int i = 0; i < length; i++) {
-            builder.append(StringUtils.ALPHABET.charAt(
-                    (int) (Math.random() * StringUtils.ALPHABET.length())
-            ));
-        }
-
-        return builder.toString();
+public class ModNameAuthorLabel extends JLabel {
+    public ModNameAuthorLabel(Mod mod) {
+        this.setText(
+            "<html>" +
+            "<b>" + mod.getName() + "</b>" +
+            " by " + "<u>" + mod.getAuthor() + "</u>"
+            + "</html>"
+        );
     }
 
-    public static String capitalize(String s) {
-        return Character.toUpperCase(s.charAt(0)) + s.substring(1);
-    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-    public StringUtils() {
-        throw new UnsupportedOperationException();
+        super.paintComponent(g);
     }
 }

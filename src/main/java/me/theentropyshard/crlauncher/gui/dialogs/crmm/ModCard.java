@@ -20,31 +20,37 @@ package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.Mod;
+import me.theentropyshard.crlauncher.gui.dialogs.addinstance.LoadVersionsWorker;
+import me.theentropyshard.crlauncher.gui.utils.ClickThroughListener;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.ImageUtils;
+import me.theentropyshard.crlauncher.utils.StringUtils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import javax.imageio.ImageIO;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Area;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.InputStream;
+import java.time.OffsetDateTime;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class ModCard extends JPanel {
     private static final BufferedImage DEFAULT_ICON = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+    private static final int DESCRIPTION_LIMIT = 100;
+    private static final int MAX_HEIGHT = 148;
 
     private final JLabel iconLabel;
     private final JLabel nameLabel;
+    private final JTextPane descriptionArea;
 
     private final int border = 12;
 
@@ -59,16 +65,86 @@ public class ModCard extends JPanel {
         super(new BorderLayout());
 
         this.iconLabel = new JLabel(new ImageIcon(ModCard.DEFAULT_ICON));
-        this.nameLabel = new JLabel(mod.getName());
+
+        this.nameLabel = new ModNameAuthorLabel(mod);
+        this.nameLabel.setBorder(new EmptyBorder(0, 12, 0, 0));
+        this.nameLabel.setFont(this.nameLabel.getFont().deriveFont(24.0f));
 
         this.fetchIcon(mod);
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false);
-        topPanel.add(this.iconLabel, BorderLayout.WEST);
-        topPanel.add(this.nameLabel, BorderLayout.CENTER);
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
 
-        this.add(topPanel, BorderLayout.CENTER);
+        JPanel nameDescriptionPanel = new JPanel(new GridLayout(2, 1));
+        nameDescriptionPanel.setOpaque(false);
+        nameDescriptionPanel.add(this.nameLabel, BorderLayout.CENTER);
+
+        this.descriptionArea = new JTextPane();
+        this.descriptionArea.setEditable(false);
+        this.descriptionArea.setBorder(new EmptyBorder(0, 12, 0, 0));
+        this.descriptionArea.setOpaque(false);
+        SwingUtils.removeMouseListeners(this.descriptionArea);
+        this.descriptionArea.addMouseListener(new ClickThroughListener(this));
+
+        String summary = mod.getSummary();
+        if (summary.length() > ModCard.DESCRIPTION_LIMIT) {
+            this.descriptionArea.setText(summary.substring(0, ModCard.DESCRIPTION_LIMIT - 3) + "...");
+        } else {
+            this.descriptionArea.setText(summary);
+        }
+
+        this.descriptionArea.setToolTipText(summary);
+
+        this.descriptionArea.setFont(this.descriptionArea.getFont().deriveFont(14.0f));
+        nameDescriptionPanel.add(this.descriptionArea);
+
+        centerPanel.add(nameDescriptionPanel, BorderLayout.NORTH);
+
+        JPanel tagsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        tagsPanel.setOpaque(false);
+        tagsPanel.setBorder(new EmptyBorder(0, 7, 0, 0));
+        for (String category : mod.getFeaturedCategories()) {
+            //tagsPanel.add(new JLabel(category, SwingUtils.getIcon("/assets/images/icons/utility_icon.png"), SwingConstants.LEFT));
+            tagsPanel.add(new JLabel(StringUtils.capitalize(category)));
+        }
+        for (String loader : mod.getLoaders()) {
+            //tagsPanel.add(new JLabel(loader, SwingUtils.getIcon("/assets/images/icons/quilt_icon.png"), SwingConstants.LEFT));
+            tagsPanel.add(new JLabel(StringUtils.capitalize(loader)));
+        }
+        centerPanel.add(tagsPanel, BorderLayout.SOUTH);
+
+        JPanel iconPanel = new JPanel();
+        iconPanel.setOpaque(false);
+        iconPanel.setLayout(new BoxLayout(iconPanel, BoxLayout.Y_AXIS));
+        iconPanel.add(this.iconLabel);
+
+        this.add(iconPanel, BorderLayout.WEST);
+        this.add(centerPanel, BorderLayout.CENTER);
+
+        JPanel infoPanel = new JPanel(new BorderLayout());
+        infoPanel.setOpaque(false);
+
+        JPanel downloadsFollowersPanel = new JPanel(new GridLayout(2, 1));
+        downloadsFollowersPanel.setOpaque(false);
+
+        JLabel downloadsLabel = new JLabel(mod.getDownloads() + " downloads");
+        downloadsLabel.setFont(downloadsLabel.getFont().deriveFont(14.0f));
+        downloadsLabel.setHorizontalAlignment(JLabel.RIGHT);
+        downloadsFollowersPanel.add(downloadsLabel);
+
+        JLabel followersLabel = new JLabel(mod.getFollowers() + " followers");
+        followersLabel.setFont(followersLabel.getFont().deriveFont(14.0f));
+        followersLabel.setHorizontalAlignment(JLabel.RIGHT);
+        downloadsFollowersPanel.add(followersLabel);
+
+        infoPanel.add(downloadsFollowersPanel, BorderLayout.NORTH);
+
+        JLabel updatedLabel = new JLabel("Updated " + LoadVersionsWorker.getAgoFromNow(OffsetDateTime.parse(mod.getDateUpdated())));
+        updatedLabel.setFont(updatedLabel.getFont().deriveFont(14.0f));
+        updatedLabel.setHorizontalAlignment(JLabel.RIGHT);
+        infoPanel.add(updatedLabel, BorderLayout.SOUTH);
+
+        this.add(infoPanel, BorderLayout.EAST);
 
         this.setOpaque(false);
         this.setDefaultColor(UIManager.getColor("InstanceItem.defaultColor"));
@@ -110,6 +186,20 @@ public class ModCard extends JPanel {
         });
     }
 
+    @Override
+    public Dimension getMaximumSize() {
+        Dimension maximumSize = super.getMaximumSize();
+
+        return new Dimension(maximumSize.width, ModCard.MAX_HEIGHT);
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        Dimension preferredSize = super.getPreferredSize();
+
+        return new Dimension(preferredSize.width, ModCard.MAX_HEIGHT);
+    }
+
     private void fetchIcon(Mod mod) {
         new Worker<Icon, Void>("fetching icon for mod " + mod.getName()) {
             @Override
@@ -120,29 +210,23 @@ public class ModCard extends JPanel {
                     .url(mod.getIcon())
                     .build();
 
-                // TODO: refactor this
                 try (Response response = httpClient.newCall(request).execute()) {
-                    InputStream inputStream = Objects.requireNonNull(response.body()).byteStream();
-                    BufferedImage bufferedImage = ImageIO.read(inputStream);
+                    BufferedImage bufferedImage = ImageIO.read(Objects.requireNonNull(response.body()).byteStream());
+                    BufferedImage scaledImage = ImageUtils.toBufferedImage(bufferedImage.getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH));
 
-                    //Image scaledImage = bufferedImage.getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH);
                     BufferedImage clippedImage = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+
                     Graphics2D g2d = clippedImage.createGraphics();
-                    g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
                     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                     g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-                    TexturePaint paint = new TexturePaint(bufferedImage, new Rectangle(64, 64));
-                    Clipper clipper = new Clipper(new Rectangle(64, 64));
+
+                    TexturePaint paint = new TexturePaint(scaledImage, new Rectangle(64, 64));
                     g2d.setPaint(paint);
-                    g2d.fill(clipper.clip(new RoundRectangle2D.Double(0, 0, 64, 64, 10, 10)));
+                    g2d.fill(new RoundRectangle2D.Double(0, 0, 64, 64, 10, 10));
+
                     g2d.dispose();
 
-                    BufferedImage resultImage = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
-                    Graphics2D rg = resultImage.createGraphics();
-                    rg.drawImage(clippedImage, 0, 0, null);
-                    rg.dispose();
-
-                    return new ImageIcon(resultImage);
+                    return new ImageIcon(clippedImage);
                 }
             }
 
@@ -159,21 +243,6 @@ public class ModCard extends JPanel {
                 ModCard.this.iconLabel.setIcon(icon);
             }
         }.execute();
-    }
-
-    private static class Clipper {
-        private final Shape shape;
-
-        public Clipper(Shape shape) {
-            this.shape = shape;
-        }
-
-        public Shape clip(Shape other) {
-            Area a = new Area(this.shape);
-            a.intersect(new Area(other));
-
-            return a;
-        }
     }
 
     @Override
