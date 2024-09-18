@@ -16,25 +16,21 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.crmm;
+package me.theentropyshard.crlauncher.crmm.model.project;
 
-import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+public class ProjectResponse {
+    private boolean success;
+    private Project project;
 
-public interface CrmmHttpApi {
-    @GET("search?type=mod")
-    SearchModsResponse searchMods();
+    public ProjectResponse() {
 
-    @GET("search?type=mod")
-    SearchModsResponse searchMods(@Query("q") String query);
+    }
 
-    @GET("project/{slug}")
-    ProjectResponse getProject(@Path("slug") String slug);
+    public boolean isSuccess() {
+        return this.success;
+    }
 
-    @GET("project/{slug}/version")
-    ProjectVersionResponse getProjectVersions(@Path("slug") String slug);
+    public Project getProject() {
+        return this.project;
+    }
 }

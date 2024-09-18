@@ -18,7 +18,9 @@
 
 package me.theentropyshard.crlauncher.crmm;
 
-import me.theentropyshard.crlauncher.crmm.model.SearchModsResponse;
+import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
 import me.theentropyshard.crlauncher.utils.CallUnwrapAdapter;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -47,5 +49,13 @@ public class CrmmApi {
         } else {
             return this.crmmApi.searchMods(query);
         }
+    }
+
+    public ProjectResponse getProject(String slug) {
+        return this.crmmApi.getProject(slug);
+    }
+
+    public ProjectVersionResponse getProjectVersions(String slug) {
+        return this.crmmApi.getProjectVersions(slug);
     }
 }

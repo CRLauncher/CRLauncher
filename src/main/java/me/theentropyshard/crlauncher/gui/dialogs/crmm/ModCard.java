@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.crmm.model.Mod;
+import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.LoadVersionsWorker;
 import me.theentropyshard.crlauncher.gui.utils.ClickThroughListener;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;

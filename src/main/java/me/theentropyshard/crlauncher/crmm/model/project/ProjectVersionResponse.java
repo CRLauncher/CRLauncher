@@ -16,25 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.crmm;
+package me.theentropyshard.crlauncher.crmm.model.project;
 
-import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+import com.google.gson.annotations.SerializedName;
 
-public interface CrmmHttpApi {
-    @GET("search?type=mod")
-    SearchModsResponse searchMods();
+import java.util.List;
 
-    @GET("search?type=mod")
-    SearchModsResponse searchMods(@Query("q") String query);
+public class ProjectVersionResponse {
+    private boolean success;
 
-    @GET("project/{slug}")
-    ProjectResponse getProject(@Path("slug") String slug);
+    @SerializedName("data")
+    private List<ProjectVersion> projectVersions;
 
-    @GET("project/{slug}/version")
-    ProjectVersionResponse getProjectVersions(@Path("slug") String slug);
+    public ProjectVersionResponse() {
+
+    }
+
+    public boolean isSuccess() {
+        return this.success;
+    }
+
+    public List<ProjectVersion> getProjectVersions() {
+        return this.projectVersions;
+    }
 }

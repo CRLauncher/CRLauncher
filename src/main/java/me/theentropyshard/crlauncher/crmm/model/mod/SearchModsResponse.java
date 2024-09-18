@@ -1,4 +1,4 @@
-package me.theentropyshard.crlauncher.crmm.model;
+package me.theentropyshard.crlauncher.crmm.model.mod;
 
 import com.google.gson.annotations.SerializedName;
 

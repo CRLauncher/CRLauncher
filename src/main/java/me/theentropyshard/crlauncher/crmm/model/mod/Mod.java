@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.crmm.model;
+package me.theentropyshard.crlauncher.crmm.model.mod;
 
 import java.util.List;
 

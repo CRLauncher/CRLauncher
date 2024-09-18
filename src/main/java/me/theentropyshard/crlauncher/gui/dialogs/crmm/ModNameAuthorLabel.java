@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 
-import me.theentropyshard.crlauncher.crmm.model.Mod;
+import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
 
 import javax.swing.*;
 import java.awt.*;

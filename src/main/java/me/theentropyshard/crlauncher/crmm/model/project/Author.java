@@ -16,25 +16,36 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.crmm;
+package me.theentropyshard.crlauncher.crmm.model.project;
 
-import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
+public class Author{
+    private String id;
+    private String userName;
+    private String name;
+    private String avatarUrl;
+    private String role;
 
-public interface CrmmHttpApi {
-    @GET("search?type=mod")
-    SearchModsResponse searchMods();
+    public Author() {
 
-    @GET("search?type=mod")
-    SearchModsResponse searchMods(@Query("q") String query);
+    }
 
-    @GET("project/{slug}")
-    ProjectResponse getProject(@Path("slug") String slug);
+    public String getId() {
+        return this.id;
+    }
 
-    @GET("project/{slug}/version")
-    ProjectVersionResponse getProjectVersions(@Path("slug") String slug);
+    public String getUserName() {
+        return this.userName;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getAvatarUrl() {
+        return this.avatarUrl;
+    }
+
+    public String getRole() {
+        return this.role;
+    }
 }
