@@ -27,7 +27,7 @@ public class ProjectFile {
     private boolean primary;
 
     private String name;
-    private int size;
+    private long size;
     private String type;
     private String url;
 
@@ -53,7 +53,7 @@ public class ProjectFile {
         return this.name;
     }
 
-    public int getSize() {
+    public long getSize() {
         return this.size;
     }
 
