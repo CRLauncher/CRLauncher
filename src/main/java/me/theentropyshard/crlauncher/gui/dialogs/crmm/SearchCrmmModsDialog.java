@@ -24,6 +24,7 @@ import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
@@ -40,11 +41,13 @@ public class SearchCrmmModsDialog extends AppDialog {
     private final JPanel modCardsPanel;
     private final JTextField searchField;
     private final Instance instance;
+    private final ModsTab modsTab;
 
-    public SearchCrmmModsDialog(Instance instance) {
+    public SearchCrmmModsDialog(Instance instance, ModsTab modsTab) {
         super(CRLauncher.frame, "Search mods on CRMM");
 
         this.instance = instance;
+        this.modsTab = modsTab;
 
         JPanel root = new JPanel(new BorderLayout());
         root.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
@@ -109,7 +112,7 @@ public class SearchCrmmModsDialog extends AppDialog {
                 for (Mod mod : mods) {
                     ModCard card = new ModCard(mod);
                     card.addMouseListener(new MouseClickListener(e -> {
-                        new ModVersionsDialog(mod, SearchCrmmModsDialog.this.instance);
+                        new ModVersionsDialog(mod, SearchCrmmModsDialog.this.instance, SearchCrmmModsDialog.this.modsTab);
                     }));
                     SearchCrmmModsDialog.this.modCardsPanel.add(card);
                 }

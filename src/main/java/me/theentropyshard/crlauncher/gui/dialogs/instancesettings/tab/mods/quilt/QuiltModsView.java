@@ -250,4 +250,8 @@ public class QuiltModsView extends JPanel {
             }
         }.execute();
     }
+
+    public QuiltModsTableModel getQuiltModsModel() {
+        return this.quiltModsModel;
+    }
 }

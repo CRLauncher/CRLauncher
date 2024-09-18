@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
 import me.theentropyshard.crlauncher.crmm.model.project.*;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -35,12 +36,14 @@ public class ModVersionsView extends JPanel {
     private final JPanel modVersionCardsPanel;
     private final Mod mod;
     private final Instance instance;
+    private final ModsTab modsTab;
 
-    public ModVersionsView(Mod mod, Instance instance) {
+    public ModVersionsView(Mod mod, Instance instance, ModsTab modsTab) {
         super(new BorderLayout());
 
         this.mod = mod;
         this.instance = instance;
+        this.modsTab = modsTab;
 
         this.modVersionCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
         this.modVersionCardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -86,7 +89,7 @@ public class ModVersionsView extends JPanel {
             @Override
             protected void process(List<ProjectVersion> chunks) {
                 for (ProjectVersion version : chunks) {
-                    ModVersionCard card = new ModVersionCard(version, ModVersionsView.this.instance);
+                    ModVersionCard card = new ModVersionCard(version, ModVersionsView.this.instance, modsTab);
                     ModVersionsView.this.addModVersionCard(card);
                 }
             }

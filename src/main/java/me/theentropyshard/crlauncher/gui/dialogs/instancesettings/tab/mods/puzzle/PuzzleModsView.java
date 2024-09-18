@@ -239,4 +239,8 @@ public class PuzzleModsView extends JPanel {
             }
         }.execute();
     }
+
+    public PuzzleModsTableModel getPuzzleModsModel() {
+        return this.puzzleModsModel;
+    }
 }

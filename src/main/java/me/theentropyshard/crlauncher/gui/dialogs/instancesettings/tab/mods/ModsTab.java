@@ -141,7 +141,7 @@ public class ModsTab extends Tab implements ItemListener {
                 new Worker<Void, Void>("searching mods") {
                     @Override
                     protected Void work() throws Exception {
-                        new SearchCrmmModsDialog(instance);
+                        new SearchCrmmModsDialog(instance, ModsTab.this);
 
                         return null;
                     }
@@ -245,5 +245,9 @@ public class ModsTab extends Tab implements ItemListener {
 
     public JComboBox<GithubRelease> getLoaderVersionCombo() {
         return this.loaderVersionCombo;
+    }
+
+    public JPanel getModsView() {
+        return this.modsView;
     }
 }

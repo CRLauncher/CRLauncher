@@ -21,15 +21,16 @@ package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import java.awt.*;
 
 public class ModVersionsDialog extends AppDialog {
-    public ModVersionsDialog(Mod mod, Instance instance) {
+    public ModVersionsDialog(Mod mod, Instance instance, ModsTab modsTab) {
         super(CRLauncher.frame, "Select mod version");
 
-        ModVersionsView view = new ModVersionsView(mod, instance);
+        ModVersionsView view = new ModVersionsView(mod, instance, modsTab);
         view.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
         view.loadVersions();
 
