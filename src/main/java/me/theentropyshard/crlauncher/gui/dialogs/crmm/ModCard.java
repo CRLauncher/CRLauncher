@@ -107,11 +107,11 @@ public class ModCard extends JPanel {
         tagsPanel.setBorder(new EmptyBorder(0, 7, 0, 0));
         for (String category : mod.getFeaturedCategories()) {
             //tagsPanel.add(new JLabel(category, SwingUtils.getIcon("/assets/images/icons/utility_icon.png"), SwingConstants.LEFT));
-            tagsPanel.add(new JLabel(StringUtils.capitalize(category)));
+            tagsPanel.add(new JLabel(StringUtils.capitalize(category).replace("_", " ")));
         }
         for (String loader : mod.getLoaders()) {
             //tagsPanel.add(new JLabel(loader, SwingUtils.getIcon("/assets/images/icons/quilt_icon.png"), SwingConstants.LEFT));
-            tagsPanel.add(new JLabel(StringUtils.capitalize(loader)));
+            tagsPanel.add(new JLabel(StringUtils.capitalize(loader).replace("_", " ")));
         }
         centerPanel.add(tagsPanel, BorderLayout.SOUTH);
 
