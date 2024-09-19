@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.crmm;
 
+import me.theentropyshard.crlauncher.crmm.model.datapack.SearchDatapacksResponse;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
@@ -31,6 +32,12 @@ public interface CrmmHttpApi {
 
     @GET("search?type=mod")
     SearchModsResponse searchMods(@Query("q") String query);
+
+    @GET("search?type=datapack")
+    SearchDatapacksResponse searchDatapacks();
+
+    @GET("search?type=datapack")
+    SearchDatapacksResponse searchDatapacks(@Query("q") String query);
 
     @GET("project/{slug}")
     ProjectResponse getProject(@Path("slug") String slug);
