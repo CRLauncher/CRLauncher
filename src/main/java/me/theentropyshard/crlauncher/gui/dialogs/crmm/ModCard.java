@@ -44,7 +44,9 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class ModCard extends JPanel {
-    private static final BufferedImage DEFAULT_ICON = new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB);
+    private static final Icon EMPTY_ICON = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
+    private static final Icon NO_ICON = SwingUtils.getIcon("/assets/images/icons/mod_no_icon.png");
+
     private static final int DESCRIPTION_LIMIT = 100;
     private static final int MAX_HEIGHT = 148;
 
@@ -64,7 +66,7 @@ public class ModCard extends JPanel {
     public ModCard(Mod mod) {
         super(new BorderLayout());
 
-        this.iconLabel = new JLabel(new ImageIcon(ModCard.DEFAULT_ICON));
+        this.iconLabel = new JLabel(ModCard.EMPTY_ICON);
 
         this.nameLabel = new ModNameAuthorLabel(mod);
         this.nameLabel.setBorder(new EmptyBorder(0, 12, 0, 0));
@@ -206,8 +208,14 @@ public class ModCard extends JPanel {
             protected Icon work() throws Exception {
                 OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient();
 
+                String iconUrl = mod.getIcon();
+
+                if (iconUrl == null) {
+                    return ModCard.NO_ICON;
+                }
+
                 Request request = new Request.Builder()
-                    .url(mod.getIcon())
+                    .url(iconUrl)
                     .build();
 
                 try (Response response = httpClient.newCall(request).execute()) {
@@ -238,6 +246,10 @@ public class ModCard extends JPanel {
                     icon = this.get();
                 } catch (InterruptedException | ExecutionException e) {
                     Log.error(e);
+                }
+
+                if (icon == null) {
+                    icon = ModCard.NO_ICON;
                 }
 
                 ModCard.this.iconLabel.setIcon(icon);
