@@ -20,20 +20,36 @@ package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 
 import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
+import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
 import me.theentropyshard.crlauncher.crmm.model.project.*;
 import me.theentropyshard.crlauncher.gui.SmoothScrollMouseWheelListener;
+import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.network.download.HttpDownload;
+import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
+import me.theentropyshard.crlauncher.utils.StreamUtils;
+import me.theentropyshard.crlauncher.utils.json.Json;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.FileHeader;
+import okhttp3.OkHttpClient;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseWheelListener;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class ModVersionsView extends JPanel {
     private final JPanel modVersionCardsPanel;
@@ -102,7 +118,97 @@ public class ModVersionsView extends JPanel {
             @Override
             protected void process(List<ProjectVersion> chunks) {
                 for (ProjectVersion version : chunks) {
-                    ModVersionCard card = new ModVersionCard(version, ModVersionsView.this.instance, modsTab);
+                    Instance instance = ModVersionsView.this.instance;
+                    ModVersionCard card = new ModVersionCard(version, e -> {
+                        new Worker<me.theentropyshard.crlauncher.cosmic.mods.Mod, Void>("downloading mod " + version.getTitle()) {
+                            @Override
+                            protected me.theentropyshard.crlauncher.cosmic.mods.Mod work() throws Exception {
+                                ProjectFile primaryFile = version.getPrimaryFile();
+
+                                ProgressDialog progressDialog = new ProgressDialog("Downloading " + primaryFile.getName());
+
+                                OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient().newBuilder()
+                                    .addNetworkInterceptor(new ProgressNetworkInterceptor(progressDialog))
+                                    .build();
+
+                                Path saveAs = switch (instance.getType()) {
+                                    case VANILLA, FABRIC -> null;
+                                    case QUILT -> instance.getQuiltModsDir().resolve(primaryFile.getName());
+                                    case PUZZLE -> instance.getPuzzleModsDir().resolve(primaryFile.getName());
+                                };
+
+                                if (saveAs == null) {
+                                    return null;
+                                }
+
+                                HttpDownload download = new HttpDownload.Builder()
+                                    .url(primaryFile.getUrl())
+                                    .expectedSize(primaryFile.getSize())
+                                    .httpClient(httpClient)
+                                    .saveAs(saveAs)
+                                    .build();
+
+                                SwingUtilities.invokeLater(() -> progressDialog.setVisible(true));
+                                download.execute();
+                                SwingUtilities.invokeLater(() -> progressDialog.getDialog().dispose());
+
+                                try (ZipFile file = new ZipFile(saveAs.toFile())) {
+                                    FileHeader fileHeader = file.getFileHeader(
+                                        instance.getType() == InstanceType.QUILT ?
+                                            "quilt.mod.json" : "puzzle.mod.json"
+                                    );
+
+                                    String json = StreamUtils.readToString(file.getInputStream(fileHeader));
+
+                                    me.theentropyshard.crlauncher.cosmic.mods.Mod mod = Json.parse(json,
+                                        switch (instance.getType()) {
+                                            case VANILLA, FABRIC -> throw new UnsupportedOperationException();
+                                            case QUILT -> QuiltMod.class;
+                                            case PUZZLE -> PuzzleMod.class;
+                                        }
+                                    );
+
+                                    if (instance.getType() == InstanceType.QUILT) {
+                                        QuiltMod quiltMod = (QuiltMod) mod;
+                                        if (instance.getQuiltMods().stream().anyMatch(qMod -> qMod.quiltLoader.id.equals(quiltMod.quiltLoader.id))) {
+                                            MessageBox.showErrorMessage(CRLauncher.frame, "Mod with id '" + quiltMod.quiltLoader.id + "' already added!");
+                                            return null;
+                                        }
+                                    } else if (instance.getType() == InstanceType.PUZZLE) {
+                                        PuzzleMod puzzleMod = (PuzzleMod) mod;
+                                        if (instance.getPuzzleMods().stream().anyMatch(pMod -> puzzleMod.getId().equals(pMod.getId()))) {
+                                            MessageBox.showErrorMessage(CRLauncher.frame, "Mod with id '" + puzzleMod.getId() + "' already added!");
+                                            return null;
+                                        }
+                                    }
+
+                                    mod.setActive(true);
+
+                                    return mod;
+                                }
+                            }
+
+                            @Override
+                            protected void done() {
+                                me.theentropyshard.crlauncher.cosmic.mods.Mod mod;
+                                try {
+                                    mod = this.get();
+                                } catch (InterruptedException | ExecutionException ex) {
+                                    Log.error(ex);
+
+                                    return;
+                                }
+
+                                JPanel modsView = ModVersionsView.this.modsTab.getModsView();
+
+                                if (modsView instanceof QuiltModsView quiltModsView) {
+                                    quiltModsView.getQuiltModsModel().add((QuiltMod) mod);
+                                } else if (modsView instanceof PuzzleModsView puzzleModsView) {
+                                    puzzleModsView.getPuzzleModsModel().add((PuzzleMod) mod);
+                                }
+                            }
+                        }.execute();
+                    });
                     ModVersionsView.this.addModVersionCard(card);
                 }
             }
