@@ -19,10 +19,12 @@
 package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
+import me.theentropyshard.crlauncher.gui.SmoothScrollMouseWheelListener;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
@@ -33,6 +35,7 @@ import me.theentropyshard.crlauncher.logging.Log;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseWheelListener;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -73,6 +76,16 @@ public class SearchCrmmModsDialog extends AppDialog {
         borderPanel.add(this.modCardsPanel, BorderLayout.PAGE_START);
 
         JScrollPane modCardsScrollPane = new JScrollPane(borderPanel);
+        modCardsScrollPane.setUI(new FlatScrollPaneUI() {
+            @Override
+            protected MouseWheelListener createMouseWheelListener() {
+                if (this.isSmoothScrollingEnabled()) {
+                    return new SmoothScrollMouseWheelListener(modCardsScrollPane.getVerticalScrollBar());
+                } else {
+                    return super.createMouseWheelListener();
+                }
+            }
+        });
         modCardsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         root.add(modCardsScrollPane, BorderLayout.CENTER);
 

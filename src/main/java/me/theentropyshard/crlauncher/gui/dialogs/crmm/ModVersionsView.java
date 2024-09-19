@@ -18,10 +18,12 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 
+import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
 import me.theentropyshard.crlauncher.crmm.model.project.*;
+import me.theentropyshard.crlauncher.gui.SmoothScrollMouseWheelListener;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
@@ -30,6 +32,7 @@ import me.theentropyshard.crlauncher.logging.Log;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseWheelListener;
 import java.util.List;
 
 public class ModVersionsView extends JPanel {
@@ -51,6 +54,16 @@ public class ModVersionsView extends JPanel {
         borderPanel.add(this.modVersionCardsPanel, BorderLayout.PAGE_START);
 
         JScrollPane scrollPane = new JScrollPane(borderPanel);
+        scrollPane.setUI(new FlatScrollPaneUI() {
+            @Override
+            protected MouseWheelListener createMouseWheelListener() {
+                if (this.isSmoothScrollingEnabled()) {
+                    return new SmoothScrollMouseWheelListener(scrollPane.getVerticalScrollBar());
+                } else {
+                    return super.createMouseWheelListener();
+                }
+            }
+        });
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         this.add(scrollPane, BorderLayout.CENTER);
