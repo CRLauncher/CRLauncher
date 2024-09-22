@@ -18,9 +18,9 @@
 
 package me.theentropyshard.crlauncher.gui.laf;
 
-import com.formdev.flatlaf.FlatIntelliJLaf;
+import com.formdev.flatlaf.FlatDarculaLaf;
 
-public class DarkLauncherLaf extends FlatIntelliJLaf {
+public class DarkLauncherLaf extends FlatDarculaLaf {
     public static boolean setup() {
         return setup(new DarkLauncherLaf());
     }
