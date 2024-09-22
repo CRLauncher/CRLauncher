@@ -33,10 +33,10 @@ public interface CrmmHttpApi {
     @GET("search?type=mod")
     SearchModsResponse searchMods(@Query("q") String query);
 
-    @GET("search?type=datapack")
+    @GET("search?type=datamod")
     SearchDatapacksResponse searchDatapacks();
 
-    @GET("search?type=datapack")
+    @GET("search?type=datamod")
     SearchDatapacksResponse searchDatapacks(@Query("q") String query);
 
     @GET("project/{slug}")
