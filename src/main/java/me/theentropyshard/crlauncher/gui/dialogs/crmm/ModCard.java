@@ -40,6 +40,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
@@ -141,7 +143,7 @@ public class ModCard extends JPanel {
 
         infoPanel.add(downloadsFollowersPanel, BorderLayout.NORTH);
 
-        JLabel updatedLabel = new JLabel("Updated " + LoadVersionsWorker.getAgoFromNow(OffsetDateTime.parse(mod.getDateUpdated())));
+        JLabel updatedLabel = new JLabel("Updated " + ModCard.getAgoFromNow(OffsetDateTime.parse(mod.getDateUpdated())));
         updatedLabel.setFont(updatedLabel.getFont().deriveFont(14.0f));
         updatedLabel.setHorizontalAlignment(JLabel.RIGHT);
         infoPanel.add(updatedLabel, BorderLayout.SOUTH);
@@ -200,6 +202,68 @@ public class ModCard extends JPanel {
         Dimension preferredSize = super.getPreferredSize();
 
         return new Dimension(preferredSize.width, ModCard.MAX_HEIGHT);
+    }
+
+    public static String getAgoFromNow(Temporal temporal) {
+        OffsetDateTime now = OffsetDateTime.now();
+
+        long years = ChronoUnit.YEARS.between(temporal, now);
+        if (years == 0) {
+            long months = ChronoUnit.MONTHS.between(temporal, now);
+            if (months == 0) {
+                long weeks = ChronoUnit.WEEKS.between(temporal, now);
+                if (weeks == 0) {
+                    int days = (int) ChronoUnit.DAYS.between(temporal, now);
+                    if (days == 0) {
+                        int hours = (int) ChronoUnit.HOURS.between(temporal, now);
+                        if (hours == 0) {
+                            int minutes = (int) ChronoUnit.MINUTES.between(temporal, now);
+                            if (minutes == 0) {
+                                int seconds = (int) ChronoUnit.SECONDS.between(temporal, now);
+
+                                return seconds + " seconds ago";
+                            } else {
+                                if (minutes == 1) {
+                                    return "1 minute ago";
+                                } else {
+                                    return minutes + " minutes ago";
+                                }
+                            }
+                        } else {
+                            if (hours == 1) {
+                                return "1 hour ago";
+                            } else {
+                                return hours + " hours ago";
+                            }
+                        }
+                    } else {
+                        if (days == 1) {
+                            return "yesterday";
+                        } else {
+                            return days + " days ago";
+                        }
+                    }
+                } else {
+                    if (weeks == 1) {
+                        return "1 week ago";
+                    } else {
+                        return weeks + " weeks ago";
+                    }
+                }
+            } else {
+                if (months == 1) {
+                    return "1 month ago";
+                } else {
+                    return months + " months ago";
+                }
+            }
+        } else {
+            if (years == 1) {
+                return "1 year ago";
+            } else {
+                return years + " years ago";
+            }
+        }
     }
 
     private void fetchIcon(Mod mod) {
