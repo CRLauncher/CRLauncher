@@ -36,4 +36,4 @@ This way the launcher will create its files in build/libs
 
 
 ### Plans:
- - Add support for CRM-1 mod repositories
+ - Add support for CRM-1 crmmMod repositories

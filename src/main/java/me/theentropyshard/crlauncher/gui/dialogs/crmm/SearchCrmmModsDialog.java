@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.view.crmm.CrmmModsView;
 import me.theentropyshard.crlauncher.gui.view.crmm.SearchCrmmModsView;
 import me.theentropyshard.crlauncher.instance.Instance;
 
@@ -31,11 +32,15 @@ public class SearchCrmmModsDialog extends AppDialog {
     public SearchCrmmModsDialog(Instance instance, ModsTab modsTab) {
         super(CRLauncher.frame, "Search mods on CRMM");
 
-        SearchCrmmModsView modsView = new SearchCrmmModsView(instance, modsTab);
+        /*SearchCrmmModsView modsView = new SearchCrmmModsView(instance, modsTab);
         modsView.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
         modsView.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        modsView.searchMods();
+        modsView.searchMods();*/
+
+        CrmmModsView modsView = new CrmmModsView(instance, modsTab);
+        modsView.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
+        modsView.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         this.setContent(modsView);
         this.center(0);

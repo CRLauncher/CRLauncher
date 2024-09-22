@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.crmm.model.datapack;
 
+import me.theentropyshard.crlauncher.crmm.ModInfo;
+
 import java.util.List;
 
 public class Datapack {
@@ -39,6 +41,12 @@ public class Datapack {
 
     public Datapack() {
 
+    }
+
+    public ModInfo toModInfo() {
+        return new ModInfo(
+            this.icon, this.name, this.summary, this.author, this.datePublished, this.dateUpdated,
+            String.valueOf(this.downloads), String.valueOf(this.followers), this.featuredCategories, this.loaders, this.slug);
     }
 
     public String getId() {

@@ -26,7 +26,7 @@ public class SearchModsResponse {
     private int estimatedTotalHits;
 
     @SerializedName("hits")
-    private List<Mod> mods;
+    private List<CrmmMod> crmmMods;
 
     private int limit;
     private int offset;
@@ -41,7 +41,7 @@ public class SearchModsResponse {
     public String toString() {
         return "SearchModsResponse{" +
             "estimatedTotalHits=" + this.estimatedTotalHits +
-            ", mods=" + this.mods +
+            ", mods=" + this.crmmMods +
             ", limit=" + this.limit +
             ", offset=" + this.offset +
             ", processingTimeMs=" + this.processingTimeMs +
@@ -53,8 +53,8 @@ public class SearchModsResponse {
         return this.estimatedTotalHits;
     }
 
-    public List<Mod> getMods() {
-        return this.mods;
+    public List<CrmmMod> getMods() {
+        return this.crmmMods;
     }
 
     public int getLimit() {

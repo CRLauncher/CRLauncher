@@ -19,7 +19,6 @@
 package me.theentropyshard.crlauncher.crmm.model.datapack;
 
 import com.google.gson.annotations.SerializedName;
-import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
 
 import java.util.List;
 

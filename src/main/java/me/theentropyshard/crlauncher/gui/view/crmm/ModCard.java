@@ -16,11 +16,10 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.crmm;
+package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
-import me.theentropyshard.crlauncher.gui.dialogs.addinstance.LoadVersionsWorker;
+import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.gui.utils.ClickThroughListener;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
@@ -65,16 +64,16 @@ public class ModCard extends JPanel {
     private boolean mouseOver;
     private boolean mousePressed;
 
-    public ModCard(Mod mod) {
+    public ModCard(ModInfo modInfo) {
         super(new BorderLayout());
 
         this.iconLabel = new JLabel(ModCard.EMPTY_ICON);
 
-        this.nameLabel = new ModNameAuthorLabel(mod);
+        this.nameLabel = new ModNameAuthorLabel(modInfo);
         this.nameLabel.setBorder(new EmptyBorder(0, 12, 0, 0));
         this.nameLabel.setFont(this.nameLabel.getFont().deriveFont(24.0f));
 
-        this.fetchIcon(mod);
+        this.fetchIcon(modInfo);
 
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
@@ -90,7 +89,7 @@ public class ModCard extends JPanel {
         SwingUtils.removeMouseListeners(this.descriptionArea);
         this.descriptionArea.addMouseListener(new ClickThroughListener(this));
 
-        String summary = mod.getSummary();
+        String summary = modInfo.getDescription();
         if (summary.length() > ModCard.DESCRIPTION_LIMIT) {
             this.descriptionArea.setText(summary.substring(0, ModCard.DESCRIPTION_LIMIT - 3) + "...");
         } else {
@@ -107,11 +106,11 @@ public class ModCard extends JPanel {
         JPanel tagsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         tagsPanel.setOpaque(false);
         tagsPanel.setBorder(new EmptyBorder(0, 7, 0, 0));
-        for (String category : mod.getFeaturedCategories()) {
+        for (String category : modInfo.getFeaturedCategories()) {
             //tagsPanel.add(new JLabel(category, SwingUtils.getIcon("/assets/images/icons/utility_icon.png"), SwingConstants.LEFT));
             tagsPanel.add(new JLabel(StringUtils.capitalize(category).replace("_", " ")));
         }
-        for (String loader : mod.getLoaders()) {
+        for (String loader : modInfo.getLoaders()) {
             //tagsPanel.add(new JLabel(loader, SwingUtils.getIcon("/assets/images/icons/quilt_icon.png"), SwingConstants.LEFT));
             tagsPanel.add(new JLabel(StringUtils.capitalize(loader).replace("_", " ")));
         }
@@ -131,19 +130,19 @@ public class ModCard extends JPanel {
         JPanel downloadsFollowersPanel = new JPanel(new GridLayout(2, 1));
         downloadsFollowersPanel.setOpaque(false);
 
-        JLabel downloadsLabel = new JLabel(mod.getDownloads() + " downloads");
+        JLabel downloadsLabel = new JLabel(modInfo.getDownloads() + " downloads");
         downloadsLabel.setFont(downloadsLabel.getFont().deriveFont(14.0f));
         downloadsLabel.setHorizontalAlignment(JLabel.RIGHT);
         downloadsFollowersPanel.add(downloadsLabel);
 
-        JLabel followersLabel = new JLabel(mod.getFollowers() + " followers");
+        JLabel followersLabel = new JLabel(modInfo.getFollowers() + " followers");
         followersLabel.setFont(followersLabel.getFont().deriveFont(14.0f));
         followersLabel.setHorizontalAlignment(JLabel.RIGHT);
         downloadsFollowersPanel.add(followersLabel);
 
         infoPanel.add(downloadsFollowersPanel, BorderLayout.NORTH);
 
-        JLabel updatedLabel = new JLabel("Updated " + ModCard.getAgoFromNow(OffsetDateTime.parse(mod.getDateUpdated())));
+        JLabel updatedLabel = new JLabel("Updated " + ModCard.getAgoFromNow(OffsetDateTime.parse(modInfo.getDateUpdated())));
         updatedLabel.setFont(updatedLabel.getFont().deriveFont(14.0f));
         updatedLabel.setHorizontalAlignment(JLabel.RIGHT);
         infoPanel.add(updatedLabel, BorderLayout.SOUTH);
@@ -266,13 +265,13 @@ public class ModCard extends JPanel {
         }
     }
 
-    private void fetchIcon(Mod mod) {
-        new Worker<Icon, Void>("fetching icon for mod " + mod.getName()) {
+    private void fetchIcon(ModInfo modInfo) {
+        new Worker<Icon, Void>("fetching icon for mod " + modInfo.getName()) {
             @Override
             protected Icon work() throws Exception {
                 OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient();
 
-                String iconUrl = mod.getIcon();
+                String iconUrl = modInfo.getIconUrl();
 
                 if (iconUrl == null) {
                     return ModCard.NO_ICON;

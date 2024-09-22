@@ -16,27 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.crmm;
+package me.theentropyshard.crlauncher.gui.view.crmm;
 
-import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 
-import javax.swing.*;
-import java.awt.*;
-
-public class ModNameAuthorLabel extends JLabel {
-    public ModNameAuthorLabel(Mod mod) {
-        this.setText(
-            "<html>" +
-            "<b>" + mod.getName() + "</b>" +
-            " by " + "<u>" + mod.getAuthor() + "</u>"
-            + "</html>"
-        );
-    }
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        super.paintComponent(g);
-    }
+public interface WorkerSupplier<T, V> {
+    Worker<T, V> getWorker(ModVersionsView versionsView, ProjectVersion version);
 }

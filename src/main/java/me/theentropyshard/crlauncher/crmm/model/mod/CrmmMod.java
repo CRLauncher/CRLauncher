@@ -18,9 +18,11 @@
 
 package me.theentropyshard.crlauncher.crmm.model.mod;
 
+import me.theentropyshard.crlauncher.crmm.ModInfo;
+
 import java.util.List;
 
-public class Mod {
+public class CrmmMod {
     private String id;
     private String slug;
     private String name;
@@ -37,8 +39,14 @@ public class Mod {
     private List<String> loaders;
     private String author;
 
-    public Mod() {
+    public CrmmMod() {
 
+    }
+
+    public ModInfo toModInfo() {
+        return new ModInfo(
+            this.icon, this.name, this.summary, this.author, this.datePublished, this.dateUpdated,
+            String.valueOf(this.downloads), String.valueOf(this.followers), this.featuredCategories, this.loaders, this.slug);
     }
 
     @Override

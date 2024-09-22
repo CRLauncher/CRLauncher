@@ -81,19 +81,13 @@ public class DataModsView extends JPanel {
                     DataModsView.this.dataModsTableModel.addRow(dataModDir);
                 }
             }
-        }.
-
-            execute();
+        }.execute();
 
         JScrollPane scrollPane = new JScrollPane(this.dataModsTable);
         scrollPane.setBorder(null);
-        this.
+        this.add(scrollPane, BorderLayout.CENTER);
 
-            add(scrollPane, BorderLayout.CENTER);
-
-        this.deleteDataModButton = new
-
-            JButton("Delete data mod");
+        this.deleteDataModButton = new JButton("Delete data mod");
         this.deleteDataModButton.addActionListener(e ->
 
         {
@@ -115,8 +109,10 @@ public class DataModsView extends JPanel {
             }.execute();
         });
 
-        this.
+        this.add(this.deleteDataModButton, BorderLayout.SOUTH);
+    }
 
-            add(this.deleteDataModButton, BorderLayout.SOUTH);
+    public DataModsTableModel getDataModsTableModel() {
+        return this.dataModsTableModel;
     }
 }
