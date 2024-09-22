@@ -18,120 +18,27 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.crmm;
 
-import com.formdev.flatlaf.FlatClientProperties;
-import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.crmm.CrmmApi;
-import me.theentropyshard.crlauncher.crmm.model.mod.Mod;
-import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
-import me.theentropyshard.crlauncher.gui.SmoothScrollMouseWheelListener;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
-import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.gui.view.crmm.SearchCrmmModsView;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.logging.Log;
 
-import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseWheelListener;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class SearchCrmmModsDialog extends AppDialog {
-
-    private final JPanel modCardsPanel;
-    private final JTextField searchField;
-    private final Instance instance;
-    private final ModsTab modsTab;
-
     public SearchCrmmModsDialog(Instance instance, ModsTab modsTab) {
         super(CRLauncher.frame, "Search mods on CRMM");
 
-        this.instance = instance;
-        this.modsTab = modsTab;
+        SearchCrmmModsView modsView = new SearchCrmmModsView(instance, modsTab);
+        modsView.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
+        modsView.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        JPanel root = new JPanel(new BorderLayout());
-        root.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
-        root.setBorder(new EmptyBorder(10, 10, 10, 10));
+        modsView.searchMods();
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-
-        this.searchField = new JTextField();
-        this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search mods...");
-        topPanel.add(this.searchField, BorderLayout.CENTER);
-
-        JButton searchButton = new JButton("Search");
-        searchButton.addActionListener(e -> {
-            this.searchMods();
-        });
-        topPanel.add(searchButton, BorderLayout.EAST);
-
-        root.add(topPanel, BorderLayout.NORTH);
-
-        this.modCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
-        this.modCardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-        JPanel borderPanel = new JPanel(new BorderLayout());
-        borderPanel.add(this.modCardsPanel, BorderLayout.PAGE_START);
-
-        JScrollPane modCardsScrollPane = new JScrollPane(borderPanel);
-        modCardsScrollPane.setUI(new FlatScrollPaneUI() {
-            @Override
-            protected MouseWheelListener createMouseWheelListener() {
-                if (this.isSmoothScrollingEnabled()) {
-                    return new SmoothScrollMouseWheelListener(modCardsScrollPane.getVerticalScrollBar());
-                } else {
-                    return super.createMouseWheelListener();
-                }
-            }
-        });
-        modCardsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        root.add(modCardsScrollPane, BorderLayout.CENTER);
-
-        this.setContent(root);
+        this.setContent(modsView);
         this.center(0);
-
-        this.searchMods();
-
         this.setVisible(true);
-    }
-
-    public void searchMods() {
-        new Worker<List<Mod>, Void>("searching mods") {
-            @Override
-            protected List<Mod> work() {
-                CrmmApi crmmApi = CRLauncher.getInstance().getCrmmApi();
-                SearchModsResponse searchModsResponse = crmmApi.searchMods(SearchCrmmModsDialog.this.searchField.getText());
-
-                return searchModsResponse.getMods();
-            }
-
-            @Override
-            protected void done() {
-                SearchCrmmModsDialog.this.modCardsPanel.removeAll();
-
-                List<Mod> mods = null;
-                try {
-                    mods = this.get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Log.error(ex);
-                }
-
-                if (mods == null) {
-                    return;
-                }
-
-                for (Mod mod : mods) {
-                    ModCard card = new ModCard(mod);
-                    card.addMouseListener(new MouseClickListener(e -> {
-                        new ModVersionsDialog(mod, SearchCrmmModsDialog.this.instance, SearchCrmmModsDialog.this.modsTab);
-                    }));
-                    SearchCrmmModsDialog.this.modCardsPanel.add(card);
-                }
-
-                SearchCrmmModsDialog.this.modCardsPanel.revalidate();
-            }
-        }.execute();
     }
 }
