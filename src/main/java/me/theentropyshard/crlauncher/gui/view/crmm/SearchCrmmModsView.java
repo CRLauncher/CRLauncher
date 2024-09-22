@@ -21,38 +21,21 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.mods.Mod;
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
-import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.crmm.model.mod.CrmmMod;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.gui.SmoothScrollMouseWheelListener;
-import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleModsView;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
-import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.logging.Log;
-import me.theentropyshard.crlauncher.network.download.HttpDownload;
-import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
-import me.theentropyshard.crlauncher.utils.StreamUtils;
-import me.theentropyshard.crlauncher.utils.json.Json;
-import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.model.FileHeader;
-import okhttp3.OkHttpClient;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseWheelListener;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -113,6 +96,7 @@ public class SearchCrmmModsView extends JPanel {
             }
 
             @Override
+            @SuppressWarnings("unchecked")
             protected void done() {
                 SearchCrmmModsView.this.modCardsPanel.removeAll();
 
@@ -133,9 +117,9 @@ public class SearchCrmmModsView extends JPanel {
                     card.addMouseListener(new MouseClickListener(e -> {
                         new ModVersionsDialog(modInfo, SearchCrmmModsView.this.instance, SearchCrmmModsView.this.modsTab,
                             (versionsView, version) -> {
-                            return new ModDownloadWorkerSupplier(SearchCrmmModsView.this.instance, SearchCrmmModsView.this.modsTab).getWorker(
-                                versionsView, version
-                            );
+                                return new ModDownloadWorkerSupplier(SearchCrmmModsView.this.instance, SearchCrmmModsView.this.modsTab).getWorker(
+                                    versionsView, version
+                                );
                             });
                     }));
                     SearchCrmmModsView.this.modCardsPanel.add(card);

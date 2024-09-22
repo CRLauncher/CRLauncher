@@ -27,6 +27,7 @@ import javax.swing.*;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 
+@SuppressWarnings("rawtypes")
 public class ModDownloadWorkerSupplier implements WorkerSupplier {
     private final Instance instance;
     private final ModsTab modsTab;
