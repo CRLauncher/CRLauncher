@@ -20,38 +20,22 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.mods.Mod;
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
-import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
-import me.theentropyshard.crlauncher.crmm.model.project.*;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
 import me.theentropyshard.crlauncher.gui.SmoothScrollMouseWheelListener;
-import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleModsView;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
-import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.logging.Log;
-import me.theentropyshard.crlauncher.network.download.HttpDownload;
-import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
-import me.theentropyshard.crlauncher.utils.StreamUtils;
-import me.theentropyshard.crlauncher.utils.json.Json;
-import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.model.FileHeader;
-import okhttp3.OkHttpClient;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseWheelListener;
-import java.nio.file.Path;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.function.Supplier;
 
 public class ModVersionsView extends JPanel {
     private final JPanel modVersionCardsPanel;

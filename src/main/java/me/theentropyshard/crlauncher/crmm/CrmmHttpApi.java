@@ -39,6 +39,18 @@ public interface CrmmHttpApi {
     @GET("search?type=datamod")
     SearchDatapacksResponse searchDatapacks(@Query("q") String query);
 
+    @GET("search?type=resource-pack")
+    SearchDatapacksResponse searchResourcePacks();
+
+    @GET("search?type=resource-pack")
+    SearchDatapacksResponse searchResourcePacks(@Query("q") String query);
+
+    @GET("search?type=shader")
+    SearchDatapacksResponse searchShaders();
+
+    @GET("search?type=shader")
+    SearchDatapacksResponse searchShaders(@Query("q") String query);
+
     @GET("project/{slug}")
     ProjectResponse getProject(@Path("slug") String slug);
 

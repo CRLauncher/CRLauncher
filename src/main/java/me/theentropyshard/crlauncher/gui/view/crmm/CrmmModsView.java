@@ -36,8 +36,8 @@ public class CrmmModsView extends JPanel {
 
         this.modsModsView = new SearchCrmmModsView(instance, modsTab);
         this.dataModsModsView = new SearchCrmmDataModsView(instance, modsTab);
-        this.resourcePacksModsView = new SearchCrmmModsView(instance, modsTab);
-        this.shadersModsView = new SearchCrmmModsView(instance, modsTab);
+        this.resourcePacksModsView = new SearchCrmmResourcePacksView(instance, modsTab);
+        this.shadersModsView = new SearchCrmmShadersView(instance, modsTab);
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_TAB_AREA_ALIGNMENT, FlatClientProperties.TABBED_PANE_ALIGN_FILL);

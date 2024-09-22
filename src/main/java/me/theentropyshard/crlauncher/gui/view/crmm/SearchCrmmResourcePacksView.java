@@ -19,22 +19,11 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import com.formdev.flatlaf.FlatClientProperties;
-import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.crmm.CrmmApi;
-import me.theentropyshard.crlauncher.crmm.ModInfo;
-import me.theentropyshard.crlauncher.crmm.model.datapack.Datapack;
-import me.theentropyshard.crlauncher.crmm.model.datapack.SearchDatapacksResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
-import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.logging.Log;
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-
-public class SearchCrmmDataModsView extends SearchCrmmModsView {
-    public SearchCrmmDataModsView(Instance instance, ModsTab modsTab) {
+public class SearchCrmmResourcePacksView extends SearchCrmmModsView {
+    public SearchCrmmResourcePacksView(Instance instance, ModsTab modsTab) {
         super(instance, modsTab);
 
         this.getSearchField().putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search data mods...");
@@ -44,7 +33,7 @@ public class SearchCrmmDataModsView extends SearchCrmmModsView {
     public void searchMods() {
         new DataModsSearchWorker(
             this.getSearchField(), this.getModCardsPanel(), this.getInstance(), this.getModsTab(),
-            DataModType.DATAMOD
+            DataModType.RESOURCE_PACK
         ).execute();
     }
 }

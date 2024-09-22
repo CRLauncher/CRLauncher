@@ -60,6 +60,22 @@ public class CrmmApi {
         }
     }
 
+    public SearchDatapacksResponse searchResourcePacks(String query) {
+        if (query.trim().isEmpty()) {
+            return this.crmmApi.searchResourcePacks();
+        } else {
+            return this.crmmApi.searchResourcePacks(query);
+        }
+    }
+
+    public SearchDatapacksResponse searchShaders(String query) {
+        if (query.trim().isEmpty()) {
+            return this.crmmApi.searchShaders();
+        } else {
+            return this.crmmApi.searchShaders(query);
+        }
+    }
+
     public ProjectResponse getProject(String slug) {
         return this.crmmApi.getProject(slug);
     }
