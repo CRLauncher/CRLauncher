@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.crmm;
 
+import me.theentropyshard.crlauncher.crmm.model.datapack.SearchDatapacksResponse;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
@@ -48,6 +49,14 @@ public class CrmmApi {
             return this.crmmApi.searchMods();
         } else {
             return this.crmmApi.searchMods(query);
+        }
+    }
+
+    public SearchDatapacksResponse searchDataMods(String query) {
+        if (query.trim().isEmpty()) {
+            return this.crmmApi.searchDatapacks();
+        } else {
+            return this.crmmApi.searchDatapacks(query);
         }
     }
 
