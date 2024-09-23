@@ -36,6 +36,7 @@ import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
+import me.theentropyshard.crlauncher.utils.ResourceUtils;
 import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
@@ -90,6 +91,9 @@ public class CRLauncher {
 
     public static JFrame frame;
 
+    private final List<Language> languages;
+    private int selectedLanguage;
+
     public CRLauncher(Args args, String[] rawArgs, Path workDir) {
         this.args = args;
         this.workDir = workDir;
@@ -111,6 +115,26 @@ public class CRLauncher {
 
         this.settingsFile = this.workDir.resolve("settings.json");
         this.settings = Settings.load(this.settingsFile);
+
+        this.languages = new ArrayList<>();
+
+        for (String lang : new String[]{"ru_RU"}) {
+            String resourcePath = "/lang/" + lang + ".json";
+
+            String json = null;
+
+            try {
+                json = ResourceUtils.readToString(resourcePath);
+            } catch (IOException e) {
+                Log.warn("Cannot load " + resourcePath + ": " + e.getMessage());
+            }
+
+            if (json == null) {
+                continue;
+            }
+
+            this.languages.add(new Language(json));
+        }
 
         this.httpClient = new OkHttpClient.Builder()
             .addNetworkInterceptor(new UserAgentInterceptor(CRLauncher.USER_AGENT))
