@@ -30,6 +30,7 @@ public class CrmmModsView extends JPanel {
     private SearchCrmmModsView dataModsModsView;
     private SearchCrmmModsView resourcePacksModsView;
     private SearchCrmmModsView shadersModsView;
+    private SearchCrmmModpacksView modpacksView;
 
     public CrmmModsView(Instance instance, ModsTab modsTab) {
         super(new BorderLayout());
@@ -38,6 +39,7 @@ public class CrmmModsView extends JPanel {
         this.dataModsModsView = new SearchCrmmDataModsView(instance, modsTab);
         this.resourcePacksModsView = new SearchCrmmResourcePacksView(instance, modsTab);
         this.shadersModsView = new SearchCrmmShadersView(instance, modsTab);
+        this.modpacksView = new SearchCrmmModpacksView(instance, modsTab);
 
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_TAB_AREA_ALIGNMENT, FlatClientProperties.TABBED_PANE_ALIGN_FILL);
@@ -46,6 +48,7 @@ public class CrmmModsView extends JPanel {
         tabbedPane.addTab("Data Mods", this.dataModsModsView);
         tabbedPane.addTab("Resource Packs", this.resourcePacksModsView);
         tabbedPane.addTab("Shaders", this.shadersModsView);
+        tabbedPane.addTab("Modpacks", this.modpacksView);
 
         tabbedPane.addChangeListener(e -> {
             int selectedIndex = tabbedPane.getSelectedIndex();

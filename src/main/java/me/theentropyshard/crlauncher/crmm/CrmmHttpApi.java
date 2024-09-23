@@ -51,6 +51,12 @@ public interface CrmmHttpApi {
     @GET("search?type=shader")
     SearchDatapacksResponse searchShaders(@Query("q") String query);
 
+    @GET("search?type=modpack")
+    SearchDatapacksResponse searchModpacks();
+
+    @GET("search?type=modpack")
+    SearchDatapacksResponse searchModpacks(@Query("q") String query);
+
     @GET("project/{slug}")
     ProjectResponse getProject(@Path("slug") String slug);
 

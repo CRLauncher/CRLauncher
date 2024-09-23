@@ -76,6 +76,14 @@ public class CrmmApi {
         }
     }
 
+    public SearchDatapacksResponse searchModpacks(String query) {
+        if (query.trim().isEmpty()) {
+            return this.crmmApi.searchModpacks();
+        } else {
+            return this.crmmApi.searchModpacks(query);
+        }
+    }
+
     public ProjectResponse getProject(String slug) {
         return this.crmmApi.getProject(slug);
     }

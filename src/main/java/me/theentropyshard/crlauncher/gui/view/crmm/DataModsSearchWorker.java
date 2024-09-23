@@ -58,6 +58,7 @@ public class DataModsSearchWorker extends Worker<List<Datapack>, Void> {
             case DATAMOD -> crmmApi.searchDataMods(this.searchField.getText());
             case RESOURCE_PACK -> crmmApi.searchResourcePacks(this.searchField.getText());
             case SHADER -> crmmApi.searchShaders(this.searchField.getText());
+            case MODPACK -> crmmApi.searchModpacks(this.searchField.getText());
         };
 
         return searchDatapacksResponse.getDatapacks();
