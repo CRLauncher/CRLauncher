@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -87,7 +88,9 @@ public class DataModsView extends JPanel {
         scrollPane.setBorder(null);
         this.add(scrollPane, BorderLayout.CENTER);
 
-        this.deleteDataModButton = new JButton("Delete data mod");
+        this.deleteDataModButton = new JButton(
+            CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.modsTab.vanilla.deleteModButton")
+        );
         this.deleteDataModButton.addActionListener(e ->
 
         {

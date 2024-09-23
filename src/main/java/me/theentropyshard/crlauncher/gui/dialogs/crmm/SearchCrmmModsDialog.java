@@ -30,13 +30,8 @@ import java.awt.*;
 
 public class SearchCrmmModsDialog extends AppDialog {
     public SearchCrmmModsDialog(Instance instance, ModsTab modsTab) {
-        super(CRLauncher.frame, "Search mods on CRMM");
-
-        /*SearchCrmmModsView modsView = new SearchCrmmModsView(instance, modsTab);
-        modsView.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
-        modsView.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-        modsView.searchMods();*/
+        super(CRLauncher.frame, CRLauncher.getInstance().getLanguage()
+            .getString("gui.searchCRMMModsDialog.title"));
 
         CrmmModsView modsView = new CrmmModsView(instance, modsTab);
         modsView.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));

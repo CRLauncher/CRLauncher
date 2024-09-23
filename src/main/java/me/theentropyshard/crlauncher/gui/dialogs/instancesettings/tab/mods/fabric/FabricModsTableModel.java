@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.instance.Instance;
 
@@ -26,13 +28,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FabricModsTableModel extends AbstractTableModel {
-    private static final String[] COLUMN_NAMES = {"Name", "Version", "Description", "Active"};
     private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class, Boolean.class};
 
     private final List<FabricMod> fabricMods;
+    private final String[] columnNames = {"Name", "Version", "Description", "Active"};
 
     public FabricModsTableModel(Instance oldInstance) {
         this.fabricMods = new ArrayList<>(oldInstance.getFabricMods());
+
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        this.columnNames[0] = language.getString("gui.instanceSettingsDialog.modsTab.modsTable.fabric.modName");
+        this.columnNames[1] = language.getString("gui.instanceSettingsDialog.modsTab.modsTable.fabric.modVersion");
+        this.columnNames[2] = language.getString("gui.instanceSettingsDialog.modsTab.modsTable.fabric.modDescription");
+        this.columnNames[3] = language.getString("gui.instanceSettingsDialog.modsTab.modsTable.fabric.modActive");
     }
 
     @Override
@@ -42,12 +51,12 @@ public class FabricModsTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return FabricModsTableModel.COLUMN_NAMES.length;
+        return this.columnNames.length;
     }
 
     @Override
     public String getColumnName(int column) {
-        return FabricModsTableModel.COLUMN_NAMES[column];
+        return this.columnNames[column];
     }
 
     @Override

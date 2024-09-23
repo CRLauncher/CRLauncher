@@ -19,6 +19,8 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
@@ -30,10 +32,13 @@ import java.io.IOException;
 
 public class JavaTab extends Tab {
     public JavaTab(Instance instance, JDialog dialog) {
-        super("Java", instance, dialog);
+        super(CRLauncher.getInstance().getLanguage()
+            .getString("gui.instanceSettingsDialog.javaTab.name"), instance, dialog);
 
         JPanel root = this.getRoot();
         root.setLayout(new GridBagLayout());
+
+        Language language = CRLauncher.getInstance().getLanguage();
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 2;
@@ -43,13 +48,20 @@ public class JavaTab extends Tab {
         JPanel javaInstallation = new JPanel(new GridLayout(0, 1));
         JTextField javaPathTextField = new JTextField();
         javaPathTextField.setText(instance.getJavaPath());
-        javaPathTextField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Path to java.exe");
+        javaPathTextField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
+            language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.textFieldPlaceholder"));
         javaInstallation.add(javaPathTextField);
-        javaInstallation.setBorder(new TitledBorder("Java Installation"));
+        javaInstallation.setBorder(new TitledBorder(
+            language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.borderName")
+        ));
 
         JPanel memorySettings = new JPanel(new GridLayout(2, 2));
-        JLabel minMemoryLabel = new JLabel("Minimum memory (Megabytes):");
-        JLabel maxMemoryLabel = new JLabel("Maximum memory (Megabytes):");
+        JLabel minMemoryLabel = new JLabel(
+            language.getString("gui.instanceSettingsDialog.javaTab.memorySettings.minimum") +
+                ":");
+        JLabel maxMemoryLabel = new JLabel(
+            language.getString("gui.instanceSettingsDialog.javaTab.memorySettings.maximum") +
+            ":");
         JTextField minMemoryField = new JTextField();
         minMemoryField.setText(String.valueOf(instance.getMinimumMemoryInMegabytes()));
         minMemoryField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "512");
@@ -60,7 +72,9 @@ public class JavaTab extends Tab {
         memorySettings.add(minMemoryField);
         memorySettings.add(maxMemoryLabel);
         memorySettings.add(maxMemoryField);
-        memorySettings.setBorder(new TitledBorder("Memory Settings"));
+        memorySettings.setBorder(new TitledBorder(
+            language.getString("gui.instanceSettingsDialog.javaTab.memorySettings.borderName")
+        ));
 
         gbc.gridy++;
         root.add(javaInstallation, gbc);
@@ -88,8 +102,8 @@ public class JavaTab extends Tab {
 
                 if (minimumMemoryInMegabytes > maximumMemoryInMegabytes) {
                     JOptionPane.showMessageDialog(JavaTab.this.getDialog(),
-                            "Minimum amount of RAM cannot be larger than maximum",
-                            "Error",
+                        language.getString("messages.gui.instanceSettingsDialog.ramMinCannotBeLargerMax"),
+                        language.getString("messages.gui.error"),
                             JOptionPane.ERROR_MESSAGE);
                     return;
                 }
@@ -97,8 +111,8 @@ public class JavaTab extends Tab {
                 if (minimumMemoryInMegabytes < 512) {
                     JOptionPane.showMessageDialog(
                             JavaTab.this.getDialog(),
-                            "Minimum amount of RAM cannot be less than 512 MiB",
-                            "Error",
+                        language.getString("messages.gui.instanceSettingsDialog.ramMinCannotBeLess512MB"),
+                        language.getString("messages.gui.error"),
                             JOptionPane.ERROR_MESSAGE
                     );
                 }

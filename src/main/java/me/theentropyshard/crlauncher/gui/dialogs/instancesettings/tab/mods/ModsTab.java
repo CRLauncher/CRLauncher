@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.crmm.SearchCrmmModsDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
@@ -53,7 +55,10 @@ public class ModsTab extends Tab implements ItemListener {
     private boolean versionsLoaded;
 
     public ModsTab(Instance instance, JDialog dialog) {
-        super("Mods", instance, dialog);
+        super(CRLauncher.getInstance().getLanguage()
+            .getString("gui.instanceSettingsDialog.modsTab.name"), instance, dialog);
+
+        Language language = CRLauncher.getInstance().getLanguage();
 
         this.lastType = instance.getType();
 
@@ -66,7 +71,8 @@ public class ModsTab extends Tab implements ItemListener {
         gbc.anchor = GridBagConstraints.NORTH;
 
         {
-            JPanel modLoader = this.getTitledPanel("Mod loader", 1, 1);
+            JPanel modLoader = this.getTitledPanel(
+                language.getString("gui.instanceSettingsDialog.modsTab.modLoader.borderName"), 1, 1);
             this.typeCombo = new JComboBox<>(InstanceType.values());
             for (int i = 0; i < this.typeCombo.getItemCount(); i++) {
                 if (this.typeCombo.getItemAt(i) == instance.getType()) {
@@ -98,7 +104,8 @@ public class ModsTab extends Tab implements ItemListener {
                 }
             });
 
-            this.loaderVersionsPanel = this.getTitledPanel("Loader version", 1, 1);
+            this.loaderVersionsPanel = this.getTitledPanel(
+                language.getString("gui.instanceSettingsDialog.modsTab.loaderVersion.borderName"), 1, 1);
             this.loaderVersionsPanel.setVisible(false);
             this.loaderVersionsPanel.add(this.loaderVersionCombo);
 
@@ -112,7 +119,8 @@ public class ModsTab extends Tab implements ItemListener {
         }
 
         {
-            this.mods = this.getTitledPanel("Mods", 1, 1);
+            this.mods = this.getTitledPanel(
+                language.getString("gui.instanceSettingsDialog.modsTab.modsTable.borderName"), 1, 1);
             this.updateModsView();
 
             this.mods.add(this.modsView);
@@ -125,10 +133,12 @@ public class ModsTab extends Tab implements ItemListener {
         {
             JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-            JButton openModsFolderButton = new JButton("Open mods folder");
+            JButton openModsFolderButton = new JButton(
+                language.getString("gui.instanceSettingsDialog.modsTab.openModsFolder")
+            );
             openModsFolderButton.addActionListener(e -> {
                 switch (instance.getType()) {
-                    case VANILLA -> OperatingSystem.open(instance.getCosmicDir().resolve("mods"));
+                    case VANILLA -> OperatingSystem.open(instance.getDataModsDir());
                     case FABRIC -> OperatingSystem.open(instance.getFabricModsDir());
                     case QUILT -> OperatingSystem.open(instance.getQuiltModsDir());
                     case PUZZLE -> OperatingSystem.open(instance.getPuzzleModsDir());
@@ -136,7 +146,9 @@ public class ModsTab extends Tab implements ItemListener {
             });
             bottomPanel.add(openModsFolderButton);
 
-            JButton searchModsButton = new JButton("Search mods on CRMM");
+            JButton searchModsButton = new JButton(
+                language.getString("gui.instanceSettingsDialog.modsTab.searchModsCRMM")
+            );
             searchModsButton.addActionListener(e -> {
                 new Worker<Void, Void>("searching mods") {
                     @Override

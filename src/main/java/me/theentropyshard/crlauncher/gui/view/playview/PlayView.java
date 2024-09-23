@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view.playview;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.CosmicRunner;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.gui.components.AddInstanceItem;
@@ -180,25 +181,29 @@ public class PlayView extends JPanel {
 
                 new CosmicRunner(item.getAssociatedInstance(), item).start();
             } else if (mouseButton == MouseEvent.BUTTON3) { // right mouse button
+                Language language = CRLauncher.getInstance().getLanguage();
+
                 Instance instance = item.getAssociatedInstance();
 
                 JPopupMenu popupMenu = new JPopupMenu();
 
-                JMenuItem editMenuItem = new JMenuItem("Edit");
+                JMenuItem editMenuItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.edit"));
                 editMenuItem.addActionListener(edit -> {
                     new InstanceSettingsDialog(instance);
                 });
                 popupMenu.add(editMenuItem);
 
-                JMenuItem iconMenuItem = new JMenuItem("Icon");
+                JMenuItem iconMenuItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.icon"));
                 iconMenuItem.addActionListener(edit -> {
                     new SelectIconDialog(item, instance);
                 });
                 popupMenu.add(iconMenuItem);
 
-                JMenuItem renameItem = new JMenuItem("Rename");
+                JMenuItem renameItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.rename"));
                 renameItem.addActionListener(rename -> {
-                    String newName = MessageBox.showInputMessage(CRLauncher.frame, "Rename instance", "Enter new name",
+                    String newName = MessageBox.showInputMessage(CRLauncher.frame,
+                        language.getString("gui.playView.renameInstanceDialog.title"),
+                        language.getString("gui.playView.renameInstanceDialog.message"),
                         instance.getName());
 
                     if (newName == null || newName.isEmpty()) {
@@ -208,7 +213,8 @@ public class PlayView extends JPanel {
                     InstanceManager manager = CRLauncher.getInstance().getInstanceManager();
                     try {
                         if (manager.renameInstance(instance, newName)) {
-                            MessageBox.showWarningMessage(CRLauncher.frame, "An invalid name was supplied! Valid name was created.");
+                            MessageBox.showWarningMessage(CRLauncher.frame,
+                                language.getString("messages.gui.playView.invalidInstanceName"));
                         }
                         item.instanceChanged(instance);
                     } catch (IOException ex) {
@@ -219,7 +225,7 @@ public class PlayView extends JPanel {
 
                 popupMenu.addSeparator();
 
-                JMenuItem deleteMenuItem = new JMenuItem("Delete");
+                JMenuItem deleteMenuItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.delete"));
                 deleteMenuItem.addActionListener(delete -> {
                     this.deleteInstance(item);
                 });
@@ -227,13 +233,13 @@ public class PlayView extends JPanel {
 
                 popupMenu.addSeparator();
 
-                JMenuItem openInstanceFolder = new JMenuItem("Open instance folder");
+                JMenuItem openInstanceFolder = new JMenuItem(language.getString("gui.instanceItem.contextMenu.openInstanceFolder"));
                 openInstanceFolder.addActionListener(open -> {
                     OperatingSystem.open(instance.getWorkDir());
                 });
                 popupMenu.add(openInstanceFolder);
 
-                JMenuItem openCosmicFolder = new JMenuItem("Open Cosmic folder");
+                JMenuItem openCosmicFolder = new JMenuItem(language.getString("gui.instanceItem.contextMenu.openCosmicFolder"));
                 openCosmicFolder.addActionListener(open -> {
                     OperatingSystem.open(instance.getCosmicDir());
                 });
@@ -253,27 +259,32 @@ public class PlayView extends JPanel {
                     return;
                 }
 
-                String lastPlayedTime = TimeUtils.getHoursMinutesSeconds(instance.getLastPlaytime());
-                String totalPlayedTime = TimeUtils.getHoursMinutesSeconds(instance.getTotalPlaytime());
+                Language language = CRLauncher.getInstance().getLanguage();
+                String lastPlayedForText = language.getString("gui.playView.lastPlayedFor");
+                String totalPlayedForText = language.getString("gui.playView.totalPlayedFor");
+                String runningText = language.getString("gui.playView.running");
+
+                String lastPlayedTime = TimeUtils.getHoursMinutesSecondsLocalized(instance.getLastPlaytime());
+                String totalPlayedTime = TimeUtils.getHoursMinutesSecondsLocalized(instance.getTotalPlaytime());
 
                 String timeString = "";
 
                 if (!lastPlayedTime.isEmpty()) {
-                    timeString = " - Last played for " + lastPlayedTime;
+                    timeString = " - " + lastPlayedForText + " " + lastPlayedTime;
                 }
 
                 if (!totalPlayedTime.isEmpty()) {
                     if (lastPlayedTime.isEmpty()) {
-                        timeString = " - Total played for " + totalPlayedTime;
+                        timeString = " - " + totalPlayedForText + " " + totalPlayedTime;
                     } else {
-                        timeString = timeString + ", Total played for " + totalPlayedTime;
+                        timeString = timeString + ", " + totalPlayedForText + " " + totalPlayedTime;
                     }
                 }
 
                 timeString = instance.getName() + timeString;
 
                 if (instance.isRunning()) {
-                    timeString = "[Running] " + timeString;
+                    timeString = "[" + runningText + "] " + timeString;
                 }
 
                 this.instanceInfoLabel.setText(timeString);
@@ -287,12 +298,15 @@ public class PlayView extends JPanel {
     }
 
     public void deleteInstance(InstanceItem item) {
+        Language language = CRLauncher.getInstance().getLanguage();
+
         Instance instance = item.getAssociatedInstance();
 
         boolean ok = MessageBox.showConfirmMessage(
             CRLauncher.frame,
-            "Delete instance",
-            "Are you sure you want to delete instance '" + instance.getName() + "'?"
+            language.getString("gui.playView.deleteInstanceTitle"),
+            language.getString("messages.gui.playView.deleteInstanceConfirm")
+                .replace("$$INSTANCE_NAME$$", instance.getName())
         );
 
         if (ok) {
@@ -300,7 +314,8 @@ public class PlayView extends JPanel {
             try {
                 instanceManager.removeInstance(instance.getName());
             } catch (IOException ex) {
-                Log.error("Could not remove instance instance " + instance.getWorkDir(), ex);
+                Log.error(language.getString("messages.gui.playView.cannotDeleteInstance")
+                    .replace("$$INSTANCE_DIR$$", instance.getWorkDir().toString()), ex);
 
                 return;
             }
@@ -309,6 +324,10 @@ public class PlayView extends JPanel {
             instancesPanel.remove(item);
             instancesPanel.revalidate();
         }
+    }
+
+    public void reloadLanguage() {
+        this.header.reloadLanguage();
     }
 
     public DefaultComboBoxModel<String> getModel() {

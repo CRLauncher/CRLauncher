@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -55,7 +56,9 @@ public class QuiltModsView extends JPanel {
     public QuiltModsView(Instance instance) {
         super(new BorderLayout());
 
-        JButton addJarMod = new JButton("Add Quilt mod");
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        JButton addJarMod = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.modsTable.cosmicQuilt.addModButton"));
         this.add(addJarMod, BorderLayout.NORTH);
 
         this.quiltModsModel = new QuiltModsTableModel(instance);
@@ -66,7 +69,8 @@ public class QuiltModsView extends JPanel {
                 protected Void work() throws Exception {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));
+                    String archives = language.getString("gui.general.archives");
+                    fileChooser.setFileFilter(new FileNameExtensionFilter(archives + " (*.zip, *.jar)", "zip", "jar"));
 
                     Settings settings = CRLauncher.getInstance().getSettings();
                     if (settings.lastDir != null && !settings.lastDir.isEmpty()) {
@@ -150,7 +154,7 @@ public class QuiltModsView extends JPanel {
             }.execute();
         });
 
-        this.deleteModButton = new JButton("Delete Quilt mod");
+        this.deleteModButton = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.modsTable.cosmicQuilt.deleteModButton"));
 
         JTable quiltModsTable = new JTable(this.quiltModsModel);
         quiltModsTable.getTableHeader().setEnabled(false);

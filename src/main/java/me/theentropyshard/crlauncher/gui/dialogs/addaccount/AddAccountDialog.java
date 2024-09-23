@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.addaccount;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AccountsView;
 
@@ -26,22 +27,27 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AddAccountDialog extends AppDialog {
+    public static final String TITLE = "gui.addAccountDialog.title";
+    public static final String OFFLINE_TAB_NAME = "gui.addAccountDialog.offline.tabName";
+    public static final String ITCH_TAB_NAME = "gui.addAccountDialog.itch.tabName";
     private final OfflineAccountCreationView offlineView;
     private final ItchIoAccountCreationView itchView;
 
     public AddAccountDialog(AccountsView accountsView) {
-        super(CRLauncher.frame, "Add new account");
+        super(CRLauncher.frame, CRLauncher.getInstance().getLanguage().getString(AddAccountDialog.TITLE));
 
         JPanel root = new JPanel(new BorderLayout());
 
         JTabbedPane viewSelector = new JTabbedPane(JTabbedPane.TOP);
         viewSelector.putClientProperty("JTabbedPane.tabAreaAlignment", "fill");
 
+        Language language = CRLauncher.getInstance().getLanguage();
+
         this.offlineView = new OfflineAccountCreationView(this, accountsView);
-        viewSelector.addTab("Offline", this.offlineView);
+        viewSelector.addTab(language.getString(AddAccountDialog.OFFLINE_TAB_NAME), this.offlineView);
 
         this.itchView = new ItchIoAccountCreationView(this, accountsView);
-        viewSelector.addTab("Itch.io", this.itchView);
+        viewSelector.addTab(language.getString(AddAccountDialog.ITCH_TAB_NAME), this.itchView);
 
         root.add(viewSelector, BorderLayout.CENTER);
         //root.setPreferredSize(new Dimension(450, 270));

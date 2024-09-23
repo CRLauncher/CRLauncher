@@ -19,8 +19,8 @@
 package me.theentropyshard.crlauncher.gui;
 
 import com.formdev.flatlaf.ui.FlatScrollPaneUI;
-import me.theentropyshard.crlauncher.BuildConfig;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
@@ -37,12 +37,19 @@ public class LauncherConsole {
     private static final int INITIAL_FONT_SIZE = 14;
     private static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, LauncherConsole.INITIAL_FONT_SIZE);
 
+    public static final String SCROLL_DOWN = "gui.console.scrollDown";
+    public static final String COPY = "gui.console.copyButton";
+    public static final String CLEAR = "gui.console.clearButton";
+    public static final String TITLE = "gui.console.title";
+
     private final JCheckBox scrollDown;
     public static LauncherConsole instance;
     private final JTextPane textPane;
     private final SimpleAttributeSet attrs;
     private final JFrame frame;
     private final JScrollPane scrollPane;
+    private final JButton copyButton;
+    private final JButton clearButton;
 
     public LauncherConsole() {
         this.textPane = new JTextPane() {
@@ -82,7 +89,9 @@ public class LauncherConsole {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         panel.add(bottomPanel, BorderLayout.SOUTH);
 
-        this.scrollDown = new JCheckBox("Scroll down");
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        this.scrollDown = new JCheckBox(language.getString(LauncherConsole.SCROLL_DOWN));
         this.scrollDown.setSelected(CRLauncher.getInstance().getSettings().consoleScrollDown);
         this.scrollDown.addActionListener(e -> {
             CRLauncher.getInstance().getSettings().consoleScrollDown = this.scrollDown.isSelected();
@@ -91,19 +100,19 @@ public class LauncherConsole {
 
         bottomPanel.add(this.scrollDown);
 
-        JButton copyButton = new JButton("Copy");
-        copyButton.addActionListener(e -> {
+        this.copyButton = new JButton(language.getString(LauncherConsole.COPY));
+        this.copyButton.addActionListener(e -> {
             OperatingSystem.copyToClipboard(this.textPane.getText());
         });
-        bottomPanel.add(copyButton);
+        bottomPanel.add(this.copyButton);
 
-        JButton clearButton = new JButton("Clear");
-        clearButton.addActionListener(e -> {
+        this.clearButton = new JButton(language.getString(LauncherConsole.CLEAR));
+        this.clearButton.addActionListener(e -> {
             this.textPane.setText("");
         });
-        bottomPanel.add(clearButton);
+        bottomPanel.add(this.clearButton);
 
-        this.frame = new JFrame(BuildConfig.APP_NAME + " console");
+        this.frame = new JFrame(language.getString(LauncherConsole.TITLE));
         this.frame.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         this.frame.add(panel, BorderLayout.CENTER);
         this.frame.pack();
@@ -157,6 +166,15 @@ public class LauncherConsole {
 
             this.scrollToBottom();
         });
+    }
+
+    public void reloadLanguage() {
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        this.frame.setTitle(language.getString(LauncherConsole.TITLE));
+        this.scrollDown.setText(language.getString(LauncherConsole.SCROLL_DOWN));
+        this.copyButton.setText(language.getString(LauncherConsole.COPY));
+        this.clearButton.setText(language.getString(LauncherConsole.CLEAR));
     }
 
     private static final class WrapEditorKit extends StyledEditorKit {

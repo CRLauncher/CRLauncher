@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
@@ -41,8 +42,18 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 
 public class AddInstanceDialog extends AppDialog {
-
-
+    public static final String TITLE = "gui.addInstanceDialog.title";
+    public static final String NAME_LABEL = "gui.addInstanceDialog.nameFieldLabel";
+    public static final String GROUP_LABEL = "gui.addInstanceDialog.groupFieldLabel";
+    public static final String AUTO_UPDATE_TO_LATEST = "gui.addInstanceDialog.autoUpdateToLatest";
+    public static final String FILTER = "gui.addInstanceDialog.filter";
+    public static final String REFRESH_BUTTON = "gui.addInstanceDialog.refreshButton";
+    public static final String ADD_BUTTON = "gui.addInstanceDialog.addButton";
+    public static final String CANCEL_BUTTON = "gui.addInstanceDialog.cancelButton";
+    public static final String EMPTY_NAME_MESSAGE = "messages.gui.addInstanceDialog.instanceNameCannotBeEmpty";
+    public static final String GROUP_NAME_EMPTY_MESSAGE = "messages.gui.addInstanceDialog.groupNameCannotBeEmpty";
+    public static final String VERSION_NOT_SELECTED_MESSAGE = "messages.gui.addInstanceDialog.cosmicVersionNotSelected";
+    public static final String UNABLE_TO_CREATE_MESSAGE = "messages.gui.addInstanceDialog.unableToCreateInstance";
     private final JTextField nameField;
     private final JTextField groupField;
     private final JButton addButton;
@@ -51,7 +62,8 @@ public class AddInstanceDialog extends AppDialog {
     private boolean nameEdited;
 
     public AddInstanceDialog(PlayView playView, String groupName) {
-        super(CRLauncher.frame, "Add New Instance");
+        super(CRLauncher.frame,
+            CRLauncher.getInstance().getLanguage().getString(AddInstanceDialog.TITLE));
 
         JPanel root = new JPanel(new BorderLayout());
 
@@ -69,13 +81,15 @@ public class AddInstanceDialog extends AppDialog {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(new EmptyBorder(10, 10, 0, 10));
 
+        Language language = CRLauncher.getInstance().getLanguage();
+
         JPanel headerPanelLeftPanel = new JPanel();
         headerPanelLeftPanel.setLayout(new GridLayout(2, 1));
-        headerPanelLeftPanel.add(new JLabel("Name:") {{
+        headerPanelLeftPanel.add(new JLabel(language.getString(AddInstanceDialog.NAME_LABEL) + ":") {{
             this.setVerticalTextPosition(JLabel.CENTER);
             this.setBorder(new EmptyBorder(0, 0, 0, 10));
         }});
-        headerPanelLeftPanel.add(new JLabel("Group:") {{
+        headerPanelLeftPanel.add(new JLabel(language.getString(AddInstanceDialog.GROUP_LABEL) + ":") {{
             this.setVerticalTextPosition(JLabel.CENTER);
             this.setBorder(new EmptyBorder(0, 0, 0, 10));
         }});
@@ -98,7 +112,7 @@ public class AddInstanceDialog extends AppDialog {
         headerPanel.add(headerPanelLeftPanel, BorderLayout.WEST);
         headerPanel.add(headerPanelRightPanel, BorderLayout.CENTER);
 
-        JCheckBox updateToLatestAutomatically = new JCheckBox("Automatically update to the latest version");
+        JCheckBox updateToLatestAutomatically = new JCheckBox(language.getString(AddInstanceDialog.AUTO_UPDATE_TO_LATEST));
         updateToLatestAutomatically.setSelected(CRLauncher.getInstance().getSettings().settingsDialogUpdateToLatest);
         updateToLatestAutomatically.addActionListener(e -> {
             Settings settings = CRLauncher.getInstance().getSettings();
@@ -159,7 +173,7 @@ public class AddInstanceDialog extends AppDialog {
         gbc.fill = GridBagConstraints.NONE;
         gbc.gridy++;
 
-        JLabel filterLabel = new JLabel("Filter");
+        JLabel filterLabel = new JLabel(language.getString(AddInstanceDialog.FILTER));
         filterLabel.setHorizontalAlignment(SwingConstants.CENTER);
         filterPanel.add(filterLabel, gbc);
 
@@ -190,7 +204,7 @@ public class AddInstanceDialog extends AppDialog {
         JPanel leftButtonsPanel = new JPanel(leftLayout);
         buttonsPanel.add(leftButtonsPanel, BorderLayout.WEST);
 
-        JButton refreshManifest = new JButton("Refresh");
+        JButton refreshManifest = new JButton(language.getString(AddInstanceDialog.REFRESH_BUTTON));
         refreshManifest.addActionListener(e -> {
             tableModel.reload(true);
             root.revalidate();
@@ -205,26 +219,29 @@ public class AddInstanceDialog extends AppDialog {
         JPanel rightButtonsPanel = new JPanel(rightLayout);
         buttonsPanel.add(rightButtonsPanel, BorderLayout.EAST);
 
-        this.addButton = new JButton("Add");
+        this.addButton = new JButton(language.getString(AddInstanceDialog.ADD_BUTTON));
         this.getDialog().getRootPane().setDefaultButton(this.addButton);
         this.addButton.setEnabled(false);
         this.addButton.addActionListener(e -> {
             String instanceName = this.nameField.getText();
             if (instanceName.trim().isEmpty()) {
-                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(), "Instance name cannot be empty");
+                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
+                    language.getString(AddInstanceDialog.EMPTY_NAME_MESSAGE));
 
                 return;
             }
 
             String chosenGroupName = this.groupField.getText();
             if (chosenGroupName.trim().isEmpty()) {
-                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(), "Group name cannot be empty!");
+                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
+                    language.getString(AddInstanceDialog.GROUP_NAME_EMPTY_MESSAGE));
 
                 return;
             }
 
             if (versionsTable.getSelectedRow() == -1) {
-                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(), "Cosmic version is not selected");
+                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
+                    language.getString(AddInstanceDialog.VERSION_NOT_SELECTED_MESSAGE));
 
                 return;
             }
@@ -251,12 +268,12 @@ public class AddInstanceDialog extends AppDialog {
 
                     Log.warn(ex.getMessage());
                 } catch (IOException ex) {
-                    Log.error("Unable to create new instance", ex);
+                    Log.error(language.getString(AddInstanceDialog.UNABLE_TO_CREATE_MESSAGE), ex);
                 }
             });
         });
         rightButtonsPanel.add(this.addButton);
-        JButton cancelButton = new JButton("Cancel");
+        JButton cancelButton = new JButton(language.getString(AddInstanceDialog.CANCEL_BUTTON));
         cancelButton.addActionListener(e -> {
             this.getDialog().dispose();
         });

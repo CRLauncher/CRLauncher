@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui;
 
 import com.formdev.flatlaf.FlatLaf;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.laf.DarkLauncherLaf;
@@ -40,15 +41,29 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Gui {
+    public static final String OPEN_LAUNCHER_FOLDER = "gui.general.openLauncherFolder";
+    public static final String CONSOLE_BUTTON_SHOW = "gui.general.consoleButton.show";
+    public static final String CONSOLE_BUTTON_HIDE = "gui.general.consoleButton.hide";
+    public static final String TAB_PLAY = "gui.general.tab.play";
+    public static final String TAB_ACCOUNTS = "gui.general.tab.accounts";
+    public static final String TAB_SETTINGS = "gui.general.tab.settings";
+    public static final String TAB_ABOUT = "gui.general.tab.about";
     private final JTabbedPane viewSelector;
     private final JFrame frame;
+    private final JButton openFolderButton;
+    private final JButton consoleButton;
 
     private PlayView playView;
     private AccountsView accountsView;
+    private SettingsView settingsView;
+    private AboutView aboutView;
 
     private boolean darkTheme;
     private boolean initialized;
     private boolean consoleOpen;
+
+    private String showConsoleText;
+    private String hideConsoleText;
 
     public Gui(String title, boolean darkTheme) {
         this.darkTheme = darkTheme;
@@ -60,6 +75,8 @@ public class Gui {
 
         this.switchTheme();
 
+        Language language = CRLauncher.getInstance().getLanguage();
+
         this.viewSelector = new JTabbedPane(JTabbedPane.LEFT);
 
         CRLauncher.frame = this.frame = new JFrame(title);
@@ -67,11 +84,11 @@ public class Gui {
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 5));
         bottomPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, UIManager.getColor("Component.borderColor")));
-        JButton openFolderButton = new JButton("Open launcher folder");
-        openFolderButton.addActionListener(e -> {
+        this.openFolderButton = new JButton(language.getString(Gui.OPEN_LAUNCHER_FOLDER));
+        this.openFolderButton.addActionListener(e -> {
             OperatingSystem.open(CRLauncher.getInstance().getWorkDir());
         });
-        bottomPanel.add(openFolderButton);
+        bottomPanel.add(this.openFolderButton);
 
         LauncherConsole console = new LauncherConsole();
         LauncherConsole.instance = console;
@@ -82,10 +99,13 @@ public class Gui {
             this.consoleOpen = true;
         }
 
-        JButton consoleButton = new JButton(this.consoleOpen ? "Hide console" : "Show console");
-        consoleButton.addActionListener(e -> {
+        this.showConsoleText = language.getString(Gui.CONSOLE_BUTTON_SHOW);
+        this.hideConsoleText = language.getString(Gui.CONSOLE_BUTTON_HIDE);
+
+        this.consoleButton = new JButton(this.consoleOpen ? this.hideConsoleText : this.showConsoleText);
+        this.consoleButton.addActionListener(e -> {
             this.consoleOpen = !this.consoleOpen;
-            consoleButton.setText(this.consoleOpen ? "Hide console" : "Show console");
+            this.consoleButton.setText(this.consoleOpen ? this.hideConsoleText : this.showConsoleText);
             console.setVisible(this.consoleOpen);
         });
 
@@ -93,17 +113,44 @@ public class Gui {
             @Override
             public void windowClosing(WindowEvent e) {
                 Gui.this.consoleOpen = !Gui.this.consoleOpen;
-                consoleButton.setText(Gui.this.consoleOpen ? "Hide console" : "Show console");
+                Gui.this.consoleButton.setText(Gui.this.consoleOpen ? Gui.this.hideConsoleText : Gui.this.showConsoleText);
             }
         });
 
-        bottomPanel.add(consoleButton);
+        bottomPanel.add(this.consoleButton);
 
         this.frame.add(bottomPanel, BorderLayout.SOUTH);
 
         this.frame.getContentPane().setPreferredSize(new Dimension(CRLauncher.WIDTH, CRLauncher.HEIGHT));
         this.frame.pack();
         SwingUtils.centerWindow(this.frame, 0);
+    }
+
+    public void reloadLanguage() {
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        UIManager.put("OptionPane.yesButtonText", language.getString("gui.general.yes"));
+        UIManager.put("OptionPane.noButtonText", language.getString("gui.general.no"));
+
+        this.viewSelector.setTitleAt(0, language.getString(Gui.TAB_PLAY));
+        this.viewSelector.setTitleAt(1, language.getString(Gui.TAB_ACCOUNTS));
+        this.viewSelector.setTitleAt(2, language.getString(Gui.TAB_SETTINGS));
+        this.viewSelector.setTitleAt(3, language.getString(Gui.TAB_ABOUT));
+
+        this.openFolderButton.setText(language.getString(Gui.OPEN_LAUNCHER_FOLDER));
+
+        this.showConsoleText = language.getString(Gui.CONSOLE_BUTTON_SHOW);
+        this.hideConsoleText = language.getString(Gui.CONSOLE_BUTTON_HIDE);
+
+        this.consoleButton.setText(this.consoleOpen ? this.hideConsoleText : this.showConsoleText);
+
+        LauncherConsole.instance.reloadLanguage();
+        this.playView.reloadLanguage();
+        this.accountsView.reloadLanguage();
+        this.settingsView.reloadLanguage();
+        this.aboutView.reloadLanguage();
+
+        SwingUtilities.updateComponentTreeUI(this.frame);
     }
 
     public void switchTheme() {
@@ -169,11 +216,15 @@ public class Gui {
         SwingUtilities.invokeLater(() -> {
             this.playView = new PlayView();
             this.accountsView = new AccountsView();
+            this.settingsView = new SettingsView();
+            this.aboutView = new AboutView();
 
-            this.viewSelector.addTab("Play", this.playView);
-            this.viewSelector.addTab("Accounts", this.accountsView);
-            this.viewSelector.addTab("Settings", new SettingsView());
-            this.viewSelector.addTab("About", new AboutView());
+            Language language = CRLauncher.getInstance().getLanguage();
+
+            this.viewSelector.addTab(language.getString(Gui.TAB_PLAY), this.playView);
+            this.viewSelector.addTab(language.getString(Gui.TAB_ACCOUNTS), this.accountsView);
+            this.viewSelector.addTab(language.getString(Gui.TAB_SETTINGS), this.settingsView);
+            this.viewSelector.addTab(language.getString(Gui.TAB_ABOUT), this.aboutView);
 
             this.frame.setVisible(true);
 

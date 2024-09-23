@@ -46,10 +46,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -91,8 +88,7 @@ public class CRLauncher {
 
     public static JFrame frame;
 
-    private final List<Language> languages;
-    private int selectedLanguage;
+    private final Map<String, Language> languages;
 
     public CRLauncher(Args args, String[] rawArgs, Path workDir) {
         this.args = args;
@@ -116,9 +112,9 @@ public class CRLauncher {
         this.settingsFile = this.workDir.resolve("settings.json");
         this.settings = Settings.load(this.settingsFile);
 
-        this.languages = new ArrayList<>();
+        this.languages = new LinkedHashMap<>();
 
-        for (String lang : new String[]{"ru_RU"}) {
+        for (String lang : new String[]{"en_US", "ru_RU"}) {
             String resourcePath = "/lang/" + lang + ".json";
 
             String json = null;
@@ -133,8 +129,15 @@ public class CRLauncher {
                 continue;
             }
 
-            this.languages.add(new Language(json));
+            Language language = new Language(json);
+            this.languages.put(language.getName(), language);
         }
+
+        Language language = this.getLanguage();
+        UIManager.put("OptionPane.yesButtonText", language.getString("gui.general.yes"));
+        UIManager.put("OptionPane.noButtonText", language.getString("gui.general.no"));
+        UIManager.put("OptionPane.okButtonText", language.getString("gui.general.ok"));
+        UIManager.put("OptionPane.cancelButtonText", language.getString("gui.general.cancel"));
 
         this.httpClient = new OkHttpClient.Builder()
             .addNetworkInterceptor(new UserAgentInterceptor(CRLauncher.USER_AGENT))
@@ -327,15 +330,17 @@ public class CRLauncher {
     }
 
     public Language getLanguage() {
-        return this.languages.get(this.selectedLanguage);
-    }
+        Language language = this.languages.get(this.settings.language);
 
-    public void setSelectedLanguage(int selectedLanguage) {
-        if (selectedLanguage < 0 || selectedLanguage > this.languages.size()) {
-            throw new IllegalArgumentException("language is out of bounds: " + selectedLanguage);
+        if (language == null) {
+            return this.languages.get("English");
         }
 
-        this.selectedLanguage = selectedLanguage;
+        return language;
+    }
+
+    public Map<String, Language> getLanguages() {
+        return this.languages;
     }
 
     private static void setInstance(CRLauncher instance) {

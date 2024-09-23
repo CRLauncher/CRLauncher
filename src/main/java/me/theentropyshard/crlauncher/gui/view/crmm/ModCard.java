@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.gui.utils.ClickThroughListener;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
@@ -75,6 +76,8 @@ public class ModCard extends JPanel {
 
         this.fetchIcon(modInfo);
 
+        Language language = CRLauncher.getInstance().getLanguage();
+
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
 
@@ -130,19 +133,38 @@ public class ModCard extends JPanel {
         JPanel downloadsFollowersPanel = new JPanel(new GridLayout(2, 1));
         downloadsFollowersPanel.setOpaque(false);
 
-        JLabel downloadsLabel = new JLabel(modInfo.getDownloads() + " downloads");
+        int downloads = Integer.parseInt(modInfo.getDownloads());
+        String downloadsText;
+        if (downloads == 1) {
+            downloadsText = downloads + " " + language.getString("gui.searchCRMMModsDialog.download1");
+        } else if (downloads == 2 || downloads == 3 || downloads == 4) {
+            downloadsText = downloads + " " + language.getString("gui.searchCRMMModsDialog.downloads234");
+        } else {
+            downloadsText = downloads + " " + language.getString("gui.searchCRMMModsDialog.downloads");
+        }
+        JLabel downloadsLabel = new JLabel(downloadsText);
         downloadsLabel.setFont(downloadsLabel.getFont().deriveFont(14.0f));
         downloadsLabel.setHorizontalAlignment(JLabel.RIGHT);
         downloadsFollowersPanel.add(downloadsLabel);
 
-        JLabel followersLabel = new JLabel(modInfo.getFollowers() + " followers");
+        int followers = Integer.parseInt(modInfo.getFollowers());
+        String followersText;
+        if (followers == 1) {
+            followersText = followers + " " + language.getString("gui.searchCRMMModsDialog.follower1");
+        } else if (followers == 2 || followers == 3 || followers == 4) {
+            followersText = followers + " " + language.getString("gui.searchCRMMModsDialog.followers234");
+        } else {
+            followersText = followers + " " + language.getString("gui.searchCRMMModsDialog.followers");
+        }
+        JLabel followersLabel = new JLabel(followersText);
         followersLabel.setFont(followersLabel.getFont().deriveFont(14.0f));
         followersLabel.setHorizontalAlignment(JLabel.RIGHT);
         downloadsFollowersPanel.add(followersLabel);
 
         infoPanel.add(downloadsFollowersPanel, BorderLayout.NORTH);
 
-        JLabel updatedLabel = new JLabel("Updated " + ModCard.getAgoFromNow(OffsetDateTime.parse(modInfo.getDateUpdated())));
+        JLabel updatedLabel = new JLabel(language.getString("general.updated") + " " +
+            ModCard.getAgoFromNow(OffsetDateTime.parse(modInfo.getDateUpdated())));
         updatedLabel.setFont(updatedLabel.getFont().deriveFont(14.0f));
         updatedLabel.setHorizontalAlignment(JLabel.RIGHT);
         infoPanel.add(updatedLabel, BorderLayout.SOUTH);
@@ -204,13 +226,16 @@ public class ModCard extends JPanel {
     }
 
     public static String getAgoFromNow(Temporal temporal) {
+        Language language = CRLauncher.getInstance().getLanguage();
+        String ago = language.getString("general.time.ago");
+
         OffsetDateTime now = OffsetDateTime.now();
 
-        long years = ChronoUnit.YEARS.between(temporal, now);
+        int years = (int) ChronoUnit.YEARS.between(temporal, now);
         if (years == 0) {
-            long months = ChronoUnit.MONTHS.between(temporal, now);
+            int months = (int) ChronoUnit.MONTHS.between(temporal, now);
             if (months == 0) {
-                long weeks = ChronoUnit.WEEKS.between(temporal, now);
+                int weeks = (int) ChronoUnit.WEEKS.between(temporal, now);
                 if (weeks == 0) {
                     int days = (int) ChronoUnit.DAYS.between(temporal, now);
                     if (days == 0) {
@@ -219,49 +244,52 @@ public class ModCard extends JPanel {
                             int minutes = (int) ChronoUnit.MINUTES.between(temporal, now);
                             if (minutes == 0) {
                                 int seconds = (int) ChronoUnit.SECONDS.between(temporal, now);
-
-                                return seconds + " seconds ago";
+                                return switch (seconds) {
+                                    case 1 -> seconds + " " + language.getString("general.time.units.second1") + " " + ago;
+                                    case 2, 3, 4 -> seconds + " " + language.getString("general.time.units.seconds234") + " " + ago;
+                                    default -> seconds + " " + language.getString("general.time.units.seconds") + " " + ago;
+                                };
                             } else {
-                                if (minutes == 1) {
-                                    return "1 minute ago";
-                                } else {
-                                    return minutes + " minutes ago";
-                                }
+                                return switch (minutes) {
+                                    case 1 -> minutes + " " + language.getString("general.time.units.minute1") + " " + ago;
+                                    case 2, 3, 4 -> minutes + " " + language.getString("general.time.units.minutes234") + " " + ago;
+                                    default -> minutes + " " + language.getString("general.time.units.minutes") + " " + ago;
+                                };
                             }
                         } else {
-                            if (hours == 1) {
-                                return "1 hour ago";
-                            } else {
-                                return hours + " hours ago";
-                            }
+                            return switch (hours) {
+                                case 1 -> hours + " " + language.getString("general.time.units.hour1") + " " + ago;
+                                case 2, 3, 4 -> hours + " " + language.getString("general.time.units.hours234") + " " + ago;
+                                default -> hours + " " + language.getString("general.time.units.hours") + " " + ago;
+                            };
                         }
                     } else {
-                        if (days == 1) {
-                            return "yesterday";
-                        } else {
-                            return days + " days ago";
-                        }
+                        return switch (days) {
+                            case 1 -> language.getString("general.time.units.yesterday");
+                            case 2, 3, 4 -> days + " " + language.getString("general.time.units.days234") + " " + ago;
+                            default -> days + " " + language.getString("general.time.units.days") + " " + ago;
+                        };
                     }
                 } else {
-                    if (weeks == 1) {
-                        return "1 week ago";
-                    } else {
-                        return weeks + " weeks ago";
-                    }
+                    return switch (weeks) {
+                        case 1 -> weeks + " " + language.getString("general.time.units.week1") + " " + ago;
+                        case 2, 3, 4 -> weeks + " " + language.getString("general.time.units.weeks234") + " " + ago;
+                        default -> weeks + " " + language.getString("general.time.units.weeks") + " " + ago;
+                    };
                 }
             } else {
-                if (months == 1) {
-                    return "1 month ago";
-                } else {
-                    return months + " months ago";
-                }
+                return switch (months) {
+                    case 1 -> months + " " + language.getString("general.time.units.month1") + " " + ago;
+                    case 2, 3, 4 -> months + " " + language.getString("general.time.units.months234") + " " + ago;
+                    default -> months + " " + language.getString("general.time.units.months") + " " + ago;
+                };
             }
         } else {
-            if (years == 1) {
-                return "1 year ago";
-            } else {
-                return years + " years ago";
-            }
+            return switch (years) {
+                case 1 -> years + " " + language.getString("general.time.units.year1") + " " + ago;
+                case 2, 3, 4 -> years + " " + language.getString("general.time.units.years234") + " " + ago;
+                default -> years + " " + language.getString("general.time.units.years") + " " + ago;
+            };
         }
     }
 

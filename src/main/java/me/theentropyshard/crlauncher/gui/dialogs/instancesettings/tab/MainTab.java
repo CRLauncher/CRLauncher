@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -42,10 +43,13 @@ public class MainTab extends Tab {
     private final String oldWindowTitle;
 
     public MainTab(Instance instance, JDialog dialog) {
-        super("Main", instance, dialog);
+        super(CRLauncher.getInstance().getLanguage()
+            .getString("gui.instanceSettingsDialog.mainTab.name"), instance, dialog);
 
         JPanel root = this.getRoot();
         root.setLayout(new GridBagLayout());
+
+        Language language = CRLauncher.getInstance().getLanguage();
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 2;
@@ -54,7 +58,9 @@ public class MainTab extends Tab {
 
         {
             JPanel crVersionSettings = new JPanel(new GridLayout(0, 1));
-            crVersionSettings.setBorder(new TitledBorder("Cosmic Reach version"));
+            crVersionSettings.setBorder(new TitledBorder(
+                language.getString("gui.instanceSettingsDialog.mainTab.cosmicReachVersion.borderName")
+            ));
 
             this.versionsCombo = new JComboBox<>();
             this.versionsCombo.addItemListener(e -> {
@@ -67,7 +73,9 @@ public class MainTab extends Tab {
             });
             crVersionSettings.add(this.versionsCombo);
 
-            JCheckBox updateToLatestAutomatically = new JCheckBox("Automatically update to the latest version");
+            JCheckBox updateToLatestAutomatically = new JCheckBox(
+                language.getString("gui.instanceSettingsDialog.mainTab.cosmicReachVersion.autoUpdateToLatest")
+            );
             updateToLatestAutomatically.setSelected(instance.isAutoUpdateToLatest());
             updateToLatestAutomatically.addActionListener(e -> {
                 instance.setAutoUpdateToLatest(!instance.isAutoUpdateToLatest());
@@ -82,10 +90,13 @@ public class MainTab extends Tab {
             this.oldWindowTitle = instance.getCustomWindowTitle();
 
             this.windowTitleField = new JTextField(instance.getCustomWindowTitle());
-            this.windowTitleField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Set custom window title here");
+            this.windowTitleField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
+                language.getString("gui.instanceSettingsDialog.mainTab.otherSettings.textFieldPlaceholder"));
 
             JPanel otherSettings = new JPanel(new GridLayout(1, 1));
-            otherSettings.setBorder(new TitledBorder("Other"));
+            otherSettings.setBorder(new TitledBorder(
+                language.getString("gui.instanceSettingsDialog.mainTab.otherSettings.borderName")
+            ));
 
             otherSettings.add(this.windowTitleField);
 
@@ -113,7 +124,8 @@ public class MainTab extends Tab {
 
                     MessageBox.showErrorMessage(
                             CRLauncher.frame,
-                            "Could not get versions: " + e.getMessage()
+                            language.getString("messages.gui.instanceSettingsDialog.couldNotLoadVersions") +
+                                ": " + e.getMessage()
                     );
 
                     return;

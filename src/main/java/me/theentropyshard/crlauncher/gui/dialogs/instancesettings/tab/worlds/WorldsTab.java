@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
@@ -39,7 +40,10 @@ import java.util.concurrent.ExecutionException;
 
 public class WorldsTab extends Tab {
     public WorldsTab(Instance instance, JDialog dialog) {
-        super("Worlds", instance, dialog);
+        super(CRLauncher.getInstance().getLanguage()
+            .getString("gui.instanceSettingsDialog.worldsTab.name"), instance, dialog);
+
+        Language language = CRLauncher.getInstance().getLanguage();
 
         JTable worldsTable = new JTable();
         worldsTable.getTableHeader().setEnabled(false);
@@ -74,7 +78,9 @@ public class WorldsTab extends Tab {
         });
 
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem copyItem = new JMenuItem("Copy seed");
+        JMenuItem copyItem = new JMenuItem(
+            language.getString("gui.instanceSettingsDialog.worldsTab.contextMenu.copySeed")
+        );
         copyItem.addActionListener(e -> {
             int selectedRow = worldsTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -87,7 +93,9 @@ public class WorldsTab extends Tab {
 
         popupMenu.add(copyItem);
 
-        JMenuItem deleteItem = new JMenuItem("Delete");
+        JMenuItem deleteItem = new JMenuItem(
+            language.getString("gui.instanceSettingsDialog.worldsTab.contextMenu.delete")
+        );
         deleteItem.addActionListener(e -> {
             int selectedRow = worldsTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -96,8 +104,10 @@ public class WorldsTab extends Tab {
 
             CosmicWorld world = worldsModel.worldAt(selectedRow);
 
-            boolean ok = MessageBox.showConfirmMessage(CRLauncher.frame, "Deleting world",
-                "Are you sure that you want to delete world '" + world.getWorldDisplayName() + "'?");
+            boolean ok = MessageBox.showConfirmMessage(CRLauncher.frame,
+                language.getString("gui.instanceSettingsDialog.worldsTab.deletingWorld"),
+                language.getString("messages.gui.instanceSettingsDialog.deleteWorldSure")
+                    .replace("$$WORLD_NAME$$", world.getWorldDisplayName()));
 
             if (!ok) {
                 return;
@@ -117,8 +127,9 @@ public class WorldsTab extends Tab {
                             worldDir, ex);
 
                         MessageBox.showErrorMessage(CRLauncher.frame,
-                            "Could not delete world '" + world.getWorldDisplayName() + "' located at '" +
-                                worldDir);
+                            language.getString("messages.gui.instanceSettingsDialog.couldNotDeleteWorld")
+                                .replace("$$WORLD_NAME$$", world.getWorldDisplayName())
+                                .replace("$$WORLD_DIR$$", worldDir.toString()));
                     }
 
                     return false;

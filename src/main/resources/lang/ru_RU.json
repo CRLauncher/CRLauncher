@@ -3,6 +3,42 @@
         "name": "Russian",
         "displayName": "Русский"
     },
+    "messages": {
+        "gui": {
+            "error": "Ошибка",
+            "addAccountDialog": {
+                "offline": {
+                    "enterUsername": "Введите имя"
+                },
+                "itch": {
+                    "apiKeyCannotBeEmpty": "API-ключ не может быть пустым"
+                }
+            },
+            "playView": {
+                "deleteInstanceConfirm": "Вы уверены, что хотите удалить инстанс '$$INSTANCE_NAME$$'?",
+                "cannotDeleteInstance": "Не удалось удалить $$INSTANCE_DIR$$",
+                "invalidInstanceName": "Было введено невалидное имя! Валидное имя было создано."
+            },
+            "addInstanceDialog": {
+                "instanceNameCannotBeEmpty": "Имя инстанса не может быть пустым!",
+                "groupNameCannotBeEmpty": "Имя группы не может быть пустым!",
+                "cosmicVersionNotSelected": "Версия Cosmic Reach не выбрана!",
+                "unableToCreateInstance": "Не удалось добавить инстанс"
+            },
+            "instanceSettingsDialog": {
+                "couldNotLoadVersions": "Не удалось загрузить версии",
+                "ramMinCannotBeLargerMax": "Minimum amount of RAM cannot be larger than maximum",
+                "ramMinCannotBeLess512MB": "Minimum amount of RAM cannot be less than 512 MiB",
+                "deleteWorldSure": "Вы уверены, что хотите удалить мир '$$WORLD_NAME$$'?",
+                "couldNotDeleteWorld": "Не удалось удалить мир '$$WORLD_NAME$$' в $$WORLD_DIR$$"
+            },
+            "mods": {
+                "modAddedName": "Mod with name '$$MOD_NAME$$' already added!",
+                "modAddedId": "Mod with id '$$MOD_ID$$' already added!",
+                "modInvalid": "$$MOD_PATH$$ is not a valid $$MOD_LOADER$$ mod!"
+            }
+        }
+    },
     "gui": {
         "instanceItem": {
             "contextMenu": {
@@ -17,18 +53,21 @@
         "instanceSettingsDialog": {
             "title": "Настройки инстанса - $$INSTANCE_NAME$$",
             "mainTab": {
+                "name": "Основное",
                 "cosmicReachVersion": {
                     "borderName": "Версия Cosmic Reach",
                     "autoUpdateToLatest": "Автоматически обновлять до последней версии"
                 },
                 "otherSettings": {
                     "borderName": "Другое",
-                    "titleFieldPlaceholder": "Впишите кастомное название окна Cosmic Reach"
+                    "textFieldPlaceholder": "Впишите кастомное название окна Cosmic Reach"
                 }
             },
             "javaTab": {
+                "name": "Java",
                 "javaInstallation": {
-                    "borderName": "Установка Java"
+                    "borderName": "Установка Java",
+                    "textFieldPlaceholder": "Путь до javaw.exe"
                 },
                 "memorySettings": {
                     "borderName": "Выделение памяти",
@@ -37,6 +76,7 @@
                 }
             },
             "modsTab": {
+                "name": "Моды",
                 "modLoader": {
                     "borderName": "Загрузчик модов",
                     "options": {
@@ -50,6 +90,7 @@
                     "borderName": "Версия загрузчика"
                 },
                 "modsTable": {
+                    "borderName": "Моды",
                     "vanilla": {
                         "modFolder": "Папка мода",
                         "deleteModButton": "Удалить дата-мод"
@@ -83,12 +124,18 @@
                 "searchModsCRMM": "Найти моды на CRMM"
             },
             "worldsTab": {
+                "name": "Миры",
                 "table": {
                     "worldName": "Имя",
                     "worldSeed": "Сид",
                     "lastPlayed": "Последняя игра",
                     "createdAt": "Создан"
-                }
+                },
+                "contextMenu": {
+                    "copySeed": "Копировать сид",
+                    "delete": "Удалить"
+                },
+                "deletingWorld": "Удаление мира"
             }
         },
         "searchCRMMModsDialog": {
@@ -99,6 +146,7 @@
             "follower1": "подписчик",
             "followers234": "подписчика",
             "followers": "подписчиков",
+            "downloadButton": "Скачать",
             "mods": "Моды",
             "datamods": "Дата-моды",
             "resourcePacks": "Ресурс-паки",
@@ -121,6 +169,7 @@
                 "tabName": "Itch.io",
                 "textFieldPlaceholder": "Введите API-ключ Itch.io"
             },
+            "accountExists": "Аккаунт с ником '$$ACCOUNT_NAME$$' уже добавлен",
             "addButton": "Добавить"
         },
         "console": {
@@ -130,6 +179,11 @@
             "clearButton": "Очистить"
         },
         "general": {
+            "yes": "Да",
+            "no": "Нет",
+            "ok": "Ок",
+            "cancel": "Отмена",
+            "archives": "Архивы",
             "openLauncherFolder": "Открыть папку лаунчера",
             "consoleButton": {
                 "show": "Показать консоль",
@@ -144,7 +198,15 @@
         },
         "playView": {
             "instanceGroup": "Группа инстансов",
-            "account": "Аккаунт"
+            "account": "Аккаунт",
+            "deleteInstanceTitle": "Удалить инстанс",
+            "renameInstanceDialog": {
+                "title": "Переименовать инстанс",
+                "message": "Введите новое имя"
+            },
+            "lastPlayedFor": "Последний раз",
+            "totalPlayedFor": "Всего",
+            "running": "Запущено"
         },
         "accountsView": {
             "addAccountButton": "Нажмите, чтобы добавить аккаунт"
@@ -185,14 +247,15 @@
                         "exitLauncher": "Закрывать лаунчер, если код выхода 0 (ок)"
                     }
                 },
-                "checkForUpdatesAtStartup": "Проверять обновления при запуске"
+                "checkForUpdatesAtStartup": "Проверять обновления при запуске",
+                "language": "Язык"
             }
         },
         "aboutView": {
             "lines": {
-                "line1": "CRLauncher $$GAME_VERSION$$ - простой лаунчер для Cosmic Reach",
+                "line1": "CRLauncher $$LAUNCHER_VERSION$$ - простой лаунчер для Cosmic Reach",
                 "line2": "сделано TheEntropyShard",
-                "line3": "Больше на $$GAME_URL$$"
+                "line3": "Больше на $$LAUNCHER_URL$$"
             }
         },
         "addInstanceDialog": {
@@ -212,31 +275,34 @@
         }
     },
     "general": {
+        "updated": "Обновлено",
         "time": {
             "dateFormat": "dd.MM.yyyy",
-            "ago": {
-                "secondAgo1": "секунду назад",
-                "secondsAgo234": "секунды назад",
-                "secondsAgo": "секунд назад",
-                "minuteAgo1": "минуту назад",
-                "minutesAgo234": "минуты назад",
-                "minutesAgo": "минут назад",
-                "hourAgo1": "час назад",
-                "hoursAgo234": "часа назад",
-                "hoursAgo": "часов назад",
-                "dayAgo1": "день назад",
-                "daysAgo234": "дня назад",
-                "daysAgo": "дней назад",
+            "ago": "назад",
+            "units": {
+                "second1": "секунду",
+                "seconds234": "секунды",
+                "seconds": "секунд",
+                "minute1": "минуту",
+                "minutes234": "минуты",
+                "minutes": "минут",
+                "hour1": "час",
+                "hours234": "часа",
+                "hours": "часов",
+                "day1": "день",
+                "days234": "дня",
+                "days": "дней",
+                "today": "сегодня",
                 "yesterday": "вчера",
-                "weekAgo1": "неделю назад",
-                "weeksAgo234": "недели назад",
-                "weeksAgo": "недель назад",
-                "monthAgo1": "месяц назад",
-                "monthsAgo234": "месяца назад",
-                "monthsAgo": "месяцев назад",
-                "yearAgo1": "год назад",
-                "yearsAgo234": "года назад",
-                "yearsAgo": "лет назад"
+                "week1": "неделю",
+                "weeks234": "недели",
+                "weeks": "недель",
+                "month1": "месяц",
+                "months234": "месяца",
+                "months": "месяцев",
+                "year1": "год",
+                "years234": "года",
+                "years": "лет"
             }
         }
     }

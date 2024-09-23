@@ -19,9 +19,9 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
-import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
@@ -31,8 +31,6 @@ import me.theentropyshard.crlauncher.utils.StreamUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.FileHeader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -44,11 +42,10 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FabricModsView extends JPanel {
-    
+
 
     private final FabricModsTableModel fabricModsModel;
     private final JButton deleteModButton;
@@ -56,7 +53,9 @@ public class FabricModsView extends JPanel {
     public FabricModsView(Instance instance) {
         super(new BorderLayout());
 
-        JButton addJarMod = new JButton("Add Fabric mod");
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        JButton addJarMod = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.modsTable.fabric.addModButton"));
         this.add(addJarMod, BorderLayout.NORTH);
 
         this.fabricModsModel = new FabricModsTableModel(instance);
@@ -67,7 +66,8 @@ public class FabricModsView extends JPanel {
                 protected Void work() throws Exception {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));
+                    String archives = language.getString("gui.general.archives");
+                    fileChooser.setFileFilter(new FileNameExtensionFilter(archives + " (*.zip, *.jar)", "zip", "jar"));
 
                     Settings settings = CRLauncher.getInstance().getSettings();
                     if (settings.lastDir != null && !settings.lastDir.isEmpty()) {
@@ -130,7 +130,7 @@ public class FabricModsView extends JPanel {
             }.execute();
         });
 
-        this.deleteModButton = new JButton("Delete Fabric mod");
+        this.deleteModButton = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.modsTable.puzzle.deleteModButton"));
 
         JTable fabricModsTable = new JTable(this.fabricModsModel);
         fabricModsTable.addMouseListener(new MouseAdapter() {

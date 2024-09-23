@@ -18,11 +18,7 @@
 
 package me.theentropyshard.crlauncher.cosmic.version;
 
-import java.time.format.DateTimeFormatter;
-
 public class Version {
-    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
     /**
      * Version id
      */
@@ -60,13 +56,13 @@ public class Version {
     @Override
     public String toString() {
         return "Version{" +
-                "id='" + this.id + '\'' +
-                ", type=" + this.type +
-                ", releaseTime='" + this.releaseTime + '\'' +
-                ", url='" + this.url + '\'' +
-                ", hash='" + this.sha256 + '\'' +
-                ", size=" + this.size +
-                '}';
+            "id='" + this.id + '\'' +
+            ", type=" + this.type +
+            ", releaseTime='" + this.releaseTime + '\'' +
+            ", url='" + this.url + '\'' +
+            ", hash='" + this.sha256 + '\'' +
+            ", size=" + this.size +
+            '}';
     }
 
     public String getId() {

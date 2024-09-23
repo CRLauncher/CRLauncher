@@ -25,10 +25,12 @@ import me.theentropyshard.crlauncher.utils.json.Json;
 
 public class Language {
     private final JsonObject languageObject;
+    private final String name;
     private final String displayName;
 
     public Language(String json) {
         this.languageObject = Json.parse(json, JsonObject.class);
+        this.name = this.languageObject.get("metaInfo").getAsJsonObject().get("name").getAsString();
         this.displayName = this.languageObject.get("metaInfo").getAsJsonObject().get("displayName").getAsString();
     }
 
@@ -48,6 +50,15 @@ public class Language {
         }
 
         return stringElement.getAsString();
+    }
+
+    @Override
+    public String toString() {
+        return this.displayName;
+    }
+
+    public String getName() {
+        return this.name;
     }
 
     public String getDisplayName() {

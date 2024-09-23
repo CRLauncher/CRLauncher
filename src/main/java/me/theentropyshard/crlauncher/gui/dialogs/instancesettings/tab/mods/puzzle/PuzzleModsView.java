@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -51,7 +52,9 @@ public class PuzzleModsView extends JPanel {
     public PuzzleModsView(Instance instance) {
         super(new BorderLayout());
 
-        JButton addJarMod = new JButton("Add Puzzle mod");
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        JButton addJarMod = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.modsTable.puzzle.addModButton"));
         this.add(addJarMod, BorderLayout.NORTH);
 
         this.puzzleModsModel = new PuzzleModsTableModel(instance);
@@ -62,7 +65,8 @@ public class PuzzleModsView extends JPanel {
                 protected Void work() throws Exception {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));
+                    String archives = language.getString("gui.general.archives");
+                    fileChooser.setFileFilter(new FileNameExtensionFilter(archives + " (*.zip, *.jar)", "zip", "jar"));
 
                     Settings settings = CRLauncher.getInstance().getSettings();
                     if (settings.lastDir != null && !settings.lastDir.isEmpty()) {
@@ -142,7 +146,7 @@ public class PuzzleModsView extends JPanel {
             }.execute();
         });
 
-        this.deleteModButton = new JButton("Delete Puzzle mod");
+        this.deleteModButton = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.modsTable.puzzle.deleteModButton"));
 
         JTable puzzleModsTable = new JTable(this.puzzleModsModel);
         puzzleModsTable.getTableHeader().setEnabled(false);

@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.Gui;
 
@@ -26,10 +27,51 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.util.Map;
 
 public class SettingsView extends JPanel {
+
+    public static final String THEME_BORDER = "gui.settingsView.themeSettings.borderName";
+    public static final String THEME_DARK = "gui.settingsView.themeSettings.dark";
+    public static final String THEME_LIGHT = "gui.settingsView.themeSettings.light";
+    public static final String UI_BORDER = "gui.settingsView.ui.borderName";
+    public static final String DIALOG_POSITION_LABEL = "gui.settingsView.ui.dialogPosition.label";
+    public static final String RELATIVE_TO_PARENT = "gui.settingsView.ui.dialogPosition.options.relativeToParent";
+    public static final String ALWAYS_CENTERED = "gui.settingsView.ui.dialogPosition.options.alwaysCentered";
+    public static final String AMOUNT_OF_TIME = "gui.settingsView.ui.amountOfTime";
+    public static final String OTHER_BORDER = "gui.settingsView.other.borderName";
+    public static final String WRITE_PRETTY_JSON = "gui.settingsView.other.writePrettyJson";
+    public static final String GAME_LAUNCH_LABEL = "gui.settingsView.other.onGameLaunch.label";
+    public static final String LAUNCH_DO_NOTHING = "gui.settingsView.other.onGameLaunch.options.doNothing";
+    public static final String LAUNCH_HIDE_LAUNCHER = "gui.settingsView.other.onGameLaunch.options.hideLauncher";
+    public static final String LAUNCH_HIDE_LAUNCHER_AND_CONSOLE = "gui.settingsView.other.onGameLaunch.options.hideLauncherAndConsole";
+    public static final String LAUNCH_EXIT_LAUNCHER = "gui.settingsView.other.onGameLaunch.options.exitLauncher";
+    public static final String EXIT_LABEL = "gui.settingsView.other.onGameExit.label";
+    public static final String EXIT_DO_NOTHING = "gui.settingsView.other.onGameExit.options.doNothing";
+    public static final String EXIT_EXIT_LAUNCHER = "gui.settingsView.other.onGameExit.options.exitLauncher";
+    public static final String CHECK_FOR_UPDATES = "gui.settingsView.other.checkForUpdatesAtStartup";
+    public static final String LANGUAGE = "gui.settingsView.other.language";
+
+    private final TitledBorder themeSettingsBorder;
+    private final JRadioButton darkThemeButton;
+    private final JRadioButton lightThemeButton;
+    private final TitledBorder uiSettingsBorder;
+    private final JLabel dialogPositionLabel;
+    private final JCheckBox showAmountOfTime;
+    private final TitledBorder otherSettingsBorder;
+    private final JCheckBox prettyJson;
+    private final JLabel launchOptionLabel;
+    private final JLabel exitOptionLabel;
+    private final JCheckBox checkUpdates;
+    private final JLabel languageLabel;
+    private final JComboBox<String> whenLaunchesBehavior;
+    private final JComboBox<String> whenExitsBehavior;
+    private final JComboBox<String> position;
+
     public SettingsView() {
         this.setLayout(new GridBagLayout());
+
+        Language language = CRLauncher.getInstance().getLanguage();
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 2;
@@ -38,29 +80,30 @@ public class SettingsView extends JPanel {
 
         {
             JPanel themeSettings = new JPanel(new GridLayout(0, 1));
-            themeSettings.setBorder(new TitledBorder("Theme"));
-            JRadioButton darkThemeButton = new JRadioButton("Dark");
-            darkThemeButton.addActionListener(e -> {
+            this.themeSettingsBorder = new TitledBorder(language.getString(SettingsView.THEME_BORDER));
+            themeSettings.setBorder(this.themeSettingsBorder);
+            this.darkThemeButton = new JRadioButton(language.getString(SettingsView.THEME_DARK));
+            this.darkThemeButton.addActionListener(e -> {
                 Gui gui = CRLauncher.getInstance().getGui();
                 gui.setDarkTheme(true);
                 gui.updateLookAndFeel();
                 CRLauncher.getInstance().getSettings().darkTheme = true;
             });
-            JRadioButton lightThemeButton = new JRadioButton("Light");
-            lightThemeButton.addActionListener(e -> {
+            this.lightThemeButton = new JRadioButton(language.getString(SettingsView.THEME_LIGHT));
+            this.lightThemeButton.addActionListener(e -> {
                 Gui gui = CRLauncher.getInstance().getGui();
                 gui.setDarkTheme(false);
                 gui.updateLookAndFeel();
                 CRLauncher.getInstance().getSettings().darkTheme = false;
             });
-            themeSettings.add(darkThemeButton);
-            themeSettings.add(lightThemeButton);
+            themeSettings.add(this.darkThemeButton);
+            themeSettings.add(this.lightThemeButton);
             Settings settings = CRLauncher.getInstance().getSettings();
             ButtonGroup buttonGroup = new ButtonGroup();
-            buttonGroup.add(darkThemeButton);
-            buttonGroup.add(lightThemeButton);
-            darkThemeButton.setSelected(settings.darkTheme);
-            lightThemeButton.setSelected(!settings.darkTheme);
+            buttonGroup.add(this.darkThemeButton);
+            buttonGroup.add(this.lightThemeButton);
+            this.darkThemeButton.setSelected(settings.darkTheme);
+            this.lightThemeButton.setSelected(!settings.darkTheme);
 
 
             gbc.gridy++;
@@ -69,103 +112,187 @@ public class SettingsView extends JPanel {
 
         {
             JPanel uiSettings = new JPanel(new GridLayout(2, 2));
-            uiSettings.setBorder(new TitledBorder("UI"));
+            this.uiSettingsBorder = new TitledBorder(language.getString(SettingsView.UI_BORDER));
+            uiSettings.setBorder(this.uiSettingsBorder);
 
-            JLabel dialogPosition = new JLabel("Dialog position: ");
+            this.dialogPositionLabel = new JLabel(language.getString(SettingsView.DIALOG_POSITION_LABEL) + ": ");
 
-            JComboBox<String> position = new JComboBox<>(new String[]{"Relative to parent", "Always centered"});
+            String relativeToParent = language.getString(SettingsView.RELATIVE_TO_PARENT);
+            String alwaysCentered = language.getString(SettingsView.ALWAYS_CENTERED);
+            this.position = new JComboBox<>(new String[]{
+                relativeToParent,
+                alwaysCentered
+            });
             if (CRLauncher.getInstance().getSettings().dialogRelativeParent) {
-                position.setSelectedIndex(0);
+                this.position.setSelectedIndex(0);
             } else {
-                position.setSelectedIndex(1);
+                this.position.setSelectedIndex(1);
             }
 
-            position.addItemListener(e -> {
+            this.position.addItemListener(e -> {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    switch (e.getItem().toString()) {
-                        case "Relative to parent" -> CRLauncher.getInstance().getSettings().dialogRelativeParent = true;
-                        case "Always centered" -> CRLauncher.getInstance().getSettings().dialogRelativeParent = false;
-                        default -> throw new RuntimeException("Unreachable");
+                    String item = e.getItem().toString();
+
+                    if (item.equals(relativeToParent)) {
+                        CRLauncher.getInstance().getSettings().dialogRelativeParent = true;
+                    } else if (item.equals(alwaysCentered)) {
+                        CRLauncher.getInstance().getSettings().dialogRelativeParent = false;
+                    } else {
+                        throw new RuntimeException("Unreachable");
                     }
                 }
             });
 
-            uiSettings.add(dialogPosition);
-            uiSettings.add(position);
+            uiSettings.add(this.dialogPositionLabel);
+            uiSettings.add(this.position);
 
-            JCheckBox showAmountOfTime = new JCheckBox("Show the amount of time that has passed since the release date");
-            showAmountOfTime.addActionListener(e -> {
-                CRLauncher.getInstance().getSettings().showAmountOfTime = showAmountOfTime.isSelected();
+            this.showAmountOfTime = new JCheckBox(language.getString(SettingsView.AMOUNT_OF_TIME));
+            this.showAmountOfTime.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().showAmountOfTime = this.showAmountOfTime.isSelected();
             });
-            showAmountOfTime.setSelected(CRLauncher.getInstance().getSettings().showAmountOfTime);
-            uiSettings.add(showAmountOfTime);
+            this.showAmountOfTime.setSelected(CRLauncher.getInstance().getSettings().showAmountOfTime);
+            uiSettings.add(this.showAmountOfTime);
 
             gbc.gridy++;
             this.add(uiSettings, gbc);
         }
 
         {
-            JPanel otherSettings = new JPanel(new GridLayout(4, 3));
-            otherSettings.setBorder(new TitledBorder("Other"));
+            JPanel otherSettings = new JPanel(new GridLayout(5, 3));
+            this.otherSettingsBorder = new TitledBorder(language.getString(SettingsView.OTHER_BORDER));
+            otherSettings.setBorder(this.otherSettingsBorder);
 
-            JCheckBox prettyJson = new JCheckBox("Write pretty JSON files (useful for development/debugging)");
-            prettyJson.addActionListener(e -> {
-                CRLauncher.getInstance().getSettings().writePrettyJson = prettyJson.isSelected();
+            this.prettyJson = new JCheckBox(language.getString(SettingsView.WRITE_PRETTY_JSON));
+            this.prettyJson.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().writePrettyJson = this.prettyJson.isSelected();
             });
-            prettyJson.setSelected(CRLauncher.getInstance().getSettings().writePrettyJson);
-            otherSettings.add(prettyJson);
+            this.prettyJson.setSelected(CRLauncher.getInstance().getSettings().writePrettyJson);
+            otherSettings.add(this.prettyJson);
             otherSettings.add(Box.createHorizontalGlue());
 
-            JLabel whenCosmicLaunchesLabel = new JLabel("When Cosmic Reach launches: ");
-            otherSettings.add(whenCosmicLaunchesLabel);
+            this.launchOptionLabel = new JLabel(language.getString(SettingsView.GAME_LAUNCH_LABEL) + ": ");
+            otherSettings.add(this.launchOptionLabel);
             String[] whenLaunchesOptions = {
-                "Do nothing",
-                "Hide launcher",
-                "Hide launcher and console",
-                "Exit launcher (Time spent on instance won't be counted)"
+                language.getString(SettingsView.LAUNCH_DO_NOTHING),
+                language.getString(SettingsView.LAUNCH_HIDE_LAUNCHER),
+                language.getString(SettingsView.LAUNCH_HIDE_LAUNCHER_AND_CONSOLE),
+                language.getString(SettingsView.LAUNCH_EXIT_LAUNCHER)
             };
-            JComboBox<String> whenLaunchesBehavior = new JComboBox<>(whenLaunchesOptions);
-            whenLaunchesBehavior.addItemListener(e -> {
+            this.whenLaunchesBehavior = new JComboBox<>(whenLaunchesOptions);
+            this.whenLaunchesBehavior.addItemListener(e -> {
                 if (e.getStateChange() != ItemEvent.SELECTED) {
                     return;
                 }
 
-                CRLauncher.getInstance().getSettings().whenCRLaunchesOption = whenLaunchesBehavior.getSelectedIndex();
+                CRLauncher.getInstance().getSettings().whenCRLaunchesOption = this.whenLaunchesBehavior.getSelectedIndex();
             });
             int whenLaunchesIndex = CRLauncher.getInstance().getSettings().whenCRLaunchesOption;
             if (whenLaunchesIndex < 0 || whenLaunchesIndex >= whenLaunchesOptions.length) {
                 whenLaunchesIndex = 0;
             }
-            whenLaunchesBehavior.setSelectedIndex(whenLaunchesIndex);
-            otherSettings.add(whenLaunchesBehavior);
+            this.whenLaunchesBehavior.setSelectedIndex(whenLaunchesIndex);
+            otherSettings.add(this.whenLaunchesBehavior);
 
-            JLabel whenCosmicExits = new JLabel("When Cosmic Reach exits: ");
-            otherSettings.add(whenCosmicExits);
+            this.exitOptionLabel = new JLabel(language.getString(SettingsView.EXIT_LABEL) + ": ");
+            otherSettings.add(this.exitOptionLabel);
             String[] whenExitsOptions = {
-                "Do nothing",
-                "Exit launcher if Cosmic Reach exit code is 0 (ok)"
+                language.getString(SettingsView.EXIT_DO_NOTHING),
+                language.getString(SettingsView.EXIT_EXIT_LAUNCHER)
             };
-            JComboBox<String> whenExitsBehavior = new JComboBox<>(whenExitsOptions);
-            whenExitsBehavior.addItemListener(e -> {
-                CRLauncher.getInstance().getSettings().whenCRExitsOption = whenExitsBehavior.getSelectedIndex();
+            this.whenExitsBehavior = new JComboBox<>(whenExitsOptions);
+            this.whenExitsBehavior.addItemListener(e -> {
+                CRLauncher.getInstance().getSettings().whenCRExitsOption = this.whenExitsBehavior.getSelectedIndex();
             });
             int whenExitsIndex = CRLauncher.getInstance().getSettings().whenCRExitsOption;
             if (whenExitsIndex < 0 || whenExitsIndex >= whenExitsOptions.length) {
                 whenExitsIndex = 0;
             }
-            whenExitsBehavior.setSelectedIndex(whenExitsIndex);
-            otherSettings.add(whenExitsBehavior);
+            this.whenExitsBehavior.setSelectedIndex(whenExitsIndex);
+            otherSettings.add(this.whenExitsBehavior);
 
-            JCheckBox checkUpdates = new JCheckBox("Check for updates at startup");
-            checkUpdates.addActionListener(e -> {
-                CRLauncher.getInstance().getSettings().checkUpdatesStartup = checkUpdates.isSelected();
+            this.checkUpdates = new JCheckBox(language.getString(SettingsView.CHECK_FOR_UPDATES));
+            this.checkUpdates.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().checkUpdatesStartup = this.checkUpdates.isSelected();
             });
-            checkUpdates.setSelected(CRLauncher.getInstance().getSettings().checkUpdatesStartup);
-            otherSettings.add(checkUpdates);
+            this.checkUpdates.setSelected(CRLauncher.getInstance().getSettings().checkUpdatesStartup);
+            otherSettings.add(this.checkUpdates);
+
+            otherSettings.add(Box.createHorizontalBox());
+
+            this.languageLabel = new JLabel(language.getString(SettingsView.LANGUAGE));
+            otherSettings.add(this.languageLabel);
+
+            Map<String, Language> languages = CRLauncher.getInstance().getLanguages();
+            JComboBox<Language> languageCombo = new JComboBox<>(languages.values().toArray(new Language[0]));
+            languageCombo.setSelectedIndex(languages.values()
+                .stream().map(Language::getName).toList().indexOf(CRLauncher.getInstance().getSettings().language));
+            languageCombo.addItemListener(e -> {
+                if (e.getStateChange() != ItemEvent.SELECTED) {
+                    return;
+                }
+
+                CRLauncher.getInstance().getSettings().language = ((Language) e.getItem()).getName();
+                CRLauncher.getInstance().getGui().reloadLanguage();
+            });
+            otherSettings.add(languageCombo);
 
             gbc.gridy++;
             gbc.weighty = 1;
             this.add(otherSettings, gbc);
         }
+    }
+
+    public void reloadLanguage() {
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        this.themeSettingsBorder.setTitle(language.getString(SettingsView.THEME_BORDER));
+        this.darkThemeButton.setText(language.getString(SettingsView.THEME_DARK));
+        this.lightThemeButton.setText(language.getString(SettingsView.THEME_LIGHT));
+        this.uiSettingsBorder.setTitle(language.getString(SettingsView.UI_BORDER));
+
+        this.dialogPositionLabel.setText(language.getString(SettingsView.DIALOG_POSITION_LABEL));
+
+        String relativeToParent = language.getString(SettingsView.RELATIVE_TO_PARENT);
+        String alwaysCentered = language.getString(SettingsView.ALWAYS_CENTERED);
+        DefaultComboBoxModel<String> positionModel = new DefaultComboBoxModel<>(
+            new String[]{
+                relativeToParent,
+                alwaysCentered
+            }
+        );
+        int positionIndex = this.position.getSelectedIndex();
+        this.position.setModel(positionModel);
+        this.position.setSelectedIndex(positionIndex);
+
+        this.showAmountOfTime.setText(language.getString(SettingsView.AMOUNT_OF_TIME));
+        this.otherSettingsBorder.setTitle(language.getString(SettingsView.OTHER_BORDER));
+        this.prettyJson.setText(language.getString(SettingsView.WRITE_PRETTY_JSON));
+
+        this.launchOptionLabel.setText(language.getString(SettingsView.GAME_LAUNCH_LABEL));
+        DefaultComboBoxModel<String> launchModel = new DefaultComboBoxModel<>(
+            new String[] {
+                language.getString(SettingsView.LAUNCH_DO_NOTHING),
+                language.getString(SettingsView.LAUNCH_HIDE_LAUNCHER),
+                language.getString(SettingsView.LAUNCH_HIDE_LAUNCHER_AND_CONSOLE),
+                language.getString(SettingsView.LAUNCH_EXIT_LAUNCHER)
+            }
+        );
+        int launchIndex = this.whenLaunchesBehavior.getSelectedIndex();
+        this.whenLaunchesBehavior.setModel(launchModel);
+        this.whenLaunchesBehavior.setSelectedIndex(launchIndex);
+
+        this.exitOptionLabel.setText(language.getString(SettingsView.EXIT_LABEL));
+        DefaultComboBoxModel<String> exitModel = new DefaultComboBoxModel<>(
+            new String[]{
+                language.getString(SettingsView.EXIT_DO_NOTHING),
+                language.getString(SettingsView.EXIT_EXIT_LAUNCHER)
+            }
+        );
+        int exitIndex = this.whenExitsBehavior.getSelectedIndex();
+        this.whenExitsBehavior.setModel(exitModel);
+        this.whenExitsBehavior.setSelectedIndex(exitIndex);
+
+        this.checkUpdates.setText(language.getString(SettingsView.CHECK_FOR_UPDATES));
+        this.languageLabel.setText(language.getString(SettingsView.LANGUAGE));
     }
 }

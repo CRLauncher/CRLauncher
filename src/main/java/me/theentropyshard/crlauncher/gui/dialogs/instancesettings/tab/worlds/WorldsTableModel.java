@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
@@ -39,15 +41,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorldsTableModel extends AbstractTableModel {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
-
-    private static final String[] COLUMN_NAMES = {"Name", "Seed", "Last played", "Created"};
     private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class, String.class};
+
+    private final String[] columnNames = {"Name", "Seed", "Last played", "Created"};
+    private final DateTimeFormatter formatter;
 
     private final List<CosmicWorld> worlds;
 
     public WorldsTableModel(JTable table, Instance instance) {
         this.worlds = new ArrayList<>();
+
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        this.columnNames[0] = language.getString("gui.instanceSettingsDialog.worldsTab.table.worldName");
+        this.columnNames[1] = language.getString("gui.instanceSettingsDialog.worldsTab.table.worldSeed");
+        this.columnNames[2] = language.getString("gui.instanceSettingsDialog.worldsTab.table.lastPlayed");
+        this.columnNames[3] = language.getString("gui.instanceSettingsDialog.worldsTab.table.createdAt");
+
+        DateTimeFormatter formatter;
+
+        try {
+            formatter = DateTimeFormatter.ofPattern("HH:mm " + language.getString("general.time.dateFormat"));
+        } catch (Exception e) {
+            formatter = DateTimeFormatter.ofPattern("HH:mm dd.MM.yyyy");
+        }
+
+        this.formatter = formatter;
 
         new Worker<Void, CosmicWorld>("loading worlds") {
             @Override
@@ -119,12 +138,12 @@ public class WorldsTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return WorldsTableModel.COLUMN_NAMES.length;
+        return this.columnNames.length;
     }
 
     @Override
     public String getColumnName(int column) {
-        return WorldsTableModel.COLUMN_NAMES[column];
+        return this.columnNames[column];
     }
 
     @Override
@@ -139,12 +158,12 @@ public class WorldsTableModel extends AbstractTableModel {
         return switch (columnIndex) {
             case 0 -> world.getWorldDisplayName();
             case 1 -> world.getWorldSeed();
-            case 2 -> WorldsTableModel.FORMATTER.format(
+            case 2 -> this.formatter.format(
                 world instanceof UpdatedCosmicWorld updatedWorld ?
                     WorldsTableModel.fromEpochMillis(updatedWorld.getLastPlayedEpochMillis()) : world.getLastPlayed()
             );
             case 3 -> world instanceof UpdatedCosmicWorld updatedWorld ?
-                WorldsTableModel.FORMATTER.format(
+                this.formatter.format(
                     WorldsTableModel.fromEpochMillis(updatedWorld.getWorldCreatedEpochMillis())
                 ) : "N/A";
             default -> null;

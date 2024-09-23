@@ -18,6 +18,9 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -26,12 +29,22 @@ public class CosmicVersionsTableModel extends DefaultTableModel {
     private final JTable table;
 
     public CosmicVersionsTableModel(AddInstanceDialog dialog, JTable table) {
-        super(new Object[][]{}, new Object[]{"Version", "Date released", "Type"});
+        super(new Object[][]{}, CosmicVersionsTableModel.getColumnNames());
 
         this.dialog = dialog;
         this.table = table;
 
         this.load(false);
+    }
+
+    private static Object[] getColumnNames() {
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        return new Object[]{
+            language.getString("gui.addInstanceDialog.table.version"),
+            language.getString("gui.addInstanceDialog.table.dateReleased"),
+            language.getString("gui.addInstanceDialog.table.versionType")
+        };
     }
 
     public void load(boolean forceNetwork) {

@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.crmm.model.mod.CrmmMod;
@@ -53,11 +54,14 @@ public class SearchCrmmModsView extends JPanel {
 
         JPanel topPanel = new JPanel(new BorderLayout());
 
+        Language language = CRLauncher.getInstance().getLanguage();
+
         this.searchField = new JTextField();
-        this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search mods...");
+        this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
+            language.getString("gui.searchCRMMModsDialog.searchMods"));
         topPanel.add(this.searchField, BorderLayout.CENTER);
 
-        JButton searchButton = new JButton("Search");
+        JButton searchButton = new JButton(language.getString("gui.searchCRMMModsDialog.searchButton"));
         searchButton.addActionListener(e -> {
             this.searchMods();
         });

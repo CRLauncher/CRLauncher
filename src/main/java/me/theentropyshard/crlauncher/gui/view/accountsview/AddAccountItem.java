@@ -40,8 +40,12 @@ public class AddAccountItem extends JPanel {
 
     protected final int border = 12;
 
-    public AddAccountItem() {
+    private String text;
+
+    public AddAccountItem(String text) {
         super(new BorderLayout());
+
+        this.text = text;
 
         this.setDefaultColor(UIManager.getColor("InstanceItem.defaultColor"));
         this.setHoveredColor(UIManager.getColor("InstanceItem.hoveredColor"));
@@ -121,16 +125,19 @@ public class AddAccountItem extends JPanel {
         Font font = new Font("Arial", Font.BOLD, 20);
         g.setFont(font);
 
-        String text = "Click to add new account";
         FontMetrics m = g.getFontMetrics();
-        int width = m.stringWidth(text);
+        int width = m.stringWidth(this.text);
 
         Dimension size = this.getSize();
 
         g.setColor(Color.decode("#95A5A6"));
-        g.drawString(text, size.width / 2 - width / 2, (int) (size.height - m.getStringBounds(text, g2).getHeight()));
+        g.drawString(this.text, size.width / 2 - width / 2, (int) (size.height - m.getStringBounds(this.text, g2).getHeight()));
 
         super.paintComponent(g);
+    }
+
+    public void setText(String text) {
+        this.text = text;
     }
 
     public void updateColors() {

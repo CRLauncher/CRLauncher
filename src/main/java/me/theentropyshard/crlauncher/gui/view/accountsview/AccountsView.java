@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view.accountsview;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.gui.dialogs.addaccount.AddAccountDialog;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class AccountsView extends JPanel {
+    public static final String ADD_ACCOUNT_BUTTON = "gui.accountsView.addAccountButton";
     private final JPanel panel;
     private final JScrollPane scrollPane;
     private final AccountItemGroup group;
@@ -51,7 +53,9 @@ public class AccountsView extends JPanel {
         this.scrollPane.setBorder(null);
         this.add(this.scrollPane, BorderLayout.CENTER);
 
-        this.addAccountItem = new AddAccountItem();
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        this.addAccountItem = new AddAccountItem(language.getString(AccountsView.ADD_ACCOUNT_BUTTON));
         this.addAccountItem.addMouseClickListener(e -> {
             new AddAccountDialog(this);
         });
@@ -123,6 +127,12 @@ public class AccountsView extends JPanel {
 
         this.panel.remove(item);
         this.panel.revalidate();
+    }
+
+    public void reloadLanguage() {
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        this.addAccountItem.setText(language.getString(AccountsView.ADD_ACCOUNT_BUTTON));
     }
 
     public JScrollPane getScrollPane() {

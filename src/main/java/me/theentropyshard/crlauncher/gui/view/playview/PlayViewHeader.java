@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view.playview;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 
@@ -27,10 +28,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class PlayViewHeader extends JPanel {
+    public static final String INSTANCE_GROUP = "gui.playView.instanceGroup";
+    public static final String ACCOUNT = "gui.playView.account";
+
     private final JComboBox<String> instanceGroups;
     private final JLabel account;
 
     public static PlayViewHeader instance;
+    private final JLabel instanceLabel;
+    private final JLabel accountsLabel;
 
     public PlayViewHeader() {
         super(new BorderLayout());
@@ -39,16 +45,17 @@ public class PlayViewHeader extends JPanel {
 
         JPanel leftSide = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
-        JLabel instanceLabel = new JLabel("Instance group:");
-        leftSide.add(instanceLabel);
+        Language language = CRLauncher.getInstance().getLanguage();
+        this.instanceLabel = new JLabel(language.getString(PlayViewHeader.INSTANCE_GROUP) + ":");
+        leftSide.add(this.instanceLabel);
 
         this.instanceGroups = new JComboBox<>();
         leftSide.add(this.instanceGroups);
 
         JPanel rightSide = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-        JLabel accountsLabel = new JLabel("Account:");
-        rightSide.add(accountsLabel);
+        this.accountsLabel = new JLabel(language.getString(PlayViewHeader.ACCOUNT) + ":");
+        rightSide.add(this.accountsLabel);
 
         this.account = new JLabel();
         this.setCurrentAccount(CRLauncher.getInstance().getAccountManager().getCurrentAccount());
@@ -66,6 +73,12 @@ public class PlayViewHeader extends JPanel {
         } else {
             this.account.setText("No account selected");
         }
+    }
+
+    public void reloadLanguage() {
+        Language language = CRLauncher.getInstance().getLanguage();
+        this.instanceLabel.setText(language.getString(PlayViewHeader.INSTANCE_GROUP) + ":");
+        this.accountsLabel.setText(language.getString(PlayViewHeader.ACCOUNT) + ":");
     }
 
     public JComboBox<String> getInstanceGroups() {

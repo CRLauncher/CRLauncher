@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 
 import javax.swing.*;
@@ -46,7 +48,8 @@ public class ModVersionCard extends JPanel {
 
         this.add(Box.createHorizontalBox(), BorderLayout.CENTER);
 
-        JButton downloadButton = new JButton("Download");
+        Language language = CRLauncher.getInstance().getLanguage();
+        JButton downloadButton = new JButton(language.getString("gui.searchCRMMModsDialog.downloadButton"));
         downloadButton.addActionListener(onClick);
         this.add(downloadButton, BorderLayout.EAST);
 

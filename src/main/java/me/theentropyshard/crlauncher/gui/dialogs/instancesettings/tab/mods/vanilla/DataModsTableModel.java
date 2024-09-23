@@ -1,5 +1,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +25,9 @@ public class DataModsTableModel extends AbstractTableModel {
 
     @Override
     public String getColumnName(int column) {
-        return "Mod folder";
+        return CRLauncher.getInstance().getLanguage().getString(
+            "gui.instanceSettingsDialog.modsTab.vanilla.modFolder"
+        );
     }
 
     @Override

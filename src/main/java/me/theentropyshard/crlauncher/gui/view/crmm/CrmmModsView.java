@@ -19,6 +19,8 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.instance.Instance;
 
@@ -46,11 +48,13 @@ public class CrmmModsView extends JPanel {
         JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
         tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_TAB_AREA_ALIGNMENT, FlatClientProperties.TABBED_PANE_ALIGN_FILL);
 
-        tabbedPane.addTab("Mods", this.modsModsView);
-        tabbedPane.addTab("Data Mods", this.dataModsModsView);
-        tabbedPane.addTab("Resource Packs", this.resourcePacksModsView);
-        tabbedPane.addTab("Shaders", this.shadersModsView);
-        tabbedPane.addTab("Modpacks", this.modpacksView);
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.mods"), this.modsModsView);
+        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.datamods"), this.dataModsModsView);
+        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.resourcePacks"), this.resourcePacksModsView);
+        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.shaders"), this.shadersModsView);
+        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.modpacks"), this.modpacksView);
 
         tabbedPane.addChangeListener(e -> {
             int selectedIndex = tabbedPane.getSelectedIndex();

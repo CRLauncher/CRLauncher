@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.crmm.model.datapack.Datapack;
@@ -37,7 +38,9 @@ public class SearchCrmmDataModsView extends SearchCrmmModsView {
     public SearchCrmmDataModsView(Instance instance, ModsTab modsTab) {
         super(instance, modsTab);
 
-        this.getSearchField().putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Search data mods...");
+        Language language = CRLauncher.getInstance().getLanguage();
+        this.getSearchField().putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
+            language.getString("gui.searchCRMMModsDialog.searchDatamods"));
     }
 
     @Override

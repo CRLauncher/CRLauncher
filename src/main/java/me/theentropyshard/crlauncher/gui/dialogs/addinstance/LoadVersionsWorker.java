@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
@@ -30,6 +31,7 @@ import javax.swing.table.TableRowSorter;
 import java.time.Instant;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.Temporal;
 import java.util.Arrays;
@@ -44,6 +46,8 @@ public class LoadVersionsWorker extends Worker<List<Version>, Void> {
     private final JTable table;
     private final boolean forceNetwork;
 
+    private DateTimeFormatter formatter;
+
     public LoadVersionsWorker(CosmicVersionsTableModel model, AddInstanceDialog dialog, JTable table, boolean forceNetwork) {
         super("loading Cosmic Reach versions");
 
@@ -55,6 +59,14 @@ public class LoadVersionsWorker extends Worker<List<Version>, Void> {
 
     @Override
     protected List<Version> work() throws Exception {
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        try {
+            this.formatter = DateTimeFormatter.ofPattern(language.getString("general.time.dateFormat"));
+        } catch (Exception e) {
+            this.formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        }
+
         return CRLauncher.getInstance().getVersionManager().getRemoteVersions(this.forceNetwork);
     }
 
@@ -75,7 +87,7 @@ public class LoadVersionsWorker extends Worker<List<Version>, Void> {
         for (Version version : versions) {
             Instant instant = Instant.ofEpochSecond(version.getReleaseTime());
             OffsetDateTime releaseTime = OffsetDateTime.ofInstant(instant, ZoneId.of("UTC"));
-            String releasedDate = Version.FORMATTER.format(releaseTime) + (showAmountOfTime ?
+            String releasedDate = this.formatter.format(releaseTime) + (showAmountOfTime ?
                 " (" + LoadVersionsWorker.getAgoFromNow(releaseTime) + ")" : "");
 
             Object[] rowData = {
@@ -107,43 +119,44 @@ public class LoadVersionsWorker extends Worker<List<Version>, Void> {
     }
 
     public static String getAgoFromNow(Temporal temporal) {
+        Language language = CRLauncher.getInstance().getLanguage();
+        String ago = language.getString("general.time.ago");
+
         OffsetDateTime now = OffsetDateTime.now();
 
-        long years = ChronoUnit.YEARS.between(temporal, now);
+        int years = (int) ChronoUnit.YEARS.between(temporal, now);
         if (years == 0) {
-            long months = ChronoUnit.MONTHS.between(temporal, now);
+            int months = (int) ChronoUnit.MONTHS.between(temporal, now);
             if (months == 0) {
-                long weeks = ChronoUnit.WEEKS.between(temporal, now);
+                int weeks = (int) ChronoUnit.WEEKS.between(temporal, now);
                 if (weeks == 0) {
                     int days = (int) ChronoUnit.DAYS.between(temporal, now);
-                    switch (days) {
-                        case 0:
-                            return "today";
-                        case 1:
-                            return "yesterday";
-                        default:
-                            return days + " days ago";
-                    }
+                    return switch (days) {
+                        case 0 -> language.getString("general.time.units.today");
+                        case 1 -> language.getString("general.time.units.yesterday");
+                        case 2, 3, 4 -> days + " " + language.getString("general.time.units.days234") + " " + ago;
+                        default -> days + " " + language.getString("general.time.units.days") + " " + ago;
+                    };
                 } else {
-                    if (weeks == 1) {
-                        return "1 week ago";
-                    } else {
-                        return weeks + " weeks ago";
-                    }
+                    return switch (weeks) {
+                        case 1 -> weeks + " " + language.getString("general.time.units.week1") + " " + ago;
+                        case 2, 3, 4 -> weeks + " " + language.getString("general.time.units.weeks234") + " " + ago;
+                        default -> weeks + " " + language.getString("general.time.units.weeks") + " " + ago;
+                    };
                 }
             } else {
-                if (months == 1) {
-                    return "1 month ago";
-                } else {
-                    return months + " months ago";
-                }
+                return switch (months) {
+                    case 1 -> months + " " + language.getString("general.time.units.month1") + " " + ago;
+                    case 2, 3, 4 -> months + " " + language.getString("general.time.units.months234") + " " + ago;
+                    default -> months + " " + language.getString("general.time.units.months") + " " + ago;
+                };
             }
         } else {
-            if (years == 1) {
-                return "1 year ago";
-            } else {
-                return years + " years ago";
-            }
+            return switch (years) {
+                case 1 -> years + " " + language.getString("general.time.units.year1") + " " + ago;
+                case 2, 3, 4 -> years + " " + language.getString("general.time.units.years234") + " " + ago;
+                default -> years + " " + language.getString("general.time.units.years") + " " + ago;
+            };
         }
     }
 }

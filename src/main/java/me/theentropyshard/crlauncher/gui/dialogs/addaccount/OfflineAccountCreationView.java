@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.addaccount;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.account.OfflineAccount;
@@ -31,20 +32,27 @@ import javax.swing.*;
 import java.awt.*;
 
 public class OfflineAccountCreationView extends JPanel {
+    public static final String PLACEHOLDER = "gui.addAccountDialog.offline.textFieldPlaceholder";
+    public static final String ADD_BUTTON = "gui.addAccountDialog.addButton";
+    public static final String ACCOUNT_EXISTS = "gui.addAccountDialog.accountExists";
     private final JTextField usernameField;
 
     public OfflineAccountCreationView(AddAccountDialog dialog, AccountsView accountsView) {
+        Language language = CRLauncher.getInstance().getLanguage();
+
         this.usernameField = new JTextField();
-        this.usernameField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "Enter desired username");
+        this.usernameField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
+            language.getString(OfflineAccountCreationView.PLACEHOLDER));
         this.usernameField.setPreferredSize(new Dimension(250, 26));
 
         this.add(this.usernameField);
 
-        JButton button = new JButton("Add");
+        JButton button = new JButton(language.getString(OfflineAccountCreationView.ADD_BUTTON));
         button.addActionListener(e -> {
             String text = this.usernameField.getText();
             if (text.isEmpty()) {
-                MessageBox.showErrorMessage(CRLauncher.frame, "Enter a username");
+                MessageBox.showErrorMessage(CRLauncher.frame,
+                    language.getString("messages.gui.addAccountDialog.offline.enterUsername"));
 
                 return;
             }
@@ -53,7 +61,9 @@ public class OfflineAccountCreationView extends JPanel {
 
             Account account = new OfflineAccount(text);
             if (!accountManager.canCreateAccount(account.getUsername())) {
-                MessageBox.showErrorMessage(CRLauncher.frame, "Account with username '" + account.getUsername() + "' already exists");
+                String message = language.getString(OfflineAccountCreationView.ACCOUNT_EXISTS);
+                MessageBox.showErrorMessage(CRLauncher.frame,
+                    message.replace("$$ACCOUNT_NAME$$", account.getUsername()));
 
                 return;
             }

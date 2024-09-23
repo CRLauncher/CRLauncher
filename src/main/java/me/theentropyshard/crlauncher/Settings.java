@@ -31,7 +31,7 @@ import java.nio.file.Path;
  * I don't usually like making fields public, but ok, those are settings
  */
 public class Settings {
-    public String language = "english";
+    public String language = "English";
     public boolean darkTheme = false;
     public String lastDir = System.getProperty("user.dir");
     public String lastInstanceGroup = "<default>";
