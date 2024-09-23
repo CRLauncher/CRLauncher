@@ -131,6 +131,8 @@ public class Gui {
 
         UIManager.put("OptionPane.yesButtonText", language.getString("gui.general.yes"));
         UIManager.put("OptionPane.noButtonText", language.getString("gui.general.no"));
+        UIManager.put("OptionPane.okButtonText", language.getString("gui.general.ok"));
+        UIManager.put("OptionPane.cancelButtonText", language.getString("gui.general.cancel"));
 
         this.viewSelector.setTitleAt(0, language.getString(Gui.TAB_PLAY));
         this.viewSelector.setTitleAt(1, language.getString(Gui.TAB_ACCOUNTS));

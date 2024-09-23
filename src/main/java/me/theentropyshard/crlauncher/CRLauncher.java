@@ -141,7 +141,15 @@ public class CRLauncher {
                     String json = FileUtils.readUtf8(languageJsonFile);
 
                     Language language = new Language(json);
-                    this.languages.put(language.getName(), language);
+                    String name = language.getName();
+
+                    if (this.languages.containsKey(name)) {
+                        Log.warn("Duplicate language is in 'languages' folder, it won't be loaded! Duplicated name: " + name);
+                        
+                        continue;
+                    }
+
+                    this.languages.put(name, language);
                 } catch (IOException e) {
                     Log.error("Could not load custom languages", e);
                 }
