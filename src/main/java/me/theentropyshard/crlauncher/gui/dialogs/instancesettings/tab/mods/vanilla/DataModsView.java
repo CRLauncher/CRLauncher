@@ -89,7 +89,7 @@ public class DataModsView extends JPanel {
         this.add(scrollPane, BorderLayout.CENTER);
 
         this.deleteDataModButton = new JButton(
-            CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.modsTab.vanilla.deleteModButton")
+            CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.modsTab.modsTable.vanilla.deleteModButton")
         );
         this.deleteDataModButton.addActionListener(e ->
 

@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher;
 
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltManager;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
@@ -33,7 +34,6 @@ import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltManager;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 import me.theentropyshard.crlauncher.utils.ResourceUtils;
@@ -66,6 +66,7 @@ public class CRLauncher {
     private final Path librariesDir;
     private final Path instancesDir;
     private final Path versionsDir;
+    private final Path languagesDir;
 
     private final Path settingsFile;
     private final Settings settings;
@@ -107,6 +108,7 @@ public class CRLauncher {
         this.cosmicDir = this.workDir.resolve("cosmic-reach");
         this.instancesDir = this.cosmicDir.resolve("instances");
         this.versionsDir = this.cosmicDir.resolve("versions");
+        this.languagesDir = this.workDir.resolve("languages");
         this.createDirectories();
 
         this.settingsFile = this.workDir.resolve("settings.json");
@@ -131,6 +133,21 @@ public class CRLauncher {
 
             Language language = new Language(json);
             this.languages.put(language.getName(), language);
+        }
+
+        try {
+            for (Path languageJsonFile : FileUtils.list(this.languagesDir)) {
+                try {
+                    String json = FileUtils.readUtf8(languageJsonFile);
+
+                    Language language = new Language(json);
+                    this.languages.put(language.getName(), language);
+                } catch (IOException e) {
+                    Log.error("Could not load custom languages", e);
+                }
+            }
+        } catch (IOException e) {
+            Log.error("Could not list '" + this.languagesDir + "'", e);
         }
 
         Language language = this.getLanguage();
@@ -284,6 +301,7 @@ public class CRLauncher {
             FileUtils.createDirectoryIfNotExists(this.librariesDir);
             FileUtils.createDirectoryIfNotExists(this.instancesDir);
             FileUtils.createDirectoryIfNotExists(this.versionsDir);
+            FileUtils.createDirectoryIfNotExists(this.languagesDir);
         } catch (IOException e) {
             Log.error("Unable to create launcher directories", e);
         }

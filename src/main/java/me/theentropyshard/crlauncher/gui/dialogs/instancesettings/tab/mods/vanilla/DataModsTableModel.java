@@ -26,7 +26,7 @@ public class DataModsTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int column) {
         return CRLauncher.getInstance().getLanguage().getString(
-            "gui.instanceSettingsDialog.modsTab.vanilla.modFolder"
+            "gui.instanceSettingsDialog.modsTab.modsTable.vanilla.modFolder"
         );
     }
 
