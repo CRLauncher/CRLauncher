@@ -326,6 +326,18 @@ public class CRLauncher {
         return CRLauncher.instance;
     }
 
+    public Language getLanguage() {
+        return this.languages.get(this.selectedLanguage);
+    }
+
+    public void setSelectedLanguage(int selectedLanguage) {
+        if (selectedLanguage < 0 || selectedLanguage > this.languages.size()) {
+            throw new IllegalArgumentException("language is out of bounds: " + selectedLanguage);
+        }
+
+        this.selectedLanguage = selectedLanguage;
+    }
+
     private static void setInstance(CRLauncher instance) {
         CRLauncher.instance = instance;
     }
