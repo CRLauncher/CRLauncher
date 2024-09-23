@@ -1,0 +1,239 @@
+{
+    "gui": {
+        "instanceItem": {
+            "contextMenu": {
+                "edit": "Редактировать",
+                "icon": "Иконка",
+                "rename": "Переименовать",
+                "delete": "Удалить",
+                "openInstanceFolder": "Открыть папку инстанса",
+                "openCosmicFolder": "Открыть папку cosmic-reach"
+            }
+        },
+        "instanceSettingsDialog": {
+            "title": "Настройки инстанса - $$INSTANCE_NAME$$",
+            "mainTab": {
+                "cosmicReachVersion": {
+                    "borderName": "Версия Cosmic Reach",
+                    "autoUpdateToLatest": "Автоматически обновлять до последней версии"
+                },
+                "otherSettings": {
+                    "borderName": "Другое",
+                    "titleFieldPlaceholder": "Впишите кастомное название окна Cosmic Reach"
+                }
+            },
+            "javaTab": {
+                "javaInstallation": {
+                    "borderName": "Установка Java"
+                },
+                "memorySettings": {
+                    "borderName": "Выделение памяти",
+                    "minimum": "Минимум (Мегабайты)",
+                    "maximum": "Максимум (Мегабайты)"
+                }
+            },
+            "modsTab": {
+                "modLoader": {
+                    "borderName": "Загрузчик модов",
+                    "options": {
+                        "vanilla": "Vanilla",
+                        "fabric": "Fabric",
+                        "cosmicQuilt": "Cosmic Quilt",
+                        "puzzle": "Puzzle"
+                    }
+                },
+                "loaderVersion": {
+                    "borderName": "Версия загрузчика"
+                },
+                "modsTable": {
+                    "vanilla": {
+                        "modFolder": "Папка мода",
+                        "deleteModButton": "Удалить дата-мод"
+                    },
+                    "fabric": {
+                        "modName": "Имя",
+                        "modVersion": "Версия",
+                        "modDescription": "Описание",
+                        "modActive": "Активен",
+                        "addModButton": "Добавить Fabric мод",
+                        "deleteModButton": "Удалить Fabric мод"
+                    },
+                    "cosmicQuilt": {
+                        "modName": "Имя",
+                        "modVersion": "Версия",
+                        "modDescription": "Описание",
+                        "modActive": "Активен",
+                        "addModButton": "Добавить Quilt мод",
+                        "deleteModButton": "Удалить Quilt мод"
+                    },
+                    "puzzle": {
+                        "modName": "Имя",
+                        "modVersion": "Версия",
+                        "modDescription": "Описание",
+                        "modActive": "Активен",
+                        "addModButton": "Добавить Puzzle мод",
+                        "deleteModButton": "Удалить Puzzle мод"
+                    }
+                },
+                "openModsFolder": "Открыть папку с модами",
+                "searchModsCRMM": "Найти моды на CRMM"
+            },
+            "worldsTab": {
+                "table": {
+                    "worldName": "Имя",
+                    "worldSeed": "Сид",
+                    "lastPlayed": "Последняя игра",
+                    "createdAt": "Создан"
+                }
+            }
+        },
+        "searchCRMMModsDialog": {
+            "title": "Найти моды на CRMM",
+            "download1": "загрузка",
+            "downloads234": "загрузки",
+            "downloads": "загрузок",
+            "follower1": "подписчик",
+            "followers234": "подписчика",
+            "followers": "подписчиков",
+            "mods": "Моды",
+            "datamods": "Дата-моды",
+            "resourcePacks": "Ресурс-паки",
+            "shaders": "Шейдеры",
+            "modpacks": "Модпаки",
+            "searchButton": "Найти",
+            "searchMods": "Найти моды...",
+            "searchDatamods": "Найти дата-моды...",
+            "searchResourcePacks": "Найти ресурс-паки...",
+            "searchShaders": "Найти шейдеры...",
+            "searchModpacks": "Найти модпаки..."
+        },
+        "addAccountDialog": {
+            "title": "Добавить аккаунт",
+            "offline": {
+                "tabName": "Оффлайн",
+                "textFieldPlaceholder": "Введите желаемое имя"
+            },
+            "itch": {
+                "tabName": "Itch.io",
+                "textFieldPlaceholder": "Введите API-ключ Itch.io"
+            },
+            "addButton": "Добавить"
+        },
+        "console": {
+            "title": "Консоль CRLauncher",
+            "scrollDown": "Проматывать вниз",
+            "copyButton": "Копировать",
+            "clearButton": "Очистить"
+        },
+        "general": {
+            "openLauncherFolder": "Открыть папку лаунчера",
+            "consoleButton": {
+                "show": "Показать консоль",
+                "hide": "Скрыть консоль"
+            },
+            "tab": {
+                "play": "Игра",
+                "accounts": "Аккаунты",
+                "settings": "Настройки",
+                "about": "О лаунчере"
+            }
+        },
+        "playView": {
+            "instanceGroup": "Группа инстансов",
+            "account": "Аккаунт"
+        },
+        "accountsView": {
+            "addAccountButton": "Нажмите, чтобы добавить аккаунт"
+        },
+        "settingsView": {
+            "themeSettings": {
+                "borderName": "Тема",
+                "light": "Светлая",
+                "dark": "Тёмная"
+            },
+            "ui": {
+                "borderName": "Интерфейс",
+                "dialogPosition": {
+                    "label": "Позиция диалогов",
+                    "options": {
+                        "relativeToParent": "Относительно родителя",
+                        "alwaysCentered": "Всегда в центре"
+                    }
+                },
+                "amountOfTime": "Показывать время, прошедшее с релиза версии"
+            },
+            "other": {
+                "borderName": "Другое",
+                "writePrettyJson": "Красиво форматировать Json-файлы (полезно для дебага/разработки)",
+                "onGameLaunch": {
+                    "label": "Когда Cosmic Reach запускается",
+                    "options": {
+                        "doNothing": "Ничего не делать",
+                        "hideLauncher": "Скрывать лаунчер",
+                        "hideLauncherAndConsole": "Скрывать лаунчер и консоль",
+                        "exitLauncher": "Закрывать лаунчер (время, проведённое на инстансе не будет учитываться)"
+                    }
+                },
+                "onGameExit": {
+                    "label": "Когда Cosmic Reach закрывается",
+                    "options": {
+                        "doNothing": "Ничего не делать",
+                        "exitLauncher": "Закрывать лаунчер, если код выхода 0 (ок)"
+                    }
+                },
+                "checkForUpdatesAtStartup": "Проверять обновления при запуске"
+            }
+        },
+        "aboutView": {
+            "lines": {
+                "line1": "CRLauncher $$GAME_VERSION$$ - простой лаунчер для Cosmic Reach",
+                "line2": "сделано TheEntropyShard",
+                "line3": "Больше на $$GAME_URL$$"
+            }
+        },
+        "addInstanceDialog": {
+            "title": "Добавить новый инстанс",
+            "nameFieldLabel": "Имя",
+            "groupFieldLabel": "Группа",
+            "autoUpdateToLatest": "Автоматически обновлять версию инстанса",
+            "filter": "Фильтр",
+            "refreshButton": "Перезагрузить",
+            "addButton": "Добавить",
+            "cancelButton": "Отмена",
+            "table": {
+                "version": "Версия",
+                "dateReleased": "Дата релиза",
+                "versionType": "Тип версии"
+            }
+        }
+    },
+    "general": {
+        "time": {
+            "dateFormat": "dd.MM.yyyy",
+            "ago": {
+                "secondAgo1": "секунду назад",
+                "secondsAgo234": "секунды назад",
+                "secondsAgo": "секунд назад",
+                "minuteAgo1": "минуту назад",
+                "minutesAgo234": "минуты назад",
+                "minutesAgo": "минут назад",
+                "hourAgo1": "час назад",
+                "hoursAgo234": "часа назад",
+                "hoursAgo": "часов назад",
+                "dayAgo1": "день назад",
+                "daysAgo234": "дня назад",
+                "daysAgo": "дней назад",
+                "yesterday": "вчера",
+                "weekAgo1": "неделю назад",
+                "weeksAgo234": "недели назад",
+                "weeksAgo": "недель назад",
+                "monthAgo1": "месяц назад",
+                "monthsAgo234": "месяца назад",
+                "monthsAgo": "месяцев назад",
+                "yearAgo1": "год назад",
+                "yearsAgo234": "года назад",
+                "yearsAgo": "лет назад"
+            }
+        }
+    }
+}
