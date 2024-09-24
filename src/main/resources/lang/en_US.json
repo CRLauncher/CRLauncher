@@ -14,6 +14,9 @@
                     "apiKeyCannotBeEmpty": "API key cannot be empty"
                 }
             },
+            "accountDelete": {
+                "error": "Unable to remove account '$$ACCOUNT_NAME$$'"
+            },
             "playView": {
                 "deleteInstanceConfirm": "Are you sure that you want to delete instance '$$INSTANCE_NAME$$'?",
                 "cannotDeleteInstance": "Could not delete $$INSTANCE_DIR$$",
@@ -209,7 +212,11 @@
             "running": "Running"
         },
         "accountsView": {
-            "addAccountButton": "Click to add account"
+            "addAccountButton": "Click to add account",
+            "deleteConfirmation": {
+                "title": "Account removal",
+                "message": "Are you sure you want to delete account '$$ACCOUNT_NAME$$'?"
+            }
         },
         "settingsView": {
             "themeSettings": {

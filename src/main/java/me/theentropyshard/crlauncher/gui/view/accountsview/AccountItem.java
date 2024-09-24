@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view.accountsview;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -132,11 +133,14 @@ public class AccountItem extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
+                Language language = CRLauncher.getInstance().getLanguage();
+
                 if (AccountItem.this.trashBounds.contains(e.getPoint())) {
                     boolean ok = MessageBox.showConfirmMessage(
                             CRLauncher.frame,
-                            "Account removal",
-                            "Are you sure that you want to remove account '" + account.getUsername() + "'?"
+                            language.getString("gui.accountsView.deleteConfirmation.title"),
+                        language.getString("gui.accountsView.deleteConfirmation.message")
+                            .replace("$$ACCOUNT_NAME$$", account.getUsername())
                     );
 
                     if (!ok) {
@@ -153,7 +157,8 @@ public class AccountItem extends JPanel {
 
                         MessageBox.showErrorMessage(
                                 CRLauncher.frame,
-                                "Unable to remove account '" + account.getUsername() + "': " + ex.getMessage()
+                            language.getString("messages.gui.accountDelete.error")
+                                .replace("$$ACCOUNT_NAME$$", account.getUsername())
                         );
 
                         return;

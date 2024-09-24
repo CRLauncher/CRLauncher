@@ -14,6 +14,9 @@
                     "apiKeyCannotBeEmpty": "API-ключ не может быть пустым"
                 }
             },
+            "accountDelete": {
+                "error": "Не удалось удалить аккаунт '$$ACCOUNT_NAME$$'"
+            },
             "playView": {
                 "deleteInstanceConfirm": "Вы уверены, что хотите удалить инстанс '$$INSTANCE_NAME$$'?",
                 "cannotDeleteInstance": "Не удалось удалить $$INSTANCE_DIR$$",
@@ -209,7 +212,11 @@
             "running": "Запущено"
         },
         "accountsView": {
-            "addAccountButton": "Нажмите, чтобы добавить аккаунт"
+            "addAccountButton": "Нажмите, чтобы добавить аккаунт",
+            "deleteConfirmation": {
+                "title": "Удаление аккаунта",
+                "message": "Вы уверены, что хотите удалить аккаунт '$$ACCOUNT_NAME$$'?"
+            }
         },
         "settingsView": {
             "themeSettings": {
