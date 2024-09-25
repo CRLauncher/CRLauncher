@@ -36,9 +36,9 @@
                 "couldNotDeleteWorld": "Не удалось удалить мир '$$WORLD_NAME$$' в $$WORLD_DIR$$"
             },
             "mods": {
-                "modAddedName": "Mod with name '$$MOD_NAME$$' already added!",
-                "modAddedId": "Mod with id '$$MOD_ID$$' already added!",
-                "modInvalid": "$$MOD_PATH$$ is not a valid $$MOD_LOADER$$ mod!"
+                "modAddedName": "Мод с названием '$$MOD_NAME$$' уже добавлен!",
+                "modAddedId": "Мод с id '$$MOD_ID$$' уже добавлен!",
+                "modInvalid": "$$MOD_PATH$$ это невалидный мод для $$MOD_LOADER$$!"
             }
         }
     },
