@@ -50,7 +50,7 @@ public class SearchCrmmModsView extends JPanel {
         this.modsTab = modsTab;
 
         this.modCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
-        this.modCardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        this.modCardsPanel.setBorder(new EmptyBorder(0, 3, 0, 10));
         JPanel borderPanel = new JPanel(new BorderLayout());
         borderPanel.add(this.modCardsPanel, BorderLayout.PAGE_START);
 

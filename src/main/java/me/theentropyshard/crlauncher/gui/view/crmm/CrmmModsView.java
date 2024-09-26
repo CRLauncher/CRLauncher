@@ -26,6 +26,7 @@ import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class CrmmModsView extends JPanel {
@@ -55,7 +56,7 @@ public class CrmmModsView extends JPanel {
 
         Language language = CRLauncher.getInstance().getLanguage();
 
-        JPanel topPanel = new JPanel(new GridLayout(2, 1));
+        JPanel topPanel = new JPanel(new GridLayout(2, 1, 0, 5));
 
         this.navBar = new NavBar();
         this.navBar.addItem("Mods");
@@ -65,7 +66,7 @@ public class CrmmModsView extends JPanel {
         this.navBar.addItem("Modpacks");
         topPanel.add(this.navBar);
 
-        JPanel searchPanel = new JPanel(new BorderLayout());
+        JPanel searchPanel = new JPanel(new BorderLayout(2, 0));
 
         this.searchField = new JTextField();
         this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(CrmmModsView.SEARCH_MODS_PLACEHOLDER));
@@ -80,6 +81,7 @@ public class CrmmModsView extends JPanel {
 
         this.cardLayout = new CardLayout();
         this.modsViewsPanel = new JPanel(this.cardLayout);
+        this.modsViewsPanel.setBorder(new EmptyBorder(5, 0, 0, 0));
 
         this.modsModsView = new SearchCrmmModsView(instance, modsTab);
         this.modsViewsPanel.add(this.modsModsView, "0");
