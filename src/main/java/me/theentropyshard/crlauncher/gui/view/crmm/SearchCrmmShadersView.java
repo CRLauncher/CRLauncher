@@ -18,25 +18,18 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
-import com.formdev.flatlaf.FlatClientProperties;
-import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 public class SearchCrmmShadersView extends SearchCrmmModsView {
     public SearchCrmmShadersView(Instance instance, ModsTab modsTab) {
         super(instance, modsTab);
-
-        Language language = CRLauncher.getInstance().getLanguage();
-        this.getSearchField().putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
-            language.getString("gui.searchCRMMModsDialog.searchShaders"));
     }
 
     @Override
-    public void searchMods() {
+    public void searchMods(String query) {
         new DataModsSearchWorker(
-            this.getSearchField(), this.getModCardsPanel(), this.getInstance(), this.getModsTab(),
+            query, this.getModCardsPanel(), this.getInstance(), this.getModsTab(),
             DataModType.SHADER
         ).execute();
     }

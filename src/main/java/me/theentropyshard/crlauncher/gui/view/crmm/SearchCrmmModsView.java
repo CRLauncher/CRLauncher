@@ -18,10 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
-import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.crmm.model.mod.CrmmMod;
@@ -42,7 +40,6 @@ import java.util.concurrent.ExecutionException;
 
 public class SearchCrmmModsView extends JPanel {
     private final JPanel modCardsPanel;
-    private final JTextField searchField;
     private final Instance instance;
     private final ModsTab modsTab;
 
@@ -51,23 +48,6 @@ public class SearchCrmmModsView extends JPanel {
 
         this.instance = instance;
         this.modsTab = modsTab;
-
-        JPanel topPanel = new JPanel(new BorderLayout());
-
-        Language language = CRLauncher.getInstance().getLanguage();
-
-        this.searchField = new JTextField();
-        this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
-            language.getString("gui.searchCRMMModsDialog.searchMods"));
-        topPanel.add(this.searchField, BorderLayout.CENTER);
-
-        JButton searchButton = new JButton(language.getString("gui.searchCRMMModsDialog.searchButton"));
-        searchButton.addActionListener(e -> {
-            this.searchMods();
-        });
-        topPanel.add(searchButton, BorderLayout.EAST);
-
-        this.add(topPanel, BorderLayout.NORTH);
 
         this.modCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
         this.modCardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
@@ -89,12 +69,12 @@ public class SearchCrmmModsView extends JPanel {
         this.add(modCardsScrollPane, BorderLayout.CENTER);
     }
 
-    public void searchMods() {
+    public void searchMods(String query) {
         new Worker<List<CrmmMod>, Void>("searching mods") {
             @Override
             protected List<CrmmMod> work() {
                 CrmmApi crmmApi = CRLauncher.getInstance().getCrmmApi();
-                SearchModsResponse searchModsResponse = crmmApi.searchMods(SearchCrmmModsView.this.searchField.getText());
+                SearchModsResponse searchModsResponse = crmmApi.searchMods(query);
 
                 return searchModsResponse.getMods();
             }
@@ -144,9 +124,5 @@ public class SearchCrmmModsView extends JPanel {
 
     public JPanel getModCardsPanel() {
         return this.modCardsPanel;
-    }
-
-    public JTextField getSearchField() {
-        return this.searchField;
     }
 }

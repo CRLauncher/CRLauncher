@@ -34,16 +34,16 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class DataModsSearchWorker extends Worker<List<Datapack>, Void> {
-    private final JTextField searchField;
+    private final String query;
     private final JPanel modCardsPanel;
     private final Instance instance;
     private final ModsTab modsTab;
     private final DataModType modType;
 
-    public DataModsSearchWorker(JTextField searchField, JPanel modCardsPanel, Instance instance, ModsTab modsTab, DataModType modType) {
+    public DataModsSearchWorker(String query, JPanel modCardsPanel, Instance instance, ModsTab modsTab, DataModType modType) {
         super("searching data mods");
 
-        this.searchField = searchField;
+        this.query = query;
         this.modCardsPanel = modCardsPanel;
         this.instance = instance;
         this.modsTab = modsTab;
@@ -55,10 +55,10 @@ public class DataModsSearchWorker extends Worker<List<Datapack>, Void> {
         CrmmApi crmmApi = CRLauncher.getInstance().getCrmmApi();
 
         SearchDatapacksResponse searchDatapacksResponse = switch (this.modType) {
-            case DATAMOD -> crmmApi.searchDataMods(this.searchField.getText());
-            case RESOURCE_PACK -> crmmApi.searchResourcePacks(this.searchField.getText());
-            case SHADER -> crmmApi.searchShaders(this.searchField.getText());
-            case MODPACK -> crmmApi.searchModpacks(this.searchField.getText());
+            case DATAMOD -> crmmApi.searchDataMods(this.query);
+            case RESOURCE_PACK -> crmmApi.searchResourcePacks(this.query);
+            case SHADER -> crmmApi.searchShaders(this.query);
+            case MODPACK -> crmmApi.searchModpacks(this.query);
         };
 
         return searchDatapacksResponse.getDatapacks();

@@ -16,21 +16,24 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.view.crmm;
+package me.theentropyshard.crlauncher.gui.view.crmm.navbar;
 
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.instance.Instance;
+import com.formdev.flatlaf.FlatClientProperties;
 
-public class SearchCrmmDataModsView extends SearchCrmmModsView {
-    public SearchCrmmDataModsView(Instance instance, ModsTab modsTab) {
-        super(instance, modsTab);
+import javax.swing.*;
+
+public class NavBarButton extends JToggleButton {
+    private final int id;
+
+    public NavBarButton(String text, int id) {
+        super(text);
+
+        this.id = id;
+
+        this.putClientProperty(FlatClientProperties.BUTTON_TYPE, FlatClientProperties.BUTTON_TYPE_TAB);
     }
 
-    @Override
-    public void searchMods(String query) {
-        new DataModsSearchWorker(
-            query, this.getModCardsPanel(), this.getInstance(), this.getModsTab(),
-            DataModType.DATAMOD
-        ).execute();
+    public int getId() {
+        return this.id;
     }
 }
