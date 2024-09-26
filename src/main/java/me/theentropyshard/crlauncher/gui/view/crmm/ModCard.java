@@ -225,47 +225,53 @@ public class ModCard extends JPanel {
         return new Dimension(preferredSize.width, ModCard.MAX_HEIGHT);
     }
 
-    public static String getKeyFromCount(String key, int count, Language language, String postfix) {
-        return switch (count) {
-            case 1 -> count + " " + language.getString(key + "1") + " " + postfix;
-            case 2, 3, 4 -> count + " " + language.getString(key + "s234") + " " + postfix;
-            default -> count + " " + language.getString(key + "s") + " " + postfix;
-        };
-    }
-    public static String getAgoFromNow(Temporal temporal) {
+    public static String formatUnit(String key, int count) {
         Language language = CRLauncher.getInstance().getLanguage();
         String ago = language.getString("general.time.ago");
 
+        return switch (count) {
+            case 1 -> count + " " + language.getString(key + "1") + " " + ago;
+            case 2, 3, 4 -> count + " " + language.getString(key + "s234") + " " + ago;
+            default -> count + " " + language.getString(key + "s") + " " + ago;
+        };
+    }
+
+    public static String getAgoFromNow(Temporal temporal) {
         OffsetDateTime now = OffsetDateTime.now();
 
         int years = (int) ChronoUnit.YEARS.between(temporal, now);
-        if (years != 0){
-            return this.getKeyFromCount("general.time.units.year", years, language, ago)
+        if (years != 0) {
+            return ModCard.formatUnit("general.time.units.year", years);
         }
+
         int months = (int) ChronoUnit.MONTHS.between(temporal, now);
-        if (months != 0){
-            return this.getKeyFromCount("general.time.units.month", months, language, ago)
+        if (months != 0) {
+            return ModCard.formatUnit("general.time.units.month", months);
         }
+
         int weeks = (int) ChronoUnit.WEEKS.between(temporal, now);
-        if (weeks != 0){
-            return this.getKeyFromCount("general.time.units.week", weeks, language, ago)
+        if (weeks != 0) {
+            return ModCard.formatUnit("general.time.units.week", weeks);
         }
+
         int days = (int) ChronoUnit.DAYS.between(temporal, now);
         if (days != 0) {
-            // ! IMPORTANT !
-            // ! Change "general.time.units.yesterday" to "general.time.units.day1" keys in the language dictionary
-            return this.getKeyFromCount("general.time.units.day", day, language, ago)
+            return ModCard.formatUnit("general.time.units.day", days);
         }
+
         int hours = (int) ChronoUnit.HOURS.between(temporal, now);
         if (hours != 0) {
-            return this.getKeyFromCount("general.time.units.hour", hours, language, ago)
+            return ModCard.formatUnit("general.time.units.hour", hours);
         }
+
         int minutes = (int) ChronoUnit.MINUTES.between(temporal, now);
         if (minutes != 0) {
-            return this.getKeyFromCount("general.time.units.minute", minutes, language, ago)
+            return ModCard.formatUnit("general.time.units.minute", minutes);
         }
+
         int seconds = (int) ChronoUnit.SECONDS.between(temporal, now);
-        return this.getKeyFromCount("general.time.units.second", years, language, ago)
+
+        return ModCard.formatUnit("general.time.units.second", seconds);
     }
 
     private void fetchIcon(ModInfo modInfo) {
