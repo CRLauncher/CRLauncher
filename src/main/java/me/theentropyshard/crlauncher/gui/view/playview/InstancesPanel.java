@@ -18,12 +18,15 @@
 
 package me.theentropyshard.crlauncher.gui.view.playview;
 
+import com.formdev.flatlaf.ui.FlatScrollPaneUI;
+import me.theentropyshard.crlauncher.gui.SmoothScrollMouseWheelListener;
 import me.theentropyshard.crlauncher.gui.components.AddInstanceItem;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.layouts.WrapLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseWheelListener;
 
 public class InstancesPanel extends JPanel {
     private final AddInstanceItem addInstanceItem;
@@ -45,6 +48,16 @@ public class InstancesPanel extends JPanel {
                 JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
+        this.scrollPane.setUI(new FlatScrollPaneUI() {
+            @Override
+            protected MouseWheelListener createMouseWheelListener() {
+                if (this.isSmoothScrollingEnabled()) {
+                    return new SmoothScrollMouseWheelListener(this.scrollpane.getVerticalScrollBar());
+                } else {
+                    return super.createMouseWheelListener();
+                }
+            }
+        });
         this.scrollPane.setBorder(null);
         this.scrollPane.getVerticalScrollBar().setUnitIncrement(8);
 
