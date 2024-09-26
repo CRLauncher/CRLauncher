@@ -1,1 +1,316 @@
-
+{
+    "metaInfo": {
+        "name": "Pirate English",
+        "displayName": "Pirate English"
+    },
+    "messages": {
+        "gui": {
+            "error": "Sinking Ship!",
+            "addAccountDialog": {
+                "offline": {
+                    "enterUsername": "Add yer username."
+                },
+                "itch": {
+                    "apiKeyCannotBeEmpty": "Ya musn't leave th' API key unfilled!"
+                }
+            },
+            "accountDelete": {
+                "error": "Cannot sink '$$ACCOUNT_NAME$$'!"
+            },
+            "playView": {
+                "deleteInstanceConfirm": "Are ya sure ya wanta burn down '$$INSTANCE_NAME$$'?",
+                "cannotDeleteInstance": "Couldn't sink $$INSTANCE_DIR$$!",
+                "invalidInstanceName": "Yer cannot name yer ship that! We renamed ya ship."
+            },
+            "addInstanceDialog": {
+                "instanceNameCannotBeEmpty": "Dock must have a name!",
+                "groupNameCannotBeEmpty": "Docks must have a name!",
+                "cosmicVersionNotSelected": "Cosmic Reach ship build aint picked!",
+                "unableToCreateInstance": "Unable to build new docks!"
+            },
+            "instanceSettingsDialog": {
+                "couldNotLoadVersions": "Could not take ship builds!",
+                "ramMinCannotBeLargerMax": "Yer minimum RAM cannot be more than th' max!",
+                "ramMinCannotBeLess512MB": "Minimum RAM cannot be under 512 MiB",
+                "deleteWorldSure": "Are ye sure ya wanna  drain ocean '$$WORLD_NAME$$'?",
+                "couldNotDeleteWorld": "Couldn't drain ocean '$$WORLD_NAME$$' located at $$WORLD_DIR$$"
+            },
+            "mods": {
+                "modAddedName": "Sail with name '$$MOD_NAME$$' already flown!",
+                "modAddedId": "Sail with id '$$MOD_ID$$' already flown!",
+                "modInvalid": "$$MOD_PATH$$ is not a fitting $$MOD_LOADER$$ sail!"
+            }
+        }
+    },
+    "gui": {
+        "instanceItem": {
+            "contextMenu": {
+                "edit": "Edit",
+                "icon": "Icon",
+                "rename": "Rename",
+                "delete": "Delete",
+                "openInstanceFolder": "Open instance folder",
+                "openCosmicFolder": "Open Cosmic folder"
+            }
+        },
+        "instanceSettingsDialog": {
+            "title": "Instance Settings - $$INSTANCE_NAME$$",
+            "mainTab": {
+                "name": "Main",
+                "cosmicReachVersion": {
+                    "borderName": "Cosmic Reach version",
+                    "autoUpdateToLatest": "Automatically update to the latest version"
+                },
+                "otherSettings": {
+                    "borderName": "Other",
+                    "textFieldPlaceholder": "Set custom window title here"
+                }
+            },
+            "javaTab": {
+                "name": "Java",
+                "javaInstallation": {
+                    "borderName": "Java Installation",
+                    "textFieldPlaceholder": "Path to javaw.exe"
+                },
+                "memorySettings": {
+                    "borderName": "Memory Settings",
+                    "minimum": "Minimum memory (Megabytes)",
+                    "maximum": "Maximum memory (Megabytes)"
+                }
+            },
+            "modsTab": {
+                "name": "Mods",
+                "modLoader": {
+                    "borderName": "Mod loader",
+                    "options": {
+                        "vanilla": "Vanilla",
+                        "fabric": "Fabric",
+                        "cosmicQuilt": "Cosmic Quilt",
+                        "puzzle": "Puzzle"
+                    }
+                },
+                "loaderVersion": {
+                    "borderName": "Loader version"
+                },
+                "modsTable": {
+                    "borderName": "Mods",
+                    "vanilla": {
+                        "modFolder": "Mod folder",
+                        "deleteModButton": "Delete data mod"
+                    },
+                    "fabric": {
+                        "modName": "Name",
+                        "modVersion": "Version",
+                        "modDescription": "Description",
+                        "modActive": "Active",
+                        "addModButton": "Add Fabric mod",
+                        "deleteModButton": "Delete Fabric mod"
+                    },
+                    "cosmicQuilt": {
+                        "modName": "Name",
+                        "modVersion": "Version",
+                        "modDescription": "Description",
+                        "modActive": "Active",
+                        "addModButton": "Add Quilt mod",
+                        "deleteModButton": "Delete Quilt mod"
+                    },
+                    "puzzle": {
+                        "modName": "Name",
+                        "modVersion": "Version",
+                        "modDescription": "Description",
+                        "modActive": "Active",
+                        "addModButton": "Add Puzzle mod",
+                        "deleteModButton": "Delete Puzzle mod"
+                    }
+                },
+                "openModsFolder": "Open mods folder",
+                "searchModsCRMM": "Search mods on CRMM"
+            },
+            "worldsTab": {
+                "name": "Worlds",
+                "table": {
+                    "worldName": "Name",
+                    "worldSeed": "Seed",
+                    "lastPlayed": "Last played",
+                    "createdAt": "Created"
+                },
+                "contextMenu": {
+                    "copySeed": "Copy seed",
+                    "delete": "Delete"
+                },
+                "deletingWorld": "Deleting world"
+            }
+        },
+        "searchCRMMModsDialog": {
+            "title": "Search mods on CRMM",
+            "download1": "download",
+            "downloads234": "downloads",
+            "downloads": "downloads",
+            "follower1": "follower",
+            "followers234": "followers",
+            "followers": "followers",
+            "downloadButton": "Download",
+            "mods": "Mods",
+            "datamods": "Data Mods",
+            "resourcePacks": "Resource Packs",
+            "shaders": "Shaders",
+            "modpacks": "Modpacks",
+            "searchButton": "Search",
+            "searchMods": "Search mods...",
+            "searchDatamods": "Search data mods...",
+            "searchResourcePacks": "Search resource packs...",
+            "searchShaders": "Search shaders...",
+            "searchModpacks": "Search modpacks..."
+        },
+        "addAccountDialog": {
+            "title": "Add account",
+            "offline": {
+                "tabName": "Offline",
+                "textFieldPlaceholder": "Enter desired username"
+            },
+            "itch": {
+                "tabName": "Itch.io",
+                "textFieldPlaceholder": "Enter Itch.io API key"
+            },
+            "accountExists": "Account with name '$$ACCOUNT_NAME$$' already exists",
+            "addButton": "Add"
+        },
+        "console": {
+            "title": "CRLauncher Console",
+            "scrollDown": "Scroll down",
+            "copyButton": "Copy",
+            "clearButton": "Clear"
+        },
+        "general": {
+            "yes": "Yes",
+            "no": "No",
+            "ok": "OK",
+            "cancel": "Cancel",
+            "archives": "Archives",
+            "openLauncherFolder": "Open launcher folder",
+            "consoleButton": {
+                "show": "Show console",
+                "hide": "Hide console"
+            },
+            "tab": {
+                "play": "Play",
+                "accounts": "Accounts",
+                "settings": "Settings",
+                "about": "About"
+            }
+        },
+        "playView": {
+            "instanceGroup": "Instance group",
+            "account": "Account",
+            "deleteInstanceTitle": "Delete instance",
+            "renameInstanceDialog": {
+                "title": "Rename instance",
+                "message": "Enter new name"
+            },
+            "lastPlayedFor": "Last played for",
+            "totalPlayedFor": "Total played for",
+            "running": "Running"
+        },
+        "accountsView": {
+            "addAccountButton": "Click to add account",
+            "deleteConfirmation": {
+                "title": "Account removal",
+                "message": "Are you sure you want to delete account '$$ACCOUNT_NAME$$'?"
+            }
+        },
+        "settingsView": {
+            "themeSettings": {
+                "borderName": "Theme",
+                "light": "Light",
+                "dark": "Dark"
+            },
+            "ui": {
+                "borderName": "UI",
+                "dialogPosition": {
+                    "label": "Dialog position",
+                    "options": {
+                        "relativeToParent": "Relative to parent",
+                        "alwaysCentered": "Always centered"
+                    }
+                },
+                "amountOfTime": "Show the amount of time that has passed since the release date"
+            },
+            "other": {
+                "borderName": "Other",
+                "writePrettyJson": "Write pretty JSON files (useful for development/debugging)",
+                "onGameLaunch": {
+                    "label": "When Cosmic Reach launches",
+                    "options": {
+                        "doNothing": "Do nothing",
+                        "hideLauncher": "Hide launcher",
+                        "hideLauncherAndConsole": "Hide launcher and console",
+                        "exitLauncher": "Exit launcher (Time spent on instance won't be counted)"
+                    }
+                },
+                "onGameExit": {
+                    "label": "When Cosmic Reach exits",
+                    "options": {
+                        "doNothing": "Do nothing",
+                        "exitLauncher": "Exit launcher if Cosmic Reach exit code is 0 (ok)"
+                    }
+                },
+                "checkForUpdatesAtStartup": "Check for updates at startup",
+                "language": "Language"
+            }
+        },
+        "aboutView": {
+            "lines": {
+                "line1": "CRLauncher $$LAUNCHER_VERSION$$ - simple Cosmic Reach launcher",
+                "line2": "by TheEntropyShard",
+                "line3": "More at $$LAUNCHER_URL$$"
+            }
+        },
+        "addInstanceDialog": {
+            "title": "Add New Instance",
+            "nameFieldLabel": "Name",
+            "groupFieldLabel": "Group",
+            "autoUpdateToLatest": "Automatically update to the latest version",
+            "filter": "Filter",
+            "refreshButton": "Refresh",
+            "addButton": "Add",
+            "cancelButton": "Cancel",
+            "table": {
+                "version": "Version",
+                "dateReleased": "Date released",
+                "versionType": "Type"
+            }
+        }
+    },
+    "general": {
+        "updated": "Updated",
+        "time": {
+            "dateFormat": "MM/dd/yyyy",
+            "ago": "ago",
+            "units": {
+                "second1": "second",
+                "seconds234": "seconds",
+                "seconds": "seconds",
+                "minute1": "minute",
+                "minutes234": "minutes",
+                "minutes": "minutes",
+                "hour1": "hour",
+                "hours234": "hours",
+                "hours": "hours",
+                "day1": "day",
+                "days234": "days",
+                "days": "days",
+                "today": "today",
+                "yesterday": "yesterday",
+                "week1": "week",
+                "weeks234": "weeks",
+                "weeks": "weeks",
+                "month1": "month",
+                "months234": "months",
+                "months": "months",
+                "year1": "year",
+                "years234": "years",
+                "years": "years"
+            }
+        }
+    }
+}
