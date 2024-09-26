@@ -69,7 +69,14 @@ public class SearchCrmmModsView extends JPanel {
         this.add(modCardsScrollPane, BorderLayout.CENTER);
     }
 
+    public void clear() {
+        this.modCardsPanel.removeAll();
+        this.modCardsPanel.revalidate();
+    }
+
     public void searchMods(String query) {
+        this.clear();
+
         new Worker<List<CrmmMod>, Void>("searching mods") {
             @Override
             protected List<CrmmMod> work() {
@@ -82,8 +89,6 @@ public class SearchCrmmModsView extends JPanel {
             @Override
             @SuppressWarnings("unchecked")
             protected void done() {
-                SearchCrmmModsView.this.modCardsPanel.removeAll();
-
                 List<CrmmMod> crmmMods = null;
                 try {
                     crmmMods = this.get();
