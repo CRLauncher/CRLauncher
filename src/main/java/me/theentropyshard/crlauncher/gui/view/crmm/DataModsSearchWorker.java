@@ -85,11 +85,9 @@ public class DataModsSearchWorker extends Worker<List<Datapack>, Void> {
             ModCard card = new ModCard(modInfo);
             card.addMouseListener(new MouseClickListener(e -> {
                 new ModVersionsDialog(modInfo, this.instance, this.modsTab,
-                    (versionsView, version) -> {
-                        return new DataModDownloadWorkerSupplier(
-                            this.instance, this.modsTab
-                        ).getWorker(versionsView, version);
-                    });
+                    new DataModDownloadWorkerSupplier(
+                    )
+                );
             }));
             this.modCardsPanel.add(card);
         }

@@ -18,20 +18,13 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
-import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
-import me.theentropyshard.crlauncher.gui.layouts.WrapLayout;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class ModVersionCard extends JPanel {
+public class FileCard extends JPanel {
     private static final int BORDER_SIZE = 12;
     private static final int ARC_SIZE = 10;
 
@@ -42,77 +35,43 @@ public class ModVersionCard extends JPanel {
     private boolean mouseOver;
     private boolean mousePressed;
 
-    public ModVersionCard(ProjectVersion version, FileListener fileListener) {
-        super(new BorderLayout());
-
-        JPanel versionInfoPanel = new JPanel(new GridLayout(2, 1));
-        versionInfoPanel.setOpaque(false);
-        JLabel versionNumberLabel = new JLabel("<html><b>" + version.getVersionNumber() + "</b></html>");
-        JLabel versionTitleLabel = new JLabel(version.getTitle());
-        versionInfoPanel.add(versionNumberLabel);
-        versionInfoPanel.add(versionTitleLabel);
-
-        this.add(versionInfoPanel, BorderLayout.WEST);
-
-        this.add(Box.createHorizontalBox(), BorderLayout.CENTER);
-
-        Language language = CRLauncher.getInstance().getLanguage();
-
-        JButton downloadButton = new JButton(language.getString("gui.searchCRMMModsDialog.downloadButton"));
-        downloadButton.addActionListener(e -> {
-            fileListener.fileChosen(version.getPrimaryFile());
-        });
-
-        JButton otherFilesButtons = new JButton(language.getString("gui.searchCRMMModsDialog.otherFilesButton"));
-        otherFilesButtons.addActionListener(e -> {
-
-        });
-
-        JPanel buttonsPanel = new JPanel();
-        BoxLayout boxLayout = new BoxLayout(buttonsPanel, BoxLayout.LINE_AXIS);
-        buttonsPanel.setLayout(boxLayout);
-        buttonsPanel.setOpaque(false);
-        buttonsPanel.add(downloadButton);
-        buttonsPanel.add(otherFilesButtons);
-
-        this.add(buttonsPanel, BorderLayout.EAST);
-
+    public FileCard() {
         this.setOpaque(false);
         this.setDefaultColor(UIManager.getColor("InstanceItem.defaultColor"));
         this.setHoveredColor(UIManager.getColor("InstanceItem.hoveredColor"));
         this.setPressedColor(UIManager.getColor("InstanceItem.pressedColor"));
 
         this.setBorder(new EmptyBorder(
-            ModVersionCard.BORDER_SIZE,
-            ModVersionCard.BORDER_SIZE,
-            ModVersionCard.BORDER_SIZE,
-            ModVersionCard.BORDER_SIZE
+            FileCard.BORDER_SIZE,
+            FileCard.BORDER_SIZE,
+            FileCard.BORDER_SIZE,
+            FileCard.BORDER_SIZE
         ));
 
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                ModVersionCard.this.mouseOver = true;
-                ModVersionCard.this.repaint();
+                FileCard.this.mouseOver = true;
+                FileCard.this.repaint();
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                ModVersionCard.this.mouseOver = false;
-                ModVersionCard.this.repaint();
+                FileCard.this.mouseOver = false;
+                FileCard.this.repaint();
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                ModVersionCard.this.mousePressed = true;
-                ModVersionCard.this.repaint();
+                FileCard.this.mousePressed = true;
+                FileCard.this.repaint();
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                ModVersionCard.this.mousePressed = false;
-                ModVersionCard.this.repaint();
+                FileCard.this.mousePressed = false;
+                FileCard.this.repaint();
             }
         });
     }
@@ -139,11 +98,7 @@ public class ModVersionCard extends JPanel {
         }
 
         g2d.setColor(color);
-        g2d.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), ModVersionCard.ARC_SIZE, ModVersionCard.ARC_SIZE);
-    }
-
-    public interface FileListener {
-        void fileChosen(ProjectFile file);
+        g2d.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), FileCard.ARC_SIZE, FileCard.ARC_SIZE);
     }
 
     public void setDefaultColor(Color defaultColor) {

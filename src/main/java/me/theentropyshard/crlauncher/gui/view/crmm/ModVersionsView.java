@@ -106,8 +106,8 @@ public class ModVersionsView extends JPanel {
             @Override
             protected void process(List<ProjectVersion> chunks) {
                 for (ProjectVersion version : chunks) {
-                    ModVersionCard card = new ModVersionCard(version, e -> {
-                        ModVersionsView.this.workerSupplier.getWorker(ModVersionsView.this, version).execute();
+                    ModVersionCard card = new ModVersionCard(version, file -> {
+                        ModVersionsView.this.workerSupplier.getWorker(ModVersionsView.this, version, file).execute();
                     });
                     ModVersionsView.this.addModVersionCard(card);
                 }

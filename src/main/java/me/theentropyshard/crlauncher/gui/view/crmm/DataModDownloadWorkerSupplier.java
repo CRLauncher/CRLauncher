@@ -39,33 +39,31 @@ import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 
 public class DataModDownloadWorkerSupplier implements WorkerSupplier {
-    private final Instance instance;
-    private final ModsTab modsTab;
+    public DataModDownloadWorkerSupplier() {
 
-    public DataModDownloadWorkerSupplier(Instance instance, ModsTab modsTab) {
-        this.instance = instance;
-        this.modsTab = modsTab;
     }
 
     @Override
-    public Worker getWorker(ModVersionsView versionsView, ProjectVersion version) {
+    public Worker getWorker(ModVersionsView versionsView, ProjectVersion version, ProjectFile file) {
+        ModsTab modsTab = versionsView.getModsTab();
+        Instance instance = versionsView.getInstance();
+
         return new Worker<>("downloading mod " + version.getTitle()) {
             @Override
             protected String work() throws Exception {
-                ProjectFile primaryFile = version.getPrimaryFile();
 
-                ProgressDialog progressDialog = new ProgressDialog("Downloading " + primaryFile.getName());
+                ProgressDialog progressDialog = new ProgressDialog("Downloading " + file.getName());
 
                 OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient().newBuilder()
                     .addNetworkInterceptor(new ProgressNetworkInterceptor(progressDialog))
                     .build();
 
-                Path saveAs = DataModDownloadWorkerSupplier.this.instance.getDataModsDir()
-                    .resolve(primaryFile.getName());
+                Path saveAs = instance.getDataModsDir()
+                    .resolve(file.getName());
 
                 HttpDownload download = new HttpDownload.Builder()
-                    .url(primaryFile.getUrl())
-                    .expectedSize(primaryFile.getSize())
+                    .url(file.getUrl())
+                    .expectedSize(file.getSize())
                     .httpClient(httpClient)
                     .saveAs(saveAs)
                     .build();
@@ -83,7 +81,7 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
                     } else {
                         modName = saveAs.getFileName().toString();
                     }
-                    file.extractAll(DataModDownloadWorkerSupplier.this.instance.getDataModsDir().toString());
+                    file.extractAll(instance.getDataModsDir().toString());
                 }
 
                 FileUtils.delete(saveAs);
@@ -102,7 +100,7 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
                     return;
                 }
 
-                JPanel modsView = DataModDownloadWorkerSupplier.this.modsTab.getModsView();
+                JPanel modsView = modsTab.getModsView();
 
                 if (modsView instanceof DataModsView dataModsView) {
                     dataModsView.getDataModsTableModel().addRow(modName);

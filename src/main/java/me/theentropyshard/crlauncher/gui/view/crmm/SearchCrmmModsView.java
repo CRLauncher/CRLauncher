@@ -105,11 +105,7 @@ public class SearchCrmmModsView extends JPanel {
                     ModCard card = new ModCard(modInfo);
                     card.addMouseListener(new MouseClickListener(e -> {
                         new ModVersionsDialog(modInfo, SearchCrmmModsView.this.instance, SearchCrmmModsView.this.modsTab,
-                            (versionsView, version) -> {
-                                return new ModDownloadWorkerSupplier(SearchCrmmModsView.this.instance, SearchCrmmModsView.this.modsTab).getWorker(
-                                    versionsView, version
-                                );
-                            });
+                            new ModDownloadWorkerSupplier());
                     }));
                     SearchCrmmModsView.this.modCardsPanel.add(card);
                 }
