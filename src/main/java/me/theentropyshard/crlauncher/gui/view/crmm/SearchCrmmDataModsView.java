@@ -22,15 +22,19 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsT
 import me.theentropyshard.crlauncher.instance.Instance;
 
 public class SearchCrmmDataModsView extends SearchCrmmModsView {
-    public SearchCrmmDataModsView(Instance instance, ModsTab modsTab) {
+    private final DataModType modType;
+
+    public SearchCrmmDataModsView(Instance instance, ModsTab modsTab, DataModType modType) {
         super(instance, modsTab);
+
+        this.modType = modType;
     }
 
     @Override
     public void searchMods(String query) {
         new DataModsSearchWorker(
             query, this.getModCardsPanel(), this.getInstance(), this.getModsTab(),
-            DataModType.DATAMOD
+            this.modType
         ).execute();
     }
 }

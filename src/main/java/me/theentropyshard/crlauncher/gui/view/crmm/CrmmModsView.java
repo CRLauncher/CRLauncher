@@ -47,7 +47,7 @@ public class CrmmModsView extends JPanel {
     private final SearchCrmmModsView dataModsModsView;
     private final SearchCrmmModsView resourcePacksModsView;
     private final SearchCrmmModsView shadersModsView;
-    private final SearchCrmmModpacksView modpacksView;
+    private final SearchCrmmModsView modpacksView;
 
     private int tab;
 
@@ -86,16 +86,16 @@ public class CrmmModsView extends JPanel {
         this.modsModsView = new SearchCrmmModsView(instance, modsTab);
         this.modsViewsPanel.add(this.modsModsView, "0");
 
-        this.dataModsModsView = new SearchCrmmDataModsView(instance, modsTab);
+        this.dataModsModsView = new SearchCrmmDataModsView(instance, modsTab, DataModType.DATAMOD);
         this.modsViewsPanel.add(this.dataModsModsView, "1");
 
-        this.resourcePacksModsView = new SearchCrmmResourcePacksView(instance, modsTab);
+        this.resourcePacksModsView = new SearchCrmmDataModsView(instance, modsTab, DataModType.RESOURCE_PACK);
         this.modsViewsPanel.add(this.resourcePacksModsView, "2");
 
-        this.shadersModsView = new SearchCrmmShadersView(instance, modsTab);
+        this.shadersModsView = new SearchCrmmDataModsView(instance, modsTab, DataModType.SHADER);
         this.modsViewsPanel.add(this.shadersModsView, "3");
 
-        this.modpacksView = new SearchCrmmModpacksView(instance, modsTab);
+        this.modpacksView = new SearchCrmmDataModsView(instance, modsTab, DataModType.MODPACK);
         this.modsViewsPanel.add(this.modpacksView, "4");
 
         this.modsModsView.searchMods("");
