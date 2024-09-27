@@ -39,7 +39,7 @@ public class Language {
 
         JsonElement stringElement = this.languageObject.get(parts[0]);
 
-        for (int i = 1; i < parts.length; i++) {
+        for (int i = 1; i < parts.length && stringElement != null; i++) {
             stringElement = stringElement.getAsJsonObject().get(parts[i]);
         }
 
