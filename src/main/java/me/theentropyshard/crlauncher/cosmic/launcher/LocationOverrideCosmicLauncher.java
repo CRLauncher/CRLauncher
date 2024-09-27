@@ -32,9 +32,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
-    private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.0");
+    private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.1");
     private static final String CR_LOADER_JAR = "CRLoader-" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION.toVersionString() + ".jar";
-    private static final String CR_LOADER_SHA256 = "8147f23d15599d5ce9b7bb98983989b0e59a1402409731ec3228873ef4c17f66";
+    private static final String CR_LOADER_SHA256 = "d341da9796990f0d251c28f82b3179242c03bd809e504864d7d8942898ffe3ee";
 
     public LocationOverrideCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
         super(javaPath, runDir, gameFilesLocation, clientPath);
