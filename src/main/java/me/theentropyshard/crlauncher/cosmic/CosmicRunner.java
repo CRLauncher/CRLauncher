@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
+import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.cosmic.launcher.AbstractCosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
@@ -54,8 +55,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CosmicRunner extends Thread {
-
-
     private final Instance instance;
     private final InstanceItem item;
 
@@ -183,6 +182,12 @@ public class CosmicRunner extends Thread {
 
                 if (title != null && !title.trim().isEmpty()) {
                     abstractLauncher.defineProperty(new SystemProperty("crloader.windowTitle", title));
+                }
+
+                Account currentAccount = CRLauncher.getInstance().getAccountManager().getCurrentAccount();
+
+                if (currentAccount != null) {
+                    abstractLauncher.defineProperty(new SystemProperty("crloader.offlineUsername", currentAccount.getUsername()));
                 }
             }
 
