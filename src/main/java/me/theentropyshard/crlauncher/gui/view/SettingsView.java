@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.view;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
@@ -51,6 +52,13 @@ public class SettingsView extends JPanel {
     public static final String EXIT_EXIT_LAUNCHER = "gui.settingsView.other.onGameExit.options.exitLauncher";
     public static final String CHECK_FOR_UPDATES = "gui.settingsView.other.checkForUpdatesAtStartup";
     public static final String LANGUAGE = "gui.settingsView.other.language";
+    public static final String STORAGE_BORDER = "gui.settingsView.storageSettings.borderName";
+    public static final String VERSIONS_PATH_LABEL = "gui.settingsView.storageSettings.versionsPathLabel";
+    public static final String VERSIONS_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.versionsPathFieldPlaceholder";
+    public static final String INSTANCES_PATH_LABEL = "gui.settingsView.storageSettings.instancesPathLabel";
+    public static final String INSTANCES_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.instancesPathFieldPlaceholder";
+    public static final String MOD_LOADERS_PATH_LABEL = "gui.settingsView.storageSettings.modLoadersPathLabel";
+    public static final String MOD_LOADERS_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.modLoadersPathFieldPlaceholder";
 
     private final TitledBorder themeSettingsBorder;
     private final JRadioButton darkThemeButton;
@@ -58,6 +66,13 @@ public class SettingsView extends JPanel {
     private final TitledBorder uiSettingsBorder;
     private final JLabel dialogPositionLabel;
     private final JCheckBox showAmountOfTime;
+    private final TitledBorder storageSettingsBorder;
+    private final JLabel versionsPathLabel;
+    private final JTextField versionsPathField;
+    private final JLabel instancesPathLabel;
+    private final JTextField instancesPathField;
+    private final JLabel modLoadersPathLabel;
+    private final JTextField modLoadersPathField;
     private final TitledBorder otherSettingsBorder;
     private final JCheckBox prettyJson;
     private final JLabel launchOptionLabel;
@@ -155,6 +170,36 @@ public class SettingsView extends JPanel {
 
             gbc.gridy++;
             this.add(uiSettings, gbc);
+        }
+
+        {
+            JPanel storageSettings = new JPanel(new GridLayout(3, 2));
+            this.storageSettingsBorder = new TitledBorder(language.getString(SettingsView.STORAGE_BORDER));
+            storageSettings.setBorder(this.storageSettingsBorder);
+
+            this.versionsPathLabel = new JLabel(language.getString(SettingsView.VERSIONS_PATH_LABEL) + ": ");
+            storageSettings.add(this.versionsPathLabel);
+
+            this.versionsPathField = new JTextField();
+            this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
+            storageSettings.add(this.versionsPathField);
+
+            this.instancesPathLabel = new JLabel(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
+            storageSettings.add(this.instancesPathLabel);
+
+            this.instancesPathField = new JTextField();
+            this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
+            storageSettings.add(this.instancesPathField);
+
+            this.modLoadersPathLabel = new JLabel(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
+            storageSettings.add(this.modLoadersPathLabel);
+
+            this.modLoadersPathField = new JTextField();
+            this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
+            storageSettings.add(this.modLoadersPathField);
+
+            gbc.gridy++;
+            this.add(storageSettings, gbc);
         }
 
         {
@@ -268,9 +313,17 @@ public class SettingsView extends JPanel {
         this.otherSettingsBorder.setTitle(language.getString(SettingsView.OTHER_BORDER));
         this.prettyJson.setText(language.getString(SettingsView.WRITE_PRETTY_JSON));
 
+        this.storageSettingsBorder.setTitle(language.getString(SettingsView.STORAGE_BORDER));
+        this.versionsPathLabel.setText(language.getString(SettingsView.VERSIONS_PATH_LABEL) + ": ");
+        this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
+        this.instancesPathLabel.setText(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
+        this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));;
+        this.modLoadersPathLabel.setText(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
+        this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));;
+
         this.launchOptionLabel.setText(language.getString(SettingsView.GAME_LAUNCH_LABEL));
         DefaultComboBoxModel<String> launchModel = new DefaultComboBoxModel<>(
-            new String[] {
+            new String[]{
                 language.getString(SettingsView.LAUNCH_DO_NOTHING),
                 language.getString(SettingsView.LAUNCH_HIDE_LAUNCHER),
                 language.getString(SettingsView.LAUNCH_HIDE_LAUNCHER_AND_CONSOLE),

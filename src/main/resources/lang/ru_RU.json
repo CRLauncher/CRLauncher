@@ -236,6 +236,15 @@
                 },
                 "amountOfTime": "Показывать время, прошедшее с релиза версии"
             },
+            "storageSettings": {
+                "borderName": "Хранилище",
+                "versionsPathLabel": "Путь к папке с версиями",
+                "versionsPathFieldPlaceholder": "<launcher folder>/cosmic-reach/versions",
+                "instancesPathLabel": "Путь к папке с инстансами",
+                "instancesPathFieldPlaceholder": "<launcher folder>/cosmic-reach/instances",
+                "modLoadersPathLabel": "Путь к папке с загрузчиками модов",
+                "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach"
+            },
             "other": {
                 "borderName": "Другое",
                 "writePrettyJson": "Красиво форматировать Json-файлы (полезно для дебага/разработки)",

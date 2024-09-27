@@ -236,6 +236,15 @@
                 },
                 "amountOfTime": "Show the amount of time that has passed since the release date"
             },
+            "storageSettings": {
+                "borderName": "Storage",
+                "versionsPathLabel": "Versions directory path",
+                "versionsPathFieldPlaceholder": "<launcher folder>/cosmic-reach/versions",
+                "instancesPathLabel": "Instances directory path",
+                "instancesPathFieldPlaceholder": "<launcher folder>/cosmic-reach/instances",
+                "modLoadersPathLabel": "Mod loaders directory path",
+                "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach"
+            },
             "other": {
                 "borderName": "Other",
                 "writePrettyJson": "Write pretty JSON files (useful for development/debugging)",
