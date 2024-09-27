@@ -53,7 +53,7 @@ public class ModVersionsView extends JPanel {
         this.workerSupplier = workerSupplier;
 
         this.modVersionCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
-        this.modVersionCardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        this.modVersionCardsPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
         JPanel borderPanel = new JPanel(new BorderLayout());
         borderPanel.add(this.modVersionCardsPanel, BorderLayout.PAGE_START);
 
@@ -71,6 +71,8 @@ public class ModVersionsView extends JPanel {
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         this.add(scrollPane, BorderLayout.CENTER);
+
+        this.setBorder(new EmptyBorder(0, 0, 10, 0));
     }
 
     public void addModVersionCard(ModVersionCard card) {
