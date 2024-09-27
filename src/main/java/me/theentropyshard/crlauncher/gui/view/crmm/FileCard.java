@@ -18,6 +18,9 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
+import com.formdev.flatlaf.FlatClientProperties;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -28,6 +31,10 @@ public class FileCard extends JPanel {
     private static final int BORDER_SIZE = 12;
     private static final int ARC_SIZE = 10;
 
+    private final boolean primary;
+    private final JLabel fileNameLabel;
+    private final JButton downloadButton;
+
     private Color defaultColor;
     private Color hoveredColor;
     private Color pressedColor;
@@ -35,7 +42,31 @@ public class FileCard extends JPanel {
     private boolean mouseOver;
     private boolean mousePressed;
 
-    public FileCard() {
+    public FileCard(ProjectFile file, ModVersionCard.FileListener listener, boolean primary) {
+        super(new BorderLayout());
+
+        this.fileNameLabel = new JLabel(file.getName());
+        this.primary = primary;
+        this.add(this.fileNameLabel, BorderLayout.WEST);
+
+        this.add(Box.createHorizontalBox(), BorderLayout.CENTER);
+
+        if (primary) {
+            this.downloadButton = new JButton("Download") {
+                @Override
+                public boolean isDefaultButton() {
+                    return true;
+                }
+            };
+        } else {
+            this.downloadButton = new JButton("Download");
+        }
+
+        this.downloadButton.addActionListener(e -> {
+            listener.fileChosen(file);
+        });
+        this.add(this.downloadButton, BorderLayout.EAST);
+
         this.setOpaque(false);
         this.setDefaultColor(UIManager.getColor("InstanceItem.defaultColor"));
         this.setHoveredColor(UIManager.getColor("InstanceItem.hoveredColor"));
