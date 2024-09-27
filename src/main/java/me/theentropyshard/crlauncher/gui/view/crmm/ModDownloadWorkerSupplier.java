@@ -100,6 +100,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                         }
                     }
 
+                    mod.setFilePath(saveAs.toString());
                     mod.setActive(true);
 
                     return mod;
