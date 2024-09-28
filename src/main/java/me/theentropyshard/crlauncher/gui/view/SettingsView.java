@@ -25,9 +25,11 @@ import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.Gui;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.nio.file.Files;
 import java.util.Map;
 
 public class SettingsView extends JPanel {
@@ -59,6 +61,7 @@ public class SettingsView extends JPanel {
     public static final String INSTANCES_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.instancesPathFieldPlaceholder";
     public static final String MOD_LOADERS_PATH_LABEL = "gui.settingsView.storageSettings.modLoadersPathLabel";
     public static final String MOD_LOADERS_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.modLoadersPathFieldPlaceholder";
+    public static final String TIP_LABEL = "gui.settingsView.storageSettings.tip";
 
     private final TitledBorder themeSettingsBorder;
     private final JRadioButton darkThemeButton;
@@ -73,6 +76,7 @@ public class SettingsView extends JPanel {
     private final JTextField instancesPathField;
     private final JCheckBox modLoadersPathCheckbox;
     private final JTextField modLoadersPathField;
+    private final JLabel tipLabel;
     private final TitledBorder otherSettingsBorder;
     private final JCheckBox prettyJson;
     private final JLabel launchOptionLabel;
@@ -175,7 +179,7 @@ public class SettingsView extends JPanel {
         {
             Settings settings = CRLauncher.getInstance().getSettings();
 
-            JPanel storageSettings = new JPanel(new GridLayout(3, 2));
+            JPanel storageSettings = new JPanel(new GridLayout(4, 2));
             this.storageSettingsBorder = new TitledBorder(language.getString(SettingsView.STORAGE_BORDER));
             storageSettings.setBorder(this.storageSettingsBorder);
 
@@ -202,6 +206,10 @@ public class SettingsView extends JPanel {
             this.modLoadersPathField = new JTextField();
             this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
             storageSettings.add(this.modLoadersPathField);
+
+            this.tipLabel = new JLabel("<html><b>" + language.getString(SettingsView.TIP_LABEL) + "</b></html>");
+            this.tipLabel.setBorder(new EmptyBorder(2, 2, 2, 2));
+            storageSettings.add(this.tipLabel);
 
             this.versionsPathField.setEnabled(this.versionsPathCheckbox.isSelected());
             this.versionsPathCheckbox.addActionListener(e -> {
@@ -361,6 +369,7 @@ public class SettingsView extends JPanel {
         this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));;
         this.modLoadersPathCheckbox.setText(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
         this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));;
+        this.tipLabel.setText("<html><b>" + language.getString(SettingsView.TIP_LABEL) + "</b></html>");
 
         this.launchOptionLabel.setText(language.getString(SettingsView.GAME_LAUNCH_LABEL));
         DefaultComboBoxModel<String> launchModel = new DefaultComboBoxModel<>(

@@ -245,7 +245,8 @@
                 "instancesPathLabel": "Путь к папке с инстансами",
                 "instancesPathFieldPlaceholder": "<launcher folder>/cosmic-reach/instances",
                 "modLoadersPathLabel": "Путь к папке с загрузчиками модов",
-                "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach"
+                "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach",
+                "tip": "Не забудьте нажать ENTER, чтобы сохранить путь"
             },
             "other": {
                 "borderName": "Другое",

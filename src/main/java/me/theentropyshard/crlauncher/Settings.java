@@ -45,8 +45,11 @@ public class Settings {
     public int whenCRExitsOption = 0;
     public boolean consoleScrollDown = true;
     public boolean overrideVersionsPath;
+    public String versionsDirPath;
     public boolean overrideInstancesPath;
+    public String instancesDirPath;
     public boolean overrideModloadersPath;
+    public String modloadersDirPath;
 
     public Settings() {
 
