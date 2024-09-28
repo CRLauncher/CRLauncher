@@ -67,11 +67,11 @@ public class SettingsView extends JPanel {
     private final JLabel dialogPositionLabel;
     private final JCheckBox showAmountOfTime;
     private final TitledBorder storageSettingsBorder;
-    private final JLabel versionsPathLabel;
+    private final JCheckBox versionsPathCheckbox;
     private final JTextField versionsPathField;
-    private final JLabel instancesPathLabel;
+    private final JCheckBox instancesPathCheckbox;
     private final JTextField instancesPathField;
-    private final JLabel modLoadersPathLabel;
+    private final JCheckBox modLoadersPathCheckbox;
     private final JTextField modLoadersPathField;
     private final TitledBorder otherSettingsBorder;
     private final JCheckBox prettyJson;
@@ -173,30 +173,71 @@ public class SettingsView extends JPanel {
         }
 
         {
+            Settings settings = CRLauncher.getInstance().getSettings();
+
             JPanel storageSettings = new JPanel(new GridLayout(3, 2));
             this.storageSettingsBorder = new TitledBorder(language.getString(SettingsView.STORAGE_BORDER));
             storageSettings.setBorder(this.storageSettingsBorder);
 
-            this.versionsPathLabel = new JLabel(language.getString(SettingsView.VERSIONS_PATH_LABEL) + ": ");
-            storageSettings.add(this.versionsPathLabel);
+            this.versionsPathCheckbox = new JCheckBox(language.getString(SettingsView.VERSIONS_PATH_LABEL) + ": ");
+            this.versionsPathCheckbox.setSelected(settings.overrideVersionsPath);
+            storageSettings.add(this.versionsPathCheckbox);
 
             this.versionsPathField = new JTextField();
             this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
             storageSettings.add(this.versionsPathField);
 
-            this.instancesPathLabel = new JLabel(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
-            storageSettings.add(this.instancesPathLabel);
+            this.instancesPathCheckbox = new JCheckBox(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
+            this.instancesPathCheckbox.setSelected(settings.overrideInstancesPath);
+            storageSettings.add(this.instancesPathCheckbox);
 
             this.instancesPathField = new JTextField();
             this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
             storageSettings.add(this.instancesPathField);
 
-            this.modLoadersPathLabel = new JLabel(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
-            storageSettings.add(this.modLoadersPathLabel);
+            this.modLoadersPathCheckbox = new JCheckBox(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
+            this.modLoadersPathCheckbox.setSelected(settings.overrideModloadersPath);
+            storageSettings.add(this.modLoadersPathCheckbox);
 
             this.modLoadersPathField = new JTextField();
             this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
             storageSettings.add(this.modLoadersPathField);
+
+            this.versionsPathField.setEnabled(this.versionsPathCheckbox.isSelected());
+            this.versionsPathCheckbox.addActionListener(e -> {
+                boolean selected = this.versionsPathCheckbox.isSelected();
+                this.versionsPathField.setEnabled(selected);
+                if (selected) {
+                    this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "");
+                } else {
+                    this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
+                }
+                CRLauncher.getInstance().getSettings().overrideVersionsPath = selected;
+            });
+
+            this.instancesPathField.setEnabled(this.instancesPathCheckbox.isSelected());
+            this.instancesPathCheckbox.addActionListener(e -> {
+                boolean selected = this.instancesPathCheckbox.isSelected();
+                this.instancesPathField.setEnabled(selected);
+                if (selected) {
+                    this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "");
+                } else {
+                    this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
+                }
+                CRLauncher.getInstance().getSettings().overrideInstancesPath = selected;
+            });
+
+            this.modLoadersPathField.setEnabled(this.modLoadersPathCheckbox.isSelected());
+            this.modLoadersPathCheckbox.addActionListener(e -> {
+                boolean selected = this.modLoadersPathCheckbox.isSelected();
+                this.modLoadersPathField.setEnabled(selected);
+                if (selected) {
+                    this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "");
+                } else {
+                    this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
+                }
+                CRLauncher.getInstance().getSettings().overrideModloadersPath = selected;
+            });
 
             gbc.gridy++;
             this.add(storageSettings, gbc);
@@ -314,11 +355,11 @@ public class SettingsView extends JPanel {
         this.prettyJson.setText(language.getString(SettingsView.WRITE_PRETTY_JSON));
 
         this.storageSettingsBorder.setTitle(language.getString(SettingsView.STORAGE_BORDER));
-        this.versionsPathLabel.setText(language.getString(SettingsView.VERSIONS_PATH_LABEL) + ": ");
+        this.versionsPathCheckbox.setText(language.getString(SettingsView.VERSIONS_PATH_LABEL) + ": ");
         this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
-        this.instancesPathLabel.setText(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
+        this.instancesPathCheckbox.setText(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
         this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));;
-        this.modLoadersPathLabel.setText(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
+        this.modLoadersPathCheckbox.setText(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
         this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));;
 
         this.launchOptionLabel.setText(language.getString(SettingsView.GAME_LAUNCH_LABEL));
