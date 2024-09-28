@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.StringUtils;
 import net.miginfocom.swing.MigLayout;
 
@@ -30,8 +31,12 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class ModVersionCard extends JPanel {
@@ -98,10 +103,24 @@ public class ModVersionCard extends JPanel {
             OtherFilesView.showDialog(version.getFiles(), fileListener);
         });
 
-        /*JLabel published = new JLabel(ModVersionCard.FORMATTER.format(
-            OffsetDateTime.parse(version.getDatePublished())
-        ));*/
-        JLabel published = new JLabel("date published");
+        String subDate = version.getDatePublished().substring(0, 24);
+        JLabel published;
+        try {
+            published = new JLabel(
+                ModVersionCard.FORMATTER.format(
+                    new SimpleDateFormat(
+                        "EEE MMM d yyyy HH:mm:ss", Locale.US
+                    ).parse(subDate).toInstant().atOffset(ZoneOffset.UTC)
+                )
+            );
+        } catch (ParseException e) {
+            Log.error("Could not parse date (" + subDate + ")", e);
+
+            published = new JLabel("N/A");
+        }
+
+        // "Mon Sep 16 2024 14:24:21 GMT+0000 (Greenwich Mean Time)"
+
         this.add(published);
 
         JLabel downloads = new JLabel(String.valueOf(version.getDownloads()));
