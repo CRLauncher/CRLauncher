@@ -45,6 +45,18 @@ public final class FileUtils {
         }
     };
 
+    public static boolean isPathInvalid(String path) {
+        try {
+            Path file = Paths.get(path).toAbsolutePath();
+            FileUtils.createFileIfNotExists(file);
+            FileUtils.delete(file);
+        } catch (InvalidPathException | IOException e) {
+            return true;
+        }
+
+        return false;
+    }
+
     public static int countFiles(Path dir) throws IOException {
         if (!Files.isDirectory(dir)) {
             throw new IOException(dir + " expected to be a directory");
