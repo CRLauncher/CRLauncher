@@ -27,6 +27,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
 
 public class FileCard extends JPanel {
     private static final int BORDER_SIZE = 12;
@@ -50,7 +52,9 @@ public class FileCard extends JPanel {
         String primaryText = language.getString("gui.searchCRMMModsDialog.primary");
 
         this.fileNameLabel = new JLabel(
-            "<html>" + file.getName() + (primary ? " <i><b>[" + primaryText + "]</b></i>" : "") + "</html>"
+            "<html>" + file.getName() + " (" + FileCard.humanReadableByteCountBin(
+                file.getSize()
+            ) + ")" + (primary ? " <i><b>[" + primaryText + "]</b></i>" : "") + "</html>"
         );
         this.add(this.fileNameLabel, BorderLayout.WEST);
 
@@ -112,6 +116,22 @@ public class FileCard extends JPanel {
                 FileCard.this.repaint();
             }
         });
+    }
+
+    // idk how this works, but https://stackoverflow.com/a/3758880/19857533
+    public static String humanReadableByteCountBin(long bytes) {
+        long absB = bytes == Long.MIN_VALUE ? Long.MAX_VALUE : Math.abs(bytes);
+        if (absB < 1024) {
+            return bytes + " B";
+        }
+        long value = absB;
+        CharacterIterator ci = new StringCharacterIterator("KMGTPE");
+        for (int i = 40; i >= 0 && absB > 0xfffccccccccccccL >> i; i -= 10) {
+            value >>= 10;
+            ci.next();
+        }
+        value *= Long.signum(bytes);
+        return String.format("%.1f %ciB", value / 1024.0, ci.current());
     }
 
     @Override
