@@ -30,6 +30,11 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class CrmmModsView extends JPanel {
+    public static final String MODS_TAB = "gui.searchCRMMModsDialog.mods";
+    public static final String DATAMODS_TAB = "gui.searchCRMMModsDialog.datamods";
+    public static final String RESOURCE_PACKS_TAB = "gui.searchCRMMModsDialog.resourcePacks";
+    public static final String SHADERS_TAB = "gui.searchCRMMModsDialog.shaders";
+    public static final String MODPACKS_TAB = "gui.searchCRMMModsDialog.modpacks";
     public static final String SEARCH_MODS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchMods";
     public static final String SEARCH_BUTTON = "gui.searchCRMMModsDialog.searchButton";
     public static final String SEARCH_DATAMODS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchDatamods";
@@ -59,11 +64,11 @@ public class CrmmModsView extends JPanel {
         JPanel topPanel = new JPanel(new GridLayout(2, 1, 0, 5));
 
         this.navBar = new NavBar();
-        this.navBar.addItem("Mods");
-        this.navBar.addItem("Datamods");
-        this.navBar.addItem("Resource Packs");
-        this.navBar.addItem("Shaders");
-        this.navBar.addItem("Modpacks");
+        this.navBar.addItem(language.getString(CrmmModsView.MODS_TAB));
+        this.navBar.addItem(language.getString(CrmmModsView.DATAMODS_TAB));
+        this.navBar.addItem(language.getString(CrmmModsView.RESOURCE_PACKS_TAB));
+        this.navBar.addItem(language.getString(CrmmModsView.SHADERS_TAB));
+        this.navBar.addItem(language.getString(CrmmModsView.MODPACKS_TAB));
         topPanel.add(this.navBar);
 
         JPanel searchPanel = new JPanel(new BorderLayout(2, 0));

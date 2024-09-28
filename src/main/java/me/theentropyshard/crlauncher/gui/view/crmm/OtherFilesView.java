@@ -75,7 +75,7 @@ public class OtherFilesView extends JPanel {
 
     public static void showDialog(List<ProjectFile> projectFiles, ModVersionCard.FileListener fileListener) {
         AppDialog appDialog = new AppDialog(
-            CRLauncher.frame, "Select mod version"
+            CRLauncher.frame, CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.otherFiles")
         ) {};
 
         OtherFilesView view = new OtherFilesView(projectFiles, fileListener);

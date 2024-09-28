@@ -28,7 +28,8 @@ import java.awt.*;
 
 public class ModVersionsDialog extends AppDialog {
     public ModVersionsDialog(ModInfo modInfo, Instance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
-        super(CRLauncher.frame, "Select mod version");
+        super(CRLauncher.frame,
+            CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modVersionsDialogTitle"));
 
         ModVersionsView view = new ModVersionsView(modInfo, instance, modsTab, supplier);
         view.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));

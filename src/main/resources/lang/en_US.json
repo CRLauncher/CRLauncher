@@ -150,7 +150,8 @@
             "followers234": "followers",
             "followers": "followers",
             "downloadButton": "Download",
-            "otherFilesButton": "Other files",
+            "primary": "primary",
+            "otherFiles": "Other files",
             "mods": "Mods",
             "datamods": "Data Mods",
             "resourcePacks": "Resource Packs",
@@ -161,7 +162,8 @@
             "searchDatamods": "Search data mods...",
             "searchResourcePacks": "Search resource packs...",
             "searchShaders": "Search shaders...",
-            "searchModpacks": "Search modpacks..."
+            "searchModpacks": "Search modpacks...",
+            "modVersionsDialogTitle": "Mod versions"
         },
         "addAccountDialog": {
             "title": "Add account",

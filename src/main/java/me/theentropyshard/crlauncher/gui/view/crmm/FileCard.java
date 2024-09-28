@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 
 import javax.swing.*;
@@ -43,22 +45,28 @@ public class FileCard extends JPanel {
     public FileCard(ProjectFile file, ModVersionCard.FileListener listener, boolean primary) {
         super(new BorderLayout());
 
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        String primaryText = language.getString("gui.searchCRMMModsDialog.primary");
+
         this.fileNameLabel = new JLabel(
-            "<html>" + file.getName() + (primary ? " <i><b>[primary]</b></i>" : "") + "</html>"
+            "<html>" + file.getName() + (primary ? " <i><b>[" + primaryText + "]</b></i>" : "") + "</html>"
         );
         this.add(this.fileNameLabel, BorderLayout.WEST);
 
         this.add(Box.createHorizontalBox(), BorderLayout.CENTER);
 
+        String downloadText = language.getString("gui.searchCRMMModsDialog.downloadButton");
+
         if (primary) {
-            this.downloadButton = new JButton("Download") {
+            this.downloadButton = new JButton(downloadText) {
                 @Override
                 public boolean isDefaultButton() {
                     return true;
                 }
             };
         } else {
-            this.downloadButton = new JButton("Download");
+            this.downloadButton = new JButton(downloadText);
         }
 
         this.downloadButton.addActionListener(e -> {

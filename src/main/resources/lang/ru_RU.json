@@ -150,7 +150,8 @@
             "followers234": "подписчика",
             "followers": "подписчиков",
             "downloadButton": "Скачать",
-            "otherFilesButton": "Другие файлы",
+            "primary": "основной",
+            "otherFiles": "Другие файлы",
             "mods": "Моды",
             "datamods": "Дата-моды",
             "resourcePacks": "Ресурс-паки",
@@ -161,7 +162,8 @@
             "searchDatamods": "Найти дата-моды...",
             "searchResourcePacks": "Найти ресурс-паки...",
             "searchShaders": "Найти шейдеры...",
-            "searchModpacks": "Найти модпаки..."
+            "searchModpacks": "Найти модпаки...",
+            "modVersionsDialogTitle": "Версии мода"
         },
         "addAccountDialog": {
             "title": "Добавить аккаунт",

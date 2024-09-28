@@ -63,7 +63,7 @@ public class ModVersionCard extends JPanel {
             fileListener.fileChosen(version.getPrimaryFile());
         });
 
-        JButton otherFilesButtons = new JButton(language.getString("gui.searchCRMMModsDialog.otherFilesButton"));
+        JButton otherFilesButtons = new JButton(language.getString("gui.searchCRMMModsDialog.otherFiles"));
         otherFilesButtons.addActionListener(e -> {
             OtherFilesView.showDialog(version.getFiles(), fileListener);
         });
