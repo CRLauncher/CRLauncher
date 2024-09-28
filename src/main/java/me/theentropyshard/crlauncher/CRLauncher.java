@@ -103,6 +103,9 @@ public class CRLauncher {
 
         CRLauncher.setInstance(this);
 
+        this.settingsFile = this.workDir.resolve("settings.json");
+        this.settings = Settings.load(this.settingsFile);
+
         this.librariesDir = this.workDir.resolve("libraries");
 
         this.cosmicDir = this.workDir.resolve("cosmic-reach");
@@ -110,9 +113,6 @@ public class CRLauncher {
         this.versionsDir = this.cosmicDir.resolve("versions");
         this.languagesDir = this.workDir.resolve("languages");
         this.createDirectories();
-
-        this.settingsFile = this.workDir.resolve("settings.json");
-        this.settings = Settings.load(this.settingsFile);
 
         this.languages = new LinkedHashMap<>();
 
