@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -40,10 +42,12 @@ public class HeaderModVersionCard extends JPanel {
     public HeaderModVersionCard() {
         super(new MigLayout("insets 0, align left, aligny center", "[30%]push[20%][10%][10%]push[10%]", ""));
 
+        Language language = CRLauncher.getInstance().getLanguage();
+
         JPanel versionInfoPanel = new JPanel(new GridLayout(1, 1));
         versionInfoPanel.setOpaque(false);
         JLabel versionTitleLabel = new JLabel(
-            "<html><b>" + "Name" + "</b></html>"
+            "<html><nobr><b>" + language.getString("gui.modFilesDialog.name") + "</nobr></b></html>"
         );
         versionInfoPanel.add(versionTitleLabel);
 
@@ -53,22 +57,19 @@ public class HeaderModVersionCard extends JPanel {
         compatibility.setOpaque(false);
 
         JLabel gameVersion = new JLabel(
-            "<html><b>" + "Compatibility" + "</b></html>"
+            "<html><nobr><b>" + language.getString("gui.modFilesDialog.compatibility") + "</nobr></b></html>"
         );
         compatibility.add(gameVersion);
 
         this.add(compatibility);
 
-        /*JLabel published = new JLabel(ModVersionCard.FORMATTER.format(
-            OffsetDateTime.parse(version.getDatePublished())
-        ));*/
         JLabel published = new JLabel(
-            "<html><b>" + "Date published" + "</b></html>"
+            "<html><nobr><b>" + language.getString("gui.modFilesDialog.datePublished") + "</nobr></b></html>"
         );
         this.add(published);
 
         JLabel downloads = new JLabel(
-            "<html><b>" + "Downloads" + "</b></html>"
+            "<html><nobr><b>" + language.getString("gui.modFilesDialog.downloads") + "</nobr></b></html>"
         );
         this.add(downloads);
 

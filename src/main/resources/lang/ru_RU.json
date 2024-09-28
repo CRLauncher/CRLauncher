@@ -53,6 +53,12 @@
                 "openCosmicFolder": "Открыть папку cosmic-reach"
             }
         },
+        "modFilesDialog": {
+            "name": "Имя",
+            "compatibility": "Совместимость",
+            "datePublished": "Дата публикации",
+            "downloads": "Количество загрузок"
+        },
         "instanceSettingsDialog": {
             "title": "Настройки инстанса - $$INSTANCE_NAME$$",
             "mainTab": {

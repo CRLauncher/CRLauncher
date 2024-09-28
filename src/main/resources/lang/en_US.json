@@ -53,6 +53,12 @@
                 "openCosmicFolder": "Open Cosmic folder"
             }
         },
+        "modFilesDialog": {
+            "name": "Name",
+            "compatibility": "Compatibility",
+            "datePublished": "Date published",
+            "downloads": "Downloads"
+        },
         "instanceSettingsDialog": {
             "title": "Instance Settings - $$INSTANCE_NAME$$",
             "mainTab": {
