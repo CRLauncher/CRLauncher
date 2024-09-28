@@ -130,7 +130,7 @@ public class FabricModsView extends JPanel {
             }.execute();
         });
 
-        this.deleteModButton = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.modsTable.puzzle.deleteModButton"));
+        this.deleteModButton = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.modsTable.fabric.deleteModButton"));
 
         JTable fabricModsTable = new JTable(this.fabricModsModel);
         fabricModsTable.addMouseListener(new MouseAdapter() {
