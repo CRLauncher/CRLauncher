@@ -23,6 +23,8 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.Gui;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -30,6 +32,7 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public class SettingsView extends JPanel {
@@ -187,24 +190,54 @@ public class SettingsView extends JPanel {
             this.versionsPathCheckbox.setSelected(settings.overrideVersionsPath);
             storageSettings.add(this.versionsPathCheckbox);
 
-            this.versionsPathField = new JTextField();
+            this.versionsPathField = new JTextField(settings.versionsDirPath == null ? "" : settings.versionsDirPath);
             this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
+            this.versionsPathField.addActionListener(e -> {
+                String path = SettingsView.checkPath(this.versionsPathField);
+
+                if (path == null) {
+                    return;
+                }
+
+                this.versionsPathField.setText(path);
+                CRLauncher.getInstance().getSettings().versionsDirPath = path;
+            });
             storageSettings.add(this.versionsPathField);
 
             this.instancesPathCheckbox = new JCheckBox(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
             this.instancesPathCheckbox.setSelected(settings.overrideInstancesPath);
             storageSettings.add(this.instancesPathCheckbox);
 
-            this.instancesPathField = new JTextField();
+            this.instancesPathField = new JTextField(settings.instancesDirPath == null ? "" : settings.instancesDirPath);
             this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
+            this.instancesPathField.addActionListener(e -> {
+                String path = SettingsView.checkPath(this.instancesPathField);
+
+                if (path == null) {
+                    return;
+                }
+
+                this.instancesPathField.setText(path);
+                CRLauncher.getInstance().getSettings().instancesDirPath = path;
+            });
             storageSettings.add(this.instancesPathField);
 
             this.modLoadersPathCheckbox = new JCheckBox(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
             this.modLoadersPathCheckbox.setSelected(settings.overrideModloadersPath);
             storageSettings.add(this.modLoadersPathCheckbox);
 
-            this.modLoadersPathField = new JTextField();
+            this.modLoadersPathField = new JTextField(settings.modloadersDirPath == null ? "" : settings.modloadersDirPath);
             this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
+            this.modLoadersPathField.addActionListener(e -> {
+                String path = SettingsView.checkPath(this.modLoadersPathField);
+
+                if (path == null) {
+                    return;
+                }
+
+                this.modLoadersPathField.setText(path);
+                CRLauncher.getInstance().getSettings().modloadersDirPath = path;
+            });
             storageSettings.add(this.modLoadersPathField);
 
             this.tipLabel = new JLabel("<html><b>" + language.getString(SettingsView.TIP_LABEL) + "</b></html>");
@@ -334,6 +367,25 @@ public class SettingsView extends JPanel {
             gbc.weighty = 1;
             this.add(otherSettings, gbc);
         }
+    }
+
+    private static String checkPath(JTextField textField) {
+        String path = textField.getText();
+        boolean pathInvalid = FileUtils.isPathInvalid(path);
+
+        if (pathInvalid) {
+            textField.putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
+
+            MessageBox.showErrorMessage(
+                CRLauncher.frame, "Supplied path is invalid: " + path
+            );
+
+            return null;
+        } else {
+            textField.putClientProperty(FlatClientProperties.OUTLINE, "");
+        }
+
+        return Paths.get(path).toAbsolutePath().toString();
     }
 
     public void reloadLanguage() {
