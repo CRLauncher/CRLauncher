@@ -34,10 +34,7 @@ import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
-import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.ListUtils;
-import me.theentropyshard.crlauncher.utils.ResourceUtils;
-import me.theentropyshard.crlauncher.utils.SemanticVersion;
+import me.theentropyshard.crlauncher.utils.*;
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 
@@ -67,6 +64,7 @@ public class CRLauncher {
     private final Path instancesDir;
     private final Path versionsDir;
     private final Path languagesDir;
+    private final Path modloadersDir;
 
     private final Path settingsFile;
     private final Settings settings;
@@ -109,8 +107,25 @@ public class CRLauncher {
         this.librariesDir = this.workDir.resolve("libraries");
 
         this.cosmicDir = this.workDir.resolve("cosmic-reach");
-        this.instancesDir = this.cosmicDir.resolve("instances");
-        this.versionsDir = this.cosmicDir.resolve("versions");
+
+        if (this.settings.overrideInstancesPath && StringUtils.notNullNotEmpty(this.settings.instancesDirPath)) {
+            this.instancesDir = Paths.get(this.settings.instancesDirPath).toAbsolutePath();
+        } else {
+            this.instancesDir = this.cosmicDir.resolve("instances");
+        }
+
+        if (this.settings.overrideVersionsPath && StringUtils.notNullNotEmpty(this.settings.versionsDirPath)) {
+            this.versionsDir = Paths.get(this.settings.versionsDirPath).toAbsolutePath();
+        } else {
+            this.versionsDir = this.cosmicDir.resolve("versions");
+        }
+
+        if (this.settings.overrideModloadersPath && StringUtils.notNullNotEmpty(this.settings.modloadersDirPath)) {
+            this.modloadersDir = Paths.get(this.settings.modloadersDirPath).toAbsolutePath();
+        } else {
+            this.modloadersDir = this.cosmicDir.resolve("modloaders");
+        }
+
         this.languagesDir = this.workDir.resolve("languages");
         this.createDirectories();
 
@@ -145,7 +160,7 @@ public class CRLauncher {
 
                     if (this.languages.containsKey(name)) {
                         Log.warn("Duplicate language is in 'languages' folder, it won't be loaded! Duplicated name: " + name);
-                        
+
                         continue;
                     }
 
@@ -200,8 +215,8 @@ public class CRLauncher {
             Log.error("Unable to load icons", e);
         }
 
-        this.quiltManager = new QuiltManager(this.cosmicDir.resolve("cosmic-quilt"));
-        this.puzzleManager = new PuzzleManager(this.cosmicDir.resolve("puzzle"));
+        this.quiltManager = new QuiltManager(this.modloadersDir.resolve("cosmic-quilt"));
+        this.puzzleManager = new PuzzleManager(this.modloadersDir.resolve("puzzle"));
 
         this.taskPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -310,6 +325,7 @@ public class CRLauncher {
             FileUtils.createDirectoryIfNotExists(this.instancesDir);
             FileUtils.createDirectoryIfNotExists(this.versionsDir);
             FileUtils.createDirectoryIfNotExists(this.languagesDir);
+            FileUtils.createDirectoryIfNotExists(this.modloadersDir);
         } catch (IOException e) {
             Log.error("Unable to create launcher directories", e);
         }
@@ -427,6 +443,10 @@ public class CRLauncher {
 
     public Path getVersionsDir() {
         return this.versionsDir;
+    }
+
+    public Path getModloadersDir() {
+        return this.modloadersDir;
     }
 
     public InstanceManager getInstanceManager() {
