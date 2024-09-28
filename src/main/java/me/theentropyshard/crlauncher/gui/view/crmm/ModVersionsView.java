@@ -117,6 +117,7 @@ public class ModVersionsView extends JPanel {
 
             @Override
             protected void done() {
+                ModVersionsView.this.modVersionCardsPanel.add(new HeaderModVersionCard(), 0);
                 ModVersionsView.this.modVersionCardsPanel.revalidate();
             }
         }.execute();

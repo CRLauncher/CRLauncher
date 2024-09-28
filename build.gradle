@@ -66,6 +66,8 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-core:$log4j"
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+    implementation 'com.miglayout:miglayout-swing:5.3'
+
 }
 
 java {
