@@ -18,7 +18,6 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
-import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 
 import javax.swing.*;
@@ -31,7 +30,6 @@ public class FileCard extends JPanel {
     private static final int BORDER_SIZE = 12;
     private static final int ARC_SIZE = 10;
 
-    private final boolean primary;
     private final JLabel fileNameLabel;
     private final JButton downloadButton;
 
@@ -45,8 +43,9 @@ public class FileCard extends JPanel {
     public FileCard(ProjectFile file, ModVersionCard.FileListener listener, boolean primary) {
         super(new BorderLayout());
 
-        this.fileNameLabel = new JLabel(file.getName());
-        this.primary = primary;
+        this.fileNameLabel = new JLabel(
+            "<html>" + file.getName() + (primary ? " <i><b>[primary]</b></i>" : "") + "</html>"
+        );
         this.add(this.fileNameLabel, BorderLayout.WEST);
 
         this.add(Box.createHorizontalBox(), BorderLayout.CENTER);
