@@ -337,28 +337,27 @@ public class CosmicRunner extends Thread {
             Path filePath = Paths.get(mod.getFilePath());
 
             if (!Files.exists(filePath)) {
-                if (mod.isActive()) {
+                Log.warn("Mod at '" + filePath + "' does not exist!");
 
-                    continue;
-                }
-
-                if ((mod.isActive() && filePath.startsWith(enabledModsDir)) ||
-                    (!mod.isActive() && filePath.startsWith(disabledModsDir))) {
-
-                    continue;
-                }
-
-                Path destinationDir;
-
-                if (mod.isActive()) {
-                    destinationDir = enabledModsDir.resolve(filePath.getFileName());
-                } else {
-                    destinationDir = disabledModsDir.resolve(filePath.getFileName());
-                }
-
-                filePath = Files.move(filePath, destinationDir, StandardCopyOption.REPLACE_EXISTING);
-                mod.setFilePath(filePath.toString());
+                continue;
             }
+
+            if ((mod.isActive() && filePath.startsWith(enabledModsDir)) ||
+                (!mod.isActive() && filePath.startsWith(disabledModsDir))) {
+
+                continue;
+            }
+
+            Path destinationDir;
+
+            if (mod.isActive()) {
+                destinationDir = enabledModsDir.resolve(filePath.getFileName());
+            } else {
+                destinationDir = disabledModsDir.resolve(filePath.getFileName());
+            }
+
+            filePath = Files.move(filePath, destinationDir, StandardCopyOption.REPLACE_EXISTING);
+            mod.setFilePath(filePath.toString());
         }
     }
 }
