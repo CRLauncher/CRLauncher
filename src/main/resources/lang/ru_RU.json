@@ -61,6 +61,13 @@
         },
         "instanceSettingsDialog": {
             "title": "Настройки инстанса - $$INSTANCE_NAME$$",
+            "exportInstance": {
+                "exportButton": "Экспорт",
+                "zipFiles": "Zip-файлы (*.zip)",
+                "title": "Экспорт инстанса",
+                "success": "Инстанс успешно экспортирован!",
+                "failure": "Не удалось экспортировать инстанс"
+            },
             "mainTab": {
                 "name": "Основное",
                 "cosmicReachVersion": {

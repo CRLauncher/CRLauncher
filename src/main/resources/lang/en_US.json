@@ -61,6 +61,13 @@
         },
         "instanceSettingsDialog": {
             "title": "Instance Settings - $$INSTANCE_NAME$$",
+            "exportInstance": {
+                "exportButton": "Export",
+                "zipFiles": "Zip files (*.zip)",
+                "title": "Instance export",
+                "success": "Instance exported successfully!",
+                "failure": "Could not export instance"
+            },
             "mainTab": {
                 "name": "Main",
                 "cosmicReachVersion": {

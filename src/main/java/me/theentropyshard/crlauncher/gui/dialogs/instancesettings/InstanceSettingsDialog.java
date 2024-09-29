@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.JavaTab;
@@ -26,18 +27,27 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.MainTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds.WorldsTab;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.FileUtils;
+import net.lingala.zip4j.ZipFile;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class InstanceSettingsDialog extends AppDialog {
     private final JTabbedPane tabbedPane;
@@ -97,7 +107,69 @@ public class InstanceSettingsDialog extends AppDialog {
             }
         });
 
-        this.setContent(this.tabbedPane);
+        JPanel root = new JPanel(new BorderLayout());
+        root.add(this.tabbedPane, BorderLayout.CENTER);
+
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        buttonsPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0,
+            UIManager.getColor("Component.borderColor")));
+
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        JButton exportButton = new JButton(language.getString("gui.instanceSettingsDialog.exportInstance.exportButton"));
+        exportButton.addActionListener(e -> {
+            new Worker<Void, Void>("exporting instance") {
+                @Override
+                protected Void work() {
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    fileChooser.setFileFilter(new FileNameExtensionFilter(
+                        language.getString("gui.instanceSettingsDialog.exportInstance.zipFiles")
+                        , "zip"));
+
+                    File instanceDir = instance.getWorkDir().toFile();
+                    File saveAs = new File(instanceDir, instanceDir.getName() + ".zip");
+                    fileChooser.setSelectedFile(saveAs);
+
+                    int option = fileChooser.showSaveDialog(CRLauncher.frame);
+                    if (option != JFileChooser.APPROVE_OPTION) {
+                        return null;
+                    }
+
+                    saveAs = fileChooser.getSelectedFile();
+
+                    if (saveAs == null) {
+                        return null;
+                    }
+
+                    try (ZipFile zipFile = new ZipFile(saveAs)) {
+                        zipFile.addFiles(FileUtils.list(instance.getWorkDir()).stream()
+                            .map(Path::toFile)
+                            .collect(Collectors.toList()));
+                    } catch (IOException e) {
+                        MessageBox.showErrorMessage(
+                            CRLauncher.frame,
+                            language.getString("gui.instanceSettingsDialog.exportInstance.failure") +
+                                ": " + e.getMessage()
+                        );
+                        Log.error("Could not export instance " + instance.getName(), e);
+
+                        return null;
+                    }
+
+                    MessageBox.showPlainMessage(CRLauncher.frame,
+                        language.getString("gui.instanceSettingsDialog.exportInstance.title"),
+                        language.getString("gui.instanceSettingsDialog.exportInstance.success")
+                    );
+
+                    return null;
+                }
+            }.execute();
+        });
+        buttonsPanel.add(exportButton);
+        root.add(buttonsPanel, BorderLayout.SOUTH);
+
+        this.setContent(root);
         this.center(0);
         this.setVisible(true);
     }
