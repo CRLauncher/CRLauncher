@@ -21,9 +21,13 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quil
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.table.AbstractTableModel;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +35,12 @@ public class QuiltModsTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class, Boolean.class};
 
     private final List<QuiltMod> quiltMods;
+    private final Instance instance;
     private final String[] columnNames = {"Name", "Version", "Description", "Active"};
 
     public QuiltModsTableModel(Instance instance) {
         this.quiltMods = new ArrayList<>(instance.getQuiltMods());
+        this.instance = instance;
 
         Language language = CRLauncher.getInstance().getLanguage();
 
@@ -87,7 +93,32 @@ public class QuiltModsTableModel extends AbstractTableModel {
             return;
         }
 
-        this.quiltModAt(rowIndex).active = (boolean) aValue;
+        boolean isSelected = (boolean) aValue;
+        QuiltMod quiltMod = this.quiltModAt(rowIndex);
+        quiltMod.active = isSelected;
+
+        SwingUtils.startWorker(() -> {
+            try {
+                this.instance.updateMod(
+                    quiltMod,
+                    this.instance.getQuiltModsDir(),
+                    this.instance.getDisabledQuiltModsDir(),
+                    isSelected
+                );
+            } catch (IOException e) {
+                Language language = CRLauncher.getInstance().getLanguage();
+
+                MessageBox.showErrorMessage(
+                    CRLauncher.frame,
+                    language.getString("messages.gui.instanceSettingsDialog.couldNotUpdateMod")
+                        .replace("$$MOD_LOADER$$", "Quilt")
+                        .replace("$$MOD_ID$$", quiltMod.getId()) + ": " + e.getMessage()
+                );
+
+                Log.error("Could not update Fabric mod '" + quiltMod.getId() + "': " + e.getMessage());
+            }
+        });
+
         this.fireTableCellUpdated(rowIndex, columnIndex);
     }
 

@@ -149,18 +149,6 @@ public class CosmicRunner extends Thread {
                     );
                     default -> throw new IllegalArgumentException("Unknown instance type: " + this.instance.getType());
                 };
-
-                switch (this.instance.getType()) {
-                    case VANILLA -> {
-
-                    }
-                    case FABRIC ->
-                        this.updateMods(this.instance.getFabricMods(), this.instance.getFabricModsDir(), this.instance.getDisabledFabricModsDir());
-                    case QUILT ->
-                        this.updateMods(this.instance.getQuiltMods(), this.instance.getQuiltModsDir(), this.instance.getDisabledQuiltModsDir());
-                    case PUZZLE ->
-                        this.updateMods(this.instance.getPuzzleMods(), this.instance.getPuzzleModsDir(), this.instance.getDisabledPuzzleModsDir());
-                }
             }
 
             Settings settings = CRLauncher.getInstance().getSettings();
@@ -323,41 +311,5 @@ public class CosmicRunner extends Thread {
         }
 
         return originalClientPath;
-    }
-
-    private void updateMods(List<? extends Mod> mods, Path enabledModsDir, Path disabledModsDir) throws IOException {
-        if (mods.isEmpty()) {
-            return;
-        }
-
-        FileUtils.createDirectoryIfNotExists(enabledModsDir);
-        FileUtils.createDirectoryIfNotExists(disabledModsDir);
-
-        for (Mod mod : mods) {
-            Path filePath = Paths.get(mod.getFilePath());
-
-            if (!Files.exists(filePath)) {
-                Log.warn("Mod at '" + filePath + "' does not exist!");
-
-                continue;
-            }
-
-            if ((mod.isActive() && filePath.startsWith(enabledModsDir)) ||
-                (!mod.isActive() && filePath.startsWith(disabledModsDir))) {
-
-                continue;
-            }
-
-            Path destinationDir;
-
-            if (mod.isActive()) {
-                destinationDir = enabledModsDir.resolve(filePath.getFileName());
-            } else {
-                destinationDir = disabledModsDir.resolve(filePath.getFileName());
-            }
-
-            filePath = Files.move(filePath, destinationDir, StandardCopyOption.REPLACE_EXISTING);
-            mod.setFilePath(filePath.toString());
-        }
     }
 }

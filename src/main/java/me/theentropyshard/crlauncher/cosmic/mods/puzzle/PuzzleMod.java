@@ -28,7 +28,7 @@ public class PuzzleMod implements Mod {
     private String name;
     private String description;
     private List<String> authors;
-    private String filePath;
+    private String fileName;
     private boolean active;
 
     public PuzzleMod() {
@@ -66,6 +66,16 @@ public class PuzzleMod implements Mod {
         return this.description;
     }
 
+    @Override
+    public String getFileName() {
+        return this.fileName;
+    }
+
+    @Override
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -76,16 +86,6 @@ public class PuzzleMod implements Mod {
 
     public void setAuthors(List<String> authors) {
         this.authors = authors;
-    }
-
-    @Override
-    public String getFilePath() {
-        return this.filePath;
-    }
-
-    @Override
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     @Override

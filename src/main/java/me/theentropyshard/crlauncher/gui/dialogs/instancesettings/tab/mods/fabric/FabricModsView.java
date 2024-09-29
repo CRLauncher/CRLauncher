@@ -41,7 +41,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class FabricModsView extends JPanel {
@@ -119,7 +118,7 @@ public class FabricModsView extends JPanel {
                             FileUtils.delete(modPathInFolder);
                         }
 
-                        mod.setFilePath(modPathInFolder.toString());
+                        mod.setFileName(modPathInFolder.getFileName().toString());
 
                         Files.copy(jarModPath, modPathInFolder);
                     }
@@ -160,14 +159,12 @@ public class FabricModsView extends JPanel {
             this.fabricModsModel.removeRow(selectedRow);
             instance.getFabricMods().remove(fabricMod);
 
-            Path modFile = Paths.get(fabricMod.getFilePath());
+            Path modFile = instance.getModDir(fabricMod);
 
-            if (Files.exists(modFile)) {
-                try {
-                    FileUtils.delete(modFile);
-                } catch (IOException ex) {
-                    Log.error("Exception while trying to delete Fabric Mod", ex);
-                }
+            try {
+                FileUtils.delete(modFile);
+            } catch (IOException ex) {
+                Log.error("Exception while trying to delete Fabric Mod", ex);
             }
         });
 
@@ -201,7 +198,7 @@ public class FabricModsView extends JPanel {
                         }
 
                         fabricMods.add(mod);
-                        mod.setFilePath(modFile.toString());
+                        mod.setFileName(modFile.getFileName().toString());
 
                         mod.setActive(true);
                         FabricModsView.this.fabricModsModel.add(mod);

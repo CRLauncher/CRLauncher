@@ -95,7 +95,7 @@ public class PuzzleModsView extends JPanel {
                                 mod = new PuzzleMod();
 
                                 mod.setId(UUID.randomUUID().toString());
-                                mod.setFilePath(jarModPath.toString());
+                                mod.setFileName(jarModPath.getFileName().toString());
                                 mod.setActive(true);
                                 mod.setName(jarModPath.getFileName().toString());
                                 mod.setVersion("<unknown>");
@@ -135,7 +135,7 @@ public class PuzzleModsView extends JPanel {
                             FileUtils.delete(modPathInFolder);
                         }
 
-                        mod.setFilePath(modPathInFolder.toString());
+                        mod.setFileName(modPathInFolder.getFileName().toString());
 
                         Files.copy(jarModPath, modPathInFolder);
                     }
@@ -178,7 +178,7 @@ public class PuzzleModsView extends JPanel {
             this.puzzleModsModel.removeRow(selectedRow);
             instance.getPuzzleMods().remove(puzzleMod);
 
-            Path modFile = Paths.get(puzzleMod.getFilePath());
+            Path modFile = instance.getModDir(puzzleMod);
 
             if (Files.exists(modFile)) {
                 try {
@@ -210,7 +210,7 @@ public class PuzzleModsView extends JPanel {
 
                             PuzzleMod mod = new PuzzleMod();
                             mod.setId(UUID.randomUUID().toString());
-                            mod.setFilePath(modFile.toString());
+                            mod.setFileName(modFile.getFileName().toString());
                             mod.setActive(true);
                             mod.setName(modFile.getFileName().toString());
                             mod.setVersion("<unknown>");
@@ -231,7 +231,7 @@ public class PuzzleModsView extends JPanel {
                             }
 
                             puzzleMods.add(mod);
-                            mod.setFilePath(modFile.toString());
+                            mod.setFileName(modFile.getFileName().toString());
                             mod.setActive(true);
 
                             PuzzleModsView.this.puzzleModsModel.add(mod);

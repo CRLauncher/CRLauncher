@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.instance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
@@ -27,7 +28,9 @@ import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +97,49 @@ public class Instance {
     public void updatePlaytime(long seconds) {
         this.lastPlaytime = seconds;
         this.totalPlaytime += seconds;
+    }
+
+    public void updateMod(Mod mod, Path enabledModsDir, Path disabledModsDir, boolean selected) throws IOException {
+        FileUtils.createDirectoryIfNotExists(enabledModsDir);
+        FileUtils.createDirectoryIfNotExists(disabledModsDir);
+
+        if (selected) {
+            Files.move(
+                disabledModsDir.resolve(mod.getFileName()),
+                enabledModsDir.resolve(mod.getFileName()),
+                StandardCopyOption.REPLACE_EXISTING
+            );
+        } else {
+            Files.move(
+                enabledModsDir.resolve(mod.getFileName()),
+                disabledModsDir.resolve(mod.getFileName()),
+                StandardCopyOption.REPLACE_EXISTING
+            );
+        }
+    }
+
+    public Path getModDir(FabricMod fabricMod) {
+        if (fabricMod.isActive()) {
+            return this.getFabricModsDir().resolve(fabricMod.getFileName());
+        } else {
+            return this.getDisabledFabricModsDir().resolve(fabricMod.getFileName());
+        }
+    }
+
+    public Path getModDir(QuiltMod quiltMod) {
+        if (quiltMod.isActive()) {
+            return this.getQuiltModsDir().resolve(quiltMod.getFileName());
+        } else {
+            return this.getDisabledQuiltModsDir().resolve(quiltMod.getFileName());
+        }
+    }
+
+    public Path getModDir(PuzzleMod puzzleMod) {
+        if (puzzleMod.isActive()) {
+            return this.getPuzzleModsDir().resolve(puzzleMod.getFileName());
+        } else {
+            return this.getDisabledPuzzleModsDir().resolve(puzzleMod.getFileName());
+        }
     }
 
     public boolean isRunning() {

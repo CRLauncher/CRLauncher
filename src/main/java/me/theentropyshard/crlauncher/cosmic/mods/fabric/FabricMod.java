@@ -21,7 +21,7 @@ package me.theentropyshard.crlauncher.cosmic.mods.fabric;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 
 public class FabricMod implements Mod {
-    private String filePath;
+    private String fileName;
     private String name;
     private String version;
     private String description;
@@ -30,16 +30,6 @@ public class FabricMod implements Mod {
 
     public FabricMod() {
 
-    }
-
-    @Override
-    public String getFilePath() {
-        return this.filePath;
-    }
-
-    @Override
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
     }
 
     @Override
@@ -63,6 +53,16 @@ public class FabricMod implements Mod {
     @Override
     public String getDescription() {
         return this.description;
+    }
+
+    @Override
+    public String getFileName() {
+        return this.fileName;
+    }
+
+    @Override
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public void setDescription(String description) {

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class QuiltMod implements Mod {
-    public String filePath;
+    private String fileName;
     public boolean active;
 
     @SerializedName("schema_version")
@@ -52,13 +52,13 @@ public class QuiltMod implements Mod {
     }
 
     @Override
-    public String getFilePath() {
-        return this.filePath;
+    public String getFileName() {
+        return this.fileName;
     }
 
     @Override
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     @Override
@@ -69,6 +69,14 @@ public class QuiltMod implements Mod {
     @Override
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public String getId() {
+        return this.quiltLoader.id;
+    }
+
+    public void setId(String id) {
+        this.quiltLoader.id = id;
     }
 
     public static final class QuiltLoader {

@@ -21,9 +21,13 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzz
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.table.AbstractTableModel;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +35,12 @@ public class PuzzleModsTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class, Boolean.class};
 
     private final List<PuzzleMod> puzzleMods;
+    private final Instance instance;
     private final String[] columnNames = {"Name", "Version", "Description", "Active"};
 
     public PuzzleModsTableModel(Instance instance) {
         this.puzzleMods = new ArrayList<>(instance.getPuzzleMods());
+        this.instance = instance;
 
         Language language = CRLauncher.getInstance().getLanguage();
 
@@ -87,7 +93,32 @@ public class PuzzleModsTableModel extends AbstractTableModel {
             return;
         }
 
-        this.puzzleModAt(rowIndex).setActive((boolean) aValue);
+        boolean isSelected = (boolean) aValue;
+        PuzzleMod puzzleMod = this.puzzleModAt(rowIndex);
+        puzzleMod.setActive(isSelected);
+
+        SwingUtils.startWorker(() -> {
+            try {
+                this.instance.updateMod(
+                    puzzleMod,
+                    this.instance.getPuzzleModsDir(),
+                    this.instance.getDisabledPuzzleModsDir(),
+                    isSelected
+                );
+            } catch (IOException e) {
+                Language language = CRLauncher.getInstance().getLanguage();
+
+                MessageBox.showErrorMessage(
+                    CRLauncher.frame,
+                    language.getString("messages.gui.instanceSettingsDialog.couldNotUpdateMod")
+                        .replace("$$MOD_LOADER$$", "Puzzle")
+                        .replace("$$MOD_ID$$", puzzleMod.getId())
+                );
+
+                Log.error("Could not update Fabric mod '" + puzzleMod.getId() + "': " + e.getMessage());
+            }
+        });
+
         this.fireTableCellUpdated(rowIndex, columnIndex);
     }
 

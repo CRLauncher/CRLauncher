@@ -21,9 +21,13 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabr
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.table.AbstractTableModel;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,10 +35,12 @@ public class FabricModsTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class, Boolean.class};
 
     private final List<FabricMod> fabricMods;
+    private final Instance instance;
     private final String[] columnNames = {"Name", "Version", "Description", "Active"};
 
-    public FabricModsTableModel(Instance oldInstance) {
-        this.fabricMods = new ArrayList<>(oldInstance.getFabricMods());
+    public FabricModsTableModel(Instance instance) {
+        this.fabricMods = new ArrayList<>(instance.getFabricMods());
+        this.instance = instance;
 
         Language language = CRLauncher.getInstance().getLanguage();
 
@@ -88,7 +94,30 @@ public class FabricModsTableModel extends AbstractTableModel {
         }
 
         boolean isSelected = (Boolean) aValue;
-        this.fabricModAt(rowIndex).setActive(isSelected);
+        FabricMod fabricMod = this.fabricModAt(rowIndex);
+        fabricMod.setActive(isSelected);
+
+        SwingUtils.startWorker(() -> {
+            try {
+                this.instance.updateMod(
+                    fabricMod,
+                    this.instance.getFabricModsDir(),
+                    this.instance.getDisabledFabricModsDir(),
+                    isSelected
+                );
+            } catch (IOException e) {
+                Language language = CRLauncher.getInstance().getLanguage();
+
+                MessageBox.showErrorMessage(
+                    CRLauncher.frame,
+                    language.getString("messages.gui.instanceSettingsDialog.couldNotUpdateMod")
+                        .replace("$$MOD_LOADER$$", "Fabric")
+                        .replace("$$MOD_ID$$", fabricMod.getId())
+                );
+
+                Log.error("Could not update Fabric mod '" + fabricMod.getId() + "': " + e.getMessage());
+            }
+        });
 
         this.fireTableCellUpdated(rowIndex, columnIndex);
     }

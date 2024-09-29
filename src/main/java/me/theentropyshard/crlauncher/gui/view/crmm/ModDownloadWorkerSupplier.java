@@ -120,7 +120,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                     saveAs, modFolder.resolve(saveAs.getFileName()), StandardCopyOption.REPLACE_EXISTING
                 );
 
-                mod.setFilePath(modPath.toString());
+                mod.setFileName(modPath.getFileName().toString());
                 mod.setActive(true);
 
                 return mod;
@@ -154,13 +154,13 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                         }
 
                         try {
-                            FileUtils.delete(Paths.get(foundMod.filePath));
+                            FileUtils.delete(instance.getModDir(foundMod));
                         } catch (IOException e) {
-                            Log.error("Could not delete " + foundMod.filePath);
+                            Log.error("Could not delete " + foundMod.getFileName());
                         }
 
                         foundMod.quiltLoader.version = quiltMod.quiltLoader.version;
-                        foundMod.setFilePath(quiltMod.getFilePath());
+                        foundMod.setFileName(quiltMod.getFileName());
                     } else if (mod instanceof PuzzleMod puzzleMod) {
                         PuzzleMod foundMod = ListUtils.search(instance.getPuzzleMods(), pMod -> pMod.getId().equals(puzzleMod.getId()));
 
@@ -173,13 +173,13 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                         }
 
                         try {
-                            FileUtils.delete(Paths.get(foundMod.getFilePath()));
+                            FileUtils.delete(instance.getModDir(foundMod));
                         } catch (IOException e) {
-                            Log.error("Could not delete " + foundMod.getFilePath());
+                            Log.error("Could not delete " + foundMod.getFileName());
                         }
 
                         foundMod.setVersion(puzzleMod.getVersion());
-                        foundMod.setFilePath(puzzleMod.getFilePath());
+                        foundMod.setFileName(puzzleMod.getFileName());
                     }
                 } else {
                     JPanel modsView = modsTab.getModsView();

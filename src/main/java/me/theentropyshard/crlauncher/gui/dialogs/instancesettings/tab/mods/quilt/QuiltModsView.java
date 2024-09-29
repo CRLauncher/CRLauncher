@@ -31,8 +31,6 @@ import me.theentropyshard.crlauncher.utils.StreamUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.FileHeader;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -48,8 +46,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class QuiltModsView extends JPanel {
-    
-
     private final QuiltModsTableModel quiltModsModel;
     private final JButton deleteModButton;
 
@@ -100,16 +96,16 @@ public class QuiltModsView extends JPanel {
                                 mod.quiltLoader = new QuiltMod.QuiltLoader();
                                 mod.quiltLoader.metadata = new QuiltMod.QuiltLoader.Metadata();
                                 mod.quiltLoader.id = UUID.randomUUID().toString();
-                                mod.filePath = jarModPath.toString();
+                                mod.setFileName(jarModPath.getFileName().toString());
                                 mod.active = true;
                                 mod.quiltLoader.metadata.name = jarModPath.getFileName().toString();
                                 mod.quiltLoader.version = "<unknown>";
                                 mod.quiltLoader.metadata.description = "<unknown>";
 
                                 if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.metadata.name
-                                        .equals(mod.quiltLoader.metadata.name))) {
+                                    .equals(mod.quiltLoader.metadata.name))) {
                                     MessageBox.showErrorMessage(CRLauncher.frame, "Mod with name '" +
-                                            mod.quiltLoader.metadata.name + "' already added!");
+                                        mod.quiltLoader.metadata.name + "' already added!");
                                     return null;
                                 }
 
@@ -143,7 +139,7 @@ public class QuiltModsView extends JPanel {
                             FileUtils.delete(modPathInFolder);
                         }
 
-                        mod.filePath = modPathInFolder.toString();
+                        mod.setFileName(modPathInFolder.getFileName().toString());
 
                         Files.copy(jarModPath, modPathInFolder);
                     }
@@ -186,7 +182,7 @@ public class QuiltModsView extends JPanel {
             this.quiltModsModel.removeRow(selectedRow);
             instance.getQuiltMods().remove(quiltMod);
 
-            Path modFile = Paths.get(quiltMod.filePath);
+            Path modFile = Paths.get(quiltMod.getFileName());
 
             if (Files.exists(modFile)) {
                 try {
@@ -220,14 +216,14 @@ public class QuiltModsView extends JPanel {
                             mod.quiltLoader = new QuiltMod.QuiltLoader();
                             mod.quiltLoader.metadata = new QuiltMod.QuiltLoader.Metadata();
                             mod.quiltLoader.id = UUID.randomUUID().toString();
-                            mod.filePath = modFile.toString();
+                            mod.setFileName(modFile.getFileName().toString());
                             mod.active = true;
                             mod.quiltLoader.metadata.name = modFile.getFileName().toString();
                             mod.quiltLoader.version = "<unknown>";
                             mod.quiltLoader.metadata.description = "<unknown>";
 
                             if (quiltMods.stream().anyMatch(quiltMod -> quiltMod.quiltLoader.metadata.name
-                                    .equals(mod.quiltLoader.metadata.name))) {
+                                .equals(mod.quiltLoader.metadata.name))) {
                                 continue;
                             }
 
@@ -242,7 +238,7 @@ public class QuiltModsView extends JPanel {
                             }
 
                             quiltMods.add(mod);
-                            mod.filePath = modFile.toString();
+                            mod.setFileName(modFile.toString());
                             mod.active = true;
 
                             QuiltModsView.this.quiltModsModel.add(mod);

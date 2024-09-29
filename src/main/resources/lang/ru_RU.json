@@ -33,7 +33,8 @@
                 "ramMinCannotBeLargerMax": "Minimum amount of RAM cannot be larger than maximum",
                 "ramMinCannotBeLess512MB": "Minimum amount of RAM cannot be less than 512 MiB",
                 "deleteWorldSure": "Вы уверены, что хотите удалить мир '$$WORLD_NAME$$'?",
-                "couldNotDeleteWorld": "Не удалось удалить мир '$$WORLD_NAME$$' в $$WORLD_DIR$$"
+                "couldNotDeleteWorld": "Не удалось удалить мир '$$WORLD_NAME$$' в $$WORLD_DIR$$",
+                "couldNotUpdateMod": "Не удалось обновить $$MOD_LOADER$$ мод '$$MOD_ID$$"
             },
             "mods": {
                 "modAddedName": "Мод с названием '$$MOD_NAME$$' уже добавлен!",

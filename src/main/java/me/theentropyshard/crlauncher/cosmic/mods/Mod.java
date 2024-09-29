@@ -25,9 +25,9 @@ public interface Mod {
 
     String getDescription();
 
-    String getFilePath();
+    String getFileName();
 
-    void setFilePath(String filePath);
+    void setFileName(String fileName);
 
     boolean isActive();
 
