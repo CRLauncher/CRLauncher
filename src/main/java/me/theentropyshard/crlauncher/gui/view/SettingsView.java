@@ -199,6 +199,8 @@ public class SettingsView extends JPanel {
                 }
 
                 this.versionsPathField.setText(path);
+
+                CRLauncher.getInstance().getSettings().overrideVersionsPath = this.versionsPathCheckbox.isSelected();
                 CRLauncher.getInstance().getSettings().versionsDirPath = path;
             });
             storageSettings.add(this.versionsPathField);
@@ -217,6 +219,8 @@ public class SettingsView extends JPanel {
                 }
 
                 this.instancesPathField.setText(path);
+
+                CRLauncher.getInstance().getSettings().overrideInstancesPath = this.instancesPathCheckbox.isSelected();
                 CRLauncher.getInstance().getSettings().instancesDirPath = path;
             });
             storageSettings.add(this.instancesPathField);
@@ -235,6 +239,8 @@ public class SettingsView extends JPanel {
                 }
 
                 this.modLoadersPathField.setText(path);
+
+                CRLauncher.getInstance().getSettings().overrideModloadersPath = this.modLoadersPathCheckbox.isSelected();
                 CRLauncher.getInstance().getSettings().modloadersDirPath = path;
             });
             storageSettings.add(this.modLoadersPathField);
@@ -252,7 +258,6 @@ public class SettingsView extends JPanel {
                 } else {
                     this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
                 }
-                CRLauncher.getInstance().getSettings().overrideVersionsPath = selected;
             });
 
             this.instancesPathField.setEnabled(this.instancesPathCheckbox.isSelected());
@@ -264,7 +269,6 @@ public class SettingsView extends JPanel {
                 } else {
                     this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
                 }
-                CRLauncher.getInstance().getSettings().overrideInstancesPath = selected;
             });
 
             this.modLoadersPathField.setEnabled(this.modLoadersPathCheckbox.isSelected());
@@ -276,7 +280,6 @@ public class SettingsView extends JPanel {
                 } else {
                     this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
                 }
-                CRLauncher.getInstance().getSettings().overrideModloadersPath = selected;
             });
 
             gbc.gridy++;
