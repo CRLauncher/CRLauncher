@@ -63,10 +63,11 @@
             "title": "Instance Settings - $$INSTANCE_NAME$$",
             "exportInstance": {
                 "exportButton": "Export",
-                "zipFiles": "Zip files (*.zip)",
+                "crliFiles": "CRLauncher instance file (*.crli)",
                 "title": "Instance export",
                 "success": "Instance exported successfully!",
-                "failure": "Could not export instance"
+                "failure": "Could not export instance",
+                "wrongExtension": "Exported file must end with .crli"
             },
             "mainTab": {
                 "name": "Main",
@@ -292,6 +293,16 @@
             }
         },
         "addInstanceDialog": {
+            "importInstance": {
+                "importButton": "Import",
+                "crliFiles": "CRLauncher instance file (*.crli)",
+                "title": "Instance import",
+                "success": "Instance imported successfully",
+                "failure": "Could not import instance",
+                "duplicate": "Instance with a folder $$INSTANCE_FOLDER$$ already exists",
+                "badFile": "Instance file is corrupted or has an invalid format",
+                "wrongExtension": "Imported file must end with .crli"
+            },
             "title": "Add New Instance",
             "nameFieldLabel": "Name",
             "groupFieldLabel": "Group",

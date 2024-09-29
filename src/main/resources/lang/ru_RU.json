@@ -63,10 +63,11 @@
             "title": "Настройки инстанса - $$INSTANCE_NAME$$",
             "exportInstance": {
                 "exportButton": "Экспорт",
-                "zipFiles": "Zip-файлы (*.zip)",
+                "crliFiles": "Файл инстанса CRLauncher (*.crli)",
                 "title": "Экспорт инстанса",
                 "success": "Инстанс успешно экспортирован!",
-                "failure": "Не удалось экспортировать инстанс"
+                "failure": "Не удалось экспортировать инстанс",
+                "wrongExtension": "Название экспортированного файла должно оканчиваться на .crli"
             },
             "mainTab": {
                 "name": "Основное",
@@ -292,6 +293,16 @@
             }
         },
         "addInstanceDialog": {
+            "importInstance": {
+                "importButton": "Импорт",
+                "crliFiles": "Файл инстанса CRLauncher (*.crli)",
+                "title": "Импорт инстанса",
+                "success": "Инстанс успешно импортирован!",
+                "failure": "Не удалось импортировать инстанс",
+                "duplicate": "Инстанс с папкой $$INSTANCE_FOLDER$$ уже существует",
+                "badFile": "Файл инстанса поврежден или имеет неверный формат",
+                "wrongExtension": "Название импортированного файла должно оканчиваться на .crli"
+            },
             "title": "Добавить новый инстанс",
             "nameFieldLabel": "Имя",
             "groupFieldLabel": "Группа",

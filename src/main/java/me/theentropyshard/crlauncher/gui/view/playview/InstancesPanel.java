@@ -44,9 +44,9 @@ public class InstancesPanel extends JPanel {
         borderPanel.add(this.instancesPanel, BorderLayout.CENTER);
 
         this.scrollPane = new JScrollPane(
-                borderPanel,
-                JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+            borderPanel,
+            JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
         this.scrollPane.setUI(new FlatScrollPaneUI() {
             @Override
@@ -64,11 +64,40 @@ public class InstancesPanel extends JPanel {
         this.add(this.scrollPane, BorderLayout.CENTER);
     }
 
-    public void addInstanceItem(InstanceItem item) {
+    public void addInstanceItem(InstanceItem item, boolean sort) {
         if (item instanceof AddInstanceItem) {
             throw new IllegalArgumentException("Adding AddInstanceItem is not allowed");
         }
 
+        if (sort) {
+            boolean added = false;
+            int index = 0;
+
+            for (Component component : this.instancesPanel.getComponents()) {
+                if (component.getClass() == AddInstanceItem.class) {
+                    continue;
+                }
+
+                InstanceItem cItem = (InstanceItem) component;
+                if (cItem.getAssociatedInstance().getLastTimePlayed().isBefore(item.getAssociatedInstance().getLastTimePlayed())) {
+                    this.instancesPanel.add(item, index);
+
+                    added = true;
+                    break;
+                }
+
+                index++;
+            }
+
+            if (!added) {
+                this.addInstanceItemToEnd(item);
+            }
+        } else {
+            this.addInstanceItemToEnd(item);
+        }
+    }
+
+    public void addInstanceItemToEnd(InstanceItem item) {
         int count = this.instancesPanel.getComponentCount();
         this.instancesPanel.add(item, count - 1);
     }

@@ -24,8 +24,8 @@ import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import me.theentropyshard.crlauncher.utils.StringUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.FileHeader;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 public class InstanceManager {
-    
+
 
     private final Path workDir;
     private final List<Instance> instances;
@@ -57,16 +57,23 @@ public class InstanceManager {
                 continue;
             }
 
-            Path instanceFile = path.resolve("instance.json");
-            if (!Files.exists(instanceFile)) {
-                continue;
-            }
-
-            Instance instance = Json.parse(FileUtils.readUtf8(instanceFile), Instance.class);
-            instance.setWorkDir(path);
-
-            this.cacheInstance(instance);
+            this.loadInstance(path);
         }
+    }
+
+    private Instance loadInstance(Path instanceDir) throws IOException {
+        Path instanceFile = instanceDir.resolve("instance.json");
+
+        if (!Files.exists(instanceFile)) {
+            return null;
+        }
+
+        Instance instance = Json.parse(FileUtils.readUtf8(instanceFile), Instance.class);
+        instance.setWorkDir(instanceDir);
+
+        this.cacheInstance(instance);
+
+        return instance;
     }
 
     public void reload() throws IOException {
@@ -135,8 +142,8 @@ public class InstanceManager {
     }
 
     public void createInstance(String name, String groupName, String cosmicVersion, boolean autoUpdate) throws
-            IOException,
-            InstanceAlreadyExistsException {
+        IOException,
+        InstanceAlreadyExistsException {
 
         if (this.instancesByName.containsKey(name)) {
             throw new InstanceAlreadyExistsException(name);
@@ -201,6 +208,87 @@ public class InstanceManager {
         this.cacheInstance(instance);
 
         return invalidName;
+    }
+
+    private String findTopLevelDirectory(List<FileHeader> fileHeaders) throws IOException {
+        String topLevelDir = null;
+
+        for (FileHeader fileHeader : fileHeaders) {
+            String fileName = fileHeader.getFileName();
+            if (!fileName.substring(0, fileName.length() - 1).contains("/")) {
+                topLevelDir = fileName;
+
+                break;
+            }
+        }
+
+        return topLevelDir;
+    }
+
+    public InstanceImportResult importInstance(Path file) throws IOException {
+        try (ZipFile zipFile = new ZipFile(file.toFile())) {
+            List<FileHeader> fileHeaders = zipFile.getFileHeaders();
+            if (fileHeaders.isEmpty()) {
+                return new InstanceImportResult(
+                    InstanceImportStatus.BAD_FILE,
+                    "empty zip"
+                );
+            }
+
+            String fileName = this.findTopLevelDirectory(fileHeaders);
+            if (fileName == null) {
+                return new InstanceImportResult(
+                    InstanceImportStatus.BAD_FILE,
+                    "cannot find top level directory in zip"
+                );
+            }
+
+            if (Files.exists(this.workDir.resolve(fileName))) {
+                return new InstanceImportResult(
+                    InstanceImportStatus.INSTANCE_EXISTS,
+                    fileName
+                );
+            }
+
+            zipFile.extractAll(this.workDir.toString());
+
+            Path instanceDir = this.workDir.resolve(fileName);
+            Instance instance = this.loadInstance(instanceDir);
+            if (instance == null) {
+                FileUtils.delete(instanceDir);
+
+                return new InstanceImportResult(
+                    InstanceImportStatus.BAD_FILE,
+                    "no instance.json in zip"
+                );
+            }
+
+            return new InstanceImportResult(InstanceImportStatus.SUCCESS, instance);
+        }
+    }
+
+    public static final class InstanceImportResult {
+        private final InstanceImportStatus status;
+        private final Object message;
+
+        public InstanceImportResult(InstanceImportStatus status, Object message) {
+            this.status = status;
+            this.message = message;
+        }
+
+        public InstanceImportStatus getStatus() {
+            return this.status;
+        }
+
+        public Object getMessage() {
+            return this.message;
+        }
+    }
+
+    public enum InstanceImportStatus {
+        SUCCESS,
+        BAD_FILE,
+        INSTANCE_EXISTS
     }
 
     public Instance getInstanceByName(String name) {

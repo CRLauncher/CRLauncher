@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
+import me.theentropyshard.crlauncher.gui.action.InstanceImportAction;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -214,8 +215,12 @@ public class AddInstanceDialog extends AppDialog {
 
         leftButtonsPanel.add(refreshManifest);
 
+        JButton importButton = new JButton();
+        importButton.setAction(new InstanceImportAction(this.getDialog()));
+        leftButtonsPanel.add(importButton);
+
         FlowLayout rightLayout = new FlowLayout(FlowLayout.RIGHT);
-        rightLayout.setHgap(10);
+        rightLayout.setHgap(0);
         rightLayout.setVgap(0);
 
         JPanel rightButtonsPanel = new JPanel(rightLayout);
@@ -250,7 +255,10 @@ public class AddInstanceDialog extends AppDialog {
 
             IconManager iconManager = CRLauncher.getInstance().getIconManager();
 
-            playView.addInstanceItem(new InstanceItem(iconManager.getIcon("cosmic_logo_x32.png").icon(), instanceName), chosenGroupName);
+            playView.addInstanceItem(
+                new InstanceItem(iconManager.getIcon("cosmic_logo_x32.png").icon(), instanceName),
+                chosenGroupName, false
+            );
             this.getDialog().dispose();
             TableModel model = versionsTable.getModel();
             int selectedRow = versionsTable.getSelectedRow();
@@ -280,7 +288,7 @@ public class AddInstanceDialog extends AppDialog {
             this.getDialog().dispose();
         });
         rightButtonsPanel.add(cancelButton);
-        buttonsPanel.setBorder(new EmptyBorder(6, 10, 10, 0));
+        buttonsPanel.setBorder(new EmptyBorder(6, 10, 10, 10));
         root.add(buttonsPanel, BorderLayout.SOUTH);
 
         root.add(centerPanel, BorderLayout.CENTER);

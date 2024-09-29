@@ -126,21 +126,8 @@ public class PlayView extends JPanel {
                 try {
                     List<Instance> instances = this.get();
 
-                    IconManager iconManager = CRLauncher.getInstance().getIconManager();
-
                     for (Instance instance : instances) {
-                        Icon icon;
-                        try {
-                            icon = iconManager.getIcon(instance.getIconFileName()).icon();
-                        } catch (Exception e) {
-                            Log.warn("Could not load icon '" + instance.getIconFileName() + "' for instance '" + instance.getName() + "'");
-
-                            String validIconPath = "cosmic_logo_x32.png";
-                            instance.setIconFileName(validIconPath);
-                            icon = iconManager.getIcon(validIconPath).icon();
-                        }
-                        InstanceItem item = new InstanceItem(icon, instance.getName());
-                        PlayView.this.addInstanceItem(item, instance.getGroupName());
+                        PlayView.this.loadInstance(instance, false);
                     }
 
                     String group = CRLauncher.getInstance().getSettings().lastInstanceGroup;
@@ -154,7 +141,25 @@ public class PlayView extends JPanel {
         }.execute();
     }
 
-    public void addInstanceItem(InstanceItem item, String groupName) {
+    public void loadInstance(Instance instance, boolean sort) {
+        IconManager iconManager = CRLauncher.getInstance().getIconManager();
+
+        Icon icon;
+        try {
+            icon = iconManager.getIcon(instance.getIconFileName()).icon();
+        } catch (Exception e) {
+            Log.warn("Could not load icon '" + instance.getIconFileName() + "' for instance '" + instance.getName() + "'");
+
+            String validIconPath = "cosmic_logo_x32.png";
+            instance.setIconFileName(validIconPath);
+            icon = iconManager.getIcon(validIconPath).icon();
+        }
+
+        InstanceItem item = new InstanceItem(icon, instance.getName());
+        PlayView.this.addInstanceItem(item, instance.getGroupName(), sort);
+    }
+
+    public void addInstanceItem(InstanceItem item, String groupName, boolean sort) {
         if (item instanceof AddInstanceItem) {
             throw new IllegalArgumentException("Adding AddInstanceItem is not allowed");
         }
@@ -170,7 +175,7 @@ public class PlayView extends JPanel {
             this.model.addElement(groupName);
             this.instancesPanelView.add(panel, groupName);
         }
-        panel.addInstanceItem(item);
+        panel.addInstanceItem(item, sort);
 
         InstancesPanel finalPanel = panel;
 
