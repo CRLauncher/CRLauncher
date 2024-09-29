@@ -19,12 +19,12 @@
 package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt;
 
 import com.google.gson.annotations.SerializedName;
-import me.theentropyshard.crlauncher.cosmic.mods.IMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 
 import java.util.List;
 import java.util.Map;
 
-public class QuiltMod implements IMod {
+public class QuiltMod implements Mod {
     public String filePath;
     public boolean active;
 

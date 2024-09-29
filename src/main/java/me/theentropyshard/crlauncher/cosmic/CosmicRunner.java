@@ -25,7 +25,7 @@ import me.theentropyshard.crlauncher.cosmic.launcher.AbstractCosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
 import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
-import me.theentropyshard.crlauncher.cosmic.mods.IMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
@@ -325,7 +325,7 @@ public class CosmicRunner extends Thread {
         return originalClientPath;
     }
 
-    private void updateMods(List<? extends IMod> mods, Path enabledModsDir, Path disabledModsDir) throws IOException {
+    private void updateMods(List<? extends Mod> mods, Path enabledModsDir, Path disabledModsDir) throws IOException {
         if (mods.isEmpty()) {
             return;
         }
@@ -333,31 +333,32 @@ public class CosmicRunner extends Thread {
         FileUtils.createDirectoryIfNotExists(enabledModsDir);
         FileUtils.createDirectoryIfNotExists(disabledModsDir);
 
-        for (IMod mod : mods) {
+        for (Mod mod : mods) {
             Path filePath = Paths.get(mod.getFilePath());
 
             if (!Files.exists(filePath)) {
-                Log.warn("Mod at '" + filePath + "' does not exist!");
+                if (mod.isActive()) {
 
-                continue;
+                    continue;
+                }
+
+                if ((mod.isActive() && filePath.startsWith(enabledModsDir)) ||
+                    (!mod.isActive() && filePath.startsWith(disabledModsDir))) {
+
+                    continue;
+                }
+
+                Path destinationDir;
+
+                if (mod.isActive()) {
+                    destinationDir = enabledModsDir.resolve(filePath.getFileName());
+                } else {
+                    destinationDir = disabledModsDir.resolve(filePath.getFileName());
+                }
+
+                filePath = Files.move(filePath, destinationDir, StandardCopyOption.REPLACE_EXISTING);
+                mod.setFilePath(filePath.toString());
             }
-
-            if ((mod.isActive() && filePath.startsWith(enabledModsDir)) ||
-                (!mod.isActive() && filePath.startsWith(disabledModsDir))) {
-
-                continue;
-            }
-
-            Path destinationDir;
-
-            if (mod.isActive()) {
-                destinationDir = enabledModsDir.resolve(filePath.getFileName());
-            } else {
-                destinationDir = disabledModsDir.resolve(filePath.getFileName());
-            }
-
-            filePath = Files.move(filePath, destinationDir, StandardCopyOption.REPLACE_EXISTING);
-            mod.setFilePath(filePath.toString());
         }
     }
 }

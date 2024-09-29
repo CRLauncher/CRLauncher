@@ -1,115 +1,35 @@
+/*
+ * CRLauncher - https://github.com/CRLauncher/CRLauncher
+ * Copyright (C) 2024 CRLauncher
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package me.theentropyshard.crlauncher.cosmic.mods;
 
-public class Mod {
-    /**
-     * Unique id, mods are identified by it, two mods cannot have the same id
-     */
-    private String id;
+public interface Mod {
+    String getName();
 
-    /**
-     * Name of a mod, two mods may have the same name
-     */
-    private String name;
+    String getVersion();
 
-    /**
-     * Description of a mod
-     */
-    private String description;
+    String getDescription();
 
-    /**
-     * Version of a mod
-     */
-    private String version;
+    String getFilePath();
 
-    /**
-     * Name of the mod file
-     */
-    private String fileName;
+    void setFilePath(String filePath);
 
-    /**
-     * A loader, that this mod is made for
-     */
-    private Loader loader;
+    boolean isActive();
 
-    public Mod() {
-
-    }
-
-    public Mod(String id, String name, String description, String version, String fileName, Loader loader) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.version = version;
-        this.fileName = fileName;
-        this.loader = loader;
-    }
-
-    public boolean isFabric() {
-        return this.loader == Loader.FABRIC;
-    }
-
-    public boolean isQuilt() {
-        return this.loader == Loader.QUILT;
-    }
-
-    public boolean isPuzzle() {
-        return this.loader == Loader.PUZZLE;
-    }
-
-    /**
-     * Enum of mod loaders
-     */
-    public enum Loader {
-        FABRIC,
-        QUILT,
-        PUZZLE
-    }
-
-    public String getId() {
-        return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getFileName() {
-        return this.fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public Loader getLoader() {
-        return this.loader;
-    }
-
-    public void setLoader(Loader loader) {
-        this.loader = loader;
-    }
+    void setActive(boolean active);
 }

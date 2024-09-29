@@ -18,11 +18,11 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.puzzle;
 
-import me.theentropyshard.crlauncher.cosmic.mods.IMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 
 import java.util.List;
 
-public class PuzzleMod implements IMod {
+public class PuzzleMod implements Mod {
     private String id;
     private String version;
     private String name;

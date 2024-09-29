@@ -1,7 +1,7 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.mods.IMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
@@ -48,7 +48,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
             private final AtomicBoolean modExists = new AtomicBoolean(false);
 
             @Override
-            protected IMod work() throws Exception {
+            protected Mod work() throws Exception {
                 ProgressDialog progressDialog = new ProgressDialog("Downloading " + file.getName());
 
                 OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient().newBuilder()
@@ -81,7 +81,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                 download.execute();
                 SwingUtilities.invokeLater(() -> progressDialog.getDialog().dispose());
 
-                IMod mod;
+                Mod mod;
 
                 try (ZipFile zipFile = new ZipFile(saveAs.toFile())) {
                     FileHeader fileHeader = zipFile.getFileHeader(
@@ -128,9 +128,9 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
 
             @Override
             protected void done() {
-                IMod mod;
+                Mod mod;
                 try {
-                    mod = (IMod) this.get();
+                    mod = (Mod) this.get();
                 } catch (InterruptedException | ExecutionException ex) {
                     Log.error(ex);
 
