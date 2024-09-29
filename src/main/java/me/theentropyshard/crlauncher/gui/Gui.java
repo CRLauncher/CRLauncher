@@ -82,7 +82,14 @@ public class Gui {
         CRLauncher.frame = this.frame = new JFrame(title);
         this.frame.add(this.viewSelector, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 5));
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 5)) {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+
+                this.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, UIManager.getColor("Component.borderColor")));
+            }
+        };
         bottomPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, UIManager.getColor("Component.borderColor")));
         this.openFolderButton = new JButton(language.getString(Gui.OPEN_LAUNCHER_FOLDER));
         this.openFolderButton.addActionListener(e -> {
