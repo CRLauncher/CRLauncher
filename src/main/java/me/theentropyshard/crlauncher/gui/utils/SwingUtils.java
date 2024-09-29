@@ -47,6 +47,17 @@ public final class SwingUtils {
         return icon;
     }
 
+    public static void startWorker(Runnable runnable) {
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                runnable.run();
+
+                return null;
+            }
+        }.execute();
+    }
+
     public static BufferedImage loadImageFromBase64(String base64) {
         if (base64 == null) {
             return null;
