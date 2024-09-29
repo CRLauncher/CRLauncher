@@ -25,7 +25,7 @@ import me.theentropyshard.crlauncher.cosmic.launcher.AbstractCosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
 import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
-import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.cosmic.mods.IMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
@@ -325,7 +325,7 @@ public class CosmicRunner extends Thread {
         return originalClientPath;
     }
 
-    private void updateMods(List<? extends Mod> mods, Path enabledModsDir, Path disabledModsDir) throws IOException {
+    private void updateMods(List<? extends IMod> mods, Path enabledModsDir, Path disabledModsDir) throws IOException {
         if (mods.isEmpty()) {
             return;
         }
@@ -333,7 +333,7 @@ public class CosmicRunner extends Thread {
         FileUtils.createDirectoryIfNotExists(enabledModsDir);
         FileUtils.createDirectoryIfNotExists(disabledModsDir);
 
-        for (Mod mod : mods) {
+        for (IMod mod : mods) {
             Path filePath = Paths.get(mod.getFilePath());
 
             if (!Files.exists(filePath)) {

@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods;
 
-public interface Mod {
+public interface IMod {
     String getName();
 
     String getVersion();

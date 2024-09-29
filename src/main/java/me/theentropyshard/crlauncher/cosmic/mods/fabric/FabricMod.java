@@ -18,9 +18,9 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.fabric;
 
-import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.cosmic.mods.IMod;
 
-public class FabricMod implements Mod {
+public class FabricMod implements IMod {
     private String filePath;
     private String name;
     private String version;

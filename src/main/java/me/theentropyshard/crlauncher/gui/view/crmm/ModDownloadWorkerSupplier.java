@@ -1,7 +1,7 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.cosmic.mods.IMod;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
@@ -10,7 +10,6 @@ import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleModsView;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
-import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceType;
@@ -49,7 +48,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
             private final AtomicBoolean modExists = new AtomicBoolean(false);
 
             @Override
-            protected Mod work() throws Exception {
+            protected IMod work() throws Exception {
                 ProgressDialog progressDialog = new ProgressDialog("Downloading " + file.getName());
 
                 OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient().newBuilder()
@@ -82,7 +81,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                 download.execute();
                 SwingUtilities.invokeLater(() -> progressDialog.getDialog().dispose());
 
-                Mod mod;
+                IMod mod;
 
                 try (ZipFile zipFile = new ZipFile(saveAs.toFile())) {
                     FileHeader fileHeader = zipFile.getFileHeader(
@@ -129,9 +128,9 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
 
             @Override
             protected void done() {
-                Mod mod;
+                IMod mod;
                 try {
-                    mod = (Mod) this.get();
+                    mod = (IMod) this.get();
                 } catch (InterruptedException | ExecutionException ex) {
                     Log.error(ex);
 
