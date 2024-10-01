@@ -39,7 +39,7 @@ public class ProcessReader {
         this.charset = charset;
     }
 
-    public void read(Consumer<String> log) throws IOException {
+    public void read(Consumer<String> inLog, Consumer<String> errLog) throws IOException {
         InputStream inputStream = this.process.getInputStream();
         InputStream errorStream = this.process.getErrorStream();
         BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, this.charset));
@@ -49,10 +49,10 @@ public class ProcessReader {
             if (!in.ready()) {
                 // Do nothing: only reduces nesting
             } else if ((line = in.readLine()) != null) {
-                log.accept(line);
+                inLog.accept(line);
             } else {
                 while ((line = err.readLine()) != null) {
-                    log.accept(line);
+                    errLog.accept(line);
                 }
                 break;
             }
@@ -60,10 +60,10 @@ public class ProcessReader {
             if (!err.ready()) {
                 // Do nothing: only reduces nesting
             } else if ((line = err.readLine()) != null) {
-                log.accept(line);
+                errLog.accept(line);
             } else {
                 while ((line = in.readLine()) != null) {
-                    log.accept(line);
+                    inLog.accept(line);
                 }
                 break;
             }
