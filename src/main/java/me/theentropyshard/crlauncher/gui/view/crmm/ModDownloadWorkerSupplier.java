@@ -115,6 +115,8 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                     return null;
                 }
 
+                FileUtils.createDirectoryIfNotExists(modFolder);
+
                 Path modPath = Files.move(
                     saveAs, modFolder.resolve(saveAs.getFileName()), StandardCopyOption.REPLACE_EXISTING
                 );
