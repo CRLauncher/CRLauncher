@@ -41,10 +41,32 @@ public class ProcessReader {
 
     public void read(Consumer<String> log) throws IOException {
         InputStream inputStream = this.process.getInputStream();
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, this.charset));
+        InputStream errorStream = this.process.getErrorStream();
+        BufferedReader in = new BufferedReader(new InputStreamReader(inputStream, this.charset));
+        BufferedReader err = new BufferedReader(new InputStreamReader(errorStream, this.charset));
         String line;
-        while ((line = reader.readLine()) != null) {
-            log.accept(line);
-        }
+        do {
+            if (!in.ready()) {
+                // Do nothing: only reduces nesting
+            } else if ((line = in.readLine()) != null) {
+                log.accept(line);
+            } else {
+                while ((line = err.readLine()) != null) {
+                    log.accept(line);
+                }
+                break;
+            }
+
+            if (!err.ready()) {
+                // Do nothing: only reduces nesting
+            } else if ((line = err.readLine()) != null) {
+                log.accept(line);
+            } else {
+                while ((line = in.readLine()) != null) {
+                    log.accept(line);
+                }
+                break;
+            }
+        } while (true);
     }
 }
