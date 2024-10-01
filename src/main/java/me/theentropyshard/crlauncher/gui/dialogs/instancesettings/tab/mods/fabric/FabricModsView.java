@@ -159,7 +159,7 @@ public class FabricModsView extends JPanel {
             this.fabricModsModel.removeRow(selectedRow);
             instance.getFabricMods().remove(fabricMod);
 
-            Path modFile = instance.getModDir(fabricMod);
+            Path modFile = instance.getModPath(fabricMod);
 
             try {
                 FileUtils.delete(modFile);

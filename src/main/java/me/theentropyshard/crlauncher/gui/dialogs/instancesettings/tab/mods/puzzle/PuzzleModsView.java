@@ -41,7 +41,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -178,7 +177,7 @@ public class PuzzleModsView extends JPanel {
             this.puzzleModsModel.removeRow(selectedRow);
             instance.getPuzzleMods().remove(puzzleMod);
 
-            Path modFile = instance.getModDir(puzzleMod);
+            Path modFile = instance.getModPath(puzzleMod);
 
             if (Files.exists(modFile)) {
                 try {

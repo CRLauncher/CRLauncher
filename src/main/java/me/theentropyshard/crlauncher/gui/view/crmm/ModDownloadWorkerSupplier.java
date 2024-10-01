@@ -28,7 +28,6 @@ import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -154,7 +153,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                         }
 
                         try {
-                            FileUtils.delete(instance.getModDir(foundMod));
+                            FileUtils.delete(instance.getModPath(foundMod));
                         } catch (IOException e) {
                             Log.error("Could not delete " + foundMod.getFileName());
                         }
@@ -173,7 +172,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                         }
 
                         try {
-                            FileUtils.delete(instance.getModDir(foundMod));
+                            FileUtils.delete(instance.getModPath(foundMod));
                         } catch (IOException e) {
                             Log.error("Could not delete " + foundMod.getFileName());
                         }

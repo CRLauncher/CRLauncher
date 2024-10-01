@@ -41,7 +41,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
 
@@ -182,7 +181,7 @@ public class QuiltModsView extends JPanel {
             this.quiltModsModel.removeRow(selectedRow);
             instance.getQuiltMods().remove(quiltMod);
 
-            Path modFile = Paths.get(quiltMod.getFileName());
+            Path modFile = instance.getModPath(quiltMod);
 
             if (Files.exists(modFile)) {
                 try {

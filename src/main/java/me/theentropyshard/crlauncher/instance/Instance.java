@@ -118,7 +118,7 @@ public class Instance {
         }
     }
 
-    public Path getModDir(FabricMod fabricMod) {
+    public Path getModPath(FabricMod fabricMod) {
         if (fabricMod.isActive()) {
             return this.getFabricModsDir().resolve(fabricMod.getFileName());
         } else {
@@ -126,7 +126,7 @@ public class Instance {
         }
     }
 
-    public Path getModDir(QuiltMod quiltMod) {
+    public Path getModPath(QuiltMod quiltMod) {
         if (quiltMod.isActive()) {
             return this.getQuiltModsDir().resolve(quiltMod.getFileName());
         } else {
@@ -134,7 +134,7 @@ public class Instance {
         }
     }
 
-    public Path getModDir(PuzzleMod puzzleMod) {
+    public Path getModPath(PuzzleMod puzzleMod) {
         if (puzzleMod.isActive()) {
             return this.getPuzzleModsDir().resolve(puzzleMod.getFileName());
         } else {
