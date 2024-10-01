@@ -13,8 +13,6 @@ You can either download a prebuilt jar from [Releases](https://github.com/CRLaun
 ```shell
 $ git clone https://github.com/CRLauncher/CRLauncher
 $ cd CRLauncher
-$ gradlew build
-# Or 
 $ gradlew clean build
 ```
 
@@ -32,8 +30,8 @@ Or you can use the `--useJarLocation` argument, which will make the launcher use
 ```shell
 $ java -jar dist/CRLauncher.jar --useJarLocation
 ```
-This way the launcher will create its files in build/libs
+This way the launcher will create its files in dist
 
 
 ### Plans:
- - Add support for CRM-1 crmmMod repositories
+ - Add support for CRM-1 mod repositories
