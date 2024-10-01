@@ -18,7 +18,6 @@
 
 package me.theentropyshard.crlauncher.cosmic;
 
-import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.LauncherConsole;
 import me.theentropyshard.crlauncher.logging.LogEvent;
 import me.theentropyshard.crlauncher.logging.LogLevel;
@@ -46,11 +45,7 @@ public class CosmicLogEvent extends LogEvent {
         for (AnsiPart part : ansiParts) {
             Color color = part.getColor().getColor();
             if (color == null) {
-                if (CRLauncher.getInstance().getSettings().darkTheme) {
-                    color = Color.WHITE;
-                } else {
-                    color = Color.BLACK;
-                }
+                color = this.getLevel().color();
             }
             c.setColor(color).write(AnsiColor.stripAnsiCodes(part.getText()));
         }
