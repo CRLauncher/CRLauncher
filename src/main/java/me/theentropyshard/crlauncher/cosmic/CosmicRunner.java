@@ -205,7 +205,12 @@ public class CosmicRunner extends Thread {
                 }
             }
 
-            Log.info("Cosmic Reach process finished with exit code " + exitCode);
+            String exitMessage = "Cosmic Reach process finished with exit code " + exitCode;
+            if (exitCode == 0) {
+                Log.info(exitMessage);
+            } else {
+                Log.error(exitMessage);
+            }
 
             long timePlayedSeconds = (end - start) / 1000;
             String timePlayed = TimeUtils.getHoursMinutesSeconds(timePlayedSeconds);
