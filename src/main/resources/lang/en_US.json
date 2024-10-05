@@ -85,7 +85,9 @@
                 "name": "Java",
                 "javaInstallation": {
                     "borderName": "Java Installation",
-                    "textFieldPlaceholder": "Path to javaw.exe"
+                    "textFieldPlaceholder": "Path to $$JAVAW$$",
+                    "current": "$$CURRENT_INSTALLATION$$ (Current)",
+                    "browse": "Browse path..."
                 },
                 "memorySettings": {
                     "borderName": "Memory Settings",

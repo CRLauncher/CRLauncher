@@ -16,16 +16,20 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -49,7 +53,15 @@ public class JavaTab extends Tab {
         JTextField javaPathTextField = new JTextField();
         javaPathTextField.setText(instance.getJavaPath());
         javaPathTextField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
-            language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.textFieldPlaceholder"));
+            language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.textFieldPlaceholder")
+                .replace("$$JAVAW$$", OperatingSystem.getCurrent().getJavaExecutableName()));
+        JavaPopupMenu javaPathPopupMenu = new JavaPopupMenu(javaPathTextField::setText);
+        javaPathTextField.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent event) {
+                javaPathPopupMenu.show(javaPathTextField, 0, javaPathTextField.getHeight());
+            }
+        });
         javaInstallation.add(javaPathTextField);
         javaInstallation.setBorder(new TitledBorder(
             language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.borderName")
@@ -86,7 +98,6 @@ public class JavaTab extends Tab {
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                instance.setJavaPath(javaPathTextField.getText());
                 String minMemory = minMemoryField.getText();
                 if (minMemory.isEmpty()) {
                     minMemory = "512";
