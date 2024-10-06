@@ -86,7 +86,9 @@
                 "name": "Java",
                 "javaInstallation": {
                     "borderName": "Установка Java",
-                    "textFieldPlaceholder": "Путь до javaw.exe"
+                    "textFieldPlaceholder": "Путь до $$JAVAW$$",
+                    "current": "$$CURRENT_INSTALLATION$$ (Текущая)",
+                    "browse": "Выбрать..."
                 },
                 "memorySettings": {
                     "borderName": "Выделение памяти",
