@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.utils.json;
 
+import com.google.gson.FormattingStyle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -47,7 +48,9 @@ public final class Json {
         //
         .create();
 
-    private static final Gson PRETTY_GSON = Json.GSON.newBuilder().setPrettyPrinting().create();
+    private static final Gson PRETTY_GSON = Json.GSON.newBuilder()
+        .setFormattingStyle(FormattingStyle.PRETTY.withIndent(" ".repeat(4)))
+        .create();
 
     public static <T> T parse(String json, Type clazz) {
         return Json.GSON.fromJson(json, clazz);
