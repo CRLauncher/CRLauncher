@@ -2,11 +2,14 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.java.JavaLocator;
+import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
 import java.awt.*;
 import java.nio.file.Path;
+import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 public class JavaPathPopupMenu extends JPopupMenu {
@@ -36,17 +39,38 @@ public class JavaPathPopupMenu extends JPopupMenu {
 
         this.addSeparator();
 
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileFilter(JavaExecFileFilter.current());
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setMultiSelectionEnabled(false);
         JMenuItem selectJavaPathMenuItem = new JMenuItem();
         selectJavaPathMenuItem.setText(language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.browse"));
-        selectJavaPathMenuItem.addActionListener(event -> {
-            if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(selectJavaPathMenuItem)) {
-                consumer.accept(fileChooser.getSelectedFile().toString());
+        selectJavaPathMenuItem.addActionListener(event -> new Worker<String, Void>("browse java installation path") {
+            @Override
+            protected String work() throws Exception {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(JavaExecFileFilter.current());
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.setMultiSelectionEnabled(false);
+
+                if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(selectJavaPathMenuItem)) {
+                    return fileChooser.getSelectedFile().toString();
+                } else {
+                    return null;
+                }
             }
-        });
+
+            @Override
+            protected void done() {
+                String result;
+                try {
+                    result = this.get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Log.error(ex);
+                    return;
+                }
+
+                if (result != null) {
+                    consumer.accept(result);
+                }
+            }
+        }.execute());
         this.add(selectJavaPathMenuItem);
     }
 
