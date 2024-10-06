@@ -18,64 +18,44 @@
 
 package me.theentropyshard.crlauncher.cosmic.version;
 
-public class Version {
+public class Artifact {
     /**
-     * Version id
+     * Download url
      */
-    private String id;
+    private String url;
 
     /**
-     * Type of the version
+     * Version hash
      */
-    private VersionType type;
+    private String sha256;
 
     /**
-     * Time, when version was released, unix timestamp
+     * File size in bytes
      */
-    private long releaseTime;
+    private long size;
 
-    /**
-     * Client artifact
-     */
-    private Artifact client;
-
-    /**
-     * Server artifact
-     */
-    private Artifact server;
-
-    public Version() {
+    public Artifact() {
 
     }
 
     @Override
     public String toString() {
-        return "Version{" +
-            "id='" + this.id + '\'' +
-            ", type=" + this.type +
-            ", releaseTime=" + this.releaseTime +
-            ", client=" + this.client +
-            ", server=" + this.server +
+        return "Artifact{" +
+            "url='" + this.url + '\'' +
+            ", sha256='" + this.sha256 + '\'' +
+            ", size=" + this.size +
             '}';
     }
 
-    public String getId() {
-        return this.id;
+    public String getUrl() {
+        return this.url;
     }
 
-    public VersionType getType() {
-        return this.type;
+    public String getSha256() {
+        return this.sha256;
     }
 
-    public long getReleaseTime() {
-        return this.releaseTime;
-    }
-
-    public Artifact getClient() {
-        return this.client;
-    }
-
-    public Artifact getServer() {
-        return this.server;
+    public long getSize() {
+        return this.size;
     }
 }

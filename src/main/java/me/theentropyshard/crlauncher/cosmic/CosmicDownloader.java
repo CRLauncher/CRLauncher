@@ -22,7 +22,7 @@ public class CosmicDownloader {
 
     public void downloadVersion(Version version, ProgressListener listener) throws IOException {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
-        Path filePath = versionManager.getVersionPath(version);
+        Path filePath = versionManager.getVersionJar(version);
 
         Path versionJson = filePath.getParent().resolve(version.getId() + ".json");
 
@@ -31,7 +31,7 @@ public class CosmicDownloader {
             FileUtils.writeUtf8(versionJson, pretty ? Json.writePretty(version) : Json.write(version));
         }
 
-        if (!Files.exists(filePath) || !HashUtils.sha256(filePath).equals(version.getSha256())) {
+        if (!Files.exists(filePath) || !HashUtils.sha256(filePath).equals(version.getClient().getSha256())) {
             if (Files.exists(filePath)) {
                 FileUtils.delete(filePath);
             }
@@ -41,8 +41,8 @@ public class CosmicDownloader {
                     .build();
 
             HttpDownload download = new HttpDownload.Builder()
-                    .url(version.getUrl())
-                    .expectedSize(version.getSize())
+                    .url(version.getClient().getUrl())
+                    .expectedSize(version.getClient().getSize())
                     .httpClient(httpClient)
                     .saveAs(filePath)
                     .build();

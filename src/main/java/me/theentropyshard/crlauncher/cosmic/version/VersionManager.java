@@ -58,12 +58,27 @@ public class VersionManager {
         }
     }
 
-    public Path getVersionPath(Version version) {
-        return this.workDir.resolve(version.getId()).resolve(version.getId() + ".jar");
+    public Path getVersionPath(String id, String ext) {
+        return this.workDir
+            .resolve(id)
+            .resolve("client")
+            .resolve(id + "." + ext);
+    }
+
+    public Path getVersionPath(Version version, String ext) {
+        return this.getVersionPath(version.getId(), ext);
+    }
+
+    public Path getVersionJar(Version version) {
+        return this.getVersionPath(version, "jar");
+    }
+
+    public Path getVersionJson(String id) {
+        return this.getVersionPath(id, "json");
     }
 
     public Version getVersion(String id) throws IOException {
-        Path versionJson = this.workDir.resolve(id).resolve(id + ".json");
+        Path versionJson = this.getVersionJson(id);
         if (Files.exists(versionJson)) {
             return Json.parse(FileUtils.readUtf8(versionJson), Version.class);
         }
