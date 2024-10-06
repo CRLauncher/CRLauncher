@@ -11,32 +11,37 @@ import java.util.function.Consumer;
 
 public class JavaPathPopupMenu extends JPopupMenu {
     public JavaPathPopupMenu(final Consumer<? super String> consumer) {
-        Language language = CRLauncher.getInstance().getLanguage();
+        final Language language = CRLauncher.getInstance().getLanguage();
 
-        JMenuItem currentJavaPathMenuItem = new JMenuItem();
-        String currentJavaPath = JavaLocator.getJavaPath();
+        final JMenuItem currentJavaPathMenuItem = new JMenuItem();
+        final String currentJavaPath = JavaLocator.getJavaPath();
         currentJavaPathMenuItem.setText(
             language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.current")
                 .replace("$$CURRENT_INSTALLATION$$", currentJavaPath)
         );
         currentJavaPathMenuItem.addActionListener(event -> consumer.accept(currentJavaPath));
         this.add(currentJavaPathMenuItem);
+
         this.addSeparator();
-        for (Path path : JavaLocator.getJavaFromEnv()) {
-            JMenuItem menuItem = new JMenuItem();
+
+        for (final Path path : JavaLocator.getJavaFromEnv()) {
+            final JMenuItem menuItem = new JMenuItem();
             menuItem.setText(path.toString());
             menuItem.addActionListener(event -> {
                 consumer.accept(((JMenuItem) event.getSource()).getText());
             });
             this.add(menuItem);
         }
+
         this.addSeparator();
-        JMenuItem selectJavaPathMenuItem = new JMenuItem();
+
+        final JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(JavaExecFileFilter.current());
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.setMultiSelectionEnabled(false);
+        final JMenuItem selectJavaPathMenuItem = new JMenuItem();
         selectJavaPathMenuItem.setText(language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.browse"));
         selectJavaPathMenuItem.addActionListener(event -> {
-            JFileChooser fileChooser = new JFileChooser();
-            fileChooser.setFileFilter(JavaExecFileFilter.current());
-            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
             if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(selectJavaPathMenuItem)) {
                 consumer.accept(fileChooser.getSelectedFile().toString());
             }
