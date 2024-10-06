@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -39,6 +40,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WorldsTableModel extends AbstractTableModel {
     private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class, String.class};
@@ -71,7 +74,27 @@ public class WorldsTableModel extends AbstractTableModel {
         new Worker<Void, CosmicWorld>("loading worlds") {
             @Override
             protected Void work() throws Exception {
-                SemanticVersion cosmicVersion = SemanticVersion.parse(instance.getCosmicVersion());
+                String version = instance.getCosmicVersion();
+                SemanticVersion cosmicVersion = SemanticVersion.parse(version);
+
+                if (cosmicVersion == null) {
+                    Log.warn("Could not parse game version " + version + " of instance " + instance.getName() +
+                        ", trying to extract with regex");
+
+                    Pattern versionPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+");
+                    Matcher matcher = versionPattern.matcher(version);
+                    if (matcher.find()) {
+                        String parsedVersion = matcher.group(0);
+                        cosmicVersion = SemanticVersion.parse(parsedVersion);
+                        Log.info("Successfully extracted game version with regex: " + parsedVersion);
+                    }
+                }
+
+                if (cosmicVersion == null) {
+                    Log.warn("Could not extract game version with regex, defaulting to 0.1.33");
+
+                    cosmicVersion = new SemanticVersion(0, 1, 33);
+                }
 
                 Path worldsDir = instance.getCosmicDir().resolve("worlds");
 
