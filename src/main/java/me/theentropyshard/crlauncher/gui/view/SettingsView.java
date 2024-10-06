@@ -421,10 +421,8 @@ public class SettingsView extends JPanel {
         this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
         this.instancesPathCheckbox.setText(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
         this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
-        ;
         this.modLoadersPathCheckbox.setText(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
         this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
-        ;
         this.tipLabel.setText("<html><b>" + language.getString(SettingsView.TIP_LABEL) + "</b></html>");
 
         this.launchOptionLabel.setText(language.getString(SettingsView.GAME_LAUNCH_LABEL));

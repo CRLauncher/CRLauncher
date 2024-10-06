@@ -11,7 +11,7 @@ public final class JavaExecFileFilter extends FileFilter {
     public static final JavaExecFileFilter WINDOWS = new JavaExecFileFilter("javaw.exe");
 
     public static JavaExecFileFilter current() {
-        return OperatingSystem.isWindows() ? WINDOWS : UNIX;
+        return OperatingSystem.isWindows() ? JavaExecFileFilter.WINDOWS : JavaExecFileFilter.UNIX;
     }
 
     private final String targetName;
