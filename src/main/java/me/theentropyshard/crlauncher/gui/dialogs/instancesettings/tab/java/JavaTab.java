@@ -16,18 +16,18 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.IOException;
 
 public class JavaTab extends Tab {
@@ -46,10 +46,8 @@ public class JavaTab extends Tab {
         gbc.anchor = GridBagConstraints.NORTH;
 
         JPanel javaInstallation = new JPanel(new GridLayout(0, 1));
-        JTextField javaPathTextField = new JTextField();
+        JavaPathTextField javaPathTextField = new JavaPathTextField();
         javaPathTextField.setText(instance.getJavaPath());
-        javaPathTextField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
-            language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.textFieldPlaceholder"));
         javaInstallation.add(javaPathTextField);
         javaInstallation.setBorder(new TitledBorder(
             language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.borderName")
@@ -86,7 +84,6 @@ public class JavaTab extends Tab {
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                instance.setJavaPath(javaPathTextField.getText());
                 String minMemory = minMemoryField.getText();
                 if (minMemory.isEmpty()) {
                     minMemory = "512";
