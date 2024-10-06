@@ -28,6 +28,7 @@ public class JavaPathPopupMenu extends JPopupMenu {
             final JMenuItem menuItem = new JMenuItem();
             menuItem.setText(path.toString());
             menuItem.addActionListener(event -> {
+                // Avoid using variables from for-loop (lambda closures)
                 consumer.accept(((JMenuItem) event.getSource()).getText());
             });
             this.add(menuItem);
