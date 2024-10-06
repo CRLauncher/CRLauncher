@@ -51,7 +51,8 @@
                 "rename": "Rename",
                 "delete": "Delete",
                 "openInstanceFolder": "Open instance folder",
-                "openCosmicFolder": "Open Cosmic folder"
+                "openCosmicFolder": "Open Cosmic folder",
+                "killProcess": "Kill process"
             }
         },
         "modFilesDialog": {

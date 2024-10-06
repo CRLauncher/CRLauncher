@@ -51,7 +51,8 @@
                 "rename": "Переименовать",
                 "delete": "Удалить",
                 "openInstanceFolder": "Открыть папку инстанса",
-                "openCosmicFolder": "Открыть папку cosmic-reach"
+                "openCosmicFolder": "Открыть папку cosmic-reach",
+                "killProcess": "Остановить процесс"
             }
         },
         "modFilesDialog": {

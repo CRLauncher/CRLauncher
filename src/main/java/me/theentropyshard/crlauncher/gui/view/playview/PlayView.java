@@ -62,6 +62,7 @@ public class PlayView extends JPanel {
     private final JLabel instanceInfoLabel;
 
     private InstancesPanel currentPanel;
+    private CosmicRunner cosmicRunner;
 
     public PlayView() {
         super(new BorderLayout());
@@ -184,7 +185,8 @@ public class PlayView extends JPanel {
             if (mouseButton == MouseEvent.BUTTON1) { // left mouse button
                 finalPanel.makeItemFirst(item);
 
-                new CosmicRunner(item.getAssociatedInstance(), item).start();
+                this.cosmicRunner = new CosmicRunner(item.getAssociatedInstance(), item);
+                this.cosmicRunner.start();
             } else if (mouseButton == MouseEvent.BUTTON3) { // right mouse button
                 Language language = CRLauncher.getInstance().getLanguage();
 
@@ -249,6 +251,15 @@ public class PlayView extends JPanel {
                     OperatingSystem.open(instance.getCosmicDir());
                 });
                 popupMenu.add(openCosmicFolder);
+
+                popupMenu.addSeparator();
+
+                JMenuItem exitInstanceItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.killProcess"));
+                exitInstanceItem.setEnabled(item.getAssociatedInstance().isRunning());
+                exitInstanceItem.addActionListener(exit -> {
+                    this.cosmicRunner.stopGame();
+                });
+                popupMenu.add(exitInstanceItem);
 
                 popupMenu.show(item, e.getX(), e.getY());
             }

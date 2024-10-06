@@ -25,7 +25,6 @@ import me.theentropyshard.crlauncher.cosmic.launcher.AbstractCosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
 import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
-import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
@@ -38,6 +37,7 @@ import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.ProcessReader;
 import me.theentropyshard.crlauncher.utils.SystemProperty;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import net.lingala.zip4j.ZipFile;
@@ -49,7 +49,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +57,7 @@ public class CosmicRunner extends Thread {
     private final Instance instance;
     private final InstanceItem item;
 
+    private Process process;
     private Path clientCopyTmp;
 
     public CosmicRunner(Instance instance, InstanceItem item) {
@@ -181,14 +181,7 @@ public class CosmicRunner extends Thread {
 
             long start = System.currentTimeMillis();
 
-            int exitCode = launcher.launch(line -> {
-                InstanceType type = this.instance.getType();
-                if (type == InstanceType.VANILLA || type == InstanceType.FABRIC) {
-                    Log.cosmicReachVanilla(line);
-                } else {
-                    Log.cosmicReachModded(line);
-                }
-            }, launchOption == 3);
+            int exitCode = this.startProcess(launcher, launchOption == 3);
 
             long end = System.currentTimeMillis();
 
@@ -238,6 +231,31 @@ public class CosmicRunner extends Thread {
                 }
             }
         }
+    }
+
+    private int startProcess(CosmicLauncher launcher, boolean exitAfterLaunch) throws Exception {
+        this.process = launcher.launch(exitAfterLaunch);
+
+        new ProcessReader(this.process).read(line -> {
+            InstanceType type = this.instance.getType();
+            if (type == InstanceType.VANILLA || type == InstanceType.FABRIC) {
+                Log.cosmicReachVanilla(line);
+            } else {
+                Log.cosmicReachModded(line);
+            }
+        });
+
+        return this.process.waitFor();
+    }
+
+    public void stopGame() {
+        if (this.process == null || !this.process.isAlive()) {
+            return;
+        }
+
+        this.process.destroy();
+
+        Log.info("Destroyed Cosmic Reach process for instance " + this.instance.getName());
     }
 
     private void updateCosmicVersion() {
