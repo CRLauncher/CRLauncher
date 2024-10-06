@@ -68,7 +68,7 @@ public final class JavaLocator {
 
         int size = 0;
         for (String bin : folders) {
-            final var path = Paths.get(bin, exec);
+            final Path path = Paths.get(bin, exec);
             if (verifier.test(path)) {
                 paths[size++] = path;
             }
