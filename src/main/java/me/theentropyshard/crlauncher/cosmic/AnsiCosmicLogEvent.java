@@ -29,9 +29,13 @@ import org.apache.logging.log4j.Logger;
 import java.awt.*;
 import java.util.List;
 
-public class CosmicLogEvent extends LogEvent {
-    public CosmicLogEvent(String message) {
+public class AnsiCosmicLogEvent extends LogEvent {
+    public AnsiCosmicLogEvent(String message) {
         super(LogLevel.INFO, message);
+    }
+
+    public AnsiCosmicLogEvent(LogLevel level, String message) {
+        super(level, message);
     }
 
     @Override

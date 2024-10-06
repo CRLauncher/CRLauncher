@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.logging;
 
-import me.theentropyshard.crlauncher.cosmic.CosmicLogEvent;
+import me.theentropyshard.crlauncher.cosmic.AnsiCosmicLogEvent;
 import me.theentropyshard.crlauncher.cosmic.TimeCosmicLogEvent;
 
 import java.io.CharArrayWriter;
@@ -74,10 +74,20 @@ public final class Log {
     }
 
     public static void cosmicReachModded(String line) {
-        Log.EVENT_QUEUE.offer(new CosmicLogEvent(line));
+        Log.EVENT_QUEUE.offer(new AnsiCosmicLogEvent(line));
     }
 
     public static void cosmicReachVanilla(String line) {
-        Log.EVENT_QUEUE.offer(new TimeCosmicLogEvent(line));
+        if (line.startsWith("[INFO]")) {
+            Log.EVENT_QUEUE.offer(new TimeCosmicLogEvent(LogLevel.INFO, line));
+        } else if (line.startsWith("[WARNING]")) {
+            Log.EVENT_QUEUE.offer(new TimeCosmicLogEvent(LogLevel.WARN, line));
+        } else if (line.startsWith("[ERROR]")) {
+            Log.EVENT_QUEUE.offer(new TimeCosmicLogEvent(LogLevel.ERROR, line));
+        } else if (line.startsWith("[DEBUG]")) {
+            Log.EVENT_QUEUE.offer(new TimeCosmicLogEvent(LogLevel.DEBUG, line));
+        } else {
+            Log.EVENT_QUEUE.offer(new TimeCosmicLogEvent(line));
+        }
     }
 }

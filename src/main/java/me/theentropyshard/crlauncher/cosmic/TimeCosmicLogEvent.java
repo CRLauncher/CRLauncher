@@ -20,10 +20,15 @@ package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.gui.LauncherConsole;
 import me.theentropyshard.crlauncher.logging.LogEvent;
+import me.theentropyshard.crlauncher.logging.LogLevel;
 
-public class TimeCosmicLogEvent extends CosmicLogEvent {
+public class TimeCosmicLogEvent extends AnsiCosmicLogEvent {
     public TimeCosmicLogEvent(String message) {
         super(message);
+    }
+
+    public TimeCosmicLogEvent(LogLevel level, String message) {
+        super(level, message);
     }
 
     @Override
