@@ -39,39 +39,45 @@ public class JavaPathPopupMenu extends JPopupMenu {
 
         this.addSeparator();
 
-        JMenuItem selectJavaPathMenuItem = new JMenuItem();
-        selectJavaPathMenuItem.setText(language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.browse"));
-        selectJavaPathMenuItem.addActionListener(event -> new Worker<String, Void>("browse java installation path") {
-            @Override
-            protected String work() throws Exception {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileFilter(JavaExecFileFilter.current());
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fileChooser.setMultiSelectionEnabled(false);
+        JMenuItem browseJavaPathMenuItem = new JMenuItem();
+        browseJavaPathMenuItem.setText(language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.browse"));
+        browseJavaPathMenuItem.addActionListener(event -> {
+            browseJavaPathMenuItem.setEnabled(false);
 
-                if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(selectJavaPathMenuItem)) {
-                    return fileChooser.getSelectedFile().toString();
-                } else {
-                    return null;
-                }
-            }
+            new Worker<String, Void>("browse java installation path") {
+                @Override
+                protected String work() throws Exception {
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setFileFilter(JavaExecFileFilter.current());
+                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    fileChooser.setMultiSelectionEnabled(false);
 
-            @Override
-            protected void done() {
-                String result;
-                try {
-                    result = this.get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Log.error(ex);
-                    return;
+                    if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(browseJavaPathMenuItem)) {
+                        return fileChooser.getSelectedFile().toString();
+                    } else {
+                        return null;
+                    }
                 }
 
-                if (result != null) {
-                    consumer.accept(result);
+                @Override
+                protected void done() {
+                    browseJavaPathMenuItem.setEnabled(true);
+
+                    String result;
+                    try {
+                        result = this.get();
+                    } catch (InterruptedException | ExecutionException ex) {
+                        Log.error(ex);
+                        return;
+                    }
+
+                    if (result != null) {
+                        consumer.accept(result);
+                    }
                 }
-            }
-        }.execute());
-        this.add(selectJavaPathMenuItem);
+            }.execute();
+        });
+        this.add(browseJavaPathMenuItem);
     }
 
     public void showBelow(final Component component) {
