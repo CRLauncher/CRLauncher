@@ -31,7 +31,15 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
         this.patch = patch;
     }
 
-    public static SemanticVersion parse(String version) {
+    public static SemanticVersion parse(String s) {
+        try {
+            return SemanticVersion.tryParse(s);
+        } catch (ParseException e) {
+            return null;
+        }
+    }
+
+    public static SemanticVersion tryParse(String version) throws ParseException {
         if (version == null) {
             throw new NullPointerException("version == null");
         }
@@ -39,28 +47,28 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
         String[] parts = version.split("\\.");
 
         if (parts.length != 3) {
-            throw new IllegalArgumentException("Semantic version must have 3 numbers separated with a dot");
+            throw new ParseException("Semantic version must have 3 numbers separated with a dot");
         }
 
         int major;
         try {
             major = Integer.parseInt(parts[0]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Major must be an integer: " + version);
+            throw new ParseException("Major must be an integer: " + version);
         }
 
         int minor;
         try {
             minor = Integer.parseInt(parts[1]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Minor must be an integer: " + version);
+            throw new ParseException("Minor must be an integer: " + version);
         }
 
         int patch;
         try {
             patch = Integer.parseInt(parts[2]);
         } catch (NumberFormatException e) {
-            throw new IllegalArgumentException("Patch must be an integer: " + version);
+            throw new ParseException("Patch must be an integer: " + version);
         }
 
         return new SemanticVersion(major, minor, patch);
@@ -72,6 +80,12 @@ public class SemanticVersion implements Comparable<SemanticVersion> {
 
     public boolean isLowerThan(SemanticVersion other) {
         return this.compareTo(other) < 0;
+    }
+
+    public static class ParseException extends Exception {
+        public ParseException(String message) {
+            super(message);
+        }
     }
 
     @Override
