@@ -23,15 +23,11 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 import java.io.IOException;
 
 public class JavaTab extends Tab {
@@ -50,18 +46,8 @@ public class JavaTab extends Tab {
         gbc.anchor = GridBagConstraints.NORTH;
 
         JPanel javaInstallation = new JPanel(new GridLayout(0, 1));
-        JTextField javaPathTextField = new JTextField();
+        JavaPathTextField javaPathTextField = new JavaPathTextField();
         javaPathTextField.setText(instance.getJavaPath());
-        javaPathTextField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
-            language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.textFieldPlaceholder")
-                .replace("$$JAVAW$$", OperatingSystem.getCurrent().getJavaExecutableName()));
-        JavaPopupMenu javaPathPopupMenu = new JavaPopupMenu(javaPathTextField::setText);
-        javaPathTextField.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent event) {
-                javaPathPopupMenu.show(javaPathTextField, 0, javaPathTextField.getHeight());
-            }
-        });
         javaInstallation.add(javaPathTextField);
         javaInstallation.setBorder(new TitledBorder(
             language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.borderName")

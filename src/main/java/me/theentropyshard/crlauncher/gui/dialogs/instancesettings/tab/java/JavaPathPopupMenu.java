@@ -5,11 +5,12 @@ import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 
 import javax.swing.*;
+import java.awt.*;
 import java.nio.file.Path;
 import java.util.function.Consumer;
 
-public class JavaPopupMenu extends JPopupMenu {
-    public JavaPopupMenu(final Consumer<? super String> consumer) {
+public class JavaPathPopupMenu extends JPopupMenu {
+    public JavaPathPopupMenu(final Consumer<? super String> consumer) {
         Language language = CRLauncher.getInstance().getLanguage();
 
         JMenuItem currentJavaPathMenuItem = new JMenuItem();
@@ -41,5 +42,9 @@ public class JavaPopupMenu extends JPopupMenu {
             }
         });
         this.add(selectJavaPathMenuItem);
+    }
+
+    public void showBelow(final Component component) {
+        this.show(component, 0, component.getHeight());
     }
 }
