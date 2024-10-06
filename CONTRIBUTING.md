@@ -21,5 +21,7 @@ There are some things about my code style that I have got used to:
  - Every instance method call must be qualified with `this` keyword
  - Every static field access must be qualified with the enclosing class name
  - Every static method call must be qualified with the enclosing class name
+ - Do not add `final` when declaring local variables
+ - Do not use `var`, we are not programming in JavaScript
 
 If you have question "why?" - doing so makes things more clear.
