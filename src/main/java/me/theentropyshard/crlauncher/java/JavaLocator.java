@@ -38,13 +38,13 @@ public final class JavaLocator {
      * This method checks each entry in the {@code PATH} environmental variable
      * if the java windowless executable is present.
      *
-     * @return  the detected java installation paths
+     * @return the detected java installation paths
      * @see OperatingSystem#getJavaExecutableName
      * @see System#getenv
      * @see Files#exists
      */
     public static Path[] getJavaFromEnv() {
-        return getJavaInFolders(
+        return JavaLocator.getJavaInFolders(
             System.getenv("PATH").split(File.pathSeparator),
             OperatingSystem.getCurrent().getJavaExecutableName(),
             Files::exists
@@ -55,20 +55,16 @@ public final class JavaLocator {
      * Detect java installations from given folders.
      *
      * @param folders  the folders to check
-     * @param exec  the file name of the windowless java executable
-     * @param verifier  the installation verifier
-     * @return  the verified java installation paths
+     * @param exec     the file name of the windowless java executable
+     * @param verifier the installation verifier
+     * @return the verified java installation paths
      */
-    public static Path[] getJavaInFolders(
-        final String[] folders,
-        final String exec,
-        final Predicate<Path> verifier
-    ) {
+    public static Path[] getJavaInFolders(String[] folders, String exec, Predicate<Path> verifier) {
         Path[] paths = new Path[folders.length];
 
         int size = 0;
         for (String bin : folders) {
-            final Path path = Paths.get(bin, exec);
+            Path path = Paths.get(bin, exec);
             if (verifier.test(path)) {
                 paths[size++] = path;
             }
