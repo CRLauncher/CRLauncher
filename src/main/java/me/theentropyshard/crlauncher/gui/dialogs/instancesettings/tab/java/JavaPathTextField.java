@@ -15,13 +15,13 @@ import java.awt.event.MouseEvent;
 
 public class JavaPathTextField extends JTextField {
     public JavaPathTextField() {
-        final Language language = CRLauncher.getInstance().getLanguage();
+        Language language = CRLauncher.getInstance().getLanguage();
 
         this.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
             language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.textFieldPlaceholder")
                 .replace("$$JAVAW$$", OperatingSystem.getCurrent().getJavaExecutableName()));
 
-        final JavaPathPopupMenu popupMenu = new JavaPathPopupMenu(this::setText);
+        JavaPathPopupMenu popupMenu = new JavaPathPopupMenu(this::setText);
 
         // Popup menu on 'action': pressing enter for desktop
         this.addActionListener(event -> popupMenu.showBelow(this));

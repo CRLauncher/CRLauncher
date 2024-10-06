@@ -64,7 +64,7 @@ public final class JavaLocator {
         final String exec,
         final Predicate<Path> verifier
     ) {
-        final Path[] paths = new Path[folders.length];
+        Path[] paths = new Path[folders.length];
 
         int size = 0;
         for (String bin : folders) {

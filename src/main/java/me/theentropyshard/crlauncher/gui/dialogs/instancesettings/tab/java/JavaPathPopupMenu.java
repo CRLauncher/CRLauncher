@@ -11,10 +11,10 @@ import java.util.function.Consumer;
 
 public class JavaPathPopupMenu extends JPopupMenu {
     public JavaPathPopupMenu(final Consumer<? super String> consumer) {
-        final Language language = CRLauncher.getInstance().getLanguage();
+        Language language = CRLauncher.getInstance().getLanguage();
 
-        final JMenuItem currentJavaPathMenuItem = new JMenuItem();
-        final String currentJavaPath = JavaLocator.getJavaPath();
+        JMenuItem currentJavaPathMenuItem = new JMenuItem();
+        String currentJavaPath = JavaLocator.getJavaPath();
         currentJavaPathMenuItem.setText(
             language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.current")
                 .replace("$$CURRENT_INSTALLATION$$", currentJavaPath)
@@ -24,8 +24,8 @@ public class JavaPathPopupMenu extends JPopupMenu {
 
         this.addSeparator();
 
-        for (final Path path : JavaLocator.getJavaFromEnv()) {
-            final JMenuItem menuItem = new JMenuItem();
+        for (Path path : JavaLocator.getJavaFromEnv()) {
+            JMenuItem menuItem = new JMenuItem();
             menuItem.setText(path.toString());
             menuItem.addActionListener(event -> {
                 // Avoid using variables from for-loop (lambda closures)
@@ -36,11 +36,11 @@ public class JavaPathPopupMenu extends JPopupMenu {
 
         this.addSeparator();
 
-        final JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(JavaExecFileFilter.current());
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setMultiSelectionEnabled(false);
-        final JMenuItem selectJavaPathMenuItem = new JMenuItem();
+        JMenuItem selectJavaPathMenuItem = new JMenuItem();
         selectJavaPathMenuItem.setText(language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.browse"));
         selectJavaPathMenuItem.addActionListener(event -> {
             if (JFileChooser.APPROVE_OPTION == fileChooser.showOpenDialog(selectJavaPathMenuItem)) {
