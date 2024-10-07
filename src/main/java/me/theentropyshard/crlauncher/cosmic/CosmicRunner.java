@@ -21,10 +21,7 @@ package me.theentropyshard.crlauncher.cosmic;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
-import me.theentropyshard.crlauncher.cosmic.launcher.AbstractCosmicLauncher;
-import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
-import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
-import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
+import me.theentropyshard.crlauncher.cosmic.launcher.*;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
@@ -236,14 +233,15 @@ public class CosmicRunner extends Thread {
     private int startProcess(CosmicLauncher launcher, boolean exitAfterLaunch) throws Exception {
         this.process = launcher.launch(exitAfterLaunch);
 
-        new ProcessReader(this.process).read(line -> {
+        LogConsumer log = (level, line) -> {
             InstanceType type = this.instance.getType();
             if (type == InstanceType.VANILLA || type == InstanceType.FABRIC) {
                 Log.cosmicReachVanilla(line);
             } else {
-                Log.cosmicReachModded(line);
+                Log.cosmicReachModded(level, line);
             }
-        });
+        };
+        new ProcessReader(this.process).read(log::inLine, log::errLine);
 
         return this.process.waitFor();
     }

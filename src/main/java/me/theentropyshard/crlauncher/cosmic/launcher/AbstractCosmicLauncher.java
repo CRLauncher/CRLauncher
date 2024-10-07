@@ -64,7 +64,6 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
 
         ProcessBuilder processBuilder = new ProcessBuilder(this.command);
         processBuilder.directory(this.runDir.toFile());
-        processBuilder.redirectErrorStream(true);
 
         Process process = processBuilder.start();
 

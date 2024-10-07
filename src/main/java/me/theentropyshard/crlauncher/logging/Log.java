@@ -73,8 +73,8 @@ public final class Log {
         }
     }
 
-    public static void cosmicReachModded(String line) {
-        Log.EVENT_QUEUE.offer(new AnsiCosmicLogEvent(line));
+    public static void cosmicReachModded(LogLevel level, String line) {
+        Log.EVENT_QUEUE.offer(new AnsiCosmicLogEvent(level, line));
     }
 
     public static void cosmicReachVanilla(String line) {
