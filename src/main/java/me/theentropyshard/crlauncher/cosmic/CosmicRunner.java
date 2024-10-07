@@ -94,9 +94,7 @@ public class CosmicRunner extends Thread {
             dialog.getDialog().dispose();
 
             Path saveDirPath = this.instance.getCosmicDir();
-
-            Path versionsDir = CRLauncher.getInstance().getVersionsDir();
-            Path clientPath = versionsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
+            Path clientPath = versionManager.getVersionJar(version);
 
             this.instance.setLastTimePlayed(LocalDateTime.now());
 
@@ -109,7 +107,7 @@ public class CosmicRunner extends Thread {
             }
 
             if (this.instance.getType() == InstanceType.VANILLA) {
-                clientPath = this.applyJarMods(version, versionsDir);
+                clientPath = this.applyJarMods(version);
 
                 launcher = CosmicLauncherFactory.getLauncher(
                     javaPath,
@@ -279,8 +277,8 @@ public class CosmicRunner extends Thread {
         }
     }
 
-    private Path applyJarMods(Version version, Path clientsDir) {
-        Path originalClientPath = clientsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
+    private Path applyJarMods(Version version) {
+        Path originalClientPath = CRLauncher.getInstance().getVersionManager().getVersionJar(version);
 
         List<JarMod> jarMods = this.instance.getJarMods();
 
