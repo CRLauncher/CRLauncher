@@ -55,6 +55,7 @@ public class SettingsView extends JPanel {
     public static final String EXIT_DO_NOTHING = "gui.settingsView.other.onGameExit.options.doNothing";
     public static final String EXIT_EXIT_LAUNCHER = "gui.settingsView.other.onGameExit.options.exitLauncher";
     public static final String CHECK_FOR_UPDATES = "gui.settingsView.other.checkForUpdatesAtStartup";
+    public static final String APPEND_USERNAME = "gui.settingsView.other.appendUsername";
     public static final String LANGUAGE = "gui.settingsView.other.language";
     public static final String STORAGE_BORDER = "gui.settingsView.storageSettings.borderName";
     public static final String VERSIONS_PATH_LABEL = "gui.settingsView.storageSettings.versionsPathLabel";
@@ -84,6 +85,7 @@ public class SettingsView extends JPanel {
     private final JLabel launchOptionLabel;
     private final JLabel exitOptionLabel;
     private final JCheckBox checkUpdates;
+    private final JCheckBox appendUsername;
     private final JLabel languageLabel;
     private final JComboBox<String> whenLaunchesBehavior;
     private final JComboBox<String> whenExitsBehavior;
@@ -287,7 +289,7 @@ public class SettingsView extends JPanel {
         }
 
         {
-            JPanel otherSettings = new JPanel(new GridLayout(5, 3));
+            JPanel otherSettings = new JPanel(new GridLayout(6, 3));
             this.otherSettingsBorder = new TitledBorder(language.getString(SettingsView.OTHER_BORDER));
             otherSettings.setBorder(this.otherSettingsBorder);
 
@@ -345,6 +347,15 @@ public class SettingsView extends JPanel {
             });
             this.checkUpdates.setSelected(CRLauncher.getInstance().getSettings().checkUpdatesStartup);
             otherSettings.add(this.checkUpdates);
+
+            otherSettings.add(Box.createHorizontalBox());
+
+            this.appendUsername = new JCheckBox(language.getString(SettingsView.APPEND_USERNAME));
+            this.appendUsername.setSelected(CRLauncher.getInstance().getSettings().appendUsername);
+            this.appendUsername.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().appendUsername = this.appendUsername.isSelected();
+            });
+            otherSettings.add(this.appendUsername);
 
             otherSettings.add(Box.createHorizontalBox());
 
@@ -450,6 +461,7 @@ public class SettingsView extends JPanel {
         this.whenExitsBehavior.setSelectedIndex(exitIndex);
 
         this.checkUpdates.setText(language.getString(SettingsView.CHECK_FOR_UPDATES));
+        this.appendUsername.setText(language.getString(SettingsView.APPEND_USERNAME));
         this.languageLabel.setText(language.getString(SettingsView.LANGUAGE));
     }
 }

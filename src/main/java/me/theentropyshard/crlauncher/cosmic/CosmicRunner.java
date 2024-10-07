@@ -174,6 +174,8 @@ public class CosmicRunner extends Thread {
 
                 if (currentAccount != null) {
                     abstractLauncher.defineProperty(new SystemProperty("crloader.offlineUsername", currentAccount.getUsername()));
+                    abstractLauncher.defineProperty(new SystemProperty("crloader.appendUsername",
+                        CRLauncher.getInstance().getSettings().appendUsername));
                 }
             }
 
