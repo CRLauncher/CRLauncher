@@ -26,7 +26,8 @@
                 "instanceNameCannotBeEmpty": "Имя инстанса не может быть пустым!",
                 "groupNameCannotBeEmpty": "Имя группы не может быть пустым!",
                 "cosmicVersionNotSelected": "Версия Cosmic Reach не выбрана!",
-                "unableToCreateInstance": "Не удалось добавить инстанс"
+                "unableToCreateInstance": "Не удалось добавить инстанс",
+                "doesNotHaveClient": "У версии $$CR_VERSION$$ нет клиента"
             },
             "instanceSettingsDialog": {
                 "couldNotLoadVersions": "Не удалось загрузить версии",

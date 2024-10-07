@@ -26,7 +26,8 @@
                 "instanceNameCannotBeEmpty": "Instance name cannot be empty!",
                 "groupNameCannotBeEmpty": "Group name cannot be empty!",
                 "cosmicVersionNotSelected": "Cosmic Reach version is not selected!",
-                "unableToCreateInstance": "Unable to create new instance"
+                "unableToCreateInstance": "Unable to create new instance",
+                "doesNotHaveClient": "Version $$CR_VERSION$$ does not have client"
             },
             "instanceSettingsDialog": {
                 "couldNotLoadVersions": "Could not get versions",

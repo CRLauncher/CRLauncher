@@ -57,6 +57,7 @@ public class AddInstanceDialog extends AppDialog {
     public static final String GROUP_NAME_EMPTY_MESSAGE = "messages.gui.addInstanceDialog.groupNameCannotBeEmpty";
     public static final String VERSION_NOT_SELECTED_MESSAGE = "messages.gui.addInstanceDialog.cosmicVersionNotSelected";
     public static final String UNABLE_TO_CREATE_MESSAGE = "messages.gui.addInstanceDialog.unableToCreateInstance";
+    public static final String NO_CLIENT_MESSAGE = "messages.gui.addInstanceDialog.doesNotHaveClient";
     private final JTextField nameField;
     private final JTextField groupField;
     private final JButton addButton;
@@ -268,7 +269,8 @@ public class AddInstanceDialog extends AppDialog {
                     } else {
                         if (version.getClient() == null) {
                             MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
-                                "Version " + crVersion + " does not have client");
+                                CRLauncher.getInstance().getLanguage().getString(AddInstanceDialog.NO_CLIENT_MESSAGE)
+                                    .replace("$$CR_VERSION$$", crVersion));
                             return;
                         }
                     }
