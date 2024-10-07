@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
+import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.action.InstanceImportAction;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
@@ -255,20 +256,30 @@ public class AddInstanceDialog extends AppDialog {
 
             IconManager iconManager = CRLauncher.getInstance().getIconManager();
 
-            playView.addInstanceItem(
-                new InstanceItem(iconManager.getIcon("cosmic_logo_x32.png").icon(), instanceName),
-                chosenGroupName, false
-            );
-            this.getDialog().dispose();
             TableModel model = versionsTable.getModel();
             int selectedRow = versionsTable.getSelectedRow();
             selectedRow = versionsTable.convertRowIndexToModel(selectedRow);
-            String mcVersion = String.valueOf(model.getValueAt(selectedRow, 0));
+            String crVersion = String.valueOf(model.getValueAt(selectedRow, 0));
             CRLauncher.getInstance().doTask(() -> {
+                try {
+                    Version version = CRLauncher.getInstance().getVersionManager().getVersion(crVersion);
+                    if (version == null) {
+                        Log.warn("Version returned for " + crVersion + " is null");
+                    } else {
+                        if (version.getClient() == null) {
+                            MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
+                                "Version " + crVersion + " does not have client");
+                            return;
+                        }
+                    }
+                } catch (IOException ex) {
+                    Log.error("Could not get info about version " + crVersion, ex);
+                }
+
                 InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
 
                 try {
-                    instanceManager.createInstance(instanceName, chosenGroupName, mcVersion,
+                    instanceManager.createInstance(instanceName, chosenGroupName, crVersion,
                         CRLauncher.getInstance().getSettings().settingsDialogUpdateToLatest);
                 } catch (InstanceAlreadyExistsException ex) {
                     MessageBox.showErrorMessage(
@@ -280,6 +291,15 @@ public class AddInstanceDialog extends AppDialog {
                 } catch (IOException ex) {
                     Log.error(language.getString(AddInstanceDialog.UNABLE_TO_CREATE_MESSAGE), ex);
                 }
+
+                SwingUtilities.invokeLater(() -> {
+                    playView.addInstanceItem(
+                        new InstanceItem(iconManager.getIcon("cosmic_logo_x32.png").icon(), instanceName),
+                        chosenGroupName, false
+                    );
+
+                    this.getDialog().dispose();
+                });
             });
         });
         rightButtonsPanel.add(this.addButton);
