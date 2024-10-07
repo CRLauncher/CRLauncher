@@ -288,6 +288,8 @@ public class AddInstanceDialog extends AppDialog {
                     );
 
                     Log.warn(ex.getMessage());
+
+                    return;
                 } catch (IOException ex) {
                     Log.error(language.getString(AddInstanceDialog.UNABLE_TO_CREATE_MESSAGE), ex);
                 }
