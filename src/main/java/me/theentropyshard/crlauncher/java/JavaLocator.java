@@ -18,10 +18,12 @@
 
 package me.theentropyshard.crlauncher.java;
 
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
@@ -64,7 +66,16 @@ public final class JavaLocator {
 
         int size = 0;
         for (String bin : folders) {
-            Path path = Paths.get(bin, exec);
+            Path path;
+
+            try {
+                path = Paths.get(bin, exec);
+            } catch (InvalidPathException e) {
+                Log.warn("Could not parse path: " + String.join(File.pathSeparator, bin, exec));
+
+                continue;
+            }
+
             if (verifier.test(path)) {
                 paths[size++] = path;
             }
