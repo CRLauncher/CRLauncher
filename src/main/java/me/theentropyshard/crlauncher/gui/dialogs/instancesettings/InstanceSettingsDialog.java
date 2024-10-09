@@ -29,6 +29,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsT
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds.WorldsTab;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -78,7 +79,7 @@ public class InstanceSettingsDialog extends AppDialog {
                     try {
                         tab.save();
                     } catch (IOException ex) {
-                        ex.printStackTrace();
+                        Log.error("Error saving tab", ex);
                     }
                 });
 
@@ -91,7 +92,7 @@ public class InstanceSettingsDialog extends AppDialog {
                         try {
                             instance.save();
                         } catch (IOException ex) {
-                            ex.printStackTrace();
+                            Log.error("Error saving instance " + instance.getName(), ex);
                         }
                     }
                 }
