@@ -34,6 +34,9 @@ public class Args {
     @Parameter(names = {"--useJarLocation"})
     private boolean useJarLocation;
 
+    @Parameter(names = {"--crLoaderPath"})
+    private String customCRLoaderPath;
+
     private final List<String> unknownOptions;
 
     private Args() {
@@ -77,5 +80,9 @@ public class Args {
         }
 
         return workDir.normalize().toAbsolutePath();
+    }
+
+    public String getCustomCRLoaderPath() {
+        return this.customCRLoaderPath;
     }
 }

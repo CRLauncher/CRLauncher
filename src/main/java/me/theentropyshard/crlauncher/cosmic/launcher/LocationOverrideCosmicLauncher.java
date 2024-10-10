@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
+import me.theentropyshard.crlauncher.Args;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
@@ -29,6 +30,7 @@ import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
@@ -67,11 +69,22 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
 
     @Override
     public void buildCommand(List<String> command) {
-        Path loaderPath = CRLauncher.getInstance().getLibrariesDir().resolve(LocationOverrideCosmicLauncher.CR_LOADER_JAR);
-        try {
-            this.downloadLoader(loaderPath);
-        } catch (IOException e) {
-            Log.error("Could not download " + LocationOverrideCosmicLauncher.CR_LOADER_JAR, e);
+        CRLauncher launcher = CRLauncher.getInstance();
+        Args args = launcher.getArgs();
+
+        Path loaderPath;
+
+        String customCRLoaderPath = args.getCustomCRLoaderPath();
+        if (customCRLoaderPath != null) {
+            loaderPath = Paths.get(customCRLoaderPath).normalize().toAbsolutePath();
+        } else {
+            loaderPath = launcher.getLibrariesDir().resolve(LocationOverrideCosmicLauncher.CR_LOADER_JAR);
+
+            try {
+                this.downloadLoader(loaderPath);
+            } catch (IOException e) {
+                Log.error("Could not download " + LocationOverrideCosmicLauncher.CR_LOADER_JAR, e);
+            }
         }
 
         String gameFilesLocation = this.getGameFilesLocation().toString();
