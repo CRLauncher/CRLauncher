@@ -33,21 +33,28 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
+public class PatchCosmicLauncher extends AbstractCosmicLauncher {
     private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.2");
-    private static final String CR_LOADER_JAR = "CRLoader-" + LocationOverrideCosmicLauncher.CR_LOADER_VERSION.toVersionString() + ".jar";
+    private static final String CR_LOADER_JAR = "CRLoader-" + PatchCosmicLauncher.CR_LOADER_VERSION.toVersionString() + ".jar";
     private static final String CR_LOADER_SHA256 = "5a542329969e0c384101a0f70448011a277409689cfa65a69e72a87c27f43b31";
 
-    public LocationOverrideCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
+    private boolean changeSaveLocation;
+    private String customWindowTitle;
+    private String offlineUsername;
+    private boolean appendUsername;
+
+    public PatchCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
         super(javaPath, runDir, gameFilesLocation, clientPath);
+
+        this.setChangeSaveLocation(true);
     }
 
     private void downloadLoader(Path path) throws IOException {
-        if (Files.exists(path) && HashUtils.sha256(path).equals(LocationOverrideCosmicLauncher.CR_LOADER_SHA256)) {
+        if (Files.exists(path) && HashUtils.sha256(path).equals(PatchCosmicLauncher.CR_LOADER_SHA256)) {
             return;
         }
 
-        String loaderVersion = LocationOverrideCosmicLauncher.CR_LOADER_VERSION.toVersionString();
+        String loaderVersion = PatchCosmicLauncher.CR_LOADER_VERSION.toVersionString();
 
         GithubApi downloader = new GithubApi();
         List<GithubRelease> allReleases = downloader.getAllReleases("CRLauncher", "CRLoader");
@@ -58,17 +65,16 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
         }
 
         ProgressDialog dialog = new ProgressDialog("Downloading CRLoader");
-        dialog.setStage("Downloading " + LocationOverrideCosmicLauncher.CR_LOADER_JAR);
+        dialog.setStage("Downloading " + PatchCosmicLauncher.CR_LOADER_JAR);
         SwingUtilities.invokeLater(() -> dialog.setVisible(true));
 
-        GithubRelease.Asset asset = ListUtils.search(releaseResponse.assets, a -> a.name.equals(LocationOverrideCosmicLauncher.CR_LOADER_JAR));
+        GithubRelease.Asset asset = ListUtils.search(releaseResponse.assets, a -> a.name.equals(PatchCosmicLauncher.CR_LOADER_JAR));
         downloader.downloadRelease(path, releaseResponse, releaseResponse.assets.indexOf(asset), dialog);
 
         SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
     }
 
-    @Override
-    public void buildCommand(List<String> command) {
+    private Path setupLoader() {
         CRLauncher launcher = CRLauncher.getInstance();
         Args args = launcher.getArgs();
 
@@ -78,24 +84,68 @@ public class LocationOverrideCosmicLauncher extends AbstractCosmicLauncher {
         if (customCRLoaderPath != null) {
             loaderPath = Paths.get(customCRLoaderPath).normalize().toAbsolutePath();
         } else {
-            loaderPath = launcher.getLibrariesDir().resolve(LocationOverrideCosmicLauncher.CR_LOADER_JAR);
+            loaderPath = launcher.getLibrariesDir().resolve(PatchCosmicLauncher.CR_LOADER_JAR);
 
             try {
                 this.downloadLoader(loaderPath);
             } catch (IOException e) {
-                Log.error("Could not download " + LocationOverrideCosmicLauncher.CR_LOADER_JAR, e);
+                Log.error("Could not download " + PatchCosmicLauncher.CR_LOADER_JAR, e);
             }
         }
 
-        String gameFilesLocation = this.getGameFilesLocation().toString();
-        if (OperatingSystem.isWindows()) {
-            gameFilesLocation = gameFilesLocation.replace("\\", "\\\\");
+        return loaderPath;
+    }
+
+    @Override
+    public void buildCommand(List<String> command) {
+        if (this.isChangeSaveLocation()) {
+            String gameFilesLocation = this.getGameFilesLocation().toString();
+
+            if (OperatingSystem.isWindows()) {
+                gameFilesLocation = gameFilesLocation.replace("\\", "\\\\");
+            }
+
+            this.defineProperty(new SystemProperty("crloader.saveDirPath", gameFilesLocation));
         }
 
-        this.defineProperty(new SystemProperty("crloader.saveDirPath", gameFilesLocation));
+        if (this.customWindowTitle != null && !this.customWindowTitle.trim().isEmpty()) {
+            this.defineProperty(new SystemProperty("crloader.windowTitle", this.customWindowTitle));
+        }
+
+        if (this.offlineUsername != null && !this.offlineUsername.trim().isEmpty()) {
+            this.defineProperty(new SystemProperty("crloader.offlineUsername", this.offlineUsername));
+        }
+
+        if (this.isAppendUsername()) {
+            this.defineProperty(new SystemProperty("crloader.appendUsername", true));
+        }
 
         super.buildCommand(command);
 
-        command.add("-javaagent:" + loaderPath);
+        command.add("-javaagent:" + this.setupLoader());
+    }
+
+    public boolean isChangeSaveLocation() {
+        return this.changeSaveLocation;
+    }
+
+    public void setChangeSaveLocation(boolean changeSaveLocation) {
+        this.changeSaveLocation = changeSaveLocation;
+    }
+
+    public void setCustomWindowTitle(String customWindowTitle) {
+        this.customWindowTitle = customWindowTitle;
+    }
+
+    public void setOfflineUsername(String offlineUsername) {
+        this.offlineUsername = offlineUsername;
+    }
+
+    public boolean isAppendUsername() {
+        return this.appendUsername;
+    }
+
+    public void setAppendUsername(boolean appendUsername) {
+        this.appendUsername = appendUsername;
     }
 }

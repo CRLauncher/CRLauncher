@@ -20,10 +20,10 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import java.nio.file.Path;
 
-public class ModdedLocationOverrideCosmicLauncher extends LocationOverrideCosmicLauncher {
+public class ModdedPatchCosmicLauncher extends PatchCosmicLauncher {
     private final Path modsDir;
 
-    public ModdedLocationOverrideCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
+    public ModdedPatchCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir) {
         super(javaPath, runDir, gameFilesLocation, clientPath);
 
         this.modsDir = modsDir;

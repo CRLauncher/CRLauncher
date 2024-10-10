@@ -21,10 +21,7 @@ package me.theentropyshard.crlauncher.cosmic;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
-import me.theentropyshard.crlauncher.cosmic.launcher.AbstractCosmicLauncher;
-import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
-import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
-import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
+import me.theentropyshard.crlauncher.cosmic.launcher.*;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
@@ -188,19 +185,14 @@ public class CosmicRunner extends Thread {
                 }
             }
 
-            if (launcher instanceof AbstractCosmicLauncher abstractLauncher) {
-                String title = this.instance.getCustomWindowTitle();
-
-                if (title != null && !title.trim().isEmpty()) {
-                    abstractLauncher.defineProperty(new SystemProperty("crloader.windowTitle", title));
-                }
+            if (launcher instanceof PatchCosmicLauncher patchLauncher) {
+                patchLauncher.setCustomWindowTitle(this.instance.getCustomWindowTitle());
 
                 Account currentAccount = CRLauncher.getInstance().getAccountManager().getCurrentAccount();
 
                 if (currentAccount != null) {
-                    abstractLauncher.defineProperty(new SystemProperty("crloader.offlineUsername", currentAccount.getUsername()));
-                    abstractLauncher.defineProperty(new SystemProperty("crloader.appendUsername",
-                        CRLauncher.getInstance().getSettings().appendUsername));
+                    patchLauncher.setOfflineUsername(currentAccount.getUsername());
+                    patchLauncher.setAppendUsername(CRLauncher.getInstance().getSettings().appendUsername);
                 }
 
                 int currentFlagsOption = this.instance.getCurrentFlagsOption();
@@ -213,7 +205,7 @@ public class CosmicRunner extends Thread {
                                 continue;
                             }
 
-                            abstractLauncher.addJvmFlag(customJvmFlag);
+                            patchLauncher.addJvmFlag(customJvmFlag);
                         }
                     }
                 } else {
@@ -223,7 +215,7 @@ public class CosmicRunner extends Thread {
                             continue;
                         }
 
-                        abstractLauncher.addJvmFlag(customJvmFlag);
+                        patchLauncher.addJvmFlag(customJvmFlag);
                     }
                 }
             }

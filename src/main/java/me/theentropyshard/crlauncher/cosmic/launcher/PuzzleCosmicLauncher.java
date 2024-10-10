@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public class PuzzleCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
+public class PuzzleCosmicLauncher extends ModdedPatchCosmicLauncher {
     private final String version;
 
     public PuzzleCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {

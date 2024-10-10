@@ -37,7 +37,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
+public class FabricCosmicLauncher extends ModdedPatchCosmicLauncher {
     
     private final String version;
 
