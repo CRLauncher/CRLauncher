@@ -34,9 +34,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class PatchCosmicLauncher extends AbstractCosmicLauncher {
-    private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.2");
+    private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.3");
     private static final String CR_LOADER_JAR = "CRLoader-" + PatchCosmicLauncher.CR_LOADER_VERSION.toVersionString() + ".jar";
-    private static final String CR_LOADER_SHA256 = "5a542329969e0c384101a0f70448011a277409689cfa65a69e72a87c27f43b31";
+    private static final String CR_LOADER_SHA256 = "5b0beced3b281a769108db328dbc90f73ceea2048d49561598941d89d5ece865";
 
     private boolean changeSaveLocation;
     private String customWindowTitle;
