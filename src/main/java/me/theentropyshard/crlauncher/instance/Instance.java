@@ -33,7 +33,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Instance {
     private static final String INSTANCE_FILE_NAME = "instance.json";
@@ -71,6 +73,8 @@ public class Instance {
     private String quiltVersion;
     private String puzzleVersion;
     private boolean autoUpdateToLatest;
+    private Set<String> customJvmFlags;
+    private int currentFlagsOption;
     private transient volatile boolean running;
 
     public Instance() {
@@ -352,5 +356,21 @@ public class Instance {
 
     public void setTotalPlaytime(long totalPlaytime) {
         this.totalPlaytime = totalPlaytime;
+    }
+
+    public Set<String> getCustomJvmFlags() {
+        return this.customJvmFlags;
+    }
+
+    public void setCustomJvmFlags(Set<String> flags) {
+        this.customJvmFlags = flags;
+    }
+
+    public int getCurrentFlagsOption() {
+        return this.currentFlagsOption;
+    }
+
+    public void setCurrentFlagsOption(int currentFlagsOption) {
+        this.currentFlagsOption = currentFlagsOption;
     }
 }

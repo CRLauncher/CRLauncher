@@ -52,8 +52,33 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class CosmicRunner extends Thread {
+    public static final String[] FLAG_SET_1 = {
+        "-XX:+UnlockExperimentalVMOptions", "-XX:+UnlockDiagnosticVMOptions", "-XX:+AlwaysPreTouch",
+        "-XX:+DisableExplicitGC", "-XX:+UseNUMA", "-XX:NmethodSweepActivity=1", "-XX:ReservedCodeCacheSize=400M",
+        "-XX:NonNMethodCodeHeapSize=12M", "-XX:ProfiledCodeHeapSize=194M", "-XX:NonProfiledCodeHeapSize=194M",
+        "-XX:-DontCompileHugeMethods", "-XX:MaxNodeLimit=240000", "-XX:NodeLimitFudgeFactor=8000", "-XX:+UseVectorCmov",
+        "-XX:+PerfDisableSharedMem", "-XX:+UseFastUnorderedTimeStamps", "-XX:+UseCriticalJavaThreadPriority",
+        "-XX:ThreadPriorityPolicy=1", "-XX:AllocatePrefetchStyle=3", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=37",
+        "-XX:+PerfDisableSharedMem", "-XX:G1HeapRegionSize=16M", "-XX:G1NewSizePercent=23", "-XX:G1ReservePercent=20",
+        "-XX:SurvivorRatio=32", "-XX:G1MixedGCCountTarget=3", "-XX:G1HeapWastePercent=20",
+        "-XX:InitiatingHeapOccupancyPercent=10", "-XX:G1RSetUpdatingPauseTimePercent=0", "-XX:MaxTenuringThreshold=1",
+        "-XX:G1SATBBufferEnqueueingThresholdPercent=30", "-XX:G1ConcMarkStepDurationMillis=5.0",
+        "-XX:G1ConcRSHotCardLimit=16", "-XX:G1ConcRefinementServiceIntervalMillis=150", "-XX:GCTimeRatio=99",
+        "-XX:+UseLargePages", "-XX:LargePageSizeInBytes=2m"
+    };
+
+    public static final String[] FLAG_SET_2 = {
+        "-XX:+UnlockExperimentalVMOptions", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=37", "-XX:+PerfDisableSharedMem",
+        "-XX:G1HeapRegionSize=16M", "-XX:G1NewSizePercent=23", "-XX:G1ReservePercent=20", "-XX:SurvivorRatio=32",
+        "-XX:G1MixedGCCountTarget=3", "-XX:G1HeapWastePercent=20", "-XX:InitiatingHeapOccupancyPercent=10",
+        "-XX:G1RSetUpdatingPauseTimePercent=0", "-XX:MaxTenuringThreshold=1", "-XX:G1SATBBufferEnqueueingThresholdPercent=30",
+        "-XX:G1ConcMarkStepDurationMillis=5.0", "-XX:G1ConcRSHotCardLimit=16",
+        "-XX:G1ConcRefinementServiceIntervalMillis=150", "-XX:GCTimeRatio=99"
+    };
+
     private final Instance instance;
     private final InstanceItem item;
 
@@ -177,6 +202,30 @@ public class CosmicRunner extends Thread {
                     abstractLauncher.defineProperty(new SystemProperty("crloader.appendUsername",
                         CRLauncher.getInstance().getSettings().appendUsername));
                 }
+
+                int currentFlagsOption = this.instance.getCurrentFlagsOption();
+
+                if (currentFlagsOption == 0) {
+                    Set<String> customJvmFlags = this.instance.getCustomJvmFlags();
+                    if (customJvmFlags != null && !customJvmFlags.isEmpty()) {
+                        for (String customJvmFlag : customJvmFlags) {
+                            if (customJvmFlag.isEmpty()) {
+                                continue;
+                            }
+
+                            abstractLauncher.addJvmFlag(customJvmFlag);
+                        }
+                    }
+                } else {
+                    String[] flags = CosmicRunner.getBuiltinFlags(currentFlagsOption);
+                    for (String customJvmFlag : flags) {
+                        if (customJvmFlag.isEmpty()) {
+                            continue;
+                        }
+
+                        abstractLauncher.addJvmFlag(customJvmFlag);
+                    }
+                }
             }
 
             long start = System.currentTimeMillis();
@@ -236,7 +285,13 @@ public class CosmicRunner extends Thread {
     private int startProcess(CosmicLauncher launcher, boolean exitAfterLaunch) throws Exception {
         this.process = launcher.launch(exitAfterLaunch);
 
+        String userHome = System.getProperty("user.home");
+
         new ProcessReader(this.process).read(line -> {
+            if (line.contains(userHome)) {
+                line = line.replace(userHome, "<UserHome>");
+            }
+
             InstanceType type = this.instance.getType();
             if (type == InstanceType.VANILLA || type == InstanceType.FABRIC) {
                 Log.cosmicReachVanilla(line);
@@ -334,5 +389,13 @@ public class CosmicRunner extends Thread {
         }
 
         return originalClientPath;
+    }
+
+    public static String[] getBuiltinFlags(int option) {
+        return switch (option) {
+            case 1 -> CosmicRunner.FLAG_SET_1;
+            case 2 -> CosmicRunner.FLAG_SET_2;
+            default -> CosmicRunner.FLAG_SET_1;
+        };
     }
 }
