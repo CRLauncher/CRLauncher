@@ -62,7 +62,7 @@ public class LauncherConsole {
         };
         this.textPane.setPreferredSize(new Dimension(LauncherConsole.INITIAL_WIDTH, LauncherConsole.INITIAL_HEIGHT));
         this.textPane.setFont(LauncherConsole.FONT);
-        //this.textPane.setEditorKit(new WrapEditorKit());
+        ((DefaultCaret) this.textPane.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         this.textPane.setEditable(false);
 
         this.attrs = new SimpleAttributeSet();
@@ -175,47 +175,5 @@ public class LauncherConsole {
         this.scrollDown.setText(language.getString(LauncherConsole.SCROLL_DOWN));
         this.copyButton.setText(language.getString(LauncherConsole.COPY));
         this.clearButton.setText(language.getString(LauncherConsole.CLEAR));
-    }
-
-    private static final class WrapEditorKit extends StyledEditorKit {
-        private final ViewFactory viewFactory;
-
-        public WrapEditorKit() {
-            this.viewFactory = new WrapColumnFactory();
-        }
-
-        @Override
-        public ViewFactory getViewFactory() {
-            return this.viewFactory;
-        }
-    }
-
-    private static final class WrapColumnFactory implements ViewFactory {
-        public View create(Element elem) {
-            String kind = elem.getName();
-
-            return switch (kind) {
-                case AbstractDocument.ContentElementName -> new WrapLabelView(elem);
-                case AbstractDocument.ParagraphElementName -> new ParagraphView(elem);
-                case AbstractDocument.SectionElementName -> new BoxView(elem, View.Y_AXIS);
-                case StyleConstants.ComponentElementName -> new ComponentView(elem);
-                case StyleConstants.IconElementName -> new IconView(elem);
-                default -> new LabelView(elem);
-            };
-        }
-    }
-
-    private static final class WrapLabelView extends LabelView {
-        public WrapLabelView(Element element) {
-            super(element);
-        }
-
-        public float getMinimumSpan(int axis) {
-            return switch (axis) {
-                case View.X_AXIS -> 0;
-                case View.Y_AXIS -> super.getMinimumSpan(axis);
-                default -> throw new IllegalArgumentException("Invalid axis: " + axis);
-            };
-        }
     }
 }
