@@ -115,7 +115,7 @@ public class QuiltModsTableModel extends AbstractTableModel {
                         .replace("$$MOD_ID$$", quiltMod.getId()) + ": " + e.getMessage()
                 );
 
-                Log.error("Could not update Fabric mod '" + quiltMod.getId() + "': " + e.getMessage());
+                Log.error("Could not update Quilt mod '" + quiltMod.getId() + "': " + e.getMessage());
             }
         });
 
