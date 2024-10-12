@@ -183,13 +183,15 @@ public class SettingsView extends JPanel {
         {
             Settings settings = CRLauncher.getInstance().getSettings();
 
-            JPanel storageSettings = new JPanel(new GridLayout(4, 2));
+            JPanel storageSettings = new JPanel(new BorderLayout());
             this.storageSettingsBorder = new TitledBorder(language.getString(SettingsView.STORAGE_BORDER));
             storageSettings.setBorder(this.storageSettingsBorder);
 
+            JPanel pathsPanel = new JPanel(new GridLayout(3, 2));
+
             this.versionsPathCheckbox = new JCheckBox(language.getString(SettingsView.VERSIONS_PATH_LABEL) + ": ");
             this.versionsPathCheckbox.setSelected(settings.overrideVersionsPath);
-            storageSettings.add(this.versionsPathCheckbox);
+            pathsPanel.add(this.versionsPathCheckbox);
 
             this.versionsPathField = new JTextField(settings.versionsDirPath == null ? "" : settings.versionsDirPath);
             this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
@@ -205,11 +207,11 @@ public class SettingsView extends JPanel {
                 CRLauncher.getInstance().getSettings().overrideVersionsPath = this.versionsPathCheckbox.isSelected();
                 CRLauncher.getInstance().getSettings().versionsDirPath = path;
             });
-            storageSettings.add(this.versionsPathField);
+            pathsPanel.add(this.versionsPathField);
 
             this.instancesPathCheckbox = new JCheckBox(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
             this.instancesPathCheckbox.setSelected(settings.overrideInstancesPath);
-            storageSettings.add(this.instancesPathCheckbox);
+            pathsPanel.add(this.instancesPathCheckbox);
 
             this.instancesPathField = new JTextField(settings.instancesDirPath == null ? "" : settings.instancesDirPath);
             this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
@@ -225,11 +227,11 @@ public class SettingsView extends JPanel {
                 CRLauncher.getInstance().getSettings().overrideInstancesPath = this.instancesPathCheckbox.isSelected();
                 CRLauncher.getInstance().getSettings().instancesDirPath = path;
             });
-            storageSettings.add(this.instancesPathField);
+            pathsPanel.add(this.instancesPathField);
 
             this.modLoadersPathCheckbox = new JCheckBox(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
             this.modLoadersPathCheckbox.setSelected(settings.overrideModloadersPath);
-            storageSettings.add(this.modLoadersPathCheckbox);
+            pathsPanel.add(this.modLoadersPathCheckbox);
 
             this.modLoadersPathField = new JTextField(settings.modloadersDirPath == null ? "" : settings.modloadersDirPath);
             this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
@@ -245,11 +247,13 @@ public class SettingsView extends JPanel {
                 CRLauncher.getInstance().getSettings().overrideModloadersPath = this.modLoadersPathCheckbox.isSelected();
                 CRLauncher.getInstance().getSettings().modloadersDirPath = path;
             });
-            storageSettings.add(this.modLoadersPathField);
+            pathsPanel.add(this.modLoadersPathField);
+
+            storageSettings.add(pathsPanel, BorderLayout.CENTER);
 
             this.tipLabel = new JLabel("<html><b>" + language.getString(SettingsView.TIP_LABEL) + "</b></html>");
             this.tipLabel.setBorder(new EmptyBorder(2, 2, 2, 2));
-            storageSettings.add(this.tipLabel);
+            storageSettings.add(this.tipLabel, BorderLayout.SOUTH);
 
             this.versionsPathField.setEnabled(this.versionsPathCheckbox.isSelected());
             this.versionsPathCheckbox.addActionListener(e -> {

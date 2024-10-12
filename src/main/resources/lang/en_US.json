@@ -265,7 +265,7 @@
                 "instancesPathFieldPlaceholder": "<launcher folder>/cosmic-reach/instances",
                 "modLoadersPathLabel": "Mod loaders directory path",
                 "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach",
-                "tip": "Remember to press ENTER to save path"
+                "tip": "Remember to press ENTER to save path. Changes will be applied after restart"
             },
             "other": {
                 "borderName": "Other",
