@@ -75,7 +75,9 @@ public class JarModsView extends JPanel {
                 protected Void work() throws IOException {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));
+
+                    String archives = language.getString("gui.general.archives");
+                    fileChooser.setFileFilter(new FileNameExtensionFilter(archives + " (*.zip, *.jar)", "zip", "jar"));
 
                     Settings settings = CRLauncher.getInstance().getSettings();
                     if (settings.lastDir != null && !settings.lastDir.isEmpty()) {
