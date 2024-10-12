@@ -16,27 +16,41 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.jarmods;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.table.AbstractTableModel;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class JarModsTableModel extends AbstractTableModel {
-    private static final String[] COLUMN_NAMES = {"Name", "Active"};
     private static final Class<?>[] COLUMN_CLASSES = {String.class, Boolean.class};
 
+    private final Instance instance;
     private final List<JarMod> jarMods;
+    private final String[] columnNames = {"Name", "Active"};
 
     public JarModsTableModel(Instance instance) {
+        this.instance = instance;
+
         if (instance.getJarMods() == null) {
             this.jarMods = new ArrayList<>();
         } else {
             this.jarMods = new ArrayList<>(instance.getJarMods());
         }
+
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        this.columnNames[0] = language.getString("gui.instanceSettingsDialog.jarModsTab.modName");
+        this.columnNames[1] = language.getString("gui.instanceSettingsDialog.jarModsTab.modActive");
     }
 
     @Override
@@ -46,12 +60,12 @@ public class JarModsTableModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return JarModsTableModel.COLUMN_NAMES.length;
+        return this.columnNames.length;
     }
 
     @Override
     public String getColumnName(int column) {
-        return JarModsTableModel.COLUMN_NAMES[column];
+        return this.columnNames[column];
     }
 
     @Override
@@ -81,7 +95,30 @@ public class JarModsTableModel extends AbstractTableModel {
         }
 
         boolean isSelected = (Boolean) aValue;
-        this.jarModAt(rowIndex).setActive(isSelected);
+        JarMod jarMod = this.jarModAt(rowIndex);
+        jarMod.setActive(isSelected);
+
+        SwingUtils.startWorker(() -> {
+            try {
+                this.instance.updateMod(
+                    jarMod,
+                    this.instance.getJarModsDir(),
+                    this.instance.getDisabledJarModsDir(),
+                    isSelected
+                );
+            } catch (IOException e) {
+                Log.error("Could not update Jar mod '" + jarMod.getId() + "'", e);
+
+                Language language = CRLauncher.getInstance().getLanguage();
+
+                MessageBox.showErrorMessage(
+                    CRLauncher.frame,
+                    language.getString("messages.gui.instanceSettingsDialog.couldNotUpdateMod")
+                        .replace("$$MOD_LOADER$$", "Jar")
+                        .replace("$$MOD_ID$$", jarMod.getId().toString()) + ": " + e.getMessage()
+                );
+            }
+        });
 
         this.fireTableCellUpdated(rowIndex, columnIndex);
     }

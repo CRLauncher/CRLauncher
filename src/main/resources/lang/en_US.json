@@ -145,6 +145,13 @@
                 "openModsFolder": "Open mods folder",
                 "searchModsCRMM": "Search mods on CRMM"
             },
+            "jarModsTab": {
+                "name": "Jar Mods",
+                "modName": "Name",
+                "modActive": "Active",
+                "addModButton": "Add Jar mod",
+                "deleteModButton": "Delete Jar mod"
+            },
             "worldsTab": {
                 "name": "Worlds",
                 "table": {

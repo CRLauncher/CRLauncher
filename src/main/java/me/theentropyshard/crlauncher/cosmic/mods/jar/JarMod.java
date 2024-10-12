@@ -18,22 +18,24 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.jar;
 
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+
 import java.util.UUID;
 
-public class JarMod {
+public class JarMod implements Mod {
     private boolean active;
-    private String fullPath;
-    private UUID uuid;
+    private String fileName;
+    private UUID id;
     private String name;
 
     public JarMod() {
 
     }
 
-    public JarMod(boolean active, String fullPath, UUID uuid, String name) {
+    public JarMod(boolean active, String fileName, UUID id, String name) {
         this.active = active;
-        this.fullPath = fullPath;
-        this.uuid = uuid;
+        this.fileName = fileName;
+        this.id = id;
         this.name = name;
     }
 
@@ -45,24 +47,34 @@ public class JarMod {
         this.active = active;
     }
 
-    public String getFullPath() {
-        return this.fullPath;
+    public String getFileName() {
+        return this.fileName;
     }
 
-    public void setFullPath(String fullPath) {
-        this.fullPath = fullPath;
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
-    public UUID getUuid() {
-        return this.uuid;
+    public UUID getId() {
+        return this.id;
     }
 
-    public void setUuid(UUID uuid) {
-        this.uuid = uuid;
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getVersion() {
+        throw new UnsupportedOperationException("Jar mods don't have version");
+    }
+
+    @Override
+    public String getDescription() {
+        throw new UnsupportedOperationException("Jar mods don't have description");
     }
 
     public void setName(String name) {

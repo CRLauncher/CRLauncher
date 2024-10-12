@@ -24,6 +24,7 @@ import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.MainTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.jarmods.JarModsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java.JavaTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds.WorldsTab;
@@ -70,6 +71,7 @@ public class InstanceSettingsDialog extends AppDialog {
         this.addTab(new MainTab(instance, this.getDialog()));
         this.addTab(new JavaTab(instance, this.getDialog()));
         this.addTab(new ModsTab(instance, this.getDialog()));
+        this.addTab(new JarModsTab(instance, this.getDialog()));
         this.addTab(new WorldsTab(instance, this.getDialog()));
 
         this.getDialog().addWindowListener(new WindowAdapter() {

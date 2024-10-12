@@ -16,13 +16,16 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.jarmods;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -30,6 +33,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
@@ -42,7 +47,9 @@ public class JarModsView extends JPanel {
     public JarModsView(Instance instance) {
         super(new BorderLayout());
 
-        JButton addJarMod = new JButton("Add jar mod");
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        JButton addJarMod = new JButton(language.getString("gui.instanceSettingsDialog.jarModsTab.addModButton"));
         this.add(addJarMod, BorderLayout.NORTH);
 
         this.jarModsTableModel = new JarModsTableModel(instance);
@@ -65,7 +72,7 @@ public class JarModsView extends JPanel {
         addJarMod.addActionListener(e -> {
             new Worker<Void, Void>("picking jar mod") {
                 @Override
-                protected Void work() throws Exception {
+                protected Void work() throws IOException {
                     UIManager.put("FileChooser.readOnly", Boolean.TRUE);
                     JFileChooser fileChooser = new JFileChooser();
                     fileChooser.setFileFilter(new FileNameExtensionFilter("Archives (*.zip, *.jar)", "zip", "jar"));
@@ -87,15 +94,18 @@ public class JarModsView extends JPanel {
                         List<JarMod> jarMods = instance.getJarMods();
 
                         Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
+                        String fileName = jarModPath.getFileName().toString();
 
                         JarMod jarMod = new JarMod(
-                                true,
-                                jarModPath.toString(),
-                                UUID.randomUUID(),
-                                jarModPath.getFileName().toString()
+                            true,
+                            fileName,
+                            UUID.randomUUID(),
+                            fileName
                         );
-                        jarMods.add(jarMod);
 
+                        Files.copy(jarModPath, instance.getModPath(jarMod));
+
+                        jarMods.add(jarMod);
                         JarModsView.this.jarModsTableModel.add(jarMod);
                     }
 
@@ -105,7 +115,7 @@ public class JarModsView extends JPanel {
             }.execute();
         });
 
-        this.deleteModButton = new JButton("Delete jar mod");
+        this.deleteModButton = new JButton(language.getString("gui.instanceSettingsDialog.jarModsTab.deleteModButton"));
 
         JScrollPane scrollPane = new JScrollPane(this.jarModsTable);
         scrollPane.setBorder(null);
@@ -121,6 +131,16 @@ public class JarModsView extends JPanel {
             JarMod jarMod = this.jarModsTableModel.jarModAt(selectedRow);
             this.jarModsTableModel.removeRow(selectedRow);
             instance.getJarMods().remove(jarMod);
+
+            Path modFile = instance.getModPath(jarMod);
+
+            if (Files.exists(modFile)) {
+                try {
+                    FileUtils.delete(modFile);
+                } catch (IOException ex) {
+                    Log.error("Exception while trying to delete jar Mod", ex);
+                }
+            }
         });
 
         this.add(this.deleteModButton, BorderLayout.SOUTH);

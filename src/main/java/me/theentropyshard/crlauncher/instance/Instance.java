@@ -41,6 +41,7 @@ public class Instance {
     private static final String INSTANCE_FILE_NAME = "instance.json";
     private static final String COSMIC_DIR_NAME = "cosmic-reach";
     private static final String JARMODS_DIR_NAME = "jarmods";
+    private static final String DISABLED_JARMODS_DIR_NAME = "disabledjarmods";
     private static final String FABRIC_MODS_DIR_NAME = "fabricmods";
     private static final String DISABLED_FABRIC_MODS_DIR_NAME = "disabledfabricmods";
     private static final String QUILT_MODS_DIR_NAME = "quiltmods";
@@ -146,6 +147,14 @@ public class Instance {
         }
     }
 
+    public Path getModPath(JarMod jarMod) {
+        if (jarMod.isActive()) {
+            return this.getJarModsDir().resolve(jarMod.getFileName());
+        } else {
+            return this.getDisabledJarModsDir().resolve(jarMod.getFileName());
+        }
+    }
+
     public boolean isRunning() {
         return this.running;
     }
@@ -224,6 +233,10 @@ public class Instance {
 
     public Path getJarModsDir() {
         return this.workDir.resolve(Instance.JARMODS_DIR_NAME);
+    }
+
+    public Path getDisabledJarModsDir() {
+        return this.workDir.resolve(Instance.DISABLED_JARMODS_DIR_NAME);
     }
 
     public List<JarMod> getJarMods() {

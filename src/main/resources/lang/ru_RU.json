@@ -145,6 +145,13 @@
                 "openModsFolder": "Открыть папку с модами",
                 "searchModsCRMM": "Найти моды на CRMM"
             },
+            "jarModsTab": {
+                "name": "Jar-моды",
+                "modName": "Имя",
+                "modActive": "Активен",
+                "addModButton": "Добавить Jar-мод",
+                "deleteModButton": "Удалить Jar-мод"
+            },
             "worldsTab": {
                 "name": "Миры",
                 "table": {

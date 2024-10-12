@@ -35,7 +35,6 @@ import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ProcessReader;
-import me.theentropyshard.crlauncher.utils.SystemProperty;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
@@ -50,6 +49,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CosmicRunner extends Thread {
     public static final String[] FLAG_SET_1 = {
@@ -116,11 +116,8 @@ public class CosmicRunner extends Thread {
             dialog.getDialog().dispose();
 
             Path saveDirPath = this.instance.getCosmicDir();
-            Path clientPath = versionManager.getVersionJar(version);
 
             this.instance.setLastTimePlayed(LocalDateTime.now());
-
-            CosmicLauncher launcher;
 
             String javaPath = this.instance.getJavaPath();
             if (javaPath == null || javaPath.isEmpty()) {
@@ -128,9 +125,11 @@ public class CosmicRunner extends Thread {
                 this.instance.setJavaPath(javaPath);
             }
 
-            if (this.instance.getType() == InstanceType.VANILLA) {
-                clientPath = this.applyJarMods(version);
+            Path clientPath = this.applyJarMods(version);
 
+            CosmicLauncher launcher;
+
+            if (this.instance.getType() == InstanceType.VANILLA) {
                 launcher = CosmicLauncherFactory.getLauncher(
                     javaPath,
                     LaunchType.VANILLA,
@@ -335,19 +334,17 @@ public class CosmicRunner extends Thread {
             return originalClientPath;
         } else {
             try {
+                Log.info("Creating modified client...");
                 this.clientCopyTmp = Files.copy(originalClientPath, this.instance.getWorkDir()
                     .resolve(originalClientPath.getFileName().toString() + System.currentTimeMillis() + ".jar"));
 
-                List<File> zipFilesToMerge = new ArrayList<>();
+                Log.info("Collecting jar mods...");
+                List<File> zipFilesToMerge = FileUtils.list(this.instance.getJarModsDir(), Files::isRegularFile)
+                    .stream()
+                    .map(Path::toFile)
+                    .toList();
 
-                for (JarMod jarMod : jarMods) {
-                    if (!jarMod.isActive()) {
-                        continue;
-                    }
-
-                    zipFilesToMerge.add(Paths.get(jarMod.getFullPath()).toFile());
-                }
-
+                Log.info("Merging modified files...");
                 try (ZipFile copyZip = new ZipFile(this.clientCopyTmp.toFile())) {
                     for (File modFile : zipFilesToMerge) {
                         Path unpackDir = this.instance.getWorkDir().resolve(modFile.getName().replace(".", "_"));
@@ -373,6 +370,8 @@ public class CosmicRunner extends Thread {
                         FileUtils.delete(unpackDir);
                     }
                 }
+
+                Log.info("Successfully applied jar mods");
 
                 return this.clientCopyTmp;
             } catch (IOException e) {
