@@ -28,7 +28,7 @@ import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
-import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.dialogs.UpdateDialog;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.java.JavaLocator;
@@ -234,17 +234,13 @@ public class CRLauncher {
                     SemanticVersion currentVersion = SemanticVersion.parse(BuildConfig.APP_VERSION);
 
                     if (latestVersion.isHigherThan(currentVersion)) {
-                        String link = "https://github.com/CRLauncher/CRLauncher/releases/tag/" + release.tag_name;
                         String baseText = "New version is available! (" + latestVersion.toVersionString() + "). Download here: ";
+                        String link = "https://github.com/CRLauncher/CRLauncher/releases/tag/" + release.tag_name;
 
                         Log.info(baseText + link);
 
-                        JTextPane message = new JTextPane();
-                        message.setContentType("text/html");
-                        message.setText(baseText + "<a href=\"" + link + "\">" + link + "</a><br>Update now?");
-                        message.setEditable(false);
+                        boolean updateNow = UpdateDialog.show(release);
 
-                        boolean updateNow = MessageBox.showConfirmMessage(CRLauncher.frame, "Update", message);
                         if (updateNow) {
                             Log.info("Updating now");
 

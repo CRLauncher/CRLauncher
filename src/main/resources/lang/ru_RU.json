@@ -322,6 +322,11 @@
                 "dateReleased": "Дата релиза",
                 "versionType": "Тип версии"
             }
+        },
+        "updateDialog": {
+            "title": "Обновление",
+            "updateNowButton": "Обновить",
+            "updateLaterButton": "Позже"
         }
     },
     "general": {

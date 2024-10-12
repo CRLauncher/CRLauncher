@@ -67,7 +67,7 @@ dependencies {
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
     implementation 'com.miglayout:miglayout-swing:5.3'
-
+    implementation 'org.commonmark:commonmark:0.23.0'
 }
 
 java {

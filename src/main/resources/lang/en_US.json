@@ -322,6 +322,11 @@
                 "dateReleased": "Date released",
                 "versionType": "Type"
             }
+        },
+        "updateDialog": {
+            "title": "Update",
+            "updateNowButton": "Update",
+            "updateLaterButton": "Later"
         }
     },
     "general": {
