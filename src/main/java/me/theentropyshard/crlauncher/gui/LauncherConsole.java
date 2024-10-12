@@ -18,7 +18,6 @@
 
 package me.theentropyshard.crlauncher.gui;
 
-import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
@@ -26,7 +25,6 @@ import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
-import java.awt.event.MouseWheelListener;
 import java.awt.event.WindowListener;
 
 public class LauncherConsole {
@@ -72,16 +70,7 @@ public class LauncherConsole {
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
             JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS
         );
-        this.scrollPane.setUI(new FlatScrollPaneUI() {
-            @Override
-            protected MouseWheelListener createMouseWheelListener() {
-                if (this.isSmoothScrollingEnabled()) {
-                    return new SmoothScrollMouseWheelListener(this.scrollpane.getVerticalScrollBar());
-                } else {
-                    return super.createMouseWheelListener();
-                }
-            }
-        });
+        this.scrollPane.setUI(new FlatSmoothScrollPaneUI());
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(this.scrollPane, BorderLayout.CENTER);
