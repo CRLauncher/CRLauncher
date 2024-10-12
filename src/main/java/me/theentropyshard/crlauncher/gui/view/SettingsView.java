@@ -24,6 +24,7 @@ import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 
 import javax.swing.*;
@@ -55,6 +56,8 @@ public class SettingsView extends JPanel {
     public static final String EXIT_DO_NOTHING = "gui.settingsView.other.onGameExit.options.doNothing";
     public static final String EXIT_EXIT_LAUNCHER = "gui.settingsView.other.onGameExit.options.exitLauncher";
     public static final String CHECK_FOR_UPDATES = "gui.settingsView.other.checkForUpdatesAtStartup";
+    public static final String CHECK_UPDATES_NOW_BUTTON = "gui.settingsView.other.checkUpdatesNowButton";
+    public static final String CHECKING_UPDATES = "gui.settingsView.other.checkingForUpdates";
     public static final String APPEND_USERNAME = "gui.settingsView.other.appendUsername";
     public static final String LANGUAGE = "gui.settingsView.other.language";
     public static final String STORAGE_BORDER = "gui.settingsView.storageSettings.borderName";
@@ -85,6 +88,7 @@ public class SettingsView extends JPanel {
     private final JLabel launchOptionLabel;
     private final JLabel exitOptionLabel;
     private final JCheckBox checkUpdates;
+    private final JButton checkUpdatesNowButton;
     private final JCheckBox appendUsername;
     private final JLabel languageLabel;
     private final JComboBox<String> whenLaunchesBehavior;
@@ -352,7 +356,25 @@ public class SettingsView extends JPanel {
             this.checkUpdates.setSelected(CRLauncher.getInstance().getSettings().checkUpdatesStartup);
             otherSettings.add(this.checkUpdates);
 
-            otherSettings.add(Box.createHorizontalBox());
+            this.checkUpdatesNowButton = new JButton(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
+            this.checkUpdatesNowButton.addActionListener(e -> {
+                this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECKING_UPDATES));
+
+                new Worker<Void, Void>("checking for updates") {
+                    @Override
+                    protected Void work() throws Exception {
+                        CRLauncher.checkForUpdates(true);
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        SettingsView.this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
+                    }
+                }.execute();
+            });
+            otherSettings.add(this.checkUpdatesNowButton);
 
             this.appendUsername = new JCheckBox(language.getString(SettingsView.APPEND_USERNAME));
             this.appendUsername.setSelected(CRLauncher.getInstance().getSettings().appendUsername);
@@ -465,6 +487,7 @@ public class SettingsView extends JPanel {
         this.whenExitsBehavior.setSelectedIndex(exitIndex);
 
         this.checkUpdates.setText(language.getString(SettingsView.CHECK_FOR_UPDATES));
+        this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
         this.appendUsername.setText(language.getString(SettingsView.APPEND_USERNAME));
         this.languageLabel.setText(language.getString(SettingsView.LANGUAGE));
     }

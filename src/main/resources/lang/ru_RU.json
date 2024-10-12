@@ -287,6 +287,9 @@
                     }
                 },
                 "checkForUpdatesAtStartup": "Проверять обновления при запуске",
+                "checkUpdatesNowButton": "Проверить обновления",
+                "checkingForUpdates": "Проверяем...",
+                "noUpdatesAvailable": "Вы используете новейшую версию",
                 "appendUsername": "Добавлять ник перед сообщениями в чате",
                 "language": "Язык"
             }

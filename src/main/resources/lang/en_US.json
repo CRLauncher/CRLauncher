@@ -287,6 +287,9 @@
                     }
                 },
                 "checkForUpdatesAtStartup": "Check for updates at startup",
+                "checkUpdatesNowButton": "Check for updates",
+                "checkingForUpdates": "Checking...",
+                "noUpdatesAvailable": "You are using the latest version",
                 "appendUsername": "Append username before chat messages",
                 "language": "Language"
             }

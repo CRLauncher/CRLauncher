@@ -29,6 +29,7 @@ import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.UpdateDialog;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.java.JavaLocator;
@@ -86,12 +87,15 @@ public class CRLauncher {
     private volatile boolean shutdown;
 
     public static JFrame frame;
+    public static String[] rawArgs;
 
     private final Map<String, Language> languages;
 
     public CRLauncher(Args args, String[] rawArgs, Path workDir) {
         this.args = args;
         this.workDir = workDir;
+
+        CRLauncher.rawArgs = rawArgs;
 
         Thread.setDefaultUncaughtExceptionHandler(new ExceptionHandler());
 
@@ -225,81 +229,100 @@ public class CRLauncher {
 
         if (this.settings.checkUpdatesStartup) {
             this.taskPool.execute(() -> {
-                Log.info("Checking for updates...");
-
-                try {
-                    GithubApi downloader = new GithubApi();
-                    GithubRelease release = downloader.getLatestRelease("CRLauncher", "CRLauncher");
-                    SemanticVersion latestVersion = SemanticVersion.parse(release.tag_name.substring(1));
-                    SemanticVersion currentVersion = SemanticVersion.parse(BuildConfig.APP_VERSION);
-
-                    if (latestVersion.isHigherThan(currentVersion)) {
-                        String baseText = "New version is available! (" + latestVersion.toVersionString() + "). Download here: ";
-                        String link = "https://github.com/CRLauncher/CRLauncher/releases/tag/" + release.tag_name;
-
-                        Log.info(baseText + link);
-
-                        boolean updateNow = UpdateDialog.show(release);
-
-                        if (updateNow) {
-                            Log.info("Updating now");
-
-                            String fileExtension;
-
-                            if (CRLauncher.isJar()) {
-                                fileExtension = ".jar";
-                            } else if (CRLauncher.isExe()) {
-                                fileExtension = ".exe";
-                            } else {
-                                throw new RuntimeException("Updating launcher while running not in jar " +
-                                    "and not in exe is not supported. (Running in an IDE?)");
-                            }
-
-                            Path tmpDir = this.getWorkDir().resolve("tmp");
-                            FileUtils.createDirectoryIfNotExists(tmpDir);
-                            Path newLauncherFile = tmpDir.resolve(BuildConfig.APP_NAME + fileExtension);
-
-                            FileUtils.delete(newLauncherFile);
-
-                            GithubRelease.Asset asset = ListUtils.search(release.assets, a -> a.name.endsWith(fileExtension));
-
-                            ProgressDialog dialog = new ProgressDialog("Updating CRLauncher to " + latestVersion.toVersionString());
-
-                            SwingUtilities.invokeLater(() -> dialog.setVisible(true));
-                            Log.info("Downloading new version");
-                            downloader.downloadRelease(newLauncherFile, release, release.assets.indexOf(asset), dialog);
-                            SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
-
-                            Path currentPath = Paths.get(URI.create(Args.class.getProtectionDomain().getCodeSource().getLocation().toString()));
-
-                            List<String> arguments = new ArrayList<>();
-                            arguments.add(JavaLocator.getJavaPath());
-                            arguments.add("-classpath");
-                            arguments.add(newLauncherFile.toString());
-                            arguments.add("me.theentropyshard.crlauncher.Updater");
-                            arguments.add(currentPath.toString());
-                            arguments.add(newLauncherFile.toString());
-                            arguments.addAll(Arrays.asList(rawArgs));
-
-                            Log.info("Starting new version with command: " + arguments);
-
-                            ProcessBuilder builder = new ProcessBuilder(arguments);
-                            builder.start();
-
-                            this.shutdown();
-                        } else {
-                            Log.info("Not updating");
-                        }
-                    } else {
-                        Log.info("No updates are available");
-                    }
-                } catch (IOException e) {
-                    Log.error("Could not check for updates", e);
-                }
+                CRLauncher.checkForUpdates(false);
             });
         }
 
         this.gui.showGui();
+    }
+
+    public static void checkForUpdates(boolean showDialogIfNoUpdates) {
+        Log.info("Checking for updates...");
+
+        try {
+            GithubApi githubApi = new GithubApi();
+            GithubRelease release = githubApi.getLatestRelease("CRLauncher", "CRLauncher");
+            SemanticVersion latestVersion = SemanticVersion.parse(release.tag_name.substring(1));
+            SemanticVersion currentVersion = SemanticVersion.parse(BuildConfig.APP_VERSION);
+
+            if (latestVersion.isHigherThan(currentVersion)) {
+                String baseText = "New version is available! (" + latestVersion.toVersionString() + "). Download here: ";
+                String link = "https://github.com/CRLauncher/CRLauncher/releases/tag/" + release.tag_name;
+
+                Log.info(baseText + link);
+
+                boolean updateNow = UpdateDialog.show(release);
+
+                if (updateNow) {
+                    CRLauncher.runUpdater(githubApi, release, latestVersion);
+                } else {
+                    Log.info("Not updating");
+                }
+            } else {
+                Log.info("No updates are available");
+
+                if (!showDialogIfNoUpdates) {
+                    return;
+                }
+
+                Language language = CRLauncher.getInstance().getLanguage();
+
+                MessageBox.showPlainMessage(CRLauncher.frame,
+                    language.getString("gui.updateDialog.title"),
+                    language.getString("gui.settingsView.other.noUpdatesAvailable"));
+            }
+        } catch (IOException e) {
+            Log.error("Could not check for updates", e);
+        }
+    }
+
+    public static void runUpdater(GithubApi githubApi, GithubRelease release, SemanticVersion latestVersion) throws IOException {
+        Log.info("Updating now");
+
+        String fileExtension;
+
+        if (CRLauncher.isJar()) {
+            fileExtension = ".jar";
+        } else if (CRLauncher.isExe()) {
+            fileExtension = ".exe";
+        } else {
+            throw new RuntimeException("Updating launcher while running not in jar " +
+                "and not in exe is not supported. (Running in an IDE?)");
+        }
+
+        Path tmpDir = CRLauncher.getInstance().getWorkDir().resolve("tmp");
+        FileUtils.createDirectoryIfNotExists(tmpDir);
+
+        Path newLauncherFile = tmpDir.resolve(BuildConfig.APP_NAME + fileExtension);
+        FileUtils.delete(newLauncherFile);
+
+        ProgressDialog dialog = new ProgressDialog("Updating CRLauncher to " + latestVersion.toVersionString());
+        dialog.setStage("Downloading launcher...");
+        SwingUtilities.invokeLater(() -> dialog.setVisible(true));
+
+        Log.info("Downloading new version");
+        GithubRelease.Asset asset = ListUtils.search(release.assets, a -> a.name.endsWith(fileExtension));
+        githubApi.downloadRelease(newLauncherFile, release, release.assets.indexOf(asset), dialog);
+
+        SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
+
+        Path currentPath = Paths.get(URI.create(Args.class.getProtectionDomain().getCodeSource().getLocation().toString()));
+
+        List<String> arguments = new ArrayList<>();
+        arguments.add(JavaLocator.getJavaPath());
+        arguments.add("-classpath");
+        arguments.add(newLauncherFile.toString());
+        arguments.add("me.theentropyshard.crlauncher.Updater");
+        arguments.add(currentPath.toString());
+        arguments.add(newLauncherFile.toString());
+        arguments.addAll(Arrays.asList(CRLauncher.rawArgs));
+
+        Log.info("Starting new version with command: " + arguments);
+
+        ProcessBuilder builder = new ProcessBuilder(arguments);
+        builder.start();
+
+        CRLauncher.getInstance().shutdown();
     }
 
     public static boolean isExe() {
