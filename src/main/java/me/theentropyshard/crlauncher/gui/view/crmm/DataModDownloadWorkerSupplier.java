@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.vanilla.DataMod;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
@@ -50,7 +51,7 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
 
         return new Worker<>("downloading mod " + version.getTitle()) {
             @Override
-            protected String work() throws Exception {
+            protected DataMod work() throws Exception {
 
                 ProgressDialog progressDialog = new ProgressDialog("Downloading " + file.getName());
 
@@ -86,14 +87,14 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
 
                 FileUtils.delete(saveAs);
 
-                return modName;
+                return new DataMod(modName, true);
             }
 
             @Override
             protected void done() {
-                String modName;
+                DataMod dataMod;
                 try {
-                    modName = (String) this.get();
+                    dataMod = (DataMod) this.get();
                 } catch (InterruptedException | ExecutionException ex) {
                     Log.error(ex);
 
@@ -103,7 +104,7 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
                 JPanel modsView = modsTab.getModsView();
 
                 if (modsView instanceof DataModsView dataModsView) {
-                    //dataModsView.getDataModsTableModel().addRow(modName);
+                    dataModsView.getDataModsTableModel().addDataMod(dataMod);
                 }
             }
         };
