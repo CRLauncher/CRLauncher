@@ -124,6 +124,10 @@ public class DataModsView extends JPanel {
                         return;
                     }
 
+                    if (dataMod == null) {
+                        return;
+                    }
+
                     DataModsView.this.dataModsTableModel.addDataMod(dataMod);
                 }
             }.execute();
