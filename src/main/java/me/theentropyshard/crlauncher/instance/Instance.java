@@ -24,6 +24,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
+import me.theentropyshard.crlauncher.cosmic.mods.vanilla.DataMod;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 
@@ -39,16 +40,23 @@ import java.util.Set;
 
 public class Instance {
     private static final String INSTANCE_FILE_NAME = "instance.json";
+
     private static final String COSMIC_DIR_NAME = "cosmic-reach";
+
     private static final String JARMODS_DIR_NAME = "jarmods";
     private static final String DISABLED_JARMODS_DIR_NAME = "disabledjarmods";
+
     private static final String FABRIC_MODS_DIR_NAME = "fabricmods";
     private static final String DISABLED_FABRIC_MODS_DIR_NAME = "disabledfabricmods";
+
     private static final String QUILT_MODS_DIR_NAME = "quiltmods";
     private static final String DISABLED_QUILT_MODS_DIR_NAME = "disabledquiltmods";
+
     private static final String PUZZLE_MODS_DIR_NAME = "pmods";
     private static final String DISABLED_PUZZLE_MODS_DIR_NAME = "disabledpuzzlemods";
+
     public static final String DATA_MODS_DIR_NAME = "mods";
+    public static final String DISABLED_DATA_MODS_DIR_NAME = "disabledmods";
 
     private transient Path workDir;
 
@@ -155,6 +163,14 @@ public class Instance {
         }
     }
 
+    public Path getModPath(DataMod dataMod) {
+        if (dataMod.isActive()) {
+            return this.getDataModsDir().resolve(dataMod.getFileName());
+        } else {
+            return this.getDisabledDataModsDir().resolve(dataMod.getFileName());
+        }
+    }
+
     public boolean isRunning() {
         return this.running;
     }
@@ -229,6 +245,10 @@ public class Instance {
 
     public Path getDataModsDir() {
         return this.getCosmicDir().resolve(Instance.DATA_MODS_DIR_NAME);
+    }
+
+    public Path getDisabledDataModsDir() {
+        return this.getCosmicDir().resolve(Instance.DISABLED_DATA_MODS_DIR_NAME);
     }
 
     public Path getJarModsDir() {

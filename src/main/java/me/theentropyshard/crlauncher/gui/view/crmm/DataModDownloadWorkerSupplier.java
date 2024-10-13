@@ -103,7 +103,7 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
                 JPanel modsView = modsTab.getModsView();
 
                 if (modsView instanceof DataModsView dataModsView) {
-                    dataModsView.getDataModsTableModel().addRow(modName);
+                    //dataModsView.getDataModsTableModel().addRow(modName);
                 }
             }
         };

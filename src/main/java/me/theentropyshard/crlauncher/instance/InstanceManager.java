@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import me.theentropyshard.crlauncher.utils.StringUtils;
+import me.theentropyshard.crlauncher.utils.ZipUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.FileHeader;
@@ -210,21 +211,6 @@ public class InstanceManager {
         return invalidName;
     }
 
-    private String findTopLevelDirectory(List<FileHeader> fileHeaders) throws IOException {
-        String topLevelDir = null;
-
-        for (FileHeader fileHeader : fileHeaders) {
-            String fileName = fileHeader.getFileName();
-            if (!fileName.substring(0, fileName.length() - 1).contains("/")) {
-                topLevelDir = fileName;
-
-                break;
-            }
-        }
-
-        return topLevelDir;
-    }
-
     public InstanceImportResult importInstance(Path file) throws IOException {
         try (ZipFile zipFile = new ZipFile(file.toFile())) {
             List<FileHeader> fileHeaders = zipFile.getFileHeaders();
@@ -235,7 +221,7 @@ public class InstanceManager {
                 );
             }
 
-            String fileName = this.findTopLevelDirectory(fileHeaders);
+            String fileName = ZipUtils.findTopLevelDirectory(fileHeaders);
             if (fileName == null) {
                 return new InstanceImportResult(
                     InstanceImportStatus.BAD_FILE,

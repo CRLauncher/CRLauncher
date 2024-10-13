@@ -115,6 +115,7 @@
                     "borderName": "Mods",
                     "vanilla": {
                         "modFolder": "Mod folder",
+                        "addModButton": "Add data mod",
                         "deleteModButton": "Delete data mod"
                     },
                     "fabric": {

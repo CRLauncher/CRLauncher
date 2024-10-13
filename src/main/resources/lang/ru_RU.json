@@ -115,6 +115,7 @@
                     "borderName": "Моды",
                     "vanilla": {
                         "modFolder": "Папка мода",
+                        "addModButton": "Добавить дата-мод",
                         "deleteModButton": "Удалить дата-мод"
                     },
                     "fabric": {
