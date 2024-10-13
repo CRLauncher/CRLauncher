@@ -93,6 +93,16 @@ public final class FileUtils {
         }
     }
 
+    public static void copyDirectory(Path src, Path dest) throws IOException {
+        List<Path> walked = FileUtils.walk(src);
+
+        FileUtils.createDirectoryIfNotExists(dest);
+
+        for (Path path : walked) {
+            Files.copy(path, dest.resolve(src.relativize(path)), StandardCopyOption.REPLACE_EXISTING);
+        }
+    }
+
     public static void createDirectoryIfNotExists(Path dir) throws IOException {
         if (FileUtils.existsButIsNotADirectory(dir)) {
             throw new IOException(dir + " exists, but is not a directory");
