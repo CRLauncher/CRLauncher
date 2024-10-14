@@ -93,6 +93,7 @@ public class ModCard extends JPanel {
         this.descriptionArea.addMouseListener(new ClickThroughListener(this));
 
         String summary = modInfo.getDescription();
+        summary = summary.replace("\n", "").replace("\r", "");
         if (summary.length() > ModCard.DESCRIPTION_LIMIT) {
             this.descriptionArea.setText(summary.substring(0, ModCard.DESCRIPTION_LIMIT - 3) + "...");
         } else {
