@@ -1,0 +1,375 @@
+{
+    "metaInfo": {
+        "name": "German",
+        "displayName": "Deutsch"
+    },
+    "messages": {
+        "gui": {
+            "error": "Error",
+            "addAccountDialog": {
+                "offline": {
+                    "enterUsername": "Benutzername eingeben"
+                },
+                "itch": {
+                    "apiKeyCannotBeEmpty": "API key muss ausgefüllt sein."
+                }
+            },
+            "accountDelete": {
+                "error": "Der Account '$$ACCOUNT_NAME$$' konnte nicht entfernt werden."
+            },
+            "playView": {
+                "deleteInstanceConfirm": "Willst Du wirklich die Instanz '$$INSTANCE_NAME$$' löschen?",
+                "cannotDeleteInstance": "Die Instanz $$INSTANCE_DIR$$ konnte nicht gelöscht werden.",
+                "invalidInstanceName": "Ein invalider Name wurde eingegeben und ersetzt."
+            },
+            "addInstanceDialog": {
+                "instanceNameCannotBeEmpty": "Der Instanzenname muss ausgefüllt sein!",
+                "groupNameCannotBeEmpty": "Der Gruppenname muss ausgefüllt sein!",
+                "cosmicVersionNotSelected": "Cosmic Reach Version ist nicht ausgewählt!",
+                "unableToCreateInstance": "Neue Instanz konnte nicht erstellt werden.",
+                "doesNotHaveClient": "Die Version $$CR_VERSION$$ hat kein Client."
+            },
+            "instanceSettingsDialog": {
+                "couldNotLoadVersions": "Versionen konnten nicht gefunden werden.",
+                "ramMinCannotBeLargerMax": "Die minimale Menge an RAM kann nicht höher als die maximale Anzahl sein.",
+                "ramMinCannotBeLess512MB": "Die minimale Menge an RAM kann nicht unter 512 MiB sein.",
+                "deleteWorldSure": "Möchtest Du '$$WORLD_NAME$$' wirklich löschen?",
+                "couldNotDeleteWorld": "Konnte die Welt '$$WORLD_NAME$$' bei $$WORLD_DIR$$ nicht löschen.",
+                "couldNotUpdateMod": "Konnte $$MOD_LOADER$$ Mod '$$MOD_ID$$ nicht updaten."
+            },
+            "mods": {
+                "modAddedName": "Die Mod '$$MOD_NAME$$' wurde bereits hinzugefügt!",
+                "modAddedId": "Die Mod mit der Id '$$MOD_ID$$' wurde bereits hinzugefügt!",
+                "modInvalid": "$$MOD_PATH$$ ist keine valide $$MOD_LOADER$$ Mod!"
+            }
+        }
+    },
+    "gui": {
+        "instanceItem": {
+            "contextMenu": {
+                "edit": "Bearbeiten",
+                "icon": "Icon",
+                "rename": "Umbenennen",
+                "delete": "Löschen",
+                "openInstanceFolder": "Instanzenordner öffnen",
+                "openCosmicFolder": "Cosmic Reach Ordner öffnen",
+                "killProcess": "Prozess beenden"
+            }
+        },
+        "modFilesDialog": {
+            "name": "Name",
+            "compatibility": "Kompatibilität",
+            "datePublished": "Veröffentlichungsdatum",
+            "downloads": "Downloads"
+        },
+        "instanceSettingsDialog": {
+            "title": "Instanzeinstellungen - $$INSTANCE_NAME$$",
+            "exportInstance": {
+                "exportButton": "Exportieren",
+                "crliFiles": "CRLauncher Instanzendatei (*.crli)",
+                "title": "Instanz exportieren",
+                "success": "Instanz wurde erfolgreich exportiert.",
+                "failure": "Instanz konnte nicht erfolgreich exportiert werden.",
+                "wrongExtension": "Die exportierte Datei muss mit .crli enden."
+            },
+            "mainTab": {
+                "name": "Main",
+                "cosmicReachVersion": {
+                    "borderName": "Cosmic Reach Version",
+                    "autoUpdateToLatest": "Automatisch auf die neuste Version updaten"
+                },
+                "otherSettings": {
+                    "borderName": "Anderes",
+                    "textFieldPlaceholder": "Fenstertitel hier setzen"
+                }
+            },
+            "javaTab": {
+                "name": "Java",
+                "javaInstallation": {
+                    "borderName": "Java Installation",
+                    "textFieldPlaceholder": "Datenpfad zu $$JAVAW$$",
+                    "current": "$$CURRENT_INSTALLATION$$ (Aktuell)",
+                    "browse": "Datenpfad browsen..."
+                },
+                "memorySettings": {
+                    "borderName": "Memory Einstellungen",
+                    "minimum": "Minimum Memory (Megabytes)",
+                    "maximum": "Maximum Memory (Megabytes)"
+                }
+            },
+            "modsTab": {
+                "name": "Mods",
+                "modLoader": {
+                    "borderName": "Modloader",
+                    "options": {
+                        "vanilla": "Vanilla",
+                        "fabric": "Fabric",
+                        "cosmicQuilt": "Cosmic Quilt",
+                        "puzzle": "Puzzle"
+                    }
+                },
+                "loaderVersion": {
+                    "borderName": "Loader-Version"
+                },
+                "modsTable": {
+                    "borderName": "Mods",
+                    "vanilla": {
+                        "modFolder": "Mod-Ordner",
+                        "addModButton": "Data-Mod hinzufügen",
+                        "deleteModButton": "Data-Mod löschen"
+                    },
+                    "fabric": {
+                        "modName": "Name",
+                        "modVersion": "Version",
+                        "modDescription": "Beschreibung",
+                        "modActive": "Aktiv",
+                        "addModButton": "Fabric-Mod hinzufügen",
+                        "deleteModButton": "Fabric-Mod löschen"
+                    },
+                    "cosmicQuilt": {
+                        "modName": "Name",
+                        "modVersion": "Version",
+                        "modDescription": "Beschreibung",
+                        "modActive": "Aktiv",
+                        "addModButton": "Quilt-Mod hinzufügen",
+                        "deleteModButton": "Quilt-Mod löschen"
+                    },
+                    "puzzle": {
+                        "modName": "Name",
+                        "modVersion": "Version",
+                        "modDescription": "Beschreibung",
+                        "modActive": "Aktiv",
+                        "addModButton": "Puzzle-Mod hinzufügen",
+                        "deleteModButton": "Puzzle-Mod löschen"
+                    }
+                },
+                "openModsFolder": "Mod-Ordner öffnen",
+                "searchModsCRMM": "Mods auf CRMM suchen"
+            },
+            "jarModsTab": {
+                "name": "Jar-Mods",
+                "modName": "Name",
+                "modActive": "Aktiv",
+                "addModButton": "Jar-Mod hinzufügen",
+                "deleteModButton": "Jar-Mod löschen"
+            },
+            "worldsTab": {
+                "name": "Welten",
+                "table": {
+                    "worldName": "Name",
+                    "worldSeed": "Seed",
+                    "lastPlayed": "Zuletzt gespielt",
+                    "createdAt": "Erstellt"
+                },
+                "contextMenu": {
+                    "copySeed": "Seed kopieren",
+                    "delete": "Löschen"
+                },
+                "deletingWorld": "Welt wird gelöscht"
+            }
+        },
+        "searchCRMMModsDialog": {
+            "title": "Mods auf CRMM suchen",
+            "download1": "Download",
+            "downloads234": "Downloads",
+            "downloads": "Downloads",
+            "follower1": "Follower",
+            "followers234": "Follower",
+            "followers": "Follower",
+            "downloadButton": "Runterladen",
+            "primary": "Primär",
+            "otherFiles": "Andere Dateien",
+            "mods": "Mods",
+            "datamods": "Data-Mods",
+            "resourcePacks": "Resource-Packs",
+            "shaders": "Shader",
+            "modpacks": "Modpacks",
+            "searchButton": "Suchen",
+            "searchMods": "Mods suchen...",
+            "searchDatamods": "Data-Mods suchen...",
+            "searchResourcePacks": "Resource-Packs suchen...",
+            "searchShaders": "Shader suchen...",
+            "searchModpacks": "Modpacks suchen...",
+            "modVersionsDialogTitle": "Mod-Versionen"
+        },
+        "addAccountDialog": {
+            "title": "Account hinzufügen",
+            "offline": {
+                "tabName": "Offline",
+                "textFieldPlaceholder": "Erwünschten Benutzernamen eingeben"
+            },
+            "itch": {
+                "tabName": "Itch.io",
+                "textFieldPlaceholder": "Itch.io API-Key eingeben"
+            },
+            "accountExists": "Ein Account mit dem Namen '$$ACCOUNT_NAME$$' existiert bereits",
+            "addButton": "Hinzufügen"
+        },
+        "console": {
+            "title": "CRLauncher Konsole",
+            "scrollDown": "Runter scrollen",
+            "copyButton": "Kopieren",
+            "clearButton": "Leeren"
+        },
+        "general": {
+            "yes": "Ja",
+            "no": "Nein",
+            "ok": "OK",
+            "cancel": "Abbrechen",
+            "archives": "Archive",
+            "openLauncherFolder": "Launcher-Ordner öffnen",
+            "consoleButton": {
+                "show": "Konsole anzeigen",
+                "hide": "Konsole verstecken"
+            },
+            "tab": {
+                "play": "Spielen",
+                "accounts": "Accounts",
+                "settings": "Einstellungen",
+                "about": "About"
+            }
+        },
+        "playView": {
+            "instanceGroup": "Instanzengruppe",
+            "account": "Account",
+            "deleteInstanceTitle": "Instanz löschen",
+            "renameInstanceDialog": {
+                "title": "Instanz umbenennen",
+                "message": "Neuen Namen eingeben"
+            },
+            "lastPlayedFor": "Spielzeit beim letzten mal:",
+            "totalPlayedFor": "Insgesamte Spielzeit:",
+            "running": "Läuft"
+        },
+        "accountsView": {
+            "addAccountButton": "Drücken um Account hinzuzufügen",
+            "deleteConfirmation": {
+                "title": "Account entfernung",
+                "message": "Möchtest Du den Account '$$ACCOUNT_NAME$$' wirklich löschen?"
+            }
+        },
+        "settingsView": {
+            "themeSettings": {
+                "borderName": "Stil",
+                "light": "Hell",
+                "dark": "Dunkel"
+            },
+            "ui": {
+                "borderName": "UI",
+                "dialogPosition": {
+                    "label": "Dialog Position",
+                    "options": {
+                        "relativeToParent": "Relativ zum Parent",
+                        "alwaysCentered": "Immer mittig"
+                    }
+                },
+                "amountOfTime": "Vergangene Zeit seit der Veröffentlichung anzeigen"
+            },
+            "storageSettings": {
+                "borderName": "Speicher",
+                "versionsPathLabel": "Versionen-Datenpfad",
+                "versionsPathFieldPlaceholder": "<Launcher-Ordner>/cosmic-reach/versions",
+                "instancesPathLabel": "Instanzen-Datenpfad",
+                "instancesPathFieldPlaceholder": "<Launcher-Ordner>/cosmic-reach/instances",
+                "modLoadersPathLabel": "Mod-Loader-Datenpfad",
+                "modLoadersPathFieldPlaceholder": "<Launcher-Ordner>/cosmic-reach",
+                "tip": "ENTER drücken um den Datenpfad zu speichern. Änderungen treten nach Neustart ein."
+            },
+            "other": {
+                "borderName": "Anderes",
+                "writePrettyJson": "Schöne JSON-Files schreiben (nützlich für Development/Debugging)",
+                "onGameLaunch": {
+                    "label": "Wenn Cosmic Reach startet",
+                    "options": {
+                        "doNothing": "Nichts tun",
+                        "hideLauncher": "Launcher verstecken",
+                        "hideLauncherAndConsole": "Launcher und Konsole verstecken",
+                        "exitLauncher": "Launcher schließen (Die auf der Instanz verbrachte Zeit wird nicht mitgezählt)"
+                    }
+                },
+                "onGameExit": {
+                    "label": "Wenn Cosmic Reach geschlossen wird",
+                    "options": {
+                        "doNothing": "Nichts tun",
+                        "exitLauncher": "Launcher schließen, falls der Cosmic Reach Exit-Code 0 (ok) ist"
+                    }
+                },
+                "checkForUpdatesAtStartup": "Beim Starten nach Updates suchen",
+                "checkUpdatesNowButton": "Nach Updates suchen",
+                "checkingForUpdates": "Suchen...",
+                "noUpdatesAvailable": "Du benutzt die neuste Version.",
+                "appendUsername": "Nutzername vor Chat-Nachrichten setzen",
+                "language": "Sprache"
+            }
+        },
+        "aboutView": {
+            "lines": {
+                "line1": "CRLauncher $$LAUNCHER_VERSION$$ - simpler Cosmic Reach Launcher",
+                "line2": "von TheEntropyShard",
+                "line3": "Mehr auf $$LAUNCHER_URL$$"
+            }
+        },
+        "addInstanceDialog": {
+            "importInstance": {
+                "importButton": "Importieren",
+                "crliFiles": "CRLauncher Instanzendatei (*.crli)",
+                "title": "Instanz Import",
+                "success": "Instanz erfolgreich importiert.",
+                "failure": "Instanz konnte nicht erfolgreich importiert werden.",
+                "duplicate": "Instanz mit einem Ordner namens $$INSTANCE_FOLDER$$ existiert bereits.",
+                "badFile": "Instanzendatei ist defekt or hat ein falsches Format.",
+                "wrongExtension": "Importierte Datei muss mit .crli enden."
+            },
+            "title": "Neue Instanz hinzufügen",
+            "nameFieldLabel": "Name",
+            "groupFieldLabel": "Gruppe",
+            "autoUpdateToLatest": "Automatisch auf die neuste Version updaten",
+            "filter": "Filter",
+            "refreshButton": "Aktualisieren",
+            "addButton": "Hinzufügen",
+            "cancelButton": "Abbrechen",
+            "table": {
+                "version": "Version",
+                "dateReleased": "Veröffentlichungsdatum",
+                "versionType": "Typ"
+            }
+        },
+        "updateDialog": {
+            "title": "Aktualisierung",
+            "updateNowButton": "Aktualisieren",
+            "updateLaterButton": "Später"
+        }
+    },
+    "general": {
+        "updated": "Aktualisiert",
+        "time": {
+            "dateFormat": "dd/MM/yyyy",
+            "ago": "her",
+            "units": {
+                "second1": "Sekunde",
+                "seconds234": "Sekunden",
+                "seconds": "Sekunden",
+                "minute1": "Minute",
+                "minutes234": "Minuten",
+                "minutes": "Minuten",
+                "hour1": "Stunde",
+                "hours234": "Stunden",
+                "hours": "Stunden",
+                "day1": "Tag",
+                "days234": "Tage",
+                "days": "Tage",
+                "today": "Heute",
+                "yesterday": "Gestern",
+                "week1": "Woche",
+                "weeks234": "Wochen",
+                "weeks": "Wochen",
+                "month1": "Monat",
+                "months234": "Monate",
+                "months": "Monate",
+                "year1": "Jahr",
+                "years234": "Jahre",
+                "years": "Jahre"
+            }
+        }
+    }
+}
