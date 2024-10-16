@@ -164,16 +164,6 @@ public class InstanceManager {
         Path modsDir = instance.getCosmicDir().resolve("mods");
         FileUtils.createDirectoryIfNotExists(modsDir);
 
-        try {
-            SemanticVersion version = SemanticVersion.parse(cosmicVersion);
-
-            if (version.isLowerThan(SemanticVersion.parse("0.3.0"))) {
-                FileUtils.createDirectoryIfNotExists(modsDir.resolve("assets"));
-            }
-        } catch (Exception ignored) {
-
-        }
-
         instance.save();
     }
 
