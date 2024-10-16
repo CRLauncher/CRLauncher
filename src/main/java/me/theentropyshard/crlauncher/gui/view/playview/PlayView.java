@@ -213,7 +213,7 @@ public class PlayView extends JPanel {
                         language.getString("gui.playView.renameInstanceDialog.message"),
                         instance.getName());
 
-                    if (newName == null || newName.isEmpty()) {
+                    if (newName == null || newName.isEmpty() || instance.getName().equals(newName)) {
                         return;
                     }
 

@@ -188,17 +188,11 @@ public class InstanceManager {
 
         instance.setWorkDir(newInstanceDir);
 
-        boolean invalidName = !newInstanceDir.endsWith(newName);
-
-        if (invalidName) {
-            instance.setName(newInstanceDir.getFileName().toString());
-        } else {
-            instance.setName(newName);
-        }
+        instance.setName(newName);
 
         this.cacheInstance(instance);
 
-        return invalidName;
+        return false;
     }
 
     public InstanceImportResult importInstance(Path file) throws IOException {
