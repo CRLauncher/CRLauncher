@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
+import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.laf.DarkLauncherLaf;
 import me.theentropyshard.crlauncher.gui.laf.LightLauncherLaf;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;

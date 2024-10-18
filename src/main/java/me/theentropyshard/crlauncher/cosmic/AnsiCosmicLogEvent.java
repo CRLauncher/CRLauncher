@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.cosmic;
 
-import me.theentropyshard.crlauncher.gui.LauncherConsole;
+import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.logging.LogEvent;
 import me.theentropyshard.crlauncher.logging.LogLevel;
 import me.theentropyshard.crlauncher.utils.ansi.AnsiColor;

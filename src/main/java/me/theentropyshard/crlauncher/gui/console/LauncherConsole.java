@@ -16,10 +16,11 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui;
+package me.theentropyshard.crlauncher.gui.console;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
@@ -30,8 +31,8 @@ import java.awt.event.WindowListener;
 public class LauncherConsole {
     private static final int DEFAULT_X = 80;
     private static final int DEFAULT_Y = 80;
-    private static final int INITIAL_WIDTH = 480;
-    private static final int INITIAL_HEIGHT = 280;
+    private static final int INITIAL_WIDTH = 576;
+    private static final int INITIAL_HEIGHT = 336;
     private static final int INITIAL_FONT_SIZE = 14;
     private static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, LauncherConsole.INITIAL_FONT_SIZE);
 
@@ -50,7 +51,7 @@ public class LauncherConsole {
     private final JButton clearButton;
 
     public LauncherConsole() {
-        this.textPane = new JTextPane() {
+        this.textPane = new NoWrapJTextPane() {
             @Override
             protected void paintComponent(Graphics g) {
                 ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -58,7 +59,6 @@ public class LauncherConsole {
                 super.paintComponent(g);
             }
         };
-        this.textPane.setPreferredSize(new Dimension(LauncherConsole.INITIAL_WIDTH, LauncherConsole.INITIAL_HEIGHT));
         this.textPane.setFont(LauncherConsole.FONT);
         ((DefaultCaret) this.textPane.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         this.textPane.setEditable(false);
@@ -72,11 +72,12 @@ public class LauncherConsole {
         );
         this.scrollPane.setUI(new FlatSmoothScrollPaneUI());
 
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.add(this.scrollPane, BorderLayout.CENTER);
+        JPanel root = new JPanel(new BorderLayout());
+        root.setPreferredSize(new Dimension(LauncherConsole.INITIAL_WIDTH, LauncherConsole.INITIAL_HEIGHT));
+        root.add(this.scrollPane, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        panel.add(bottomPanel, BorderLayout.SOUTH);
+        root.add(bottomPanel, BorderLayout.SOUTH);
 
         Language language = CRLauncher.getInstance().getLanguage();
 
@@ -103,7 +104,7 @@ public class LauncherConsole {
 
         this.frame = new JFrame(language.getString(LauncherConsole.TITLE));
         this.frame.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
-        this.frame.add(panel, BorderLayout.CENTER);
+        this.frame.add(root, BorderLayout.CENTER);
         this.frame.pack();
         this.frame.setLocation(LauncherConsole.DEFAULT_X, LauncherConsole.DEFAULT_Y);
     }
