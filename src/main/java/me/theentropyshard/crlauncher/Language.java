@@ -35,21 +35,47 @@ public class Language {
     }
 
     public String getString(String key) {
-        String[] parts = key.split("\\.");
+        int lastDotIndex = key.lastIndexOf(".");
+        String sectionKey = key.substring(0, lastDotIndex);
+        String valueKey = key.substring(lastDotIndex + 1);
 
-        JsonElement stringElement = this.languageObject.get(parts[0]);
+        JsonObject section = this.getSection(sectionKey);
 
-        for (int i = 1; i < parts.length && stringElement != null; i++) {
-            stringElement = stringElement.getAsJsonObject().get(parts[i]);
+        if (section == null) {
+            return key;
         }
 
+        return this.getString(section, valueKey);
+    }
+
+    public String getString(JsonObject section, String key) {
+        JsonElement stringElement = section.get(key);
+
         if (stringElement == null) {
-            Log.warn("Cannot find translation for " + key);
+            Log.warn("Cannot find value for key '" + key + "'");
 
             return key;
         }
 
         return stringElement.getAsString();
+    }
+
+    public JsonObject getSection(String key) {
+        String[] parts = key.split("\\.");
+
+        JsonObject jsonObject = this.languageObject.get(parts[0]).getAsJsonObject();
+
+        for (int i = 1; i < parts.length && jsonObject != null; i++) {
+            jsonObject = jsonObject.get(parts[i]).getAsJsonObject();
+        }
+
+        if (jsonObject == null) {
+            Log.warn("Cannot find object for key '" + key + "'");
+
+            return null;
+        }
+
+        return jsonObject;
     }
 
     @Override
