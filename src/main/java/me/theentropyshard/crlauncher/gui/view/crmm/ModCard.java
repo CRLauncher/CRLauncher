@@ -47,7 +47,6 @@ import java.util.concurrent.ExecutionException;
 
 public class ModCard extends JPanel {
     private static final Icon EMPTY_ICON = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
-    private static final Icon NO_ICON = SwingUtils.getIcon("/assets/images/icons/mod_no_icon.png");
 
     private static final int DESCRIPTION_LIMIT = 100;
     private static final int MAX_HEIGHT = 148;
@@ -284,7 +283,7 @@ public class ModCard extends JPanel {
                 String iconUrl = modInfo.getIconUrl();
 
                 if (iconUrl == null) {
-                    return ModCard.NO_ICON;
+                    return ModNoIcon.INSTANCE;
                 }
 
                 Request request = new Request.Builder()
@@ -322,7 +321,7 @@ public class ModCard extends JPanel {
                 }
 
                 if (icon == null) {
-                    icon = ModCard.NO_ICON;
+                    icon = ModNoIcon.INSTANCE;
                 }
 
                 ModCard.this.iconLabel.setIcon(icon);
