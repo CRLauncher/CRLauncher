@@ -112,6 +112,24 @@ public class Instance {
         this.totalPlaytime += seconds;
     }
 
+    public Path getCurrentModsDir() {
+        return switch (this.type) {
+            case VANILLA -> this.getDataModsDir();
+            case FABRIC -> this.getFabricModsDir();
+            case QUILT -> this.getQuiltModsDir();
+            case PUZZLE -> this.getPuzzleModsDir();
+        };
+    }
+
+    public Path getCurrentDisabledModsDir() {
+        return switch (this.type) {
+            case VANILLA -> this.getDisabledDataModsDir();
+            case FABRIC -> this.getDisabledFabricModsDir();
+            case QUILT -> this.getDisabledQuiltModsDir();
+            case PUZZLE -> this.getDisabledPuzzleModsDir();
+        };
+    }
+
     public void updateMod(Mod mod, Path enabledModsDir, Path disabledModsDir, boolean selected) throws IOException {
         FileUtils.createDirectoryIfNotExists(enabledModsDir);
         FileUtils.createDirectoryIfNotExists(disabledModsDir);
