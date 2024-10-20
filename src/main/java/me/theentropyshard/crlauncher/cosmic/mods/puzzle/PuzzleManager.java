@@ -79,7 +79,7 @@ public class PuzzleManager {
             throw new IOException("Puzzle Loader " + version + " not found");
         }
 
-        String fileName = "PuzzleLoader-" + version + ".jar";
+        String fileName = PuzzleManager.getClientName(version);
         Path filePath = this.versionsDir.resolve(fileName);
 
         DownloadList list = new DownloadList((totalSize, downloadedBytes) -> {
@@ -113,13 +113,13 @@ public class PuzzleManager {
 
     public String getClasspath(String version) throws IOException {
         List<Path> deps = FileUtils.list(this.depsDir);
-        deps.add(this.versionsDir.resolve("PuzzleLoader-" + version + ".jar"));
+        deps.add(this.versionsDir.resolve(PuzzleManager.getClientName(version)));
 
         return String.join(File.pathSeparator, deps.stream().map(Path::toString).toList());
     }
 
     public boolean isInstalled(String version) {
-        Path loaderFile = this.versionsDir.resolve("PuzzleLoader-" + version + ".jar");
+        Path loaderFile = this.versionsDir.resolve(PuzzleManager.getClientName(version));
         if (!Files.exists(loaderFile)) {
             return false;
         }
@@ -143,6 +143,17 @@ public class PuzzleManager {
             return PuzzleManager.LIBRARIES;
         } else {
             return PuzzleManager.LIBRARIES_2_0_0;
+        }
+    }
+
+    public static String getClientName(String version) {
+        SemanticVersion puzzleVersion = SemanticVersion.parse(version);
+        SemanticVersion version2_0_0 = new SemanticVersion(2, 0, 0);
+
+        if (puzzleVersion.isLowerThan(version2_0_0)) {
+            return "PuzzleLoader-" + version + ".jar";
+        } else {
+            return "PuzzleLoader-" + version + "-client.jar";
         }
     }
 }
