@@ -166,6 +166,14 @@
                     "delete": "Delete"
                 },
                 "deletingWorld": "Deleting world"
+            },
+            "screenshotsTab": {
+                "name": "Screenshots",
+                "copyImage": "Copy Image",
+                "copyFile": "Copy File",
+                "delete": "Delete",
+                "rename": "Rename",
+                "renameMessage": "Enter new name for the file"
             }
         },
         "searchCRMMModsDialog": {

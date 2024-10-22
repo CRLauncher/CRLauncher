@@ -32,6 +32,32 @@ public final class ImageUtils {
         return resultImage;
     }
 
+    public static BufferedImage fitImageAndResize(BufferedImage image, int desiredWidth, int desiredHeight) {
+        BufferedImage resizedImage = new BufferedImage(desiredWidth, desiredHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+
+        // Set the background to transparent
+        g2d.setComposite(AlphaComposite.Clear);
+        g2d.fillRect(0, 0, desiredWidth, desiredHeight);
+        g2d.setComposite(AlphaComposite.SrcOver);
+
+        // Calculate the scaling factor to maintain aspect ratio
+        double scaleX = (double) desiredWidth / image.getWidth();
+        double scaleY = (double) desiredHeight / image.getHeight();
+        double scale = Math.min(scaleX, scaleY); // Use the smaller scale to maintain aspect ratio
+
+        int newWidth = (int) (image.getWidth() * scale);
+        int newHeight = (int) (image.getHeight() * scale);
+
+        int x = (desiredWidth - newWidth) / 2;
+        int y = (desiredHeight - newHeight) / 2;
+
+        g2d.drawImage(image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH), x, y, null);
+        g2d.dispose();
+
+        return resizedImage;
+    }
+
     private ImageUtils() {
         throw new UnsupportedOperationException();
     }

@@ -31,6 +31,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -95,6 +97,10 @@ public final class SwingUtils {
         }
 
         return null;
+    }
+
+    public static BufferedImage loadImageFromFile(Path file) throws IOException {
+        return ImageIO.read(file.toFile());
     }
 
     public static void centerWindow(Window window, int screen) {

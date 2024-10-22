@@ -166,6 +166,14 @@
                     "delete": "Удалить"
                 },
                 "deletingWorld": "Удаление мира"
+            },
+            "screenshotsTab": {
+                "name": "Скриншоты",
+                "copyImage": "Копировать изображение",
+                "copyFile": "Копировать файл",
+                "delete": "Удалить",
+                "rename": "Переименовать",
+                "renameMessage": "Введите новое имя файла"
             }
         },
         "searchCRMMModsDialog": {
