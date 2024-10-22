@@ -46,6 +46,13 @@ public final class FileUtils {
         }
     };
 
+    public static void renameFile(Path path, String newName) throws IOException {
+        Path parentDir = path.getParent();
+        Path targetPath = parentDir.resolve(newName);
+
+        Files.move(path, targetPath, StandardCopyOption.REPLACE_EXISTING);
+    }
+
     public static boolean isPathInvalid(String path) {
         try {
             Path file = Paths.get(path).toAbsolutePath();
