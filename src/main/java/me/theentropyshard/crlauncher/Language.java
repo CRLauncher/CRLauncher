@@ -66,7 +66,7 @@ public class Language {
         JsonObject jsonObject = this.languageObject.get(parts[0]).getAsJsonObject();
 
         for (int i = 1; i < parts.length && jsonObject != null; i++) {
-            jsonObject = jsonObject.get(parts[i]).getAsJsonObject();
+            jsonObject = jsonObject.getAsJsonObject(parts[i]);
         }
 
         if (jsonObject == null) {
