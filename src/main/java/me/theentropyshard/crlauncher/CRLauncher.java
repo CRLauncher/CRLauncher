@@ -34,6 +34,7 @@ import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.mclogs.McLogsApi;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
 import me.theentropyshard.crlauncher.utils.*;
 import okhttp3.OkHttpClient;
@@ -70,6 +71,7 @@ public class CRLauncher {
 
     private final OkHttpClient httpClient;
     private final CrmmApi crmmApi;
+    private final McLogsApi mcLogsApi;
 
     private final VersionManager versionManager;
     private final InstanceManager instanceManager;
@@ -190,6 +192,7 @@ public class CRLauncher {
             .build();
 
         this.crmmApi = new CrmmApi(this.httpClient);
+        this.mcLogsApi = new McLogsApi(this.httpClient);
 
         this.versionManager = new VersionManager(this.versionsDir);
 
@@ -412,6 +415,10 @@ public class CRLauncher {
 
     public CrmmApi getCrmmApi() {
         return this.crmmApi;
+    }
+
+    public McLogsApi getMcLogsApi() {
+        return this.mcLogsApi;
     }
 
     public VersionManager getVersionManager() {
