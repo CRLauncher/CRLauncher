@@ -16,28 +16,29 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screenshots.datatransfer;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.datatransfer;
 
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.Collections;
 
-public class TransferableImage implements Transferable {
-    private final BufferedImage image;
+public class TransferableFile implements Transferable {
+    private final File file;
 
-    public TransferableImage(BufferedImage image) {
-        this.image = image;
+    public TransferableFile(File file) {
+        this.file = file;
     }
 
     @Override
     public DataFlavor[] getTransferDataFlavors() {
-        return new DataFlavor[]{DataFlavor.imageFlavor};
+        return new DataFlavor[]{DataFlavor.javaFileListFlavor};
     }
 
     @Override
     public boolean isDataFlavorSupported(DataFlavor flavor) {
-        return DataFlavor.imageFlavor.equals(flavor);
+        return DataFlavor.javaFileListFlavor.equals(flavor);
     }
 
     @Override
@@ -46,6 +47,6 @@ public class TransferableImage implements Transferable {
             throw new UnsupportedFlavorException(flavor);
         }
 
-        return this.image;
+        return Collections.singletonList(this.file);
     }
 }
