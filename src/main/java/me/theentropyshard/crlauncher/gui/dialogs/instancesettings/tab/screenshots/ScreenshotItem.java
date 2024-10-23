@@ -21,8 +21,8 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screensho
 import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screenshots.datatransfer.TransferableFile;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screenshots.datatransfer.TransferableImage;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.datatransfer.TransferableFile;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.datatransfer.TransferableImage;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -102,16 +102,14 @@ public class ScreenshotItem extends JPanel {
                     JMenuItem copyImageItem = new JMenuItem(language.getString(section, "copyImage"));
                     copyImageItem.addActionListener(copy -> {
                         SwingUtils.startWorker(() -> {
-                            TransferableImage transferableImage = new TransferableImage(info.getOriginalImage());
-                            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferableImage, null);
+                            OperatingSystem.copyToClipboard(info.getOriginalImage());
                         });
                     });
 
                     JMenuItem copyFileItem = new JMenuItem(language.getString(section, "copyFile"));
                     copyFileItem.addActionListener(copy -> {
                         SwingUtils.startWorker(() -> {
-                            TransferableFile transferableImage = new TransferableFile(info.getFilePath().toFile());
-                            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferableImage, null);
+                            OperatingSystem.copyToClipboard(info.getFilePath());
                         });
                     });
 
