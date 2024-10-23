@@ -50,8 +50,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class CRLauncher {
-
-
     public static final String USER_AGENT = BuildConfig.APP_NAME + "/" + BuildConfig.APP_VERSION;
 
     public static final int WIDTH = 960;
