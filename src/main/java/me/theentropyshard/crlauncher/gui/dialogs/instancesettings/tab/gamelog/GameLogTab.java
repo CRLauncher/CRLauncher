@@ -26,9 +26,13 @@ import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.console.NoWrapJTextPane;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.mclogs.McLogsApi;
+import me.theentropyshard.crlauncher.mclogs.model.LimitsResponse;
+import me.theentropyshard.crlauncher.mclogs.model.PasteResponse;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
@@ -37,14 +41,17 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultCaret;
 import javax.swing.text.Document;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class GameLogTab extends Tab {
 
     private final JTextPane logArea;
+    private final JButton uploadButton;
     private final JButton copyFileButton;
     private final JButton copyTextButton;
     private final JButton clearButton;
@@ -100,6 +107,59 @@ public class GameLogTab extends Tab {
         JPanel bottomButtonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomButtonsPanel.setBorder(new EmptyBorder(2, 0, 0, 0));
 
+        this.uploadButton = new JButton(language.getString(section, "upload"));
+        this.uploadButton.addActionListener(e -> {
+            this.uploadButton.setText(language.getString(section, "uploading") + "...");
+
+            SwingUtils.startWorker(() -> {
+                String log;
+
+                Path logFile = this.getInstance().getCosmicDir().resolve("errorLogLatest.txt");
+                try {
+                    log = FileUtils.readUtf8(logFile);
+                } catch (IOException ex) {
+                    Log.error("Could not read file: " + logFile, ex);
+                    MessageBox.showErrorMessage(CRLauncher.frame, language.getString(section, "failed") + ": " + ex.getMessage());
+
+                    return;
+                }
+
+                McLogsApi api = CRLauncher.getInstance().getMcLogsApi();
+
+                LimitsResponse limits = api.getLimits();
+                int maxLength = limits.getMaxLength();
+
+                if (log.getBytes(StandardCharsets.UTF_8).length > maxLength) {
+                    MessageBox.showWarningMessage(CRLauncher.frame, language.getString(section, "largeLog"));
+                }
+
+                PasteResponse pasteResponse = api.pasteLog(log);
+
+                if (pasteResponse.isSuccess()) {
+                    OperatingSystem.copyToClipboard(pasteResponse.getUrl());
+
+                    JTextPane messagePane = new JTextPane();
+                    messagePane.setContentType("text/html");
+                    messagePane.setEditable(false);
+                    messagePane.setEditorKit(new HTMLEditorKit());
+                    messagePane.setText("<html>" + language.getString(section, "successMessage").replace(
+                        "$$LINK$$",
+                        "<a href=\"" + pasteResponse.getUrl() + "\">" + pasteResponse.getUrl() + "</a>"
+                    ) + "</html>");
+
+                    MessageBox.showPlainMessage(CRLauncher.frame, language.getString(section, "successTitle"), messagePane);
+                } else {
+                    Log.error("Could not upload log: " + pasteResponse.getError());
+                    MessageBox.showErrorMessage(CRLauncher.frame, language.getString(section, "failed") + ": " + pasteResponse.getError());
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    this.uploadButton.setText(language.getString(section, "upload"));
+                });
+            });
+        });
+        bottomButtonsPanel.add(this.uploadButton);
+
         this.copyFileButton = new JButton(language.getString(section, "copyFile"));
         Path logFile = this.getInstance().getCosmicDir().resolve("errorLogLatest.txt");
         this.copyFileButton.addActionListener(e -> {
@@ -154,6 +214,7 @@ public class GameLogTab extends Tab {
     }
 
     public void toggleButtons(boolean enabled) {
+        this.uploadButton.setEnabled(enabled);
         this.copyFileButton.setEnabled(enabled);
         this.copyTextButton.setEnabled(enabled);
         this.clearButton.setEnabled(enabled);

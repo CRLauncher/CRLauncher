@@ -179,9 +179,16 @@
                 "name": "Game Log",
                 "search": "Search",
                 "find": "Find",
+                "upload": "Upload",
                 "copyFile": "Copy File",
                 "copyText": "Copy Text",
-                "clear": "Clear"
+                "clear": "Clear",
+                "title": "Upload",
+                "uploading": "Uploading log to McLogs",
+                "failed": "Failed to upload log",
+                "largeLog": "Log size exceeds the limit, log will be truncated",
+                "successTitle": "Log uploaded",
+                "successMessage": "Log uploaded successfully! Link: $$LINK$$ (Copied to clipboard)"
             }
         },
         "searchCRMMModsDialog": {
