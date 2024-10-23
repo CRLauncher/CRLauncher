@@ -47,6 +47,8 @@ public class ScreenshotsPanel extends JPanel {
 
     public void addScreenshot(ScreenshotItem item) {
         this.screenshotsPanel.add(item);
+
+        this.revalidate();
     }
 
     public void removeScreenshot(ScreenshotItem item) {

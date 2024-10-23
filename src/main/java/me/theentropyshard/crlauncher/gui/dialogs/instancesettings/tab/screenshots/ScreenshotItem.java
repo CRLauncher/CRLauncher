@@ -21,6 +21,8 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screensho
 import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screenshots.datatransfer.TransferableFile;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screenshots.datatransfer.TransferableImage;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -31,16 +33,9 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.datatransfer.DataFlavor;
-import java.awt.datatransfer.Transferable;
-import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Collections;
 
 public class ScreenshotItem extends JPanel {
     private Color defaultColor;
@@ -50,13 +45,13 @@ public class ScreenshotItem extends JPanel {
     private boolean mouseOver;
     private boolean mousePressed;
 
-    public ScreenshotItem(ScreenshotsPanel screenshotsPanel, BufferedImage image, BufferedImage originalImage, String text, Path filePath) {
+    public ScreenshotItem(ScreenshotInfo info, ScreenshotsPanel screenshotsPanel) {
         super(new MigLayout("wrap, flowy", "[center]", "[center][bottom]"));
 
-        JLabel imageLabel = new JLabel(new ImageIcon(image));
+        JLabel imageLabel = new JLabel(new ImageIcon(info.getImage()));
         this.add(imageLabel);
 
-        JLabel textLabel = new JLabel(text);
+        JLabel textLabel = new JLabel(info.getText());
         this.add(textLabel);
 
         this.setDefaultColor(UIManager.getColor("InstanceItem.defaultColor"));
@@ -66,6 +61,7 @@ public class ScreenshotItem extends JPanel {
         this.setOpaque(false);
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -95,7 +91,7 @@ public class ScreenshotItem extends JPanel {
             public void mouseClicked(MouseEvent e) {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     SwingUtils.startWorker(() -> {
-                        OperatingSystem.open(filePath);
+                        OperatingSystem.open(info.getFilePath());
                     });
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
                     Language language = CRLauncher.getInstance().getLanguage();
@@ -106,7 +102,7 @@ public class ScreenshotItem extends JPanel {
                     JMenuItem copyImageItem = new JMenuItem(language.getString(section, "copyImage"));
                     copyImageItem.addActionListener(copy -> {
                         SwingUtils.startWorker(() -> {
-                            TransferableImage transferableImage = new TransferableImage(originalImage);
+                            TransferableImage transferableImage = new TransferableImage(info.getOriginalImage());
                             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferableImage, null);
                         });
                     });
@@ -114,7 +110,7 @@ public class ScreenshotItem extends JPanel {
                     JMenuItem copyFileItem = new JMenuItem(language.getString(section, "copyFile"));
                     copyFileItem.addActionListener(copy -> {
                         SwingUtils.startWorker(() -> {
-                            TransferableFile transferableImage = new TransferableFile(filePath.toFile());
+                            TransferableFile transferableImage = new TransferableFile(info.getFilePath().toFile());
                             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferableImage, null);
                         });
                     });
@@ -124,7 +120,7 @@ public class ScreenshotItem extends JPanel {
                     deleteFileItem.addActionListener(delete -> {
                         SwingUtils.startWorker(() -> {
                             try {
-                                FileUtils.delete(filePath);
+                                FileUtils.delete(info.getFilePath());
                                 screenshotsPanel.removeScreenshot(ScreenshotItem.this);
                             } catch (IOException ex) {
                                 Log.error("Could not delete screenshot", ex);
@@ -135,19 +131,21 @@ public class ScreenshotItem extends JPanel {
                     JMenuItem renameFileItem = new JMenuItem(language.getString(section, "rename"));
                     renameFileItem.addActionListener(rename -> {
                         SwingUtils.startWorker(() -> {
-                            String oldFileName = filePath.getFileName().toString();
+                            String oldFileName = info.getFilePath().getFileName().toString();
 
-                            String newFileName = MessageBox.showInputMessage(CRLauncher.frame,
+                            String newFileName = MessageBox.showInputMessage(
+                                CRLauncher.frame,
                                 language.getString(section, "rename"),
                                 language.getString(section, "renameMessage"),
-                                oldFileName);
+                                oldFileName
+                            );
 
                             if (newFileName == null || newFileName.isEmpty() || oldFileName.equals(newFileName)) {
                                 return;
                             }
 
                             try {
-                                FileUtils.renameFile(filePath, newFileName);
+                                FileUtils.renameFile(info.getFilePath(), newFileName);
                             } catch (IOException ex) {
                                 Log.error("Could not rename screenshot", ex);
                             }
@@ -202,59 +200,5 @@ public class ScreenshotItem extends JPanel {
 
     public void setPressedColor(Color pressedColor) {
         this.pressedColor = pressedColor;
-    }
-
-    private static class TransferableImage implements Transferable {
-        private final BufferedImage image;
-
-        public TransferableImage(BufferedImage image) {
-            this.image = image;
-        }
-
-        @Override
-        public DataFlavor[] getTransferDataFlavors() {
-            return new DataFlavor[]{DataFlavor.imageFlavor};
-        }
-
-        @Override
-        public boolean isDataFlavorSupported(DataFlavor flavor) {
-            return DataFlavor.imageFlavor.equals(flavor);
-        }
-
-        @Override
-        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-            if (!this.isDataFlavorSupported(flavor)) {
-                throw new UnsupportedFlavorException(flavor);
-            }
-
-            return this.image;
-        }
-    }
-
-    private static class TransferableFile implements Transferable {
-        private final File file;
-
-        public TransferableFile(File file) {
-            this.file = file;
-        }
-
-        @Override
-        public DataFlavor[] getTransferDataFlavors() {
-            return new DataFlavor[]{DataFlavor.javaFileListFlavor};
-        }
-
-        @Override
-        public boolean isDataFlavorSupported(DataFlavor flavor) {
-            return DataFlavor.javaFileListFlavor.equals(flavor);
-        }
-
-        @Override
-        public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-            if (!this.isDataFlavorSupported(flavor)) {
-                throw new UnsupportedFlavorException(flavor);
-            }
-
-            return Collections.singletonList(this.file);
-        }
     }
 }
