@@ -34,7 +34,7 @@ public class LauncherConsole {
     private static final int INITIAL_WIDTH = 576;
     private static final int INITIAL_HEIGHT = 336;
     private static final int INITIAL_FONT_SIZE = 14;
-    private static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, LauncherConsole.INITIAL_FONT_SIZE);
+    public static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, LauncherConsole.INITIAL_FONT_SIZE);
 
     public static final String SCROLL_DOWN = "gui.console.scrollDown";
     public static final String COPY = "gui.console.copyButton";
