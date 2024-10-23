@@ -20,12 +20,13 @@ package me.theentropyshard.crlauncher.utils;
 
 import com.sun.jna.Platform;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.datatransfer.TransferableFile;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.datatransfer.TransferableImage;
 import me.theentropyshard.crlauncher.logging.Log;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
@@ -144,6 +145,16 @@ public enum OperatingSystem {
 
     public static void copyToClipboard(String text) {
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(text), null);
+    }
+
+    public static void copyToClipboard(Path file) {
+        TransferableFile transferableFile = new TransferableFile(file.toFile());
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferableFile, null);
+    }
+
+    public static void copyToClipboard(BufferedImage image) {
+        TransferableImage transferableImage = new TransferableImage(image);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(transferableImage, null);
     }
 
     public static boolean is64Bit() {
