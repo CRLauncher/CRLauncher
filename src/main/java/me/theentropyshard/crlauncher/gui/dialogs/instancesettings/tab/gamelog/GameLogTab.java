@@ -28,6 +28,7 @@ import me.theentropyshard.crlauncher.gui.console.NoWrapJTextPane;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.mclogs.McLogsApi;
@@ -77,6 +78,33 @@ public class GameLogTab extends Tab {
         topSearchPanel.add(searchField, BorderLayout.CENTER);
 
         JButton searchButton = new JButton(language.getString(section, "find"));
+        searchButton.addActionListener(e -> {
+            new Worker<Void, Void>("searching text") {
+                @Override
+                protected Void work() throws Exception {
+                    // TODO: improve text search
+
+                    String text = searchField.getText();
+                    String areaText = GameLogTab.this.logArea.getText();
+                    int index = areaText.indexOf(text);
+
+                    if (index == -1) {
+                        return null;
+                    }
+
+                    int line = GameLogTab.findLine(areaText, index);
+                    int i = index - line + 1;
+
+                    SwingUtilities.invokeLater(() -> {
+                        GameLogTab.this.logArea.requestFocus();
+                        GameLogTab.this.logArea.select(i, i + text.length());
+                        GameLogTab.this.logArea.repaint();
+                    });
+
+                    return null;
+                }
+            }.execute();
+        });
         topSearchPanel.add(searchButton, BorderLayout.EAST);
 
         root.add(topSearchPanel, BorderLayout.NORTH);
@@ -90,6 +118,7 @@ public class GameLogTab extends Tab {
                 super.paintComponent(g);
             }
         };
+        this.logArea.getCaret().setSelectionVisible(true);
         this.logArea.setFont(LauncherConsole.FONT);
         ((DefaultCaret) this.logArea.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         this.logArea.setEditable(false);
@@ -223,5 +252,19 @@ public class GameLogTab extends Tab {
     @Override
     public void save() throws IOException {
 
+    }
+
+    public static int findLine(String text, int index) {
+        String[] lines = text.split("\n");
+        int charCount = 0;
+
+        for (int lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+            charCount += lines[lineNumber].length() + 1; // Add line length and 1 for the newline character
+            if (charCount > index) {
+                return lineNumber + 1; // Return the line number (1-based index)
+            }
+        }
+
+        return -1;
     }
 }
