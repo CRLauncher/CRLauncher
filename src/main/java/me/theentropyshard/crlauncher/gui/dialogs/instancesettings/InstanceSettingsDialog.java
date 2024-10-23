@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.action.InstanceExportAction;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.gamelog.GameLogTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.MainTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.jarmods.JarModsTab;
@@ -75,6 +76,7 @@ public class InstanceSettingsDialog extends AppDialog {
         this.addTab(new JarModsTab(instance, this.getDialog()));
         this.addTab(new WorldsTab(instance, this.getDialog()));
         this.addTab(new ScreenshotsTab(instance, this.getDialog()));
+        this.addTab(new GameLogTab(instance, this.getDialog()));
 
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
