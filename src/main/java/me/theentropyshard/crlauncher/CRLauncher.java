@@ -135,7 +135,7 @@ public class CRLauncher {
 
         this.languages = new LinkedHashMap<>();
 
-        for (String lang : new String[]{"de_DE", "en_US", "fil_PH", "ru_RU", "tl_PH"}) {
+        for (String lang : new String[]{"de_DE", "en_US", "fil_PH", "hr_HR", "ru_RU", "tl_PH"}) {
             String resourcePath = "/lang/" + lang + ".json";
 
             String json = null;
