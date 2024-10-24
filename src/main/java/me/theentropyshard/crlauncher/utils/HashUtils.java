@@ -49,6 +49,12 @@ public final class HashUtils {
         return HashUtils.toHex(mdBytes);
     }
 
+    public static String sha512(Path file) throws IOException {
+        byte[] mdBytes = HashUtils.hash(file, "SHA-512");
+
+        return HashUtils.toHex(mdBytes);
+    }
+
     public static String toHex(byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte b : bytes) {
