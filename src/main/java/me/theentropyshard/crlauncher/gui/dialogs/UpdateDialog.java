@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.github.GithubRelease;
+import me.theentropyshard.crlauncher.gui.BrowseHyperlinkListener;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import org.commonmark.node.Node;
@@ -61,13 +62,7 @@ public class UpdateDialog extends AppDialog {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
         JTextPane releaseNamePane = new JTextPane();
-        releaseNamePane.addHyperlinkListener(e -> {
-            if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
-                return;
-            }
-
-            OperatingSystem.browse(e.getURL().toString());
-        });
+        releaseNamePane.addHyperlinkListener(new BrowseHyperlinkListener());
         releaseNamePane.setContentType("text/html");
         releaseNamePane.setEditorKit(new HTMLEditorKit());
         releaseNamePane.setFont(releaseNamePane.getFont().deriveFont(24.0f));
@@ -82,13 +77,7 @@ public class UpdateDialog extends AppDialog {
         String html = renderer.render(document);
 
         JTextPane changelogPane = new JTextPane();
-        changelogPane.addHyperlinkListener(e -> {
-            if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
-                return;
-            }
-
-            OperatingSystem.browse(e.getURL().toString());
-        });
+        changelogPane.addHyperlinkListener(new BrowseHyperlinkListener());
         changelogPane.setBorder(new EmptyBorder(12, 12, 12, 12));
         changelogPane.setFont(changelogPane.getFont().deriveFont(14.0f));
         changelogPane.setContentType("text/html");

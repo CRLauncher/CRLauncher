@@ -22,6 +22,7 @@ import com.formdev.flatlaf.ui.FlatScrollPaneBorder;
 import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.gui.BrowseHyperlinkListener;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.console.NoWrapJTextPane;
@@ -175,6 +176,8 @@ public class GameLogTab extends Tab {
                         "$$LINK$$",
                         "<a href=\"" + pasteResponse.getUrl() + "\">" + pasteResponse.getUrl() + "</a>"
                     ) + "</html>");
+                    messagePane.addHyperlinkListener(new BrowseHyperlinkListener());
+
 
                     MessageBox.showPlainMessage(CRLauncher.frame, language.getString(section, "successTitle"), messagePane);
                 } else {
