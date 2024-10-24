@@ -44,8 +44,6 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class FabricModsView extends JPanel {
-
-
     private final FabricModsTableModel fabricModsModel;
     private final JButton deleteModButton;
 
