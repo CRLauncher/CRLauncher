@@ -42,7 +42,6 @@ import java.util.concurrent.ExecutionException;
 
 public class DataModsView extends JPanel {
     private final DataModsTableModel dataModsTableModel;
-    private final JTable dataModsTable;
     private final JButton deleteDataModButton;
 
     public DataModsView(Instance instance) {
@@ -133,13 +132,13 @@ public class DataModsView extends JPanel {
             }.execute();
         });
 
-        this.dataModsTable = new JTable(this.dataModsTableModel);
-        this.dataModsTable.getTableHeader().setEnabled(false);
-        this.dataModsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        this.dataModsTable.addMouseListener(new MouseAdapter() {
+        JTable dataModsTable = new JTable(this.dataModsTableModel);
+        dataModsTable.getTableHeader().setEnabled(false);
+        dataModsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        dataModsTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                int selectedRow = DataModsView.this.dataModsTable.getSelectedRow();
+                int selectedRow = dataModsTable.getSelectedRow();
 
                 if (selectedRow == -1) {
                     return;
@@ -191,7 +190,7 @@ public class DataModsView extends JPanel {
             }
         }.execute();
 
-        JScrollPane scrollPane = new JScrollPane(this.dataModsTable);
+        JScrollPane scrollPane = new JScrollPane(dataModsTable);
         scrollPane.setBorder(null);
         this.add(scrollPane, BorderLayout.CENTER);
 
@@ -199,7 +198,7 @@ public class DataModsView extends JPanel {
             language.getString("gui.instanceSettingsDialog.modsTab.modsTable.vanilla.deleteModButton")
         );
         this.deleteDataModButton.addActionListener(e -> {
-            int selectedRow = this.dataModsTable.getSelectedRow();
+            int selectedRow = dataModsTable.getSelectedRow();
             if (selectedRow == -1) {
                 return;
             }
