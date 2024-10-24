@@ -22,6 +22,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public final class ImageUtils {
+    /**
+     * Converts any <code>Image</code> to <code>BufferedImage</code>
+     *
+     * @param image any <code>Image</code> object
+     * @return instance of <code>BufferedImage</code> with support for transparency
+     */
     public static BufferedImage toBufferedImage(Image image) {
         BufferedImage resultImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
@@ -32,6 +38,14 @@ public final class ImageUtils {
         return resultImage;
     }
 
+    /**
+     * Resizes an image keeping its aspect ratio and fitting it in the specified size
+     *
+     * @param image         image to resize
+     * @param desiredWidth  width in which the image needs to be fit
+     * @param desiredHeight height in which the image needs to be fit
+     * @return resized image with transparent bars if it does not fully cover desired width and height
+     */
     public static BufferedImage fitImageAndResize(BufferedImage image, int desiredWidth, int desiredHeight) {
         BufferedImage resizedImage = new BufferedImage(desiredWidth, desiredHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = resizedImage.createGraphics();
