@@ -31,8 +31,8 @@ import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.ZipUtils;
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.model.FileHeader;
 import okhttp3.OkHttpClient;
 
 import javax.swing.*;
@@ -73,31 +73,45 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
                 download.execute();
                 SwingUtilities.invokeLater(() -> progressDialog.getDialog().dispose());
 
-                String modName;
+                Path dataModsDir = instance.getDataModsDir();
 
+                Path dest = null;
                 try (ZipFile file = new ZipFile(saveAs.toFile())) {
-                    FileHeader firstFileHeader = file.getFileHeaders().get(0);
-                    if (firstFileHeader.isDirectory()) {
-                        modName = firstFileHeader.getFileName();
-                    } else {
-                        modName = saveAs.getFileName().toString();
+                    String topLevelDirectory = ZipUtils.findTopLevelDirectory(file.getFileHeaders());
+
+                    if (topLevelDirectory == null) {
+                        Log.error("Could not find top level directory in " + saveAs);
+
+                        return null;
                     }
-                    file.extractAll(instance.getDataModsDir().toString());
+
+                    dest = dataModsDir.resolve(topLevelDirectory);
+                    FileUtils.delete(dest);
+                    file.extractAll(dataModsDir.toString());
+
+                    FileUtils.delete(saveAs);
+
+                    return new DataMod(topLevelDirectory.replace("/", ""), true);
+                } catch (Exception e) {
+                    Log.error("Could not extract file " + saveAs + " to dir: " + dest, e);
                 }
 
-                FileUtils.delete(saveAs);
-
-                return new DataMod(modName, true);
+                return null;
             }
 
             @Override
             protected void done() {
                 DataMod dataMod;
+
                 try {
                     dataMod = (DataMod) this.get();
                 } catch (InterruptedException | ExecutionException ex) {
                     Log.error(ex);
 
+                    return;
+                }
+
+                if (dataMod == null) {
                     return;
                 }
 
