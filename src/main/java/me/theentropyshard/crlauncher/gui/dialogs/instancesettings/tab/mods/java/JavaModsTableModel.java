@@ -57,6 +57,8 @@ public class JavaModsTableModel extends ModsTableModel {
             language.getString(section, "modDescription"),
             language.getString(section, "modActive")
         };
+
+        new JavaModsLoader(instance, this).execute();
     }
 
     @Override
