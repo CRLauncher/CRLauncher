@@ -19,18 +19,20 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar.JarModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.ListUtils;
 import me.theentropyshard.crlauncher.utils.StreamUtils;
 import me.theentropyshard.crlauncher.utils.ZipUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -40,6 +42,7 @@ import net.lingala.zip4j.model.FileHeader;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -57,7 +60,84 @@ public class ModInstaller {
         }
     }
 
-    private static void pickDataMod(Instance instance, ModsTableModel tableModel) {
+    public static void pickJarMod(Instance instance, JarModsTableModel tableModel) {
+        UIManager.put("FileChooser.readOnly", Boolean.TRUE);
+
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        new Worker<Mod, Void>("picking jar mod") {
+            @Override
+            protected Mod work() throws IOException {
+                JFileChooser fileChooser = new JFileChooser();
+
+                String archives = language.getString("gui.general.archives");
+                fileChooser.setFileFilter(new FileNameExtensionFilter(archives + " (*.zip, *.jar)", "zip", "jar"));
+
+                Settings settings = CRLauncher.getInstance().getSettings();
+                if (settings.lastDir != null && !settings.lastDir.isEmpty()) {
+                    fileChooser.setCurrentDirectory(new File(settings.lastDir));
+                }
+
+                if (fileChooser.showOpenDialog(CRLauncher.frame) != JFileChooser.APPROVE_OPTION) {
+                    return null;
+                }
+
+                File selectedFile = fileChooser.getSelectedFile();
+
+                if (selectedFile == null) {
+                    return null;
+                }
+
+                settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
+
+                List<Mod> jarMods = instance.getJarMods();
+
+                Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
+                String fileName = jarModPath.getFileName().toString();
+
+                Mod jarMod = new Mod();
+                jarMod.setActive(true);
+                jarMod.setName(fileName);
+                jarMod.setFileName(fileName);
+
+                if (ListUtils.search(jarMods, m -> m.getName().equals(jarMod.getName())) != null) {
+                    MessageBox.showErrorMessage(CRLauncher.frame,
+                        language.getString("messages.gui.mods.modAddedName")
+                            .replace("$$MOD_NAME$$", jarMod.getName()));
+
+                    return null;
+                }
+
+                Files.copy(jarModPath, instance.getJarModPath(jarMod));
+                jarMods.add(jarMod);
+
+                return jarMod;
+            }
+
+            @Override
+            protected void done() {
+                UIManager.put("FileChooser.readOnly", Boolean.FALSE);
+
+                Mod jarMod;
+
+                try {
+                    jarMod = this.get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Log.error(ex);
+
+                    return;
+                }
+
+                if (jarMod == null) {
+                    return;
+                }
+
+                tableModel.addMod(jarMod);
+            }
+        }.execute();
+    }
+
+    public static void pickDataMod(Instance instance, ModsTableModel tableModel) {
         UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 
         Language language = CRLauncher.getInstance().getLanguage();

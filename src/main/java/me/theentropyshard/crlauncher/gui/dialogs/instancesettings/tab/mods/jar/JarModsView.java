@@ -20,111 +20,54 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
-import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
-import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModInstaller;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.File;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.List;
 
 public class JarModsView extends JPanel {
-    private final JarModsTableModel jarModsTableModel;
     private final JTable jarModsTable;
-    private final JButton deleteModButton;
+    private final JarModsTableModel jarModsTableModel;
 
     public JarModsView(Instance instance) {
         super(new BorderLayout());
 
-        Language language = CRLauncher.getInstance().getLanguage();
-
-        JButton addJarMod = new JButton(language.getString("gui.instanceSettingsDialog.jarModsTab.addModButton"));
-        this.add(addJarMod, BorderLayout.NORTH);
-
         this.jarModsTable = new JTable();
-
         this.jarModsTableModel = new JarModsTableModel(this.jarModsTable, instance);
-        this.jarModsTable.setModel(this.jarModsTableModel);
 
+        this.jarModsTable.setModel(this.jarModsTableModel);
         this.jarModsTable.getTableHeader().setEnabled(false);
         this.jarModsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        this.jarModsTable.addMouseListener(new MouseAdapter() {
+        this.jarModsTable.addComponentListener(new ComponentAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                int selectedRow = JarModsView.this.jarModsTable.getSelectedRow();
-                if (selectedRow == -1) {
-                    return;
-                }
-
-                JarModsView.this.deleteModButton.setEnabled(true);
+            public void componentResized(ComponentEvent e) {
+                SwingUtils.setJTableColumnsWidth(JarModsView.this.jarModsTable, JarModsView.this.jarModsTableModel.getTableColumnWidthPercentages());
             }
         });
-
-        addJarMod.addActionListener(e -> {
-            new Worker<Void, Void>("picking jar mod") {
-                @Override
-                protected Void work() throws IOException {
-                    UIManager.put("FileChooser.readOnly", Boolean.TRUE);
-                    JFileChooser fileChooser = new JFileChooser();
-
-                    String archives = language.getString("gui.general.archives");
-                    fileChooser.setFileFilter(new FileNameExtensionFilter(archives + " (*.zip, *.jar)", "zip", "jar"));
-
-                    Settings settings = CRLauncher.getInstance().getSettings();
-                    if (settings.lastDir != null && !settings.lastDir.isEmpty()) {
-                        fileChooser.setCurrentDirectory(new File(settings.lastDir));
-                    }
-
-                    int option = fileChooser.showOpenDialog(CRLauncher.frame);
-                    if (option == JFileChooser.APPROVE_OPTION) {
-                        File selectedFile = fileChooser.getSelectedFile();
-                        if (selectedFile == null) {
-                            return null;
-                        }
-
-                        settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
-
-                        List<Mod> jarMods = instance.getJarMods();
-
-                        Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
-                        String fileName = jarModPath.getFileName().toString();
-
-                        Mod jarMod = new Mod();
-                        jarMod.setActive(true);
-                        jarMod.setName(fileName);
-                        jarMod.setFileName(fileName);
-
-                        Files.copy(jarModPath, instance.getJarModPath(jarMod));
-
-                        jarMods.add(jarMod);
-                        JarModsView.this.jarModsTableModel.addMod(jarMod);
-                    }
-
-                    UIManager.put("FileChooser.readOnly", Boolean.FALSE);
-                    return null;
-                }
-            }.execute();
-        });
-
-        this.deleteModButton = new JButton(language.getString("gui.instanceSettingsDialog.jarModsTab.deleteModButton"));
 
         JScrollPane scrollPane = new JScrollPane(this.jarModsTable);
         scrollPane.setBorder(null);
         this.add(scrollPane, BorderLayout.CENTER);
 
-        this.deleteModButton.setEnabled(false);
-        this.deleteModButton.addActionListener(e -> {
+        Language language = CRLauncher.getInstance().getLanguage();
+
+        JButton addJarMod = new JButton(language.getString("gui.instanceSettingsDialog.jarModsTab.addModButton"));
+        addJarMod.addActionListener(e -> {
+            ModInstaller.pickJarMod(instance, this.jarModsTableModel);
+        });
+
+        JButton deleteModButton = new JButton(language.getString("gui.instanceSettingsDialog.jarModsTab.deleteModButton"));
+        deleteModButton.addActionListener(e -> {
             int selectedRow = this.jarModsTable.getSelectedRow();
+
             if (selectedRow == -1) {
                 return;
             }
@@ -133,17 +76,17 @@ public class JarModsView extends JPanel {
             this.jarModsTableModel.removeRow(selectedRow);
             instance.getJarMods().remove(jarMod);
 
-            Path modFile = instance.getJarModPath(jarMod);
-
-            if (Files.exists(modFile)) {
-                try {
-                    FileUtils.delete(modFile);
-                } catch (IOException ex) {
-                    Log.error("Exception while trying to delete jar Mod", ex);
-                }
+            try {
+                FileUtils.delete(instance.getJarModPath(jarMod));
+            } catch (IOException ex) {
+                Log.error("Exception while trying to delete jar Mod", ex);
             }
         });
 
-        this.add(this.deleteModButton, BorderLayout.SOUTH);
+        JPanel buttonsPanel = new JPanel(new GridLayout(1, 2));
+        buttonsPanel.add(addJarMod);
+        buttonsPanel.add(deleteModButton);
+
+        this.add(buttonsPanel, BorderLayout.SOUTH);
     }
 }
