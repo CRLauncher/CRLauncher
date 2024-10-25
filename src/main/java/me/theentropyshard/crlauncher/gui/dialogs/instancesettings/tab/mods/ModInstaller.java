@@ -284,7 +284,9 @@ public class ModInstaller {
                         mod.setActive(true);
 
                         if (mods.stream().anyMatch(m -> m.getName().equals(mod.getName()))) {
-                            MessageBox.showErrorMessage(CRLauncher.frame, "Mod with name '" + mod.getName() + "' already added!");
+                            MessageBox.showErrorMessage(CRLauncher.frame,
+                                language.getString("messages.gui.mods.modAddedName")
+                                    .replace("$$MOD_NAME$$", mod.getName()));
 
                             return null;
                         }
@@ -306,7 +308,9 @@ public class ModInstaller {
                         }
 
                         if (mods.stream().anyMatch(m -> m.getId().equals(mod.getId()))) {
-                            MessageBox.showErrorMessage(CRLauncher.frame, "Mod with id '" + mod.getId() + "' already added!");
+                            MessageBox.showErrorMessage(CRLauncher.frame,
+                                language.getString("messages.gui.mods.modAddedId")
+                                    .replace("$$MOD_ID$$", mod.getId()));
 
                             return null;
                         }
