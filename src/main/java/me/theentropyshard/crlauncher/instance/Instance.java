@@ -138,6 +138,10 @@ public class Instance {
         }
     }
 
+    public List<Mod> getCurrentMods() {
+        return this.getMods(this.modLoader);
+    }
+
     public Path getModsDir(ModLoader loader) {
         return switch (loader) {
             case VANILLA -> this.getDataModsDir();
