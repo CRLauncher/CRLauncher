@@ -19,8 +19,10 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.data;
 
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 
@@ -33,6 +35,7 @@ public class DataModsLoader extends Worker<Void, Mod> {
     private final Path dataModsDir;
     private final Path disabledDataModsDir;
     private final List<Mod> dataMods;
+    private final Instance instance;
     private final DataModsTableModel tableModel;
 
     public DataModsLoader(Instance instance, DataModsTableModel tableModel) {
@@ -41,15 +44,21 @@ public class DataModsLoader extends Worker<Void, Mod> {
         this.dataModsDir = instance.getDataModsDir();
         this.disabledDataModsDir = instance.getDisabledDataModsDir();
         this.dataMods = instance.getDataMods();
+        this.instance = instance;
         this.tableModel = tableModel;
     }
 
     @Override
     protected Void work() throws Exception {
+        this.removeNonExistentMods();
         this.loadActiveMods();
         this.loadInactiveMods();
 
         return null;
+    }
+
+    private void removeNonExistentMods() {
+        this.dataMods.removeIf(mod -> !Files.exists(this.instance.getModPath(mod, ModLoader.VANILLA)));
     }
 
     private void loadActiveMods() throws IOException {
