@@ -37,6 +37,7 @@ import okhttp3.OkHttpClient;
 
 import javax.swing.*;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class DataModDownloadWorkerSupplier implements WorkerSupplier {
@@ -94,6 +95,11 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
                     Mod mod = new Mod();
                     mod.setActive(true);
                     mod.setName(topLevelDirectory.replace("/", ""));
+                    mod.setFileName(dest.getFileName().toString());
+
+                    List<Mod> dataMods = instance.getDataMods();
+                    dataMods.removeIf(m -> m.getName().equals(mod.getName()));
+                    dataMods.add(mod);
 
                     return mod;
                 } catch (Exception e) {
