@@ -69,17 +69,7 @@ public class JavaModsLoader extends Worker<Void, Mod> {
     }
 
     private void removeNonExistentMods() {
-        for (Mod mod : this.mods) {
-            Path modPath = this.instance.getModPath(mod, this.loader);
-
-            if (!Files.exists(modPath)) {
-                try {
-                    FileUtils.delete(modPath);
-                } catch (IOException e) {
-                    Log.error("Could not delete non-existent mod: " + modPath, e);
-                }
-            }
-        }
+        this.mods.removeIf(mod -> !Files.exists(this.instance.getModPath(mod, this.loader)));
     }
 
     private void loadActiveMods() throws IOException {
