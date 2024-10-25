@@ -261,7 +261,7 @@ public class ModInstaller {
         }.execute();
     }
 
-    private static String getModInfoFile(ModLoader loader) {
+    public static String getModInfoFile(ModLoader loader) {
         return switch (loader) {
             case VANILLA -> null;
             case FABRIC -> "fabric.mod.json";
