@@ -16,56 +16,44 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.jarmods;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
-import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 
-import javax.swing.table.AbstractTableModel;
+import javax.swing.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class JarModsTableModel extends AbstractTableModel {
+public class JarModsTableModel extends ModsTableModel {
     private static final Class<?>[] COLUMN_CLASSES = {String.class, Boolean.class};
+    private static final double[] WIDTH_PERCENTAGES = {90.0D, 10.0D};
 
+    private final JTable modsTable;
     private final Instance instance;
-    private final List<JarMod> jarMods;
-    private final String[] columnNames = {"Name", "Active"};
+    private final String[] columnNames;
 
-    public JarModsTableModel(Instance instance) {
+    public JarModsTableModel(JTable modsTable, Instance instance) {
+        super(instance.getJarMods());
+
+        this.modsTable = modsTable;
         this.instance = instance;
-
-        if (instance.getJarMods() == null) {
-            this.jarMods = new ArrayList<>();
-        } else {
-            this.jarMods = new ArrayList<>(instance.getJarMods());
-        }
 
         Language language = CRLauncher.getInstance().getLanguage();
 
-        this.columnNames[0] = language.getString("gui.instanceSettingsDialog.jarModsTab.modName");
-        this.columnNames[1] = language.getString("gui.instanceSettingsDialog.jarModsTab.modActive");
+        this.columnNames = new String[]{
+            language.getString("gui.instanceSettingsDialog.modsTab.modsTable.vanilla.modFolder"),
+            language.getString("gui.instanceSettingsDialog.modsTab.modsTable.cosmicQuilt.modActive")
+        };
     }
 
     @Override
-    public int getRowCount() {
-        return this.jarMods.size();
-    }
-
-    @Override
-    public int getColumnCount() {
-        return this.columnNames.length;
-    }
-
-    @Override
-    public String getColumnName(int column) {
-        return this.columnNames[column];
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return columnIndex == 1;
     }
 
     @Override
@@ -74,12 +62,22 @@ public class JarModsTableModel extends AbstractTableModel {
     }
 
     @Override
+    public String getColumnName(int column) {
+        return this.columnNames[column];
+    }
+
+    @Override
+    public int getColumnCount() {
+        return this.columnNames.length;
+    }
+
+    @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        JarMod jarMod = this.jarMods.get(rowIndex);
+        Mod dataMod = this.getModAt(rowIndex);
 
         return switch (columnIndex) {
-            case 0 -> jarMod.getName();
-            case 1 -> jarMod.isActive();
+            case 0 -> dataMod.getName();
+            case 1 -> dataMod.isActive();
             default -> null;
         };
     }
@@ -95,7 +93,7 @@ public class JarModsTableModel extends AbstractTableModel {
         }
 
         boolean isSelected = (Boolean) aValue;
-        JarMod jarMod = this.jarModAt(rowIndex);
+        Mod jarMod = this.getModAt(rowIndex);
         jarMod.setActive(isSelected);
 
         SwingUtils.startWorker(() -> {
@@ -103,11 +101,10 @@ public class JarModsTableModel extends AbstractTableModel {
                 this.instance.updateMod(
                     jarMod,
                     this.instance.getJarModsDir(),
-                    this.instance.getDisabledJarModsDir(),
-                    isSelected
+                    this.instance.getDisabledJarModsDir()
                 );
             } catch (IOException e) {
-                Log.error("Could not update Jar mod '" + jarMod.getId() + "'", e);
+                Log.error("Could not update Jar mod '" + jarMod.getFileName() + "'", e);
 
                 Language language = CRLauncher.getInstance().getLanguage();
 
@@ -115,7 +112,7 @@ public class JarModsTableModel extends AbstractTableModel {
                     CRLauncher.frame,
                     language.getString("messages.gui.instanceSettingsDialog.couldNotUpdateMod")
                         .replace("$$MOD_LOADER$$", "Jar")
-                        .replace("$$MOD_ID$$", jarMod.getId().toString()) + ": " + e.getMessage()
+                        .replace("$$MOD_ID$$", jarMod.getFileName()) + ": " + e.getMessage()
                 );
             }
         });
@@ -124,22 +121,21 @@ public class JarModsTableModel extends AbstractTableModel {
     }
 
     @Override
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columnIndex == 1;
+    public double[] getTableColumnWidthPercentages() {
+        return JarModsTableModel.WIDTH_PERCENTAGES;
     }
 
-    public void add(JarMod jarMod) {
-        int index = this.jarMods.size();
-        this.jarMods.add(jarMod);
-        this.fireTableRowsInserted(index, index);
+    @Override
+    public void addMod(Mod mod) {
+        super.addMod(mod);
+
+        SwingUtils.setJTableColumnsWidth(this.modsTable, this.getTableColumnWidthPercentages());
     }
 
-    public JarMod jarModAt(int rowIndex) {
-        return this.jarMods.get(rowIndex);
-    }
+    @Override
+    public void removeRow(int index) {
+        super.removeRow(index);
 
-    public void removeRow(int rowIndex) {
-        this.jarMods.remove(rowIndex);
-        this.fireTableStructureChanged();
+        SwingUtils.setJTableColumnsWidth(this.modsTable, this.getTableColumnWidthPercentages());
     }
 }

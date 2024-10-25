@@ -22,7 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.cosmic.launcher.*;
-import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
@@ -30,7 +30,7 @@ import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceType;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -126,7 +126,7 @@ public class CosmicRunner extends Thread {
 
             CosmicLauncher launcher;
 
-            if (this.instance.getType() == InstanceType.VANILLA) {
+            if (this.instance.getModLoader() == ModLoader.VANILLA) {
                 launcher = CosmicLauncherFactory.getLauncher(
                     javaPath,
                     LaunchType.VANILLA,
@@ -135,7 +135,7 @@ public class CosmicRunner extends Thread {
                     clientPath
                 );
             } else {
-                launcher = switch (this.instance.getType()) {
+                launcher = switch (this.instance.getModLoader()) {
                     case FABRIC -> CosmicLauncherFactory.getLauncher(
                         javaPath,
                         LaunchType.FABRIC,
@@ -163,7 +163,7 @@ public class CosmicRunner extends Thread {
                         this.instance.getPuzzleModsDir(),
                         this.instance.getPuzzleVersion()
                     );
-                    default -> throw new IllegalArgumentException("Unknown instance type: " + this.instance.getType());
+                    default -> throw new IllegalArgumentException("Unknown instance type: " + this.instance.getModLoader());
                 };
             }
 
@@ -280,8 +280,8 @@ public class CosmicRunner extends Thread {
                 line = line.replace(userHome, "<UserHome>");
             }
 
-            InstanceType type = this.instance.getType();
-            if (type == InstanceType.VANILLA || type == InstanceType.FABRIC) {
+            ModLoader type = this.instance.getModLoader();
+            if (type == ModLoader.VANILLA || type == ModLoader.FABRIC) {
                 Log.cosmicReachVanilla(line);
             } else {
                 Log.cosmicReachModded(line);
@@ -325,9 +325,9 @@ public class CosmicRunner extends Thread {
     private Path applyJarMods(Version version) {
         Path originalClientPath = CRLauncher.getInstance().getVersionManager().getVersionJar(version);
 
-        List<JarMod> jarMods = this.instance.getJarMods();
+        List<Mod> jarMods = this.instance.getJarMods();
 
-        if (jarMods == null || jarMods.isEmpty() || jarMods.stream().noneMatch(JarMod::isActive)) {
+        if (jarMods == null || jarMods.isEmpty() || jarMods.stream().noneMatch(Mod::isActive)) {
             return originalClientPath;
         } else {
             try {

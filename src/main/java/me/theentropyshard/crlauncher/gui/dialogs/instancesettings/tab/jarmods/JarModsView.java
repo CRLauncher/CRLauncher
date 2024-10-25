@@ -21,7 +21,8 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.jarmods;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
-import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.JarModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -37,7 +38,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
 
 public class JarModsView extends JPanel {
     private final JarModsTableModel jarModsTableModel;
@@ -52,9 +52,11 @@ public class JarModsView extends JPanel {
         JButton addJarMod = new JButton(language.getString("gui.instanceSettingsDialog.jarModsTab.addModButton"));
         this.add(addJarMod, BorderLayout.NORTH);
 
-        this.jarModsTableModel = new JarModsTableModel(instance);
+        this.jarModsTable = new JTable();
 
-        this.jarModsTable = new JTable(this.jarModsTableModel);
+        this.jarModsTableModel = new JarModsTableModel(this.jarModsTable, instance);
+        this.jarModsTable.setModel(this.jarModsTableModel);
+
         this.jarModsTable.getTableHeader().setEnabled(false);
         this.jarModsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.jarModsTable.addMouseListener(new MouseAdapter() {
@@ -93,22 +95,20 @@ public class JarModsView extends JPanel {
 
                         settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
 
-                        List<JarMod> jarMods = instance.getJarMods();
+                        List<Mod> jarMods = instance.getJarMods();
 
                         Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
                         String fileName = jarModPath.getFileName().toString();
 
-                        JarMod jarMod = new JarMod(
-                            true,
-                            fileName,
-                            UUID.randomUUID(),
-                            fileName
-                        );
+                        Mod jarMod = new Mod();
+                        jarMod.setActive(true);
+                        jarMod.setName(fileName);
+                        jarMod.setFileName(fileName);
 
-                        Files.copy(jarModPath, instance.getModPath(jarMod));
+                        Files.copy(jarModPath, instance.getJarModPath(jarMod));
 
                         jarMods.add(jarMod);
-                        JarModsView.this.jarModsTableModel.add(jarMod);
+                        JarModsView.this.jarModsTableModel.addMod(jarMod);
                     }
 
                     UIManager.put("FileChooser.readOnly", Boolean.FALSE);
@@ -130,11 +130,11 @@ public class JarModsView extends JPanel {
                 return;
             }
 
-            JarMod jarMod = this.jarModsTableModel.jarModAt(selectedRow);
+            Mod jarMod = this.jarModsTableModel.getModAt(selectedRow);
             this.jarModsTableModel.removeRow(selectedRow);
             instance.getJarMods().remove(jarMod);
 
-            Path modFile = instance.getModPath(jarMod);
+            Path modFile = instance.getJarModPath(jarMod);
 
             if (Files.exists(modFile)) {
                 try {

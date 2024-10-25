@@ -18,18 +18,70 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods;
 
-public interface Mod {
-    String getName();
+public class Mod {
+    private String id;
+    private String name;
+    private String version;
+    private String description;
+    private String fileName;
+    private boolean active;
 
-    String getVersion();
+    public Mod() {
 
-    String getDescription();
+    }
 
-    String getFileName();
+    public Mod(String id, String name, String version, String description) {
+        this.id = id;
+        this.name = name;
+        this.version = version;
+        this.description = description;
+    }
 
-    void setFileName(String fileName);
+    public String getId() {
+        return this.id;
+    }
 
-    boolean isActive();
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    void setActive(boolean active);
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVersion() {
+        return this.version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getFileName() {
+        return this.fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public boolean isActive() {
+        return this.active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
 }

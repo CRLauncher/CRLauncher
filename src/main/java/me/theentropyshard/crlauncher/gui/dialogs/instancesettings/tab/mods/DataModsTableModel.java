@@ -16,46 +16,44 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
-import me.theentropyshard.crlauncher.cosmic.mods.vanilla.DataMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 
-import javax.swing.table.AbstractTableModel;
+import javax.swing.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class DataModsTableModel extends AbstractTableModel {
+public class DataModsTableModel extends ModsTableModel {
     private static final Class<?>[] COLUMN_CLASSES = {String.class, Boolean.class};
+    private static final double[] WIDTH_PERCENTAGES = {90.0D, 10.0D};
 
-    private final List<DataMod> dataMods;
-    private final String[] columnNames = {"Name", "Active"};
+    private final JTable modsTable;
     private final Instance instance;
+    private final String[] columnNames;
 
-    public DataModsTableModel(Instance instance) {
+    public DataModsTableModel(JTable modsTable, Instance instance) {
+        super(instance.getDataMods());
+
+        this.modsTable = modsTable;
         this.instance = instance;
-        this.dataMods = new ArrayList<>();
 
         Language language = CRLauncher.getInstance().getLanguage();
 
-        this.columnNames[0] = language.getString("gui.instanceSettingsDialog.modsTab.modsTable.vanilla.modFolder");
-        this.columnNames[1] = language.getString("gui.instanceSettingsDialog.jarModsTab.modActive");
+        this.columnNames = new String[]{
+            language.getString("gui.instanceSettingsDialog.modsTab.modsTable.vanilla.modFolder"),
+            language.getString("gui.instanceSettingsDialog.modsTab.modsTable.cosmicQuilt.modActive")
+        };
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
         return columnIndex == 1;
-    }
-
-    @Override
-    public int getRowCount() {
-        return this.dataMods.size();
     }
 
     @Override
@@ -75,7 +73,7 @@ public class DataModsTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        DataMod dataMod = this.dataMods.get(rowIndex);
+        Mod dataMod = this.getModAt(rowIndex);
 
         return switch (columnIndex) {
             case 0 -> dataMod.getName();
@@ -95,7 +93,7 @@ public class DataModsTableModel extends AbstractTableModel {
         }
 
         boolean isSelected = (Boolean) aValue;
-        DataMod dataMod = this.dataModAt(rowIndex);
+        Mod dataMod = this.getModAt(rowIndex);
         dataMod.setActive(isSelected);
 
         SwingUtils.startWorker(() -> {
@@ -103,8 +101,7 @@ public class DataModsTableModel extends AbstractTableModel {
                 this.instance.updateMod(
                     dataMod,
                     this.instance.getDataModsDir(),
-                    this.instance.getDisabledDataModsDir(),
-                    isSelected
+                    this.instance.getDisabledDataModsDir()
                 );
             } catch (IOException e) {
                 Log.error("Could not update data mod '" + dataMod.getFileName() + "'", e);
@@ -123,18 +120,22 @@ public class DataModsTableModel extends AbstractTableModel {
         this.fireTableCellUpdated(rowIndex, columnIndex);
     }
 
-    public void addDataMod(DataMod dataMod) {
-        int index = this.dataMods.size();
-        this.dataMods.add(dataMod);
-        this.fireTableRowsInserted(index, index);
+    @Override
+    public double[] getTableColumnWidthPercentages() {
+        return DataModsTableModel.WIDTH_PERCENTAGES;
     }
 
-    public DataMod dataModAt(int rowIndex) {
-        return this.dataMods.get(rowIndex);
+    @Override
+    public void addMod(Mod mod) {
+        super.addMod(mod);
+
+        SwingUtils.setJTableColumnsWidth(this.modsTable, this.getTableColumnWidthPercentages());
     }
 
-    public void removeRow(int rowIndex) {
-        this.dataMods.remove(rowIndex);
-        this.fireTableStructureChanged();
+    @Override
+    public void removeRow(int index) {
+        super.removeRow(index);
+
+        SwingUtils.setJTableColumnsWidth(this.modsTable, this.getTableColumnWidthPercentages());
     }
 }

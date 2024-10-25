@@ -20,81 +20,37 @@ package me.theentropyshard.crlauncher.cosmic.mods.puzzle;
 
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 
-import java.util.List;
-
-public class PuzzleMod implements Mod {
+public class PuzzleMod {
     private String id;
     private String version;
     private String name;
     private String description;
-    private List<String> authors;
-    private String fileName;
-    private boolean active;
 
     public PuzzleMod() {
 
+    }
+
+    public Mod toMod() {
+        return new Mod(this.id, this.name, this.version, this.description);
     }
 
     public String getId() {
         return this.id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
     public String getVersion() {
         return this.version;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    @Override
     public String getName() {
         return this.name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
     public String getDescription() {
         return this.description;
     }
 
-    @Override
-    public String getFileName() {
-        return this.fileName;
-    }
-
-    @Override
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<String> getAuthors() {
-        return this.authors;
-    }
-
-    public void setAuthors(List<String> authors) {
-        this.authors = authors;
-    }
-
-    @Override
-    public boolean isActive() {
-        return this.active;
-    }
-
-    @Override
-    public void setActive(boolean active) {
-        this.active = active;
     }
 }

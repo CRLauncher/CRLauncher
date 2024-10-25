@@ -2,17 +2,16 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleModsView;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsView;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceType;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
@@ -59,7 +58,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
 
                 Path saveAs = tmpDir.resolve(file.getName());
 
-                Path modFolder = switch (instance.getType()) {
+                Path modFolder = switch (instance.getModLoader()) {
                     case VANILLA, FABRIC -> null;
                     case QUILT -> instance.getQuiltModsDir();
                     case PUZZLE -> instance.getPuzzleModsDir();
@@ -84,30 +83,25 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
 
                 try (ZipFile zipFile = new ZipFile(saveAs.toFile())) {
                     FileHeader fileHeader = zipFile.getFileHeader(
-                        instance.getType() == InstanceType.QUILT ?
-                            "quilt.mod.json" : "puzzle.mod.json"
+                        instance.getModLoader() == ModLoader.QUILT ? "quilt.mod.json" : "puzzle.mod.json"
                     );
 
                     String json = StreamUtils.readToString(zipFile.getInputStream(fileHeader));
 
-                    mod = Json.parse(json,
-                        switch (instance.getType()) {
-                            case VANILLA, FABRIC -> throw new UnsupportedOperationException();
-                            case QUILT -> QuiltMod.class;
-                            case PUZZLE -> PuzzleMod.class;
-                        }
-                    );
+                    if (instance.getModLoader() == ModLoader.QUILT) {
+                        mod = Json.parse(json, QuiltMod.class).toMod();
 
-                    if (instance.getType() == InstanceType.QUILT) {
-                        QuiltMod quiltMod = (QuiltMod) mod;
-                        if (instance.getQuiltMods().stream().anyMatch(qMod -> qMod.quiltLoader.id.equals(quiltMod.quiltLoader.id))) {
+                        if (instance.getQuiltMods().stream().anyMatch(m -> m.getId().equals(mod.getId()))) {
                             this.modExists.set(true);
                         }
-                    } else if (instance.getType() == InstanceType.PUZZLE) {
-                        PuzzleMod puzzleMod = (PuzzleMod) mod;
-                        if (instance.getPuzzleMods().stream().anyMatch(pMod -> puzzleMod.getId().equals(pMod.getId()))) {
+                    } else if (instance.getModLoader() == ModLoader.PUZZLE) {
+                        mod = Json.parse(json, PuzzleMod.class).toMod();
+
+                        if (instance.getPuzzleMods().stream().anyMatch(m -> m.getId().equals(mod.getId()))) {
                             this.modExists.set(true);
                         }
+                    } else {
+                        mod = null;
                     }
                 }
 
@@ -143,54 +137,53 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                 }
 
                 if (this.modExists.get()) {
-                    if (mod instanceof QuiltMod quiltMod) {
-                        QuiltMod foundMod = ListUtils.search(instance.getQuiltMods(), qMod -> qMod.quiltLoader.id.equals(quiltMod.quiltLoader.id));
+                    if (instance.getModLoader() == ModLoader.QUILT) {
+                        Mod foundMod = ListUtils.search(instance.getQuiltMods(), m -> m.getId().equals(mod.getId()));
 
                         if (foundMod == null) {
                             return;
                         }
 
-                        if (foundMod.quiltLoader.version.equals(quiltMod.quiltLoader.version)) {
+                        if (foundMod.getVersion().equals(mod.getVersion())) {
                             return;
                         }
 
                         try {
-                            FileUtils.delete(instance.getModPath(foundMod));
+                            FileUtils.delete(instance.getModPath(foundMod, ModLoader.QUILT));
                         } catch (IOException e) {
                             Log.error("Could not delete " + foundMod.getFileName());
                         }
 
-                        foundMod.quiltLoader.version = quiltMod.quiltLoader.version;
-                        foundMod.setFileName(quiltMod.getFileName());
-                    } else if (mod instanceof PuzzleMod puzzleMod) {
-                        PuzzleMod foundMod = ListUtils.search(instance.getPuzzleMods(), pMod -> pMod.getId().equals(puzzleMod.getId()));
+                        foundMod.setVersion(mod.getVersion());
+                        foundMod.setFileName(mod.getFileName());
+                    } else if (instance.getModLoader() == ModLoader.PUZZLE) {
+                        Mod foundMod = ListUtils.search(instance.getPuzzleMods(), m -> m.getId().equals(mod.getId()));
 
                         if (foundMod == null) {
                             return;
                         }
 
-                        if (foundMod.getVersion().equals(puzzleMod.getVersion())) {
+                        if (foundMod.getVersion().equals(mod.getVersion())) {
                             return;
                         }
 
                         try {
-                            FileUtils.delete(instance.getModPath(foundMod));
+                            FileUtils.delete(instance.getModPath(foundMod, ModLoader.PUZZLE));
                         } catch (IOException e) {
                             Log.error("Could not delete " + foundMod.getFileName());
                         }
 
-                        foundMod.setVersion(puzzleMod.getVersion());
-                        foundMod.setFileName(puzzleMod.getFileName());
+                        foundMod.setVersion(mod.getVersion());
+                        foundMod.setFileName(mod.getFileName());
                     }
                 } else {
-                    JPanel modsView = modsTab.getModsView();
+                    ModsView modsView = modsTab.getModsView();
+                    modsView.getModsTableModel().addMod(mod);
 
-                    if (modsView instanceof QuiltModsView quiltModsView) {
-                        instance.getQuiltMods().add((QuiltMod) mod);
-                        quiltModsView.getQuiltModsModel().add((QuiltMod) mod);
-                    } else if (modsView instanceof PuzzleModsView puzzleModsView) {
-                        instance.getPuzzleMods().add((PuzzleMod) mod);
-                        puzzleModsView.getPuzzleModsModel().add((PuzzleMod) mod);
+                    if (instance.getModLoader() == ModLoader.QUILT) {
+                        instance.getQuiltMods().add(mod);
+                    } else if (instance.getModLoader() == ModLoader.PUZZLE) {
+                        instance.getPuzzleMods().add(mod);
                     }
                 }
             }

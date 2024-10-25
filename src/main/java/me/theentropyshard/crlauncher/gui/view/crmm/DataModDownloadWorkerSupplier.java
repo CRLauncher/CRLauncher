@@ -19,12 +19,12 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.mods.vanilla.DataMod;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.DataModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsView;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -51,7 +51,7 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
 
         return new Worker<>("downloading mod " + version.getTitle()) {
             @Override
-            protected DataMod work() throws Exception {
+            protected Mod work() throws Exception {
 
                 ProgressDialog progressDialog = new ProgressDialog("Downloading " + file.getName());
 
@@ -91,7 +91,11 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
 
                     FileUtils.delete(saveAs);
 
-                    return new DataMod(topLevelDirectory.replace("/", ""), true);
+                    Mod mod = new Mod();
+                    mod.setActive(true);
+                    mod.setName(topLevelDirectory.replace("/", ""));
+
+                    return mod;
                 } catch (Exception e) {
                     Log.error("Could not extract file " + saveAs + " to dir: " + dest, e);
                 }
@@ -101,10 +105,10 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
 
             @Override
             protected void done() {
-                DataMod dataMod;
+                Mod dataMod;
 
                 try {
-                    dataMod = (DataMod) this.get();
+                    dataMod = (Mod) this.get();
                 } catch (InterruptedException | ExecutionException ex) {
                     Log.error(ex);
 
@@ -115,11 +119,8 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
                     return;
                 }
 
-                JPanel modsView = modsTab.getModsView();
-
-                if (modsView instanceof DataModsView dataModsView) {
-                    dataModsView.getDataModsTableModel().addDataMod(dataMod);
-                }
+                ModsView modsView = modsTab.getModsView();
+                modsView.getModsTableModel().addMod(dataMod);
             }
         };
     }

@@ -16,38 +16,38 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.instance;
+package me.theentropyshard.crlauncher.cosmic.mods;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum InstanceType {
+public enum ModLoader {
     VANILLA("vanilla", "Vanilla"),
     FABRIC("fabric", "Fabric"),
     QUILT("quilt", "Cosmic Quilt"),
     PUZZLE("puzzle", "Puzzle");
 
-    private static final Map<String, InstanceType> lookup = new HashMap<>();
+    private static final Map<String, ModLoader> lookup = new HashMap<>();
 
     static {
-        for (InstanceType type : InstanceType.values()) {
-            lookup.put(type.getType(), type);
+        for (ModLoader type : ModLoader.values()) {
+            ModLoader.lookup.put(type.getLoader(), type);
         }
     }
 
-    private final String type;
+    private final String loader;
     private final String name;
 
-    InstanceType(String type, String name) {
-        this.type = type;
+    ModLoader(String loader, String name) {
+        this.loader = loader;
         this.name = name;
     }
 
-    public static InstanceType getByType(String jsonType) {
-        InstanceType type = lookup.get(jsonType);
+    public static ModLoader getByName(String jsonName) {
+        ModLoader type = ModLoader.lookup.get(jsonName);
 
         if (type == null) {
-            throw new IllegalArgumentException("Unknown instance type: " + jsonType);
+            throw new IllegalArgumentException("Unknown mod loader: " + jsonName);
         }
 
         return type;
@@ -58,8 +58,8 @@ public enum InstanceType {
         return this.name;
     }
 
-    public String getType() {
-        return this.type;
+    public String getLoader() {
+        return this.loader;
     }
 
     public String getName() {

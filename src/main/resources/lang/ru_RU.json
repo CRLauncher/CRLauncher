@@ -111,6 +111,8 @@
                 "loaderVersion": {
                     "borderName": "Версия загрузчика"
                 },
+                "modpack": "Модпак",
+                "customModpack": "Кастомный",
                 "modsTable": {
                     "borderName": "Моды",
                     "vanilla": {

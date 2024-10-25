@@ -111,6 +111,8 @@
                 "loaderVersion": {
                     "borderName": "Loader version"
                 },
+                "modpack": "Modpack",
+                "customModpack": "Custom",
                 "modsTable": {
                     "borderName": "Mods",
                     "vanilla": {

@@ -20,11 +20,7 @@ package me.theentropyshard.crlauncher.instance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
-import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
-import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
-import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
-import me.theentropyshard.crlauncher.cosmic.mods.vanilla.DataMod;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 
@@ -34,7 +30,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -73,11 +68,12 @@ public class Instance {
     private LocalDateTime lastTimePlayed = LocalDateTime.MIN;
     private long lastPlaytime;
     private long totalPlaytime;
-    private final List<JarMod> jarMods;
-    private final List<FabricMod> fabricMods;
-    private final List<QuiltMod> quiltMods;
-    private final List<PuzzleMod> puzzleMods;
-    private InstanceType type = InstanceType.VANILLA;
+    private final List<Mod> jarMods;
+    private final List<Mod> dataMods;
+    private final List<Mod> fabricMods;
+    private final List<Mod> quiltMods;
+    private final List<Mod> puzzleMods;
+    private ModLoader modLoader = ModLoader.VANILLA;
     private String fabricVersion;
     private String quiltVersion;
     private String puzzleVersion;
@@ -96,6 +92,7 @@ public class Instance {
         this.cosmicVersion = cosmicVersion;
 
         this.jarMods = new ArrayList<>();
+        this.dataMods = new ArrayList<>();
         this.fabricMods = new ArrayList<>();
         this.quiltMods = new ArrayList<>();
         this.puzzleMods = new ArrayList<>();
@@ -113,7 +110,36 @@ public class Instance {
     }
 
     public Path getCurrentModsDir() {
-        return switch (this.type) {
+        return this.getModsDir(this.modLoader);
+    }
+
+    public Path getCurrentDisabledModsDir() {
+        return this.getDisabledModsDir(this.modLoader);
+    }
+
+    public void updateMod(Mod mod, Path enabledModsDir, Path disabledModsDir) throws IOException {
+        FileUtils.createDirectoryIfNotExists(enabledModsDir);
+        FileUtils.createDirectoryIfNotExists(disabledModsDir);
+
+        String fileName = mod.getFileName();
+
+        if (mod.isActive()) {
+            Files.move(
+                disabledModsDir.resolve(fileName),
+                enabledModsDir.resolve(fileName),
+                StandardCopyOption.REPLACE_EXISTING
+            );
+        } else {
+            Files.move(
+                enabledModsDir.resolve(fileName),
+                disabledModsDir.resolve(fileName),
+                StandardCopyOption.REPLACE_EXISTING
+            );
+        }
+    }
+
+    public Path getModsDir(ModLoader loader) {
+        return switch (loader) {
             case VANILLA -> this.getDataModsDir();
             case FABRIC -> this.getFabricModsDir();
             case QUILT -> this.getQuiltModsDir();
@@ -121,8 +147,8 @@ public class Instance {
         };
     }
 
-    public Path getCurrentDisabledModsDir() {
-        return switch (this.type) {
+    public Path getDisabledModsDir(ModLoader loader) {
+        return switch (loader) {
             case VANILLA -> this.getDisabledDataModsDir();
             case FABRIC -> this.getDisabledFabricModsDir();
             case QUILT -> this.getDisabledQuiltModsDir();
@@ -130,63 +156,29 @@ public class Instance {
         };
     }
 
-    public void updateMod(Mod mod, Path enabledModsDir, Path disabledModsDir, boolean selected) throws IOException {
-        FileUtils.createDirectoryIfNotExists(enabledModsDir);
-        FileUtils.createDirectoryIfNotExists(disabledModsDir);
-
-        if (selected) {
-            Files.move(
-                disabledModsDir.resolve(mod.getFileName()),
-                enabledModsDir.resolve(mod.getFileName()),
-                StandardCopyOption.REPLACE_EXISTING
-            );
+    public Path getModPath(Mod mod, ModLoader loader) {
+        if (mod.isActive()) {
+            return this.getModsDir(loader).resolve(mod.getFileName());
         } else {
-            Files.move(
-                enabledModsDir.resolve(mod.getFileName()),
-                disabledModsDir.resolve(mod.getFileName()),
-                StandardCopyOption.REPLACE_EXISTING
-            );
+            return this.getDisabledModsDir(loader).resolve(mod.getFileName());
         }
     }
 
-    public Path getModPath(FabricMod fabricMod) {
-        if (fabricMod.isActive()) {
-            return this.getFabricModsDir().resolve(fabricMod.getFileName());
+    public Path getJarModPath(Mod mod) {
+        if (mod.isActive()) {
+            return this.getJarModsDir().resolve(mod.getFileName());
         } else {
-            return this.getDisabledFabricModsDir().resolve(fabricMod.getFileName());
+            return this.getDisabledJarModsDir().resolve(mod.getFileName());
         }
     }
 
-    public Path getModPath(QuiltMod quiltMod) {
-        if (quiltMod.isActive()) {
-            return this.getQuiltModsDir().resolve(quiltMod.getFileName());
-        } else {
-            return this.getDisabledQuiltModsDir().resolve(quiltMod.getFileName());
-        }
-    }
-
-    public Path getModPath(PuzzleMod puzzleMod) {
-        if (puzzleMod.isActive()) {
-            return this.getPuzzleModsDir().resolve(puzzleMod.getFileName());
-        } else {
-            return this.getDisabledPuzzleModsDir().resolve(puzzleMod.getFileName());
-        }
-    }
-
-    public Path getModPath(JarMod jarMod) {
-        if (jarMod.isActive()) {
-            return this.getJarModsDir().resolve(jarMod.getFileName());
-        } else {
-            return this.getDisabledJarModsDir().resolve(jarMod.getFileName());
-        }
-    }
-
-    public Path getModPath(DataMod dataMod) {
-        if (dataMod.isActive()) {
-            return this.getDataModsDir().resolve(dataMod.getFileName());
-        } else {
-            return this.getDisabledDataModsDir().resolve(dataMod.getFileName());
-        }
+    public List<Mod> getMods(ModLoader loader) {
+        return switch (loader) {
+            case VANILLA -> this.getDataMods();
+            case FABRIC -> this.getFabricMods();
+            case QUILT -> this.getQuiltMods();
+            case PUZZLE -> this.getPuzzleMods();
+        };
     }
 
     public boolean isRunning() {
@@ -205,15 +197,15 @@ public class Instance {
         this.autoUpdateToLatest = autoUpdateToLatest;
     }
 
-    public List<FabricMod> getFabricMods() {
+    public List<Mod> getFabricMods() {
         return this.fabricMods;
     }
 
-    public List<QuiltMod> getQuiltMods() {
+    public List<Mod> getQuiltMods() {
         return this.quiltMods;
     }
 
-    public List<PuzzleMod> getPuzzleMods() {
+    public List<Mod> getPuzzleMods() {
         return this.puzzleMods;
     }
 
@@ -241,12 +233,12 @@ public class Instance {
         this.puzzleVersion = puzzleVersion;
     }
 
-    public InstanceType getType() {
-        return this.type;
+    public ModLoader getModLoader() {
+        return this.modLoader;
     }
 
-    public void setType(InstanceType type) {
-        this.type = type;
+    public void setModLoader(ModLoader modLoader) {
+        this.modLoader = modLoader;
     }
 
     public Path getWorkDir() {
@@ -277,8 +269,12 @@ public class Instance {
         return this.workDir.resolve(Instance.DISABLED_JARMODS_DIR_NAME);
     }
 
-    public List<JarMod> getJarMods() {
+    public List<Mod> getJarMods() {
         return this.jarMods;
+    }
+
+    public List<Mod> getDataMods() {
+        return this.dataMods;
     }
 
     public Path getFabricModsDir() {
