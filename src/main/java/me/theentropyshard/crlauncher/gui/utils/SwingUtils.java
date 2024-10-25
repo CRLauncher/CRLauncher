@@ -132,7 +132,7 @@ public final class SwingUtils {
 
     public static void setJTableColumnsWidth(JTable table, double... percentages) {
         TableColumnModel columnModel = table.getColumnModel();
-        int tablePreferredWidth = columnModel.getTotalColumnWidth();
+        int tablePreferredWidth = table.getWidth();
 
         double total = 0;
         for (int i = 0; i < columnModel.getColumnCount(); i++) {
