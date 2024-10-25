@@ -23,11 +23,17 @@ import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.ListUtils;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
 
 public class DataModsTableModel extends ModsTableModel {
     private static final Class<?>[] COLUMN_CLASSES = {String.class, Boolean.class};
@@ -49,6 +55,70 @@ public class DataModsTableModel extends ModsTableModel {
             language.getString("gui.instanceSettingsDialog.modsTab.modsTable.vanilla.modFolder"),
             language.getString("gui.instanceSettingsDialog.modsTab.modsTable.cosmicQuilt.modActive")
         };
+
+        new Worker<Void, Mod>("loading data mods") {
+            @Override
+            protected Void work() throws Exception {
+                Path dataModsDir = instance.getDataModsDir();
+                Path disabledDataModsDir = instance.getDisabledDataModsDir();
+
+                List<Mod> dataMods = instance.getDataMods();
+
+                FileUtils.createDirectoryIfNotExists(dataModsDir);
+                FileUtils.createDirectoryIfNotExists(disabledDataModsDir);
+
+                for (Path dataModDir : FileUtils.list(dataModsDir)) {
+                    if (!Files.isDirectory(dataModDir)) {
+                        continue;
+                    }
+
+                    String dirName = dataModDir.getFileName().toString();
+
+                    Mod mod = new Mod();
+                    mod.setActive(true);
+                    mod.setName(dirName);
+                    mod.setFileName(dirName);
+
+                    if (ListUtils.search(dataMods, m -> m.getName().equals(mod.getName())) == null) {
+                        instance.getDataMods().add(mod);
+                    } else {
+                        continue;
+                    }
+
+                    this.publish(mod);
+                }
+
+                for (Path dataModDir : FileUtils.list(disabledDataModsDir)) {
+                    if (!Files.isDirectory(dataModDir)) {
+                        continue;
+                    }
+
+                    String dirName = dataModDir.getFileName().toString();
+
+                    Mod mod = new Mod();
+                    mod.setActive(false);
+                    mod.setName(dirName);
+                    mod.setFileName(dirName);
+
+                    if (ListUtils.search(dataMods, m -> m.getName().equals(mod.getName())) == null) {
+                        instance.getDataMods().add(mod);
+                    } else {
+                        continue;
+                    }
+
+                    this.publish(mod);
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void process(List<Mod> chunks) {
+                for (Mod dataMod : chunks) {
+                    DataModsTableModel.this.addMod(dataMod);
+                }
+            }
+        }.execute();
     }
 
     @Override
