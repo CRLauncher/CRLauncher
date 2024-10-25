@@ -171,37 +171,50 @@ public class ModInstaller {
 
                 Path dataModsDir = instance.getModsDir(ModLoader.VANILLA);
 
+                Mod mod = new Mod();
+                mod.setActive(true);
+
                 if (Files.isDirectory(dataModPath)) {
                     Path dest = dataModsDir.resolve(dataModPath.getFileName());
                     FileUtils.delete(dest);
                     FileUtils.copyDirectory(dataModPath, dest);
 
-                    Mod mod = new Mod();
-                    mod.setActive(true);
                     mod.setFileName(dest.getFileName().toString());
                     mod.setName(dest.getFileName().toString());
-
-                    return mod;
                 } else {
+                    String topLevelDirectory = null;
                     Path dest = null;
+
                     try (ZipFile file = new ZipFile(dataModPath.toFile())) {
-                        String topLevelDirectory = ZipUtils.findTopLevelDirectory(file.getFileHeaders());
+                        topLevelDirectory = ZipUtils.findTopLevelDirectory(file.getFileHeaders());
                         dest = dataModsDir.resolve(topLevelDirectory);
                         FileUtils.delete(dest);
                         file.extractAll(dataModsDir.toString());
-
-                        Mod mod = new Mod();
-                        mod.setActive(true);
-                        mod.setFileName(dest.getFileName().toString());
-                        mod.setName(topLevelDirectory.replace("/", ""));
-
-                        return mod;
                     } catch (Exception e) {
                         Log.error("Could not extract file " + dataModPath + " to dir: " + dest, e);
                     }
+
+                    if (topLevelDirectory == null || dest == null) {
+                        return null;
+                    }
+
+                    mod.setFileName(dest.getFileName().toString());
+                    mod.setName(topLevelDirectory.replace("/", ""));
                 }
 
-                return null;
+                List<Mod> dataMods = instance.getDataMods();
+
+                if (ListUtils.search(dataMods, m -> m.getName().equals(mod.getName())) != null) {
+                    MessageBox.showErrorMessage(CRLauncher.frame,
+                        language.getString("messages.gui.mods.modAddedName")
+                            .replace("$$MOD_NAME$$", mod.getName()));
+
+                    return null;
+                }
+
+                dataMods.add(mod);
+
+                return mod;
             }
 
             @Override
