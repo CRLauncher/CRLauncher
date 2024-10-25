@@ -45,6 +45,7 @@ public class JavaModsLoader extends Worker<Void, Mod> {
     private final Path disabledModsDir;
     private final List<Mod> mods;
     private final ModLoader loader;
+    private final Instance instance;
     private final JavaModsTableModel tableModel;
 
     public JavaModsLoader(Instance instance, JavaModsTableModel tableModel) {
@@ -54,15 +55,31 @@ public class JavaModsLoader extends Worker<Void, Mod> {
         this.disabledModsDir = instance.getCurrentDisabledModsDir();
         this.mods = instance.getCurrentMods();
         this.loader = instance.getModLoader();
+        this.instance = instance;
         this.tableModel = tableModel;
     }
 
     @Override
     protected Void work() throws Exception {
+        this.removeNonExistentMods();
         this.loadActiveMods();
         this.loadInactiveMods();
 
         return null;
+    }
+
+    private void removeNonExistentMods() {
+        for (Mod mod : this.mods) {
+            Path modPath = this.instance.getModPath(mod, this.loader);
+
+            if (!Files.exists(modPath)) {
+                try {
+                    FileUtils.delete(modPath);
+                } catch (IOException e) {
+                    Log.error("Could not delete non-existent mod: " + modPath, e);
+                }
+            }
+        }
     }
 
     private void loadActiveMods() throws IOException {
