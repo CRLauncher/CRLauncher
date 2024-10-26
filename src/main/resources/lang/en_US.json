@@ -360,7 +360,8 @@
                 "version": "Version",
                 "dateReleased": "Date released",
                 "versionType": "Type"
-            }
+            },
+            "latestVersion": "(Latest)"
         },
         "updateDialog": {
             "title": "Update",

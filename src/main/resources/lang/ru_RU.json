@@ -360,7 +360,8 @@
                 "version": "Версия",
                 "dateReleased": "Дата релиза",
                 "versionType": "Тип версии"
-            }
+            },
+            "latestVersion": "(Новейшая)"
         },
         "updateDialog": {
             "title": "Обновление",
