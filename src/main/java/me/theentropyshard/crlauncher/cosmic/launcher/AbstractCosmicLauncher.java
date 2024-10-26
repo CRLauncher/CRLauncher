@@ -25,10 +25,7 @@ import me.theentropyshard.crlauncher.utils.ProcessReader;
 import me.theentropyshard.crlauncher.utils.SystemProperty;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public abstract class AbstractCosmicLauncher implements CosmicLauncher {
     private final String javaPath;
@@ -38,6 +35,7 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
     private final List<String> command;
     private final List<SystemProperty> properties;
     private final Set<String> jvmFlags;
+    private final Map<String, String> environment;
 
     public AbstractCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
         this.javaPath = javaPath;
@@ -47,6 +45,7 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
         this.command = new ArrayList<>();
         this.properties = new ArrayList<>();
         this.jvmFlags = new LinkedHashSet<>();
+        this.environment = new LinkedHashMap<>();
     }
 
     public void defineProperty(SystemProperty property) {
@@ -55,6 +54,10 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
 
     public void addJvmFlag(String flag) {
         this.jvmFlags.add(flag);
+    }
+
+    public void putEnvironment(String key, String value) {
+        this.environment.put(key, value);
     }
 
     public void buildCommand(List<String> command) {
@@ -77,6 +80,7 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
         Log.info("Running: " + String.join(" ", this.command));
 
         ProcessBuilder processBuilder = new ProcessBuilder(this.command);
+        processBuilder.environment().putAll(this.environment);
         processBuilder.directory(this.runDir.toFile());
         processBuilder.redirectErrorStream(true);
 
