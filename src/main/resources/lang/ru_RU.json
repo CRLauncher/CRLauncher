@@ -326,7 +326,8 @@
                 "noUpdatesAvailable": "Вы используете новейшую версию",
                 "patchOfflineAccount": "Установить отображаемое имя для оффлайн аккаунта, как в лаунчере",
                 "appendUsername": "Добавлять ник перед сообщениями в чате",
-                "language": "Язык"
+                "language": "Язык",
+                "disableFileIntegrityCheck": "Отключить проверку целостности файлов"
             }
         },
         "aboutView": {

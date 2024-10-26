@@ -52,6 +52,7 @@ public class Settings {
     public String modloadersDirPath;
     public boolean appendUsername = false;
     public boolean patchOfflineAccount = false;
+    public boolean disableFileIntegrityCheck = false;
 
     public Settings() {
 

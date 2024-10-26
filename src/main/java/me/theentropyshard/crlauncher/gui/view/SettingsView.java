@@ -62,6 +62,7 @@ public class SettingsView extends JPanel {
     public static final String PATCH_OFFLINE_ACCOUNT = "gui.settingsView.other.patchOfflineAccount";
     public static final String APPEND_USERNAME = "gui.settingsView.other.appendUsername";
     public static final String LANGUAGE = "gui.settingsView.other.language";
+    public static final String DISABLE_CHECK = "gui.settingsView.other.disableFileIntegrityCheck";
     public static final String STORAGE_BORDER = "gui.settingsView.storageSettings.borderName";
     public static final String VERSIONS_PATH_LABEL = "gui.settingsView.storageSettings.versionsPathLabel";
     public static final String VERSIONS_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.versionsPathFieldPlaceholder";
@@ -95,6 +96,7 @@ public class SettingsView extends JPanel {
     private final JCheckBox patchOfflineAccount;
     private final JCheckBox appendUsername;
     private final JLabel languageLabel;
+    private final JCheckBox disableFileIntegrityCheck;
     private final JComboBox<String> whenLaunchesBehavior;
     private final JComboBox<String> whenExitsBehavior;
     private final JComboBox<String> position;
@@ -311,7 +313,7 @@ public class SettingsView extends JPanel {
         }
 
         {
-            JPanel otherSettings = new JPanel(new GridLayout(7, 3));
+            JPanel otherSettings = new JPanel(new GridLayout(8, 3));
             this.otherSettingsBorder = new TitledBorder(language.getString(SettingsView.OTHER_BORDER));
             otherSettings.setBorder(this.otherSettingsBorder);
 
@@ -425,6 +427,13 @@ public class SettingsView extends JPanel {
             });
             otherSettings.add(languageCombo);
 
+            this.disableFileIntegrityCheck = new JCheckBox(language.getString(SettingsView.DISABLE_CHECK));
+            this.disableFileIntegrityCheck.setSelected(CRLauncher.getInstance().getSettings().disableFileIntegrityCheck);
+            this.disableFileIntegrityCheck.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().disableFileIntegrityCheck = this.disableFileIntegrityCheck.isSelected();
+            });
+            otherSettings.add(this.disableFileIntegrityCheck);
+
             gbc.gridy++;
             gbc.weighty = 1;
             this.add(otherSettings, gbc);
@@ -514,5 +523,6 @@ public class SettingsView extends JPanel {
         this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
         this.appendUsername.setText(language.getString(SettingsView.APPEND_USERNAME));
         this.languageLabel.setText(language.getString(SettingsView.LANGUAGE));
+        this.disableFileIntegrityCheck.setText(language.getString(SettingsView.DISABLE_CHECK));
     }
 }
