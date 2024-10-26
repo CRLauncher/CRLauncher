@@ -24,6 +24,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -69,6 +70,15 @@ public final class SwingUtils {
                 return null;
             }
         }.execute();
+    }
+
+    public static Action newAction(ActionListener actionListener) {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                actionListener.actionPerformed(e);
+            }
+        };
     }
 
     public static BufferedImage loadImageFromBase64(String base64) {
