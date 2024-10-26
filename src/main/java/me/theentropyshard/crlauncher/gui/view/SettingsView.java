@@ -45,6 +45,7 @@ public class SettingsView extends JPanel {
     public static final String RELATIVE_TO_PARENT = "gui.settingsView.ui.dialogPosition.options.relativeToParent";
     public static final String ALWAYS_CENTERED = "gui.settingsView.ui.dialogPosition.options.alwaysCentered";
     public static final String AMOUNT_OF_TIME = "gui.settingsView.ui.amountOfTime";
+    public static final String CONSOLE_AT_STARTUP = "gui.settingsView.ui.showConsoleAtStartup";
     public static final String OTHER_BORDER = "gui.settingsView.other.borderName";
     public static final String WRITE_PRETTY_JSON = "gui.settingsView.other.writePrettyJson";
     public static final String GAME_LAUNCH_LABEL = "gui.settingsView.other.onGameLaunch.label";
@@ -75,6 +76,7 @@ public class SettingsView extends JPanel {
     private final TitledBorder uiSettingsBorder;
     private final JLabel dialogPositionLabel;
     private final JCheckBox showAmountOfTime;
+    private final JCheckBox showConsoleAtStartup;
     private final TitledBorder storageSettingsBorder;
     private final JCheckBox versionsPathCheckbox;
     private final JTextField versionsPathField;
@@ -138,7 +140,7 @@ public class SettingsView extends JPanel {
         }
 
         {
-            JPanel uiSettings = new JPanel(new GridLayout(2, 2));
+            JPanel uiSettings = new JPanel(new GridLayout(3, 2));
             this.uiSettingsBorder = new TitledBorder(language.getString(SettingsView.UI_BORDER));
             uiSettings.setBorder(this.uiSettingsBorder);
 
@@ -179,6 +181,16 @@ public class SettingsView extends JPanel {
             });
             this.showAmountOfTime.setSelected(CRLauncher.getInstance().getSettings().showAmountOfTime);
             uiSettings.add(this.showAmountOfTime);
+
+            uiSettings.add(Box.createVerticalGlue());
+
+            this.showConsoleAtStartup = new JCheckBox(language.getString(SettingsView.CONSOLE_AT_STARTUP));
+            this.showConsoleAtStartup.setSelected(CRLauncher.getInstance().getSettings().showConsoleAtStartup);
+            this.showConsoleAtStartup.addActionListener(e -> {
+                Settings settings = CRLauncher.getInstance().getSettings();
+                settings.showConsoleAtStartup = !settings.showConsoleAtStartup;
+            });
+            uiSettings.add(this.showConsoleAtStartup);
 
             gbc.gridy++;
             this.add(uiSettings, gbc);
@@ -450,6 +462,7 @@ public class SettingsView extends JPanel {
         this.position.setSelectedIndex(positionIndex);
 
         this.showAmountOfTime.setText(language.getString(SettingsView.AMOUNT_OF_TIME));
+        this.showConsoleAtStartup.setText(language.getString(SettingsView.CONSOLE_AT_STARTUP));
         this.otherSettingsBorder.setTitle(language.getString(SettingsView.OTHER_BORDER));
         this.prettyJson.setText(language.getString(SettingsView.WRITE_PRETTY_JSON));
 

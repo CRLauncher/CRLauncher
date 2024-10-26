@@ -288,7 +288,8 @@
                         "alwaysCentered": "Всегда в центре"
                     }
                 },
-                "amountOfTime": "Показывать время, прошедшее с релиза версии"
+                "amountOfTime": "Показывать время, прошедшее с релиза версии",
+                "showConsoleAtStartup": "Открывать консоль при запуске"
             },
             "storageSettings": {
                 "borderName": "Хранилище",
