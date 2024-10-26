@@ -49,8 +49,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class PlayView extends JPanel {
-
-
     public static final String DEFAULT_GROUP_NAME = "<default>";
 
     private final PlayViewHeader header;
