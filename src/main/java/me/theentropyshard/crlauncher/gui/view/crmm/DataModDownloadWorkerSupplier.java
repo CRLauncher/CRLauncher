@@ -19,26 +19,30 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsView;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
 import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.ZipUtils;
-import net.lingala.zip4j.ZipFile;
+import me.theentropyshard.crlauncher.utils.ListUtils;
 import okhttp3.OkHttpClient;
 
 import javax.swing.*;
-import java.nio.file.Path;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.Map;
+import java.util.stream.Stream;
 
 public class DataModDownloadWorkerSupplier implements WorkerSupplier {
     public DataModDownloadWorkerSupplier() {
@@ -47,27 +51,25 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
 
     @Override
     public Worker getWorker(ModVersionsView versionsView, ProjectVersion version, ProjectFile file) {
-        ModsTab modsTab = versionsView.getModsTab();
+        ModsView modsView = versionsView.getModsTab().getModsView();
         Instance instance = versionsView.getInstance();
 
-        return new Worker<>("downloading mod " + version.getTitle()) {
+        return new Worker<Void, Mod>("downloading mod " + version.getTitle()) {
             @Override
-            protected Mod work() throws Exception {
-
+            protected Void work() throws Exception {
                 ProgressDialog progressDialog = new ProgressDialog("Downloading " + file.getName());
 
                 OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient().newBuilder()
                     .addNetworkInterceptor(new ProgressNetworkInterceptor(progressDialog))
                     .build();
 
-                Path saveAs = instance.getDataModsDir()
-                    .resolve(file.getName());
+                Path dataModPath = instance.getDataModsDir().resolve(file.getName());
 
                 HttpDownload download = new HttpDownload.Builder()
                     .url(file.getUrl())
                     .expectedSize(file.getSize())
                     .httpClient(httpClient)
-                    .saveAs(saveAs)
+                    .saveAs(dataModPath)
                     .build();
 
                 SwingUtilities.invokeLater(() -> progressDialog.setVisible(true));
@@ -75,58 +77,65 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
                 SwingUtilities.invokeLater(() -> progressDialog.getDialog().dispose());
 
                 Path dataModsDir = instance.getDataModsDir();
+                List<Mod> dataMods = instance.getDataMods();
 
-                Path dest = null;
-                try (ZipFile file = new ZipFile(saveAs.toFile())) {
-                    String topLevelDirectory = ZipUtils.findTopLevelDirectory(file.getFileHeaders());
+                try (FileSystem fileSystem = FileSystems.newFileSystem(dataModPath, Map.of("create", "false"))) {
+                    Path root = fileSystem.getPath("/");
 
-                    if (topLevelDirectory == null) {
-                        Log.error("Could not find top level directory in " + saveAs);
+                    List<Path> folders = FileUtils.list(root);
 
-                        return null;
+                    for (Path folder : folders) {
+                        String fileName = folder.getFileName().toString();
+
+                        Mod mod = new Mod();
+                        mod.setActive(true);
+                        mod.setName(fileName);
+                        mod.setFileName(fileName);
+
+                        if (ListUtils.search(dataMods, m -> m.getName().equals(mod.getName())) != null) {
+                            return null;
+                        }
                     }
 
-                    dest = dataModsDir.resolve(topLevelDirectory);
-                    FileUtils.delete(dest);
-                    file.extractAll(dataModsDir.toString());
+                    for (Path folder : folders) {
+                        String fileName = folder.getFileName().toString();
 
-                    FileUtils.delete(saveAs);
+                        Mod mod = new Mod();
+                        mod.setActive(true);
+                        mod.setName(fileName);
+                        mod.setFileName(fileName);
 
-                    Mod mod = new Mod();
-                    mod.setActive(true);
-                    mod.setName(topLevelDirectory.replace("/", ""));
-                    mod.setFileName(dest.getFileName().toString());
+                        try (Stream<Path> stream = Files.walk(folder)) {
+                            stream.forEach(zipFile -> {
+                                Path targetFile = dataModsDir.resolve(zipFile.toString().substring(1));
 
-                    List<Mod> dataMods = instance.getDataMods();
-                    dataMods.removeIf(m -> m.getName().equals(mod.getName()));
-                    dataMods.add(mod);
+                                try {
+                                    if (Files.isDirectory(zipFile)) {
+                                        FileUtils.createDirectoryIfNotExists(targetFile);
+                                    } else {
+                                        Files.copy(zipFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                                    }
+                                } catch (IOException e) {
+                                    Log.error("Could not extract file: " + targetFile, e);
+                                }
+                            });
+                        }
 
-                    return mod;
-                } catch (Exception e) {
-                    Log.error("Could not extract file " + saveAs + " to dir: " + dest, e);
+                        dataMods.add(mod);
+                        this.publish(mod);
+                    }
                 }
+
+                FileUtils.delete(dataModPath);
 
                 return null;
             }
 
             @Override
-            protected void done() {
-                Mod dataMod;
-
-                try {
-                    dataMod = (Mod) this.get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Log.error(ex);
-
-                    return;
+            protected void process(List<Mod> mods) {
+                for (Mod mod : mods) {
+                    modsView.getModsTableModel().addMod(mod);
                 }
-
-                if (dataMod == null) {
-                    return;
-                }
-
-                ModsView modsView = modsTab.getModsView();
-                modsView.getModsTableModel().addMod(dataMod);
             }
         };
     }
