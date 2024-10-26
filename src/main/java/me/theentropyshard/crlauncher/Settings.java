@@ -50,7 +50,8 @@ public class Settings {
     public String instancesDirPath;
     public boolean overrideModloadersPath;
     public String modloadersDirPath;
-    public boolean appendUsername = true;
+    public boolean appendUsername = false;
+    public boolean patchOfflineAccount = false;
 
     public Settings() {
 

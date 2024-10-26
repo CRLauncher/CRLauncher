@@ -42,6 +42,7 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
     private String customWindowTitle;
     private String offlineUsername;
     private boolean appendUsername;
+    private boolean patchOfflineAccount;
 
     public PatchCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
         super(javaPath, runDir, gameFilesLocation, clientPath);
@@ -116,6 +117,10 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
             this.defineProperty(new SystemProperty("crloader.offlineUsername", this.offlineUsername));
         }
 
+        if (this.isPatchOfflineAccount()) {
+            this.defineProperty(new SystemProperty("crloader.patchOfflineAccount", true));
+        }
+
         if (this.isAppendUsername()) {
             this.defineProperty(new SystemProperty("crloader.appendUsername", true));
         }
@@ -147,5 +152,13 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
 
     public void setAppendUsername(boolean appendUsername) {
         this.appendUsername = appendUsername;
+    }
+
+    public boolean isPatchOfflineAccount() {
+        return this.patchOfflineAccount;
+    }
+
+    public void setPatchOfflineAccount(boolean patchOfflineAccount) {
+        this.patchOfflineAccount = patchOfflineAccount;
     }
 }

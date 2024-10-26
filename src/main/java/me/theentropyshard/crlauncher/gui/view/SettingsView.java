@@ -59,6 +59,7 @@ public class SettingsView extends JPanel {
     public static final String CHECK_FOR_UPDATES = "gui.settingsView.other.checkForUpdatesAtStartup";
     public static final String CHECK_UPDATES_NOW_BUTTON = "gui.settingsView.other.checkUpdatesNowButton";
     public static final String CHECKING_UPDATES = "gui.settingsView.other.checkingForUpdates";
+    public static final String PATCH_OFFLINE_ACCOUNT = "gui.settingsView.other.patchOfflineAccount";
     public static final String APPEND_USERNAME = "gui.settingsView.other.appendUsername";
     public static final String LANGUAGE = "gui.settingsView.other.language";
     public static final String STORAGE_BORDER = "gui.settingsView.storageSettings.borderName";
@@ -91,6 +92,7 @@ public class SettingsView extends JPanel {
     private final JLabel exitOptionLabel;
     private final JCheckBox checkUpdates;
     private final JButton checkUpdatesNowButton;
+    private final JCheckBox patchOfflineAccount;
     private final JCheckBox appendUsername;
     private final JLabel languageLabel;
     private final JComboBox<String> whenLaunchesBehavior;
@@ -309,7 +311,7 @@ public class SettingsView extends JPanel {
         }
 
         {
-            JPanel otherSettings = new JPanel(new GridLayout(6, 3));
+            JPanel otherSettings = new JPanel(new GridLayout(7, 3));
             this.otherSettingsBorder = new TitledBorder(language.getString(SettingsView.OTHER_BORDER));
             otherSettings.setBorder(this.otherSettingsBorder);
 
@@ -387,6 +389,15 @@ public class SettingsView extends JPanel {
                 }.execute();
             });
             otherSettings.add(this.checkUpdatesNowButton);
+
+            this.patchOfflineAccount = new JCheckBox(language.getString(SettingsView.PATCH_OFFLINE_ACCOUNT));
+            this.patchOfflineAccount.setSelected(CRLauncher.getInstance().getSettings().patchOfflineAccount);
+            this.patchOfflineAccount.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().patchOfflineAccount = this.patchOfflineAccount.isSelected();
+            });
+            otherSettings.add(this.patchOfflineAccount);
+
+            otherSettings.add(Box.createVerticalGlue());
 
             this.appendUsername = new JCheckBox(language.getString(SettingsView.APPEND_USERNAME));
             this.appendUsername.setSelected(CRLauncher.getInstance().getSettings().appendUsername);

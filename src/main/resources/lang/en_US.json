@@ -324,6 +324,7 @@
                 "checkUpdatesNowButton": "Check for updates",
                 "checkingForUpdates": "Checking...",
                 "noUpdatesAvailable": "You are using the latest version",
+                "patchOfflineAccount": "Set display name for offline account as in the launcher",
                 "appendUsername": "Append username before chat messages",
                 "language": "Language"
             }
