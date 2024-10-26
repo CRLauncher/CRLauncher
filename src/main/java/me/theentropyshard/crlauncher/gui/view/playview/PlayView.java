@@ -62,6 +62,7 @@ public class PlayView extends JPanel {
     private final JLabel instanceInfoLabel;
 
     private InstancesPanel currentPanel;
+    private CosmicRunner cosmicRunner;
 
     public PlayView() {
         super(new BorderLayout());
@@ -126,21 +127,8 @@ public class PlayView extends JPanel {
                 try {
                     List<Instance> instances = this.get();
 
-                    IconManager iconManager = CRLauncher.getInstance().getIconManager();
-
                     for (Instance instance : instances) {
-                        Icon icon;
-                        try {
-                            icon = iconManager.getIcon(instance.getIconFileName()).icon();
-                        } catch (Exception e) {
-                            Log.warn("Could not load icon '" + instance.getIconFileName() + "' for instance '" + instance.getName() + "'");
-
-                            String validIconPath = "cosmic_logo_x32.png";
-                            instance.setIconFileName(validIconPath);
-                            icon = iconManager.getIcon(validIconPath).icon();
-                        }
-                        InstanceItem item = new InstanceItem(icon, instance.getName());
-                        PlayView.this.addInstanceItem(item, instance.getGroupName());
+                        PlayView.this.loadInstance(instance, false);
                     }
 
                     String group = CRLauncher.getInstance().getSettings().lastInstanceGroup;
@@ -154,7 +142,25 @@ public class PlayView extends JPanel {
         }.execute();
     }
 
-    public void addInstanceItem(InstanceItem item, String groupName) {
+    public void loadInstance(Instance instance, boolean sort) {
+        IconManager iconManager = CRLauncher.getInstance().getIconManager();
+
+        Icon icon;
+        try {
+            icon = iconManager.getIcon(instance.getIconFileName()).icon();
+        } catch (Exception e) {
+            Log.warn("Could not load icon '" + instance.getIconFileName() + "' for instance '" + instance.getName() + "'");
+
+            String validIconPath = "cosmic_logo_x32.png";
+            instance.setIconFileName(validIconPath);
+            icon = iconManager.getIcon(validIconPath).icon();
+        }
+
+        InstanceItem item = new InstanceItem(icon, instance.getName());
+        PlayView.this.addInstanceItem(item, instance.getGroupName(), sort);
+    }
+
+    public void addInstanceItem(InstanceItem item, String groupName, boolean sort) {
         if (item instanceof AddInstanceItem) {
             throw new IllegalArgumentException("Adding AddInstanceItem is not allowed");
         }
@@ -170,7 +176,7 @@ public class PlayView extends JPanel {
             this.model.addElement(groupName);
             this.instancesPanelView.add(panel, groupName);
         }
-        panel.addInstanceItem(item);
+        panel.addInstanceItem(item, sort);
 
         InstancesPanel finalPanel = panel;
 
@@ -179,7 +185,8 @@ public class PlayView extends JPanel {
             if (mouseButton == MouseEvent.BUTTON1) { // left mouse button
                 finalPanel.makeItemFirst(item);
 
-                new CosmicRunner(item.getAssociatedInstance(), item).start();
+                this.cosmicRunner = new CosmicRunner(item.getAssociatedInstance(), item);
+                this.cosmicRunner.start();
             } else if (mouseButton == MouseEvent.BUTTON3) { // right mouse button
                 Language language = CRLauncher.getInstance().getLanguage();
 
@@ -206,7 +213,7 @@ public class PlayView extends JPanel {
                         language.getString("gui.playView.renameInstanceDialog.message"),
                         instance.getName());
 
-                    if (newName == null || newName.isEmpty()) {
+                    if (newName == null || newName.isEmpty() || instance.getName().equals(newName)) {
                         return;
                     }
 
@@ -244,6 +251,15 @@ public class PlayView extends JPanel {
                     OperatingSystem.open(instance.getCosmicDir());
                 });
                 popupMenu.add(openCosmicFolder);
+
+                popupMenu.addSeparator();
+
+                JMenuItem exitInstanceItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.killProcess"));
+                exitInstanceItem.setEnabled(item.getAssociatedInstance().isRunning());
+                exitInstanceItem.addActionListener(exit -> {
+                    this.cosmicRunner.stopGame();
+                });
+                popupMenu.add(exitInstanceItem);
 
                 popupMenu.show(item, e.getX(), e.getY());
             }

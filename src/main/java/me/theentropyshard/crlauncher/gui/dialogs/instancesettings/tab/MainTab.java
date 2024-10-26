@@ -23,10 +23,12 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
+import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.ListUtils;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -38,9 +40,11 @@ import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class MainTab extends Tab {
-    private final JComboBox<String> versionsCombo;
+    private final JComboBox<Version> versionsCombo;
     private final JTextField windowTitleField;
     private final String oldWindowTitle;
+
+    private Version previousValue;
 
     public MainTab(Instance instance, JDialog dialog) {
         super(CRLauncher.getInstance().getLanguage()
@@ -63,13 +67,37 @@ public class MainTab extends Tab {
             ));
 
             this.versionsCombo = new JComboBox<>();
+            this.versionsCombo.setRenderer(new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                    if (value instanceof Version version) {
+                        this.setText(version.getId());
+                    }
+
+                    return c;
+                }
+            });
             this.versionsCombo.addItemListener(e -> {
                 if (e.getStateChange() != ItemEvent.SELECTED) {
                     return;
                 }
 
-                String crVersion = String.valueOf(e.getItem());
-                instance.setCosmicVersion(crVersion);
+                Version version = (Version) e.getItem();
+
+                if (version.getClient() == null) {
+                    MessageBox.showErrorMessage(this.getDialog(),
+                        CRLauncher.getInstance().getLanguage().getString(AddInstanceDialog.NO_CLIENT_MESSAGE)
+                            .replace("$$CR_VERSION$$", version.getId()));
+
+                    if (this.previousValue != null) {
+                        this.versionsCombo.setSelectedItem(this.previousValue);
+                    }
+                } else {
+                    instance.setCosmicVersion(version.getId());
+                    this.previousValue = version;
+                }
             });
             crVersionSettings.add(this.versionsCombo);
 
@@ -105,35 +133,40 @@ public class MainTab extends Tab {
             root.add(otherSettings, gbc);
         }
 
-        new Worker<List<String>, Void>("getting remote versions") {
+        new Worker<List<Version>, Void>("getting remote versions") {
             @Override
-            protected List<String> work() throws Exception {
+            protected List<Version> work() throws Exception {
                 VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
-                List<Version> remoteVersions = versionManager.getRemoteVersions(false);
 
-                return remoteVersions.stream().map(Version::getId).toList();
+                return versionManager.getRemoteVersions(false);
             }
 
             @Override
             protected void done() {
-                List<String> versions;
+                List<Version> versions;
                 try {
                     versions = this.get();
                 } catch (InterruptedException | ExecutionException e) {
                     Log.error("Could not get versions", e);
 
                     MessageBox.showErrorMessage(
-                            CRLauncher.frame,
-                            language.getString("messages.gui.instanceSettingsDialog.couldNotLoadVersions") +
-                                ": " + e.getMessage()
+                        CRLauncher.frame,
+                        language.getString("messages.gui.instanceSettingsDialog.couldNotLoadVersions") +
+                            ": " + e.getMessage()
                     );
 
                     return;
                 }
 
                 String cosmicVersion = instance.getCosmicVersion();
+                Version version = ListUtils.search(versions, v -> v.getId().equals(cosmicVersion));
                 versions.forEach(MainTab.this.versionsCombo::addItem);
-                MainTab.this.versionsCombo.setSelectedItem(cosmicVersion);
+
+                MainTab.this.previousValue = version;
+
+                if (version != null) {
+                    MainTab.this.versionsCombo.setSelectedItem(version);
+                }
             }
         }.execute();
     }

@@ -18,36 +18,23 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
-import com.formdev.flatlaf.FlatClientProperties;
-import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
-import me.theentropyshard.crlauncher.crmm.CrmmApi;
-import me.theentropyshard.crlauncher.crmm.ModInfo;
-import me.theentropyshard.crlauncher.crmm.model.datapack.Datapack;
-import me.theentropyshard.crlauncher.crmm.model.datapack.SearchDatapacksResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
-import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.logging.Log;
-
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class SearchCrmmDataModsView extends SearchCrmmModsView {
-    public SearchCrmmDataModsView(Instance instance, ModsTab modsTab) {
+    private final DataModType modType;
+
+    public SearchCrmmDataModsView(Instance instance, ModsTab modsTab, DataModType modType) {
         super(instance, modsTab);
 
-        Language language = CRLauncher.getInstance().getLanguage();
-        this.getSearchField().putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
-            language.getString("gui.searchCRMMModsDialog.searchDatamods"));
+        this.modType = modType;
     }
 
     @Override
-    public void searchMods() {
+    public void searchMods(String query) {
         new DataModsSearchWorker(
-            this.getSearchField(), this.getModCardsPanel(), this.getInstance(), this.getModsTab(),
-            DataModType.DATAMOD
+            query, this.getModCardsPanel(), this.getInstance(), this.getModsTab(),
+            this.modType
         ).execute();
     }
 }

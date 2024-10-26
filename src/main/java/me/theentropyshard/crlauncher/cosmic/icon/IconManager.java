@@ -60,6 +60,10 @@ public class IconManager {
         }
 
         for (Path iconPath : FileUtils.list(this.workDir)) {
+            if (!Files.isRegularFile(iconPath)) {
+                continue;
+            }
+
             try {
                 this.loadIcon(iconPath);
             } catch (IOException e) {
@@ -80,6 +84,10 @@ public class IconManager {
         BufferedImage bufferedImage;
         try (InputStream input = Files.newInputStream(path)) {
             bufferedImage = ImageIO.read(input);
+        }
+
+        if (bufferedImage == null) {
+            throw new IOException("Could not read image: " + path);
         }
 
         if (bufferedImage.getWidth() != 32 || bufferedImage.getHeight() != 32) {

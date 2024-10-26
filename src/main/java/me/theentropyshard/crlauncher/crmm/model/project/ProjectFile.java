@@ -41,6 +41,20 @@ public class ProjectFile {
 
     }
 
+    @Override
+    public String toString() {
+        return "ProjectFile{" +
+            "id='" + this.id + '\'' +
+            ", primary=" + this.primary +
+            ", name='" + this.name + '\'' +
+            ", size=" + this.size +
+            ", type='" + this.type + '\'' +
+            ", url='" + this.url + '\'' +
+            ", sha1='" + this.sha1 + '\'' +
+            ", sha512='" + this.sha512 + '\'' +
+            '}';
+    }
+
     public String getId() {
         return this.id;
     }

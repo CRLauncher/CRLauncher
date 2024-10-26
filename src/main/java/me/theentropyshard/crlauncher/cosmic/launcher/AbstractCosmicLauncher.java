@@ -20,12 +20,15 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.java.JavaLocator;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.ProcessReader;
 import me.theentropyshard.crlauncher.utils.SystemProperty;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractCosmicLauncher implements CosmicLauncher {
     private final String javaPath;
@@ -34,6 +37,7 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
     private final Path clientPath;
     private final List<String> command;
     private final List<SystemProperty> properties;
+    private final Set<String> jvmFlags;
 
     public AbstractCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
         this.javaPath = javaPath;
@@ -42,10 +46,15 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
         this.clientPath = clientPath;
         this.command = new ArrayList<>();
         this.properties = new ArrayList<>();
+        this.jvmFlags = new LinkedHashSet<>();
     }
 
     public void defineProperty(SystemProperty property) {
         this.properties.add(property);
+    }
+
+    public void addJvmFlag(String flag) {
+        this.jvmFlags.add(flag);
     }
 
     public void buildCommand(List<String> command) {
@@ -56,11 +65,16 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
         for (SystemProperty property : this.properties) {
             command.add(property.asJvmArg());
         }
+
+        command.addAll(this.jvmFlags);
+        this.jvmFlags.clear();
     }
 
     @Override
-    public int launch(LogConsumer log, boolean exitAfterLaunch) throws Exception {
+    public Process launch(boolean exitAfterLaunch) throws Exception {
         this.buildCommand(this.command);
+
+        Log.info("Running: " + String.join(" ", this.command));
 
         ProcessBuilder processBuilder = new ProcessBuilder(this.command);
         processBuilder.directory(this.runDir.toFile());
@@ -72,9 +86,7 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
             CRLauncher.getInstance().shutdown();
         }
 
-        new ProcessReader(process).read(log::line);
-
-        return process.waitFor();
+        return process;
     }
 
     public String getJavaPath() {

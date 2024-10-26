@@ -19,53 +19,53 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.DataModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsView;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.ZipUtils;
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.model.FileHeader;
 import okhttp3.OkHttpClient;
 
 import javax.swing.*;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class DataModDownloadWorkerSupplier implements WorkerSupplier {
-    private final Instance instance;
-    private final ModsTab modsTab;
+    public DataModDownloadWorkerSupplier() {
 
-    public DataModDownloadWorkerSupplier(Instance instance, ModsTab modsTab) {
-        this.instance = instance;
-        this.modsTab = modsTab;
     }
 
     @Override
-    public Worker getWorker(ModVersionsView versionsView, ProjectVersion version) {
+    public Worker getWorker(ModVersionsView versionsView, ProjectVersion version, ProjectFile file) {
+        ModsTab modsTab = versionsView.getModsTab();
+        Instance instance = versionsView.getInstance();
+
         return new Worker<>("downloading mod " + version.getTitle()) {
             @Override
-            protected String work() throws Exception {
-                ProjectFile primaryFile = version.getPrimaryFile();
+            protected Mod work() throws Exception {
 
-                ProgressDialog progressDialog = new ProgressDialog("Downloading " + primaryFile.getName());
+                ProgressDialog progressDialog = new ProgressDialog("Downloading " + file.getName());
 
                 OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient().newBuilder()
                     .addNetworkInterceptor(new ProgressNetworkInterceptor(progressDialog))
                     .build();
 
-                Path saveAs = DataModDownloadWorkerSupplier.this.instance.getDataModsDir()
-                    .resolve(primaryFile.getName());
+                Path saveAs = instance.getDataModsDir()
+                    .resolve(file.getName());
 
                 HttpDownload download = new HttpDownload.Builder()
-                    .url(primaryFile.getUrl())
-                    .expectedSize(primaryFile.getSize())
+                    .url(file.getUrl())
+                    .expectedSize(file.getSize())
                     .httpClient(httpClient)
                     .saveAs(saveAs)
                     .build();
@@ -74,39 +74,59 @@ public class DataModDownloadWorkerSupplier implements WorkerSupplier {
                 download.execute();
                 SwingUtilities.invokeLater(() -> progressDialog.getDialog().dispose());
 
-                String modName;
+                Path dataModsDir = instance.getDataModsDir();
 
+                Path dest = null;
                 try (ZipFile file = new ZipFile(saveAs.toFile())) {
-                    FileHeader firstFileHeader = file.getFileHeaders().get(0);
-                    if (firstFileHeader.isDirectory()) {
-                        modName = firstFileHeader.getFileName();
-                    } else {
-                        modName = saveAs.getFileName().toString();
+                    String topLevelDirectory = ZipUtils.findTopLevelDirectory(file.getFileHeaders());
+
+                    if (topLevelDirectory == null) {
+                        Log.error("Could not find top level directory in " + saveAs);
+
+                        return null;
                     }
-                    file.extractAll(DataModDownloadWorkerSupplier.this.instance.getDataModsDir().toString());
+
+                    dest = dataModsDir.resolve(topLevelDirectory);
+                    FileUtils.delete(dest);
+                    file.extractAll(dataModsDir.toString());
+
+                    FileUtils.delete(saveAs);
+
+                    Mod mod = new Mod();
+                    mod.setActive(true);
+                    mod.setName(topLevelDirectory.replace("/", ""));
+                    mod.setFileName(dest.getFileName().toString());
+
+                    List<Mod> dataMods = instance.getDataMods();
+                    dataMods.removeIf(m -> m.getName().equals(mod.getName()));
+                    dataMods.add(mod);
+
+                    return mod;
+                } catch (Exception e) {
+                    Log.error("Could not extract file " + saveAs + " to dir: " + dest, e);
                 }
 
-                FileUtils.delete(saveAs);
-
-                return modName;
+                return null;
             }
 
             @Override
             protected void done() {
-                String modName;
+                Mod dataMod;
+
                 try {
-                    modName = (String) this.get();
+                    dataMod = (Mod) this.get();
                 } catch (InterruptedException | ExecutionException ex) {
                     Log.error(ex);
 
                     return;
                 }
 
-                JPanel modsView = DataModDownloadWorkerSupplier.this.modsTab.getModsView();
-
-                if (modsView instanceof DataModsView dataModsView) {
-                    dataModsView.getDataModsTableModel().addRow(modName);
+                if (dataMod == null) {
+                    return;
                 }
+
+                ModsView modsView = modsTab.getModsView();
+                modsView.getModsTableModel().addMod(dataMod);
             }
         };
     }

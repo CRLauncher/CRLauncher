@@ -37,7 +37,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
+public class FabricCosmicLauncher extends ModdedPatchCosmicLauncher {
     
     private final String version;
 
@@ -151,7 +151,7 @@ public class FabricCosmicLauncher extends ModdedLocationOverrideCosmicLauncher {
 
         super.buildCommand(command);
 
-        Path fabricLoaderDir = CRLauncher.getInstance().getCosmicDir().resolve("fabric-loader-%s".formatted(this.version));
+        Path fabricLoaderDir = CRLauncher.getInstance().getModloadersDir().resolve("fabric-loader-%s".formatted(this.version));
         this.downloadFabricLoader(fabricLoaderDir, this.version);
 
         command.add("-classpath");

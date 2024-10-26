@@ -20,16 +20,26 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
+import me.theentropyshard.crlauncher.utils.StringUtils;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ModVersionCard extends JPanel {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(
+        CRLauncher.getInstance().getLanguage().getString("general.time.dateFormat")
+    );
+
     private static final int BORDER_SIZE = 12;
     private static final int ARC_SIZE = 10;
 
@@ -40,18 +50,68 @@ public class ModVersionCard extends JPanel {
     private boolean mouseOver;
     private boolean mousePressed;
 
-    public ModVersionCard(ProjectVersion version, ActionListener onClick) {
-        super(new BorderLayout());
+    public ModVersionCard(ProjectVersion version, FileListener fileListener) {
+        super(new MigLayout("insets 0, align left", "[30%]push[20%][10%][10%]push[10%]", "[]"));
 
-        JLabel versionNameLabel = new JLabel(version.getVersionNumber());
-        this.add(versionNameLabel, BorderLayout.WEST);
+        JPanel versionInfoPanel = new JPanel(new GridLayout(2, 1));
+        versionInfoPanel.setOpaque(false);
+        JLabel versionNumberLabel = new JLabel("<html><b>" + version.getVersionNumber() + "</b></html>");
+        JLabel versionTitleLabel = new JLabel(version.getTitle());
+        versionInfoPanel.add(versionNumberLabel);
+        versionInfoPanel.add(versionTitleLabel);
 
-        this.add(Box.createHorizontalBox(), BorderLayout.CENTER);
+        this.add(versionInfoPanel);
+
+        JPanel compatibility = new JPanel(new GridLayout(1, 2, 5, 0));
+        compatibility.setOpaque(false);
+
+        List<String> gameVersions = version.getGameVersions();
+        String gameText;
+        if (gameVersions.size() == 1) {
+            gameText = gameVersions.get(0).replace("-pre-alpha", "");
+        } else {
+            gameText = gameVersions.get(0).replace("-pre-alpha", "") + "-" +
+                gameVersions.get(gameVersions.size() - 1).replace("-pre-alpha", "");
+        }
+        JLabel gameVersion = new JLabel(
+            gameText
+        );
+        compatibility.add(gameVersion);
+
+        JLabel loader = new JLabel(version.getLoaders().stream()
+            .map(ldr -> ldr.replace("-", ""))
+            .map(StringUtils::capitalize)
+            .collect(Collectors.joining(" ")));
+        compatibility.add(loader);
+
+        this.add(compatibility);
 
         Language language = CRLauncher.getInstance().getLanguage();
+
         JButton downloadButton = new JButton(language.getString("gui.searchCRMMModsDialog.downloadButton"));
-        downloadButton.addActionListener(onClick);
-        this.add(downloadButton, BorderLayout.EAST);
+        downloadButton.addActionListener(e -> {
+            fileListener.fileChosen(version.getPrimaryFile());
+        });
+
+        JButton otherFilesButtons = new JButton(language.getString("gui.searchCRMMModsDialog.otherFiles"));
+        otherFilesButtons.addActionListener(e -> {
+            OtherFilesView.showDialog(version.getFiles(), fileListener);
+        });
+
+        JLabel published = new JLabel(ModVersionCard.FORMATTER.format(OffsetDateTime.parse(version.getDatePublished())));
+        this.add(published);
+
+        JLabel downloads = new JLabel(String.valueOf(version.getDownloads()));
+        this.add(downloads);
+
+        JPanel buttonsPanel = new JPanel();
+        BoxLayout boxLayout = new BoxLayout(buttonsPanel, BoxLayout.LINE_AXIS);
+        buttonsPanel.setLayout(boxLayout);
+        buttonsPanel.setOpaque(false);
+        buttonsPanel.add(downloadButton);
+        buttonsPanel.add(otherFilesButtons);
+
+        this.add(buttonsPanel);
 
         this.setOpaque(false);
         this.setDefaultColor(UIManager.getColor("InstanceItem.defaultColor"));
@@ -116,6 +176,10 @@ public class ModVersionCard extends JPanel {
 
         g2d.setColor(color);
         g2d.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), ModVersionCard.ARC_SIZE, ModVersionCard.ARC_SIZE);
+    }
+
+    public interface FileListener {
+        void fileChosen(ProjectFile file);
     }
 
     public void setDefaultColor(Color defaultColor) {

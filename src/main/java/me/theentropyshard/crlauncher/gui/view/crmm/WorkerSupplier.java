@@ -18,9 +18,10 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 
 public interface WorkerSupplier<T, V> {
-    Worker<T, V> getWorker(ModVersionsView versionsView, ProjectVersion version);
+    Worker<T, V> getWorker(ModVersionsView versionsView, ProjectVersion version, ProjectFile file);
 }

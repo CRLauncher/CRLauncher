@@ -21,22 +21,22 @@ package me.theentropyshard.crlauncher.utils.json.type;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import me.theentropyshard.crlauncher.instance.InstanceType;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 
 import java.io.IOException;
 
-public class InstanceTypeTypeAdapter extends TypeAdapter<InstanceType> {
+public class InstanceTypeTypeAdapter extends TypeAdapter<ModLoader> {
     public InstanceTypeTypeAdapter() {
 
     }
 
     @Override
-    public void write(JsonWriter writer, InstanceType type) throws IOException {
-        writer.value(type.getType());
+    public void write(JsonWriter writer, ModLoader type) throws IOException {
+        writer.value(type.getLoader());
     }
 
     @Override
-    public InstanceType read(JsonReader reader) throws IOException {
-        return InstanceType.getByType(reader.nextString());
+    public ModLoader read(JsonReader reader) throws IOException {
+        return ModLoader.getByName(reader.nextString());
     }
 }

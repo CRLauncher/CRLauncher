@@ -24,81 +24,38 @@ import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import java.util.List;
 import java.util.Map;
 
-public class QuiltMod implements Mod {
-    public String filePath;
-    public boolean active;
-
-    @SerializedName("schema_version")
-    public int schemaVersion;
-
+public class QuiltMod {
     @SerializedName("quilt_loader")
-    public QuiltLoader quiltLoader;
+    private QuiltLoader quiltLoader;
 
-    public String mixin;
+    public Mod toMod() {
+        return new Mod(this.getId(), this.getName(), this.getVersion(), this.getDescription());
+    }
 
-    @Override
     public String getName() {
         return this.quiltLoader.metadata.name;
     }
 
-    @Override
     public String getVersion() {
         return this.quiltLoader.version;
     }
 
-    @Override
     public String getDescription() {
         return this.quiltLoader.metadata.description;
     }
 
-    @Override
-    public String getFilePath() {
-        return this.filePath;
-    }
-
-    @Override
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    @Override
-    public boolean isActive() {
-        return this.active;
-    }
-
-    @Override
-    public void setActive(boolean active) {
-        this.active = active;
+    public String getId() {
+        return this.quiltLoader.id;
     }
 
     public static final class QuiltLoader {
-        public String group;
-        public String id;
-        public String version;
-        public String intermediate_mappings;
-        public Metadata metadata;
-        public Map<String, String> entrypoints;
-        public List<Depend> depends;
+        private String id;
+        private String version;
+        private Metadata metadata;
+    }
 
-        public static class Contact {
-            public String homepage;
-            public String issues;
-            public String sources;
-            public String wiki;
-        }
-
-        public static class Depend {
-            public String id;
-            public String versions;
-        }
-
-        public static class Metadata {
-            public String name;
-            public String description;
-            public Map<String, String> contributors;
-            public String license;
-            public Contact contact;
-            public String icon;
-        }
+    private static class Metadata {
+        private String name;
+        private String description;
     }
 }

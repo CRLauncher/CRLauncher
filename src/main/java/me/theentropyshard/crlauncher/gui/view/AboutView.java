@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.view;
 import me.theentropyshard.crlauncher.BuildConfig;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.gui.BrowseHyperlinkListener;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
@@ -59,13 +60,7 @@ public class AboutView extends JPanel {
 
         String line3Text = language.getString("gui.aboutView.lines.line3");
         this.line3.setText("<html>" + line3Text.replace("$$LAUNCHER_URL$$", "<a href=\"" + AboutView.GITHUB_LINK + "\">" + AboutView.GITHUB_LINK + "</a>") + "</html>");
-        this.line3.addHyperlinkListener(e -> {
-            if (e.getEventType() != HyperlinkEvent.EventType.ACTIVATED) {
-                return;
-            }
-
-            OperatingSystem.browse(AboutView.GITHUB_LINK);
-        });
+        this.line3.addHyperlinkListener(new BrowseHyperlinkListener());
 
         gbc.gridy++;
         this.add(this.line3, gbc);

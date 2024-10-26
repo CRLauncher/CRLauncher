@@ -49,14 +49,14 @@ public class InstanceItem extends JPanel {
 
     private double percentComplete;
 
-    public InstanceItem(Icon icon, String text) {
+    public InstanceItem(Icon icon, String instanceName) {
         super(new BorderLayout(), true);
 
         this.iconLabel = new JLabel(icon);
         this.iconLabel.setHorizontalAlignment(JLabel.CENTER);
         this.add(this.iconLabel, BorderLayout.CENTER);
 
-        this.textLabel = new JLabel(text);
+        this.textLabel = new JLabel(instanceName);
         this.textLabel.setHorizontalAlignment(JLabel.CENTER);
         this.add(this.textLabel, BorderLayout.SOUTH);
 
@@ -68,7 +68,7 @@ public class InstanceItem extends JPanel {
         this.mouseEnabled = true;
 
         this.setOpaque(false);
-        this.setToolTipText(text);
+        this.setToolTipText(instanceName);
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         this.addMouseListener(new MouseAdapter() {
@@ -141,21 +141,21 @@ public class InstanceItem extends JPanel {
 
         int arcSize = 48;
         Shape arc = new Arc2D.Double(
-                (double) size.width / 2 - (double) arcSize / 2,
-                (double) size.height / 2 - (double) arcSize / 2 - 8,
-                arcSize,
-                arcSize,
-                90 - degree,
-                degree,
-                Arc2D.PIE
+            (double) size.width / 2 - (double) arcSize / 2,
+            (double) size.height / 2 - (double) arcSize / 2 - 8,
+            arcSize,
+            arcSize,
+            90 - degree,
+            degree,
+            Arc2D.PIE
         );
 
         int innerSize = 42;
         Shape inner = new Ellipse2D.Double(
-                (double) size.width / 2 - (double) innerSize / 2,
-                (double) size.height / 2 - (double) innerSize / 2 - 8,
-                innerSize,
-                innerSize
+            (double) size.width / 2 - (double) innerSize / 2,
+            (double) size.height / 2 - (double) innerSize / 2 - 8,
+            innerSize,
+            innerSize
         );
 
         Area area = new Area(arc);

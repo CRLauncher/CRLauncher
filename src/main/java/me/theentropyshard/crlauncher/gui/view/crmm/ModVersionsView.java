@@ -18,14 +18,13 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
-import com.formdev.flatlaf.ui.FlatScrollPaneUI;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
-import me.theentropyshard.crlauncher.gui.SmoothScrollMouseWheelListener;
+import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
@@ -34,7 +33,6 @@ import me.theentropyshard.crlauncher.logging.Log;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseWheelListener;
 import java.util.List;
 
 public class ModVersionsView extends JPanel {
@@ -53,24 +51,17 @@ public class ModVersionsView extends JPanel {
         this.workerSupplier = workerSupplier;
 
         this.modVersionCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
-        this.modVersionCardsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
+        this.modVersionCardsPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
         JPanel borderPanel = new JPanel(new BorderLayout());
         borderPanel.add(this.modVersionCardsPanel, BorderLayout.PAGE_START);
 
         JScrollPane scrollPane = new JScrollPane(borderPanel);
-        scrollPane.setUI(new FlatScrollPaneUI() {
-            @Override
-            protected MouseWheelListener createMouseWheelListener() {
-                if (this.isSmoothScrollingEnabled()) {
-                    return new SmoothScrollMouseWheelListener(scrollPane.getVerticalScrollBar());
-                } else {
-                    return super.createMouseWheelListener();
-                }
-            }
-        });
+        scrollPane.setUI(new FlatSmoothScrollPaneUI());
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         this.add(scrollPane, BorderLayout.CENTER);
+
+        this.setBorder(new EmptyBorder(0, 0, 10, 0));
     }
 
     public void addModVersionCard(ModVersionCard card) {
@@ -106,8 +97,8 @@ public class ModVersionsView extends JPanel {
             @Override
             protected void process(List<ProjectVersion> chunks) {
                 for (ProjectVersion version : chunks) {
-                    ModVersionCard card = new ModVersionCard(version, e -> {
-                        ModVersionsView.this.workerSupplier.getWorker(ModVersionsView.this, version).execute();
+                    ModVersionCard card = new ModVersionCard(version, file -> {
+                        ModVersionsView.this.workerSupplier.getWorker(ModVersionsView.this, version, file).execute();
                     });
                     ModVersionsView.this.addModVersionCard(card);
                 }
@@ -115,6 +106,7 @@ public class ModVersionsView extends JPanel {
 
             @Override
             protected void done() {
+                ModVersionsView.this.modVersionCardsPanel.add(new HeaderModVersionCard(), 0);
                 ModVersionsView.this.modVersionCardsPanel.revalidate();
             }
         }.execute();

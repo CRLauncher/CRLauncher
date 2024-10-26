@@ -26,14 +26,16 @@
                 "instanceNameCannotBeEmpty": "Имя инстанса не может быть пустым!",
                 "groupNameCannotBeEmpty": "Имя группы не может быть пустым!",
                 "cosmicVersionNotSelected": "Версия Cosmic Reach не выбрана!",
-                "unableToCreateInstance": "Не удалось добавить инстанс"
+                "unableToCreateInstance": "Не удалось добавить инстанс",
+                "doesNotHaveClient": "У версии $$CR_VERSION$$ нет клиента"
             },
             "instanceSettingsDialog": {
                 "couldNotLoadVersions": "Не удалось загрузить версии",
                 "ramMinCannotBeLargerMax": "Minimum amount of RAM cannot be larger than maximum",
                 "ramMinCannotBeLess512MB": "Minimum amount of RAM cannot be less than 512 MiB",
                 "deleteWorldSure": "Вы уверены, что хотите удалить мир '$$WORLD_NAME$$'?",
-                "couldNotDeleteWorld": "Не удалось удалить мир '$$WORLD_NAME$$' в $$WORLD_DIR$$"
+                "couldNotDeleteWorld": "Не удалось удалить мир '$$WORLD_NAME$$' в $$WORLD_DIR$$",
+                "couldNotUpdateMod": "Не удалось обновить $$MOD_LOADER$$ мод '$$MOD_ID$$"
             },
             "mods": {
                 "modAddedName": "Мод с названием '$$MOD_NAME$$' уже добавлен!",
@@ -50,11 +52,26 @@
                 "rename": "Переименовать",
                 "delete": "Удалить",
                 "openInstanceFolder": "Открыть папку инстанса",
-                "openCosmicFolder": "Открыть папку cosmic-reach"
+                "openCosmicFolder": "Открыть папку cosmic-reach",
+                "killProcess": "Остановить процесс"
             }
+        },
+        "modFilesDialog": {
+            "name": "Имя",
+            "compatibility": "Совместимость",
+            "datePublished": "Дата публикации",
+            "downloads": "Количество загрузок"
         },
         "instanceSettingsDialog": {
             "title": "Настройки инстанса - $$INSTANCE_NAME$$",
+            "exportInstance": {
+                "exportButton": "Экспорт",
+                "crliFiles": "Файл инстанса CRLauncher (*.crli)",
+                "title": "Экспорт инстанса",
+                "success": "Инстанс успешно экспортирован!",
+                "failure": "Не удалось экспортировать инстанс",
+                "wrongExtension": "Название экспортированного файла должно оканчиваться на .crli"
+            },
             "mainTab": {
                 "name": "Основное",
                 "cosmicReachVersion": {
@@ -70,7 +87,9 @@
                 "name": "Java",
                 "javaInstallation": {
                     "borderName": "Установка Java",
-                    "textFieldPlaceholder": "Путь до javaw.exe"
+                    "textFieldPlaceholder": "Путь до $$JAVAW$$",
+                    "current": "$$CURRENT_INSTALLATION$$ (Текущая)",
+                    "browse": "Выбрать..."
                 },
                 "memorySettings": {
                     "borderName": "Выделение памяти",
@@ -92,10 +111,13 @@
                 "loaderVersion": {
                     "borderName": "Версия загрузчика"
                 },
+                "modpack": "Модпак",
+                "customModpack": "Кастомный",
                 "modsTable": {
                     "borderName": "Моды",
                     "vanilla": {
                         "modFolder": "Папка мода",
+                        "addModButton": "Добавить дата-мод",
                         "deleteModButton": "Удалить дата-мод"
                     },
                     "fabric": {
@@ -126,6 +148,13 @@
                 "openModsFolder": "Открыть папку с модами",
                 "searchModsCRMM": "Найти моды на CRMM"
             },
+            "jarModsTab": {
+                "name": "Jar-моды",
+                "modName": "Имя",
+                "modActive": "Активен",
+                "addModButton": "Добавить Jar-мод",
+                "deleteModButton": "Удалить Jar-мод"
+            },
             "worldsTab": {
                 "name": "Миры",
                 "table": {
@@ -139,6 +168,29 @@
                     "delete": "Удалить"
                 },
                 "deletingWorld": "Удаление мира"
+            },
+            "screenshotsTab": {
+                "name": "Скриншоты",
+                "copyImage": "Копировать изображение",
+                "copyFile": "Копировать файл",
+                "delete": "Удалить",
+                "rename": "Переименовать",
+                "renameMessage": "Введите новое имя файла"
+            },
+            "gameLogTab": {
+                "name": "Лог Игры",
+                "search": "Поиск",
+                "find": "Найти",
+                "upload": "Опубликовать",
+                "copyFile": "Копировать файл",
+                "copyText": "Копировать текст",
+                "clear": "Очистить",
+                "title": "Загрузка",
+                "uploading": "Загрузка лога на McLogs",
+                "failed": "Не удалось загрузить лог",
+                "largeLog": "Размер лога превышает лимит, лог будет обрезан",
+                "successTitle": "Лог загружен",
+                "successMessage": "Лог успешно загружен! Ссылка: $$LINK$$ (Скопировано в буфер обмена)"
             }
         },
         "searchCRMMModsDialog": {
@@ -150,6 +202,8 @@
             "followers234": "подписчика",
             "followers": "подписчиков",
             "downloadButton": "Скачать",
+            "primary": "основной",
+            "otherFiles": "Другие файлы",
             "mods": "Моды",
             "datamods": "Дата-моды",
             "resourcePacks": "Ресурс-паки",
@@ -160,7 +214,8 @@
             "searchDatamods": "Найти дата-моды...",
             "searchResourcePacks": "Найти ресурс-паки...",
             "searchShaders": "Найти шейдеры...",
-            "searchModpacks": "Найти модпаки..."
+            "searchModpacks": "Найти модпаки...",
+            "modVersionsDialogTitle": "Версии мода"
         },
         "addAccountDialog": {
             "title": "Добавить аккаунт",
@@ -235,6 +290,16 @@
                 },
                 "amountOfTime": "Показывать время, прошедшее с релиза версии"
             },
+            "storageSettings": {
+                "borderName": "Хранилище",
+                "versionsPathLabel": "Путь к папке с версиями",
+                "versionsPathFieldPlaceholder": "<launcher folder>/cosmic-reach/versions",
+                "instancesPathLabel": "Путь к папке с инстансами",
+                "instancesPathFieldPlaceholder": "<launcher folder>/cosmic-reach/instances",
+                "modLoadersPathLabel": "Путь к папке с загрузчиками модов",
+                "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach",
+                "tip": "Не забудьте нажать ENTER, чтобы сохранить путь. Изменения будут применены после перезапуска"
+            },
             "other": {
                 "borderName": "Другое",
                 "writePrettyJson": "Красиво форматировать Json-файлы (полезно для дебага/разработки)",
@@ -255,6 +320,10 @@
                     }
                 },
                 "checkForUpdatesAtStartup": "Проверять обновления при запуске",
+                "checkUpdatesNowButton": "Проверить обновления",
+                "checkingForUpdates": "Проверяем...",
+                "noUpdatesAvailable": "Вы используете новейшую версию",
+                "appendUsername": "Добавлять ник перед сообщениями в чате",
                 "language": "Язык"
             }
         },
@@ -266,6 +335,16 @@
             }
         },
         "addInstanceDialog": {
+            "importInstance": {
+                "importButton": "Импорт",
+                "crliFiles": "Файл инстанса CRLauncher (*.crli)",
+                "title": "Импорт инстанса",
+                "success": "Инстанс успешно импортирован!",
+                "failure": "Не удалось импортировать инстанс",
+                "duplicate": "Инстанс с папкой $$INSTANCE_FOLDER$$ уже существует",
+                "badFile": "Файл инстанса поврежден или имеет неверный формат",
+                "wrongExtension": "Название импортированного файла должно оканчиваться на .crli"
+            },
             "title": "Добавить новый инстанс",
             "nameFieldLabel": "Имя",
             "groupFieldLabel": "Группа",
@@ -279,6 +358,11 @@
                 "dateReleased": "Дата релиза",
                 "versionType": "Тип версии"
             }
+        },
+        "updateDialog": {
+            "title": "Обновление",
+            "updateNowButton": "Обновить",
+            "updateLaterButton": "Позже"
         }
     },
     "general": {

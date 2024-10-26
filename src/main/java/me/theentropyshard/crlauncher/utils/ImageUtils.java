@@ -22,6 +22,12 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public final class ImageUtils {
+    /**
+     * Converts any <code>Image</code> to <code>BufferedImage</code>
+     *
+     * @param image any <code>Image</code> object
+     * @return instance of <code>BufferedImage</code> with support for transparency
+     */
     public static BufferedImage toBufferedImage(Image image) {
         BufferedImage resultImage = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 
@@ -30,6 +36,40 @@ public final class ImageUtils {
         g2d.dispose();
 
         return resultImage;
+    }
+
+    /**
+     * Resizes an image keeping its aspect ratio and fitting it in the specified size
+     *
+     * @param image         image to resize
+     * @param desiredWidth  width in which the image needs to be fit
+     * @param desiredHeight height in which the image needs to be fit
+     * @return resized image with transparent bars if it does not fully cover desired width and height
+     */
+    public static BufferedImage fitImageAndResize(BufferedImage image, int desiredWidth, int desiredHeight) {
+        BufferedImage resizedImage = new BufferedImage(desiredWidth, desiredHeight, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = resizedImage.createGraphics();
+
+        // Set the background to transparent
+        g2d.setComposite(AlphaComposite.Clear);
+        g2d.fillRect(0, 0, desiredWidth, desiredHeight);
+        g2d.setComposite(AlphaComposite.SrcOver);
+
+        // Calculate the scaling factor to maintain aspect ratio
+        double scaleX = (double) desiredWidth / image.getWidth();
+        double scaleY = (double) desiredHeight / image.getHeight();
+        double scale = Math.min(scaleX, scaleY); // Use the smaller scale to maintain aspect ratio
+
+        int newWidth = (int) (image.getWidth() * scale);
+        int newHeight = (int) (image.getHeight() * scale);
+
+        int x = (desiredWidth - newWidth) / 2;
+        int y = (desiredHeight - newHeight) / 2;
+
+        g2d.drawImage(image.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH), x, y, null);
+        g2d.dispose();
+
+        return resizedImage;
     }
 
     private ImageUtils() {

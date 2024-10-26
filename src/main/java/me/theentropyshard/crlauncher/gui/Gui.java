@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
+import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.laf.DarkLauncherLaf;
 import me.theentropyshard.crlauncher.gui.laf.LightLauncherLaf;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
@@ -82,7 +83,14 @@ public class Gui {
         CRLauncher.frame = this.frame = new JFrame(title);
         this.frame.add(this.viewSelector, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 5));
+        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 5)) {
+            @Override
+            public void updateUI() {
+                super.updateUI();
+
+                this.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, UIManager.getColor("Component.borderColor")));
+            }
+        };
         bottomPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, UIManager.getColor("Component.borderColor")));
         this.openFolderButton = new JButton(language.getString(Gui.OPEN_LAUNCHER_FOLDER));
         this.openFolderButton.addActionListener(e -> {

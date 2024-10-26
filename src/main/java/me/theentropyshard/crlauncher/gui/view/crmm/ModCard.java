@@ -47,7 +47,6 @@ import java.util.concurrent.ExecutionException;
 
 public class ModCard extends JPanel {
     private static final Icon EMPTY_ICON = new ImageIcon(new BufferedImage(64, 64, BufferedImage.TYPE_INT_ARGB));
-    private static final Icon NO_ICON = SwingUtils.getIcon("/assets/images/icons/mod_no_icon.png");
 
     private static final int DESCRIPTION_LIMIT = 100;
     private static final int MAX_HEIGHT = 148;
@@ -93,6 +92,7 @@ public class ModCard extends JPanel {
         this.descriptionArea.addMouseListener(new ClickThroughListener(this));
 
         String summary = modInfo.getDescription();
+        summary = summary.replace("\n", "").replace("\r", "");
         if (summary.length() > ModCard.DESCRIPTION_LIMIT) {
             this.descriptionArea.setText(summary.substring(0, ModCard.DESCRIPTION_LIMIT - 3) + "...");
         } else {
@@ -225,72 +225,53 @@ public class ModCard extends JPanel {
         return new Dimension(preferredSize.width, ModCard.MAX_HEIGHT);
     }
 
-    public static String getAgoFromNow(Temporal temporal) {
+    public static String formatUnit(String key, int count) {
         Language language = CRLauncher.getInstance().getLanguage();
         String ago = language.getString("general.time.ago");
 
+        return switch (count) {
+            case 1 -> count + " " + language.getString(key + "1") + " " + ago;
+            case 2, 3, 4 -> count + " " + language.getString(key + "s234") + " " + ago;
+            default -> count + " " + language.getString(key + "s") + " " + ago;
+        };
+    }
+
+    public static String getAgoFromNow(Temporal temporal) {
         OffsetDateTime now = OffsetDateTime.now();
 
         int years = (int) ChronoUnit.YEARS.between(temporal, now);
-        if (years == 0) {
-            int months = (int) ChronoUnit.MONTHS.between(temporal, now);
-            if (months == 0) {
-                int weeks = (int) ChronoUnit.WEEKS.between(temporal, now);
-                if (weeks == 0) {
-                    int days = (int) ChronoUnit.DAYS.between(temporal, now);
-                    if (days == 0) {
-                        int hours = (int) ChronoUnit.HOURS.between(temporal, now);
-                        if (hours == 0) {
-                            int minutes = (int) ChronoUnit.MINUTES.between(temporal, now);
-                            if (minutes == 0) {
-                                int seconds = (int) ChronoUnit.SECONDS.between(temporal, now);
-                                return switch (seconds) {
-                                    case 1 -> seconds + " " + language.getString("general.time.units.second1") + " " + ago;
-                                    case 2, 3, 4 -> seconds + " " + language.getString("general.time.units.seconds234") + " " + ago;
-                                    default -> seconds + " " + language.getString("general.time.units.seconds") + " " + ago;
-                                };
-                            } else {
-                                return switch (minutes) {
-                                    case 1 -> minutes + " " + language.getString("general.time.units.minute1") + " " + ago;
-                                    case 2, 3, 4 -> minutes + " " + language.getString("general.time.units.minutes234") + " " + ago;
-                                    default -> minutes + " " + language.getString("general.time.units.minutes") + " " + ago;
-                                };
-                            }
-                        } else {
-                            return switch (hours) {
-                                case 1 -> hours + " " + language.getString("general.time.units.hour1") + " " + ago;
-                                case 2, 3, 4 -> hours + " " + language.getString("general.time.units.hours234") + " " + ago;
-                                default -> hours + " " + language.getString("general.time.units.hours") + " " + ago;
-                            };
-                        }
-                    } else {
-                        return switch (days) {
-                            case 1 -> language.getString("general.time.units.yesterday");
-                            case 2, 3, 4 -> days + " " + language.getString("general.time.units.days234") + " " + ago;
-                            default -> days + " " + language.getString("general.time.units.days") + " " + ago;
-                        };
-                    }
-                } else {
-                    return switch (weeks) {
-                        case 1 -> weeks + " " + language.getString("general.time.units.week1") + " " + ago;
-                        case 2, 3, 4 -> weeks + " " + language.getString("general.time.units.weeks234") + " " + ago;
-                        default -> weeks + " " + language.getString("general.time.units.weeks") + " " + ago;
-                    };
-                }
-            } else {
-                return switch (months) {
-                    case 1 -> months + " " + language.getString("general.time.units.month1") + " " + ago;
-                    case 2, 3, 4 -> months + " " + language.getString("general.time.units.months234") + " " + ago;
-                    default -> months + " " + language.getString("general.time.units.months") + " " + ago;
-                };
-            }
-        } else {
-            return switch (years) {
-                case 1 -> years + " " + language.getString("general.time.units.year1") + " " + ago;
-                case 2, 3, 4 -> years + " " + language.getString("general.time.units.years234") + " " + ago;
-                default -> years + " " + language.getString("general.time.units.years") + " " + ago;
-            };
+        if (years != 0) {
+            return ModCard.formatUnit("general.time.units.year", years);
         }
+
+        int months = (int) ChronoUnit.MONTHS.between(temporal, now);
+        if (months != 0) {
+            return ModCard.formatUnit("general.time.units.month", months);
+        }
+
+        int weeks = (int) ChronoUnit.WEEKS.between(temporal, now);
+        if (weeks != 0) {
+            return ModCard.formatUnit("general.time.units.week", weeks);
+        }
+
+        int days = (int) ChronoUnit.DAYS.between(temporal, now);
+        if (days != 0) {
+            return ModCard.formatUnit("general.time.units.day", days);
+        }
+
+        int hours = (int) ChronoUnit.HOURS.between(temporal, now);
+        if (hours != 0) {
+            return ModCard.formatUnit("general.time.units.hour", hours);
+        }
+
+        int minutes = (int) ChronoUnit.MINUTES.between(temporal, now);
+        if (minutes != 0) {
+            return ModCard.formatUnit("general.time.units.minute", minutes);
+        }
+
+        int seconds = (int) ChronoUnit.SECONDS.between(temporal, now);
+
+        return ModCard.formatUnit("general.time.units.second", seconds);
     }
 
     private void fetchIcon(ModInfo modInfo) {
@@ -302,7 +283,7 @@ public class ModCard extends JPanel {
                 String iconUrl = modInfo.getIconUrl();
 
                 if (iconUrl == null) {
-                    return ModCard.NO_ICON;
+                    return ModNoIcon.INSTANCE;
                 }
 
                 Request request = new Request.Builder()
@@ -340,7 +321,7 @@ public class ModCard extends JPanel {
                 }
 
                 if (icon == null) {
-                    icon = ModCard.NO_ICON;
+                    icon = ModNoIcon.INSTANCE;
                 }
 
                 ModCard.this.iconLabel.setIcon(icon);

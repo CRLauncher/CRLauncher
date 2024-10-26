@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.utils;
 
+import me.theentropyshard.crlauncher.logging.Log;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -28,6 +30,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,10 +46,29 @@ public final class SwingUtils {
             return SwingUtils.ICON_CACHE.get(path);
         }
 
-        Icon icon = new ImageIcon(Objects.requireNonNull(SwingUtils.class.getResource(path)));
+        URL resource = SwingUtils.class.getResource(path);
+
+        if (resource == null) {
+            Log.warn("Could not find resource: " + path);
+
+            return null;
+        }
+
+        Icon icon = new ImageIcon(resource);
         SwingUtils.ICON_CACHE.put(path, icon);
 
         return icon;
+    }
+
+    public static void startWorker(Runnable runnable) {
+        new SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                runnable.run();
+
+                return null;
+            }
+        }.execute();
     }
 
     public static BufferedImage loadImageFromBase64(String base64) {
@@ -73,6 +97,10 @@ public final class SwingUtils {
         }
 
         return null;
+    }
+
+    public static BufferedImage loadImageFromFile(Path file) throws IOException {
+        return ImageIO.read(file.toFile());
     }
 
     public static void centerWindow(Window window, int screen) {
@@ -104,7 +132,7 @@ public final class SwingUtils {
 
     public static void setJTableColumnsWidth(JTable table, double... percentages) {
         TableColumnModel columnModel = table.getColumnModel();
-        int tablePreferredWidth = columnModel.getTotalColumnWidth();
+        int tablePreferredWidth = table.getWidth();
 
         double total = 0;
         for (int i = 0; i < columnModel.getColumnCount(); i++) {

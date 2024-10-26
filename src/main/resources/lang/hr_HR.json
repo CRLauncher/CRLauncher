@@ -1,0 +1,398 @@
+{
+    "metaInfo": {
+        "name": "Hrvatski",
+        "displayName": "Hrvatski"
+    },
+    "messages": {
+        "gui": {
+            "error": "Greška",
+            "addAccountDialog": {
+                "offline": {
+                    "enterUsername": "Unesi željeno ime igrača"
+                },
+                "itch": {
+                    "apiKeyCannotBeEmpty": "API ključ ne može biti prazan"
+                }
+            },
+            "accountDelete": {
+                "error": "Nije moguće ukloniti '$$ACCOUNT_NAME$$'"
+            },
+            "playView": {
+                "deleteInstanceConfirm": "Jesi li siguran da želiš ukloniti instancu '$$INSTANCE_NAME$$'?",
+                "cannotDeleteInstance": "Nije moguće ukloniti $$INSTANCE_DIR$$",
+                "invalidInstanceName": "An invalid name was supplied! Valid name was created."
+            },
+            "addInstanceDialog": {
+                "instanceNameCannotBeEmpty": "Ime instance ne može biti prazno!",
+                "groupNameCannotBeEmpty": "Ime grupe ne može biti prazno!",
+                "cosmicVersionNotSelected": "Cosmic Reach verzija nije odabrana!",
+                "unableToCreateInstance": "Nije moguće napraviti novu instancu",
+                "doesNotHaveClient": "Verzija $$CR_VERSION$$ nema klijenta"
+            },
+            "instanceSettingsDialog": {
+                "couldNotLoadVersions": "Nije moguće dobiti verzije",
+                "ramMinCannotBeLargerMax": "Minimalna količina RAM-a ne može biti veća od maksimalne",
+                "ramMinCannotBeLess512MB": "Minimalna količina rama ne može biti manje od 512 MiB",
+                "deleteWorldSure": "Jesi li siguran da želiš ukloniti svijet '$$WORLD_NAME$$'?",
+                "couldNotDeleteWorld": "Nije moguće izbrisati svijet '$$WORLD_NAME$$' koji se nalazi u $$WORLD_DIR$$",
+                "couldNotUpdateMod": "Nije moguće ažurirati '$$MOD_ID$$' za $$MOD_LOADER$$"
+            },
+            "mods": {
+                "modAddedName": "Mod sa imenom '$$MOD_NAME$$' je već dodan!",
+                "modAddedId": "Mod sa ID-jem'$$MOD_ID$$' je već dodan!",
+                "modInvalid": "$$MOD_PATH$$ nije važeći $$MOD_LOADER$$ mod!"
+            }
+        }
+    },
+    "gui": {
+        "instanceItem": {
+            "contextMenu": {
+                "edit": "Uredi",
+                "icon": "Ikona",
+                "rename": "Preimenuj",
+                "delete": "Izbriši",
+                "openInstanceFolder": "Otvori mapu instance",
+                "openCosmicFolder": "Otvori Cosmic mapu",
+                "killProcess": "Isključi proces"
+            }
+        },
+        "modFilesDialog": {
+            "name": "Ime",
+            "compatibility": "Kompatibilnost",
+            "datePublished": "Datum objave",
+            "downloads": "Preuzimanja"
+        },
+        "instanceSettingsDialog": {
+            "title": "Postavke Instance - $$INSTANCE_NAME$$",
+            "exportInstance": {
+                "exportButton": "Izvoz",
+                "crliFiles": "CRLauncher datoteka instance (*.crli)",
+                "title": "Izvoz instance",
+                "success": "Instanca uspješno izvezena!",
+                "failure": "Nije moguće izvesti instancu",
+                "wrongExtension": "Izvezeno ime mora završavati sa .crli"
+            },
+            "mainTab": {
+                "name": "Glavno",
+                "cosmicReachVersion": {
+                    "borderName": "Cosmic Reach verzija",
+                    "autoUpdateToLatest": "Automatski ažuriraj na najnoviju verziju"
+                },
+                "otherSettings": {
+                    "borderName": "Ostalo",
+                    "textFieldPlaceholder": "Stavi ime instance ovdje"
+                }
+            },
+            "javaTab": {
+                "name": "Java",
+                "javaInstallation": {
+                    "borderName": "Java Instalacija",
+                    "textFieldPlaceholder": "Lokacija $$JAVAW$$",
+                    "current": "$$CURRENT_INSTALLATION$$ (Sadašnja)",
+                    "browse": "Odaberi lokaciju..."
+                },
+                "memorySettings": {
+                    "borderName": "Postavke memorije",
+                    "minimum": "Minimalna memorija (Megabajti)",
+                    "maximum": "Maksimalna memoija (Megabajti)"
+                }
+            },
+            "modsTab": {
+                "name": "Modovi",
+                "modLoader": {
+                    "borderName": "Pokretač modova",
+                    "options": {
+                        "vanilla": "Vanilla",
+                        "fabric": "Fabric",
+                        "cosmicQuilt": "Cosmic Quilt",
+                        "puzzle": "Puzzle"
+                    }
+                },
+                "loaderVersion": {
+                    "borderName": "Loader verzija"
+                },
+                "modsTable": {
+                    "borderName": "Modovi",
+                    "vanilla": {
+                        "modFolder": "Mod mapa",
+                        "addModButton": "Dodaj podatkovni mod",
+                        "deleteModButton": "Izbriši podatkovni mod"
+                    },
+                    "fabric": {
+                        "modName": "Ime",
+                        "modVersion": "Verzija",
+                        "modDescription": "Opis",
+                        "modActive": "Aktivan",
+                        "addModButton": "Dodaj Fabric mod",
+                        "deleteModButton": "Izbriši Fabric mod"
+                    },
+                    "cosmicQuilt": {
+                        "modName": "Ime",
+                        "modVersion": "Verzija",
+                        "modDescription": "Opis",
+                        "modActive": "Aktivan",
+                        "addModButton": "Dodaj Quilt mod",
+                        "deleteModButton": "Izbriši Quilt mod"
+                    },
+                    "puzzle": {
+                        "modName": "Ime",
+                        "modVersion": "Verzija",
+                        "modDescription": "Opis",
+                        "modActive": "Aktivan",
+                        "addModButton": "Dodaj Puzzle mod",
+                        "deleteModButton": "Izbriši Puzzle mod"
+                    }
+                },
+                "openModsFolder": "Otvori mapu modova",
+                "searchModsCRMM": "Traži modove na CRMM-u"
+            },
+            "jarModsTab": {
+                "name": "Jar Modovi",
+                "modName": "Ime",
+                "modActive": "Aktivan",
+                "addModButton": "Dodaj Jar mod",
+                "deleteModButton": "Izbriši Jar mod"
+            },
+            "worldsTab": {
+                "name": "Svjetovi",
+                "table": {
+                    "worldName": "Ime",
+                    "worldSeed": "Seed",
+                    "lastPlayed": "Zadnje igran",
+                    "createdAt": "Napravljen"
+                },
+                "contextMenu": {
+                    "copySeed": "Kopiraj seed",
+                    "delete": "Izbriši"
+                },
+                "deletingWorld": "Brisanje svijeta"
+            },
+            "screenshotsTab": {
+                "name": "Screenshotovi",
+                "copyImage": "Kopiraj Sliku",
+                "copyFile": "Kopiraj Datoteku",
+                "delete": "Izbriši",
+                "rename": "Preimenuj",
+                "renameMessage": "Upiši novo ime za datoteku"
+            },
+            "gameLogTab": {
+                "name": "Log Igre",
+                "search": "Traži",
+                "find": "Nađi",
+                "upload": "Pošalji",
+                "copyFile": "Kopiraj Datoteku",
+                "copyText": "Kopiraj Tekst",
+                "clear": "Očisti",
+                "title": "Pošalji",
+                "uploading": "Slanje log-a na McLogs",
+                "failed": "Log neuspješno poslan",
+                "largeLog": "Veličina loga veća je od limitacije, log će biti skraćen",
+                "successTitle": "Log poslan",
+                "successMessage": "Log uspješno poslan! Link: $$LINK$$ (Kopiran)"
+            }
+        },
+        "searchCRMMModsDialog": {
+            "title": "Traži modove na CRMM-u",
+            "download1": "preuzmi",
+            "downloads234": "preuzimanja",
+            "downloads": "preuzimanja",
+            "follower1": "pratitelj",
+            "followers234": "pratitelji",
+            "followers": "pratitelja",
+            "downloadButton": "Preuzmi",
+            "primary": "primaran",
+            "otherFiles": "Druge datoteke",
+            "mods": "Modovi",
+            "datamods": "Podatkovni Modovi",
+            "resourcePacks": "Paketi Resursa",
+            "shaders": "Shaderi",
+            "modpacks": "Paketi modova",
+            "searchButton": "Traži",
+            "searchMods": "Traži modove...",
+            "searchDatamods": "Traži podatkovne modove...",
+            "searchResourcePacks": "Traži pakete resursa...",
+            "searchShaders": "Traži shadere...",
+            "searchModpacks": "Traži pakete modova...",
+            "modVersionsDialogTitle": "Verzije modova"
+        },
+        "addAccountDialog": {
+            "title": "Dodaj račun",
+            "offline": {
+                "tabName": "Izvanmrežni",
+                "textFieldPlaceholder": "Upiši željeno ime"
+            },
+            "itch": {
+                "tabName": "Itch.io",
+                "textFieldPlaceholder": "Upiši Itch.io API ključ"
+            },
+            "accountExists": "Račun s imenom '$$ACCOUNT_NAME$$' već postoji",
+            "addButton": "Dodaj"
+        },
+        "console": {
+            "title": "CRLauncher Konzola",
+            "scrollDown": "Automatski pomakni prema dolje",
+            "copyButton": "Kopiraj",
+            "clearButton": "Očisti"
+        },
+        "general": {
+            "yes": "Da",
+            "no": "Ne",
+            "ok": "OK",
+            "cancel": "Otkaži",
+            "archives": "Arhive",
+            "openLauncherFolder": "Otvori mapu pokretača",
+            "consoleButton": {
+                "show": "Pokaži konzolu",
+                "hide": "Sakrij konzolu"
+            },
+            "tab": {
+                "play": "Igraj",
+                "accounts": "Računi",
+                "settings": "Postavke",
+                "about": "O programu"
+            }
+        },
+        "playView": {
+            "instanceGroup": "Grupa instanci",
+            "account": "Račun",
+            "deleteInstanceTitle": "Izbriši instancu",
+            "renameInstanceDialog": {
+                "title": "Preimenuj instancu",
+                "message": "Upiši novo ime"
+            },
+            "lastPlayedFor": "Zadnje igrano",
+            "totalPlayedFor": "Ukupno igrano",
+            "running": "Pokrenuto"
+        },
+        "accountsView": {
+            "addAccountButton": "Dodaj račun",
+            "deleteConfirmation": {
+                "title": "Brisanje računa",
+                "message": "Jesi li siguran da želiš obrisati račun '$$ACCOUNT_NAME$$'?"
+            }
+        },
+        "settingsView": {
+            "themeSettings": {
+                "borderName": "Tema",
+                "light": "Svjetla",
+                "dark": "Tamna"
+            },
+            "ui": {
+                "borderName": "UI",
+                "dialogPosition": {
+                    "label": "Pozicija dijaloga",
+                    "options": {
+                        "relativeToParent": "Relativno pretcu",
+                        "alwaysCentered": "Uvijek centrirano"
+                    }
+                },
+                "amountOfTime": "Pokaži koliko je vremena prošlo od datuma izlaska"
+            },
+            "storageSettings": {
+                "borderName": "Pohrana",
+                "versionsPathLabel": "Lokacija mape s verzijama",
+                "versionsPathFieldPlaceholder": "<mapa pokretača>/cosmic-reach/versions",
+                "instancesPathLabel": "Lokacija mape s instancama",
+                "instancesPathFieldPlaceholder": "<mapa pokretača>/cosmic-reach/instances",
+                "modLoadersPathLabel": "Lokacija mape s pokretačima modova",
+                "modLoadersPathFieldPlaceholder": "<mapa pokretača>/cosmic-reach",
+                "tip": "Zapamti da treba pritisnuti ENTER da bi se lokacija spremila. Promjene će se primijeniti nakon ponovnog pokretanja"
+            },
+            "other": {
+                "borderName": "Ostalo",
+                "writePrettyJson": "Napiši lijepe JSON datoteke (korisno za razvijanje/debugiranje)",
+                "onGameLaunch": {
+                    "label": "Kada se Cosmic Reach pokrene",
+                    "options": {
+                        "doNothing": "Ne napravi ništa",
+                        "hideLauncher": "Sakrij pokretač",
+                        "hideLauncherAndConsole": "Sakrij pokretač i konzolu",
+                        "exitLauncher": "Izađi iz pokretača (Vrijeme provedeno u instanci neće biti zbrojeno)"
+                    }
+                },
+                "onGameExit": {
+                    "label": "Kada se Cosmic Reach zaustavi",
+                    "options": {
+                        "doNothing": "Ne napravi ništa",
+                        "exitLauncher": "Izađi iz pokretača ako je izlazni kod Cosmic Reacha 0 (ok)"
+                    }
+                },
+                "checkForUpdatesAtStartup": "Provjeri ima li ažuriranja na pokretanje",
+                "checkUpdatesNowButton": "Provjeri ima li ažuriranja",
+                "checkingForUpdates": "Provjeravanje...",
+                "noUpdatesAvailable": "Koristiš najnoviju verziju",
+                "appendUsername": "Dodaj ime prije razgovornih poruka",
+                "language": "Jezik"
+            }
+        },
+        "aboutView": {
+            "lines": {
+                "line1": "CRLauncher $$LAUNCHER_VERSION$$ - jednostavan Cosmic Reach pokretač",
+                "line2": "napravio TheEntropyShard",
+                "line3": "Više na $$LAUNCHER_URL$$"
+            }
+        },
+        "addInstanceDialog": {
+            "importInstance": {
+                "importButton": "Uvezi",
+                "crliFiles": "CRLauncher datoteka instance (*.crli)",
+                "title": "Uvoz instance",
+                "success": "Instance uspješno uvezena",
+                "failure": "Uvoz instance nije moguć",
+                "duplicate": "Instanca s mapom $$INSTANCE_FOLDER$$ već postoji",
+                "badFile": "Datoteka instance je koruptirana ili ima nevažeći format",
+                "wrongExtension": "Uvezena datoteka mora završavati sa .crli"
+            },
+            "title": "Dodaj Novu Instancu",
+            "nameFieldLabel": "Ime",
+            "groupFieldLabel": "Grupa",
+            "autoUpdateToLatest": "Automatski ažuriraj na najnoviju verziju",
+            "filter": "Filter",
+            "refreshButton": "Osvježi",
+            "addButton": "Dodaj",
+            "cancelButton": "Otkaži",
+            "table": {
+                "version": "Verzija",
+                "dateReleased": "Datum izlaska",
+                "versionType": "Tip"
+            }
+        },
+        "updateDialog": {
+            "title": "Ažuriranja",
+            "updateNowButton": "Ažuriraj",
+            "updateLaterButton": "Kasnije"
+        }
+    },
+    "general": {
+        "updated": "Ažuriran prije",
+        "time": {
+            "dateFormat": "MM/dd/yyyy",
+            "ago": "",
+            "units": {
+                "second1": "sekunde",
+                "seconds234": "sekunde",
+                "seconds": "sekundi",
+                "minute1": "minute",
+                "minutes234": "minute",
+                "minutes": "minuta",
+                "hour1": "sata",
+                "hours234": "sati",
+                "hours": "sata",
+                "day1": "dana",
+                "days234": "dana",
+                "days": "dana",
+                "today": "danas",
+                "yesterday": "jučer",
+                "week1": "tjedna",
+                "weeks234": "tjedna",
+                "weeks": "tjedana",
+                "month1": "mjeseca",
+                "months234": "mjeseca",
+                "months": "mjeseci",
+                "year1": "godine",
+                "years234": "godine",
+                "years": "godina"
+            }
+        }
+    }
+}

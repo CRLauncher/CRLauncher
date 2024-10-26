@@ -18,17 +18,26 @@
 
 package me.theentropyshard.crlauncher.logging;
 
-import me.theentropyshard.crlauncher.cosmic.CosmicLogEvent;
+import com.twelvemonkeys.imageio.metadata.tiff.IFD;
+import me.theentropyshard.crlauncher.cosmic.AnsiCosmicLogEvent;
 import me.theentropyshard.crlauncher.cosmic.TimeCosmicLogEvent;
 
 import java.io.CharArrayWriter;
 import java.io.PrintWriter;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.regex.Pattern;
 
 public final class Log {
     private static final BlockingQueue<LogEvent> EVENT_QUEUE = new ArrayBlockingQueue<>(128);
     private static final boolean WRAP_ERR = true;
+
+    // https://github.com/MultiMC/Launcher/blob/bb04cb09a37e4396ba09068e7d8691ceb6e3cfdc/launcher/minecraft/MinecraftInstance.cpp#L773
+    private static final String JAVA_SYMBOL = "([a-zA-Z_$][a-zA-Z\\d_$]*\\.)+[a-zA-Z_$][a-zA-Z\\d_$]*";
+    private static final Pattern EXCEPTION_AT_PATTERN = Pattern.compile("\\s+at " + Log.JAVA_SYMBOL);
+    private static final Pattern CAUSED_BY_PATTERN = Pattern.compile("Caused by: " + Log.JAVA_SYMBOL);
+    private static final Pattern EXCEPTION_PATTERN = Pattern.compile("([a-zA-Z_$][a-zA-Z\\d_$]*\\.)+[a-zA-Z_$]?[a-zA-Z\\d_$]*(Exception|Error|Throwable)");
+    private static final Pattern MORE_PATTERN = Pattern.compile("\\.\\.\\. \\d+ more$");
 
     public static void start() {
         new LogQueueProcessor(Log.EVENT_QUEUE).start();
@@ -74,10 +83,39 @@ public final class Log {
     }
 
     public static void cosmicReachModded(String line) {
-        Log.EVENT_QUEUE.offer(new CosmicLogEvent(line));
+        Log.EVENT_QUEUE.offer(new AnsiCosmicLogEvent(line));
     }
 
     public static void cosmicReachVanilla(String line) {
-        Log.EVENT_QUEUE.offer(new TimeCosmicLogEvent(line));
+        LogLevel level = null;
+
+        if (line.startsWith("[INFO]")) {
+            level = LogLevel.INFO;
+        } else if (line.startsWith("[WARNING]")) {
+            level = LogLevel.WARN;
+        } else if (line.startsWith("[ERROR]")) {
+            level = LogLevel.ERROR;
+        } else if (line.startsWith("[DEBUG]")) {
+            level = LogLevel.DEBUG;
+        }
+
+        // https://github.com/MultiMC/Launcher/blob/bb04cb09a37e4396ba09068e7d8691ceb6e3cfdc/launcher/minecraft/MinecraftInstance.cpp#L773
+        if (level == null) {
+            if (
+                line.contains("Exception in thread") ||
+                    Log.EXCEPTION_AT_PATTERN.matcher(line).find() ||
+                    Log.CAUSED_BY_PATTERN.matcher(line).find() ||
+                    Log.EXCEPTION_PATTERN.matcher(line).find() ||
+                    Log.MORE_PATTERN.matcher(line).find()
+            ) {
+                level = LogLevel.ERROR;
+            }
+        }
+
+        if (level == null) {
+            level = LogLevel.INFO;
+        }
+
+        Log.EVENT_QUEUE.offer(new TimeCosmicLogEvent(level, line));
     }
 }

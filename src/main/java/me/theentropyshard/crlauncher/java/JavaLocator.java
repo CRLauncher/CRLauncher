@@ -18,13 +18,70 @@
 
 package me.theentropyshard.crlauncher.java;
 
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.function.Predicate;
 
 public final class JavaLocator {
     public static String getJavaPath() {
         return Paths.get(System.getProperty("java.home"), "bin", OperatingSystem.getCurrent().getJavaExecutableName()).toString();
+    }
+
+    /**
+     * Detect java installation from {@code PATH} environmental variable.
+     * <p>
+     * This method checks each entry in the {@code PATH} environmental variable
+     * if the java windowless executable is present.
+     *
+     * @return the detected java installation paths
+     * @see OperatingSystem#getJavaExecutableName
+     * @see System#getenv
+     * @see Files#exists
+     */
+    public static Path[] getJavaFromEnv() {
+        return JavaLocator.getJavaInFolders(
+            System.getenv("PATH").split(File.pathSeparator),
+            OperatingSystem.getCurrent().getJavaExecutableName(),
+            Files::exists
+        );
+    }
+
+    /**
+     * Detect java installations from given folders.
+     *
+     * @param folders  the folders to check
+     * @param exec     the file name of the windowless java executable
+     * @param verifier the installation verifier
+     * @return the verified java installation paths
+     */
+    public static Path[] getJavaInFolders(String[] folders, String exec, Predicate<Path> verifier) {
+        Path[] paths = new Path[folders.length];
+
+        int size = 0;
+        for (String bin : folders) {
+            Path path;
+
+            try {
+                path = Paths.get(bin, exec);
+            } catch (InvalidPathException e) {
+                Log.warn("Could not parse path: " + String.join(File.pathSeparator, bin, exec));
+
+                continue;
+            }
+
+            if (verifier.test(path)) {
+                paths[size++] = path;
+            }
+        }
+
+        return Arrays.copyOf(paths, size);
     }
 
     private JavaLocator() {

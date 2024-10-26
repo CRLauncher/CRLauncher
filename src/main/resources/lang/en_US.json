@@ -26,14 +26,16 @@
                 "instanceNameCannotBeEmpty": "Instance name cannot be empty!",
                 "groupNameCannotBeEmpty": "Group name cannot be empty!",
                 "cosmicVersionNotSelected": "Cosmic Reach version is not selected!",
-                "unableToCreateInstance": "Unable to create new instance"
+                "unableToCreateInstance": "Unable to create new instance",
+                "doesNotHaveClient": "Version $$CR_VERSION$$ does not have client"
             },
             "instanceSettingsDialog": {
                 "couldNotLoadVersions": "Could not get versions",
                 "ramMinCannotBeLargerMax": "Minimum amount of RAM cannot be larger than maximum",
                 "ramMinCannotBeLess512MB": "Minimum amount of RAM cannot be less than 512 MiB",
                 "deleteWorldSure": "Are you sure that you want to delete world '$$WORLD_NAME$$'?",
-                "couldNotDeleteWorld": "Could not delete world '$$WORLD_NAME$$' located at $$WORLD_DIR$$"
+                "couldNotDeleteWorld": "Could not delete world '$$WORLD_NAME$$' located at $$WORLD_DIR$$",
+                "couldNotUpdateMod": "Could not update $$MOD_LOADER$$ mod '$$MOD_ID$$"
             },
             "mods": {
                 "modAddedName": "Mod with name '$$MOD_NAME$$' already added!",
@@ -50,11 +52,26 @@
                 "rename": "Rename",
                 "delete": "Delete",
                 "openInstanceFolder": "Open instance folder",
-                "openCosmicFolder": "Open Cosmic folder"
+                "openCosmicFolder": "Open Cosmic folder",
+                "killProcess": "Kill process"
             }
+        },
+        "modFilesDialog": {
+            "name": "Name",
+            "compatibility": "Compatibility",
+            "datePublished": "Date published",
+            "downloads": "Downloads"
         },
         "instanceSettingsDialog": {
             "title": "Instance Settings - $$INSTANCE_NAME$$",
+            "exportInstance": {
+                "exportButton": "Export",
+                "crliFiles": "CRLauncher instance file (*.crli)",
+                "title": "Instance export",
+                "success": "Instance exported successfully!",
+                "failure": "Could not export instance",
+                "wrongExtension": "Exported file must end with .crli"
+            },
             "mainTab": {
                 "name": "Main",
                 "cosmicReachVersion": {
@@ -70,7 +87,9 @@
                 "name": "Java",
                 "javaInstallation": {
                     "borderName": "Java Installation",
-                    "textFieldPlaceholder": "Path to javaw.exe"
+                    "textFieldPlaceholder": "Path to $$JAVAW$$",
+                    "current": "$$CURRENT_INSTALLATION$$ (Current)",
+                    "browse": "Browse path..."
                 },
                 "memorySettings": {
                     "borderName": "Memory Settings",
@@ -92,10 +111,13 @@
                 "loaderVersion": {
                     "borderName": "Loader version"
                 },
+                "modpack": "Modpack",
+                "customModpack": "Custom",
                 "modsTable": {
                     "borderName": "Mods",
                     "vanilla": {
                         "modFolder": "Mod folder",
+                        "addModButton": "Add data mod",
                         "deleteModButton": "Delete data mod"
                     },
                     "fabric": {
@@ -126,6 +148,13 @@
                 "openModsFolder": "Open mods folder",
                 "searchModsCRMM": "Search mods on CRMM"
             },
+            "jarModsTab": {
+                "name": "Jar Mods",
+                "modName": "Name",
+                "modActive": "Active",
+                "addModButton": "Add Jar mod",
+                "deleteModButton": "Delete Jar mod"
+            },
             "worldsTab": {
                 "name": "Worlds",
                 "table": {
@@ -139,6 +168,29 @@
                     "delete": "Delete"
                 },
                 "deletingWorld": "Deleting world"
+            },
+            "screenshotsTab": {
+                "name": "Screenshots",
+                "copyImage": "Copy Image",
+                "copyFile": "Copy File",
+                "delete": "Delete",
+                "rename": "Rename",
+                "renameMessage": "Enter new name for the file"
+            },
+            "gameLogTab": {
+                "name": "Game Log",
+                "search": "Search",
+                "find": "Find",
+                "upload": "Upload",
+                "copyFile": "Copy File",
+                "copyText": "Copy Text",
+                "clear": "Clear",
+                "title": "Upload",
+                "uploading": "Uploading log to McLogs",
+                "failed": "Failed to upload log",
+                "largeLog": "Log size exceeds the limit, log will be truncated",
+                "successTitle": "Log uploaded",
+                "successMessage": "Log uploaded successfully! Link: $$LINK$$ (Copied to clipboard)"
             }
         },
         "searchCRMMModsDialog": {
@@ -150,6 +202,8 @@
             "followers234": "followers",
             "followers": "followers",
             "downloadButton": "Download",
+            "primary": "primary",
+            "otherFiles": "Other files",
             "mods": "Mods",
             "datamods": "Data Mods",
             "resourcePacks": "Resource Packs",
@@ -160,7 +214,8 @@
             "searchDatamods": "Search data mods...",
             "searchResourcePacks": "Search resource packs...",
             "searchShaders": "Search shaders...",
-            "searchModpacks": "Search modpacks..."
+            "searchModpacks": "Search modpacks...",
+            "modVersionsDialogTitle": "Mod versions"
         },
         "addAccountDialog": {
             "title": "Add account",
@@ -235,6 +290,16 @@
                 },
                 "amountOfTime": "Show the amount of time that has passed since the release date"
             },
+            "storageSettings": {
+                "borderName": "Storage",
+                "versionsPathLabel": "Versions directory path",
+                "versionsPathFieldPlaceholder": "<launcher folder>/cosmic-reach/versions",
+                "instancesPathLabel": "Instances directory path",
+                "instancesPathFieldPlaceholder": "<launcher folder>/cosmic-reach/instances",
+                "modLoadersPathLabel": "Mod loaders directory path",
+                "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach",
+                "tip": "Remember to press ENTER to save path. Changes will be applied after restart"
+            },
             "other": {
                 "borderName": "Other",
                 "writePrettyJson": "Write pretty JSON files (useful for development/debugging)",
@@ -255,6 +320,10 @@
                     }
                 },
                 "checkForUpdatesAtStartup": "Check for updates at startup",
+                "checkUpdatesNowButton": "Check for updates",
+                "checkingForUpdates": "Checking...",
+                "noUpdatesAvailable": "You are using the latest version",
+                "appendUsername": "Append username before chat messages",
                 "language": "Language"
             }
         },
@@ -266,6 +335,16 @@
             }
         },
         "addInstanceDialog": {
+            "importInstance": {
+                "importButton": "Import",
+                "crliFiles": "CRLauncher instance file (*.crli)",
+                "title": "Instance import",
+                "success": "Instance imported successfully",
+                "failure": "Could not import instance",
+                "duplicate": "Instance with a folder $$INSTANCE_FOLDER$$ already exists",
+                "badFile": "Instance file is corrupted or has an invalid format",
+                "wrongExtension": "Imported file must end with .crli"
+            },
             "title": "Add New Instance",
             "nameFieldLabel": "Name",
             "groupFieldLabel": "Group",
@@ -279,6 +358,11 @@
                 "dateReleased": "Date released",
                 "versionType": "Type"
             }
+        },
+        "updateDialog": {
+            "title": "Update",
+            "updateNowButton": "Update",
+            "updateLaterButton": "Later"
         }
     },
     "general": {

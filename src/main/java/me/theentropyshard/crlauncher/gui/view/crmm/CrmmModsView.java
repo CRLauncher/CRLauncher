@@ -22,50 +22,108 @@ import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
 import me.theentropyshard.crlauncher.instance.Instance;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class CrmmModsView extends JPanel {
-    private SearchCrmmModsView modsModsView;
-    private SearchCrmmModsView dataModsModsView;
-    private SearchCrmmModsView resourcePacksModsView;
-    private SearchCrmmModsView shadersModsView;
-    private SearchCrmmModpacksView modpacksView;
+    public static final String MODS_TAB = "gui.searchCRMMModsDialog.mods";
+    public static final String DATAMODS_TAB = "gui.searchCRMMModsDialog.datamods";
+    public static final String RESOURCE_PACKS_TAB = "gui.searchCRMMModsDialog.resourcePacks";
+    public static final String SHADERS_TAB = "gui.searchCRMMModsDialog.shaders";
+    public static final String MODPACKS_TAB = "gui.searchCRMMModsDialog.modpacks";
+    public static final String SEARCH_MODS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchMods";
+    public static final String SEARCH_BUTTON = "gui.searchCRMMModsDialog.searchButton";
+    public static final String SEARCH_DATAMODS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchDatamods";
+    public static final String SEARCH_RESOURCE_PACKS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchResourcePacks";
+    public static final String SEARCH_SHADERS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchShaders";
+    public static final String SEARCH_MODPACKS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchModpacks";
+
+    private final NavBar navBar;
+    private final JTextField searchField;
+    private final JButton searchButton;
+    private final CardLayout cardLayout;
+    private final JPanel modsViewsPanel;
+
+    private final SearchCrmmModsView modsModsView;
+    private final SearchCrmmModsView dataModsModsView;
+    private final SearchCrmmModsView resourcePacksModsView;
+    private final SearchCrmmModsView shadersModsView;
+    private final SearchCrmmModsView modpacksView;
+
+    private int tab;
 
     public CrmmModsView(Instance instance, ModsTab modsTab) {
         super(new BorderLayout());
 
-        this.modsModsView = new SearchCrmmModsView(instance, modsTab);
-        this.dataModsModsView = new SearchCrmmDataModsView(instance, modsTab);
-        this.resourcePacksModsView = new SearchCrmmResourcePacksView(instance, modsTab);
-        this.shadersModsView = new SearchCrmmShadersView(instance, modsTab);
-        this.modpacksView = new SearchCrmmModpacksView(instance, modsTab);
-
-        this.modsModsView.searchMods();
-
-        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-        tabbedPane.putClientProperty(FlatClientProperties.TABBED_PANE_TAB_AREA_ALIGNMENT, FlatClientProperties.TABBED_PANE_ALIGN_FILL);
-
         Language language = CRLauncher.getInstance().getLanguage();
 
-        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.mods"), this.modsModsView);
-        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.datamods"), this.dataModsModsView);
-        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.resourcePacks"), this.resourcePacksModsView);
-        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.shaders"), this.shadersModsView);
-        tabbedPane.addTab(language.getString("gui.searchCRMMModsDialog.modpacks"), this.modpacksView);
+        JPanel topPanel = new JPanel(new GridLayout(2, 1, 0, 5));
 
-        tabbedPane.addChangeListener(e -> {
-            int selectedIndex = tabbedPane.getSelectedIndex();
+        this.navBar = new NavBar();
+        this.navBar.addItem(language.getString(CrmmModsView.MODS_TAB));
+        this.navBar.addItem(language.getString(CrmmModsView.DATAMODS_TAB));
+        this.navBar.addItem(language.getString(CrmmModsView.RESOURCE_PACKS_TAB));
+        this.navBar.addItem(language.getString(CrmmModsView.SHADERS_TAB));
+        this.navBar.addItem(language.getString(CrmmModsView.MODPACKS_TAB));
+        topPanel.add(this.navBar);
 
-            if (selectedIndex == -1) {
-                return;
-            }
+        JPanel searchPanel = new JPanel(new BorderLayout(2, 0));
 
-            ((SearchCrmmModsView) tabbedPane.getComponentAt(selectedIndex)).searchMods();
+        this.searchField = new JTextField();
+        this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(CrmmModsView.SEARCH_MODS_PLACEHOLDER));
+        searchPanel.add(this.searchField, BorderLayout.CENTER);
+
+        this.searchButton = new JButton(language.getString(CrmmModsView.SEARCH_BUTTON));
+        searchPanel.add(this.searchButton, BorderLayout.EAST);
+
+        topPanel.add(searchPanel);
+
+        this.add(topPanel, BorderLayout.NORTH);
+
+        this.cardLayout = new CardLayout();
+        this.modsViewsPanel = new JPanel(this.cardLayout);
+        this.modsViewsPanel.setBorder(new EmptyBorder(5, 0, 0, 0));
+
+        this.modsModsView = new SearchCrmmModsView(instance, modsTab);
+        this.modsViewsPanel.add(this.modsModsView, "0");
+
+        this.dataModsModsView = new SearchCrmmDataModsView(instance, modsTab, DataModType.DATAMOD);
+        this.modsViewsPanel.add(this.dataModsModsView, "1");
+
+        this.resourcePacksModsView = new SearchCrmmDataModsView(instance, modsTab, DataModType.RESOURCE_PACK);
+        this.modsViewsPanel.add(this.resourcePacksModsView, "2");
+
+        this.shadersModsView = new SearchCrmmDataModsView(instance, modsTab, DataModType.SHADER);
+        this.modsViewsPanel.add(this.shadersModsView, "3");
+
+        this.modpacksView = new SearchCrmmDataModsView(instance, modsTab, DataModType.MODPACK);
+        this.modsViewsPanel.add(this.modpacksView, "4");
+
+        this.modsModsView.searchMods("");
+
+        String[] placeHolders = {
+            language.getString(CrmmModsView.SEARCH_MODS_PLACEHOLDER),
+            language.getString(CrmmModsView.SEARCH_DATAMODS_PLACEHOLDER),
+            language.getString(CrmmModsView.SEARCH_RESOURCE_PACKS_PLACEHOLDER),
+            language.getString(CrmmModsView.SEARCH_SHADERS_PLACEHOLDER),
+            language.getString(CrmmModsView.SEARCH_MODPACKS_PLACEHOLDER),
+        };
+
+        this.navBar.addTabListener(tab -> {
+            this.tab = tab;
+            this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, placeHolders[tab]);
+            ((SearchCrmmModsView) this.modsViewsPanel.getComponent(tab)).searchMods(this.searchField.getText());
+            this.cardLayout.show(this.modsViewsPanel, String.valueOf(tab));
         });
 
-        this.add(tabbedPane, BorderLayout.CENTER);
+        this.searchButton.addActionListener(e -> {
+            ((SearchCrmmModsView) this.modsViewsPanel.getComponent(this.tab)).searchMods(this.searchField.getText());
+        });
+
+        this.add(this.modsViewsPanel, BorderLayout.CENTER);
     }
 }

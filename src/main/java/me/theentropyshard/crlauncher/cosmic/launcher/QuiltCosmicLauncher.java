@@ -31,7 +31,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
+public class QuiltCosmicLauncher extends ModdedPatchCosmicLauncher {
     private final String version;
 
     public QuiltCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
@@ -88,5 +88,10 @@ public class QuiltCosmicLauncher extends ModdedCosmicLauncher {
         } else {
             command.add(CosmicQuiltProperties.LEGACY_MAIN_CLASS);
         }
+    }
+
+    @Override
+    public boolean isChangeSaveLocation() {
+        return false;
     }
 }

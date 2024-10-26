@@ -23,16 +23,15 @@ import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.crmm.SearchCrmmModsDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricModsView;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.fabric.FabricVersionsLoaderWorker;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleModsView;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.puzzle.PuzzleVersionsLoaderWorker;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltModsView;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.quilt.QuiltVersionsLoaderWorker;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.vanilla.DataModsView;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.fabric.FabricVersionsLoaderWorker;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.puzzle.PuzzleVersionsLoaderWorker;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.quilt.QuiltVersionsLoaderWorker;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceType;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
+import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
@@ -41,17 +40,17 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Objects;
 
 public class ModsTab extends Tab implements ItemListener {
-    private final JComboBox<InstanceType> typeCombo;
+    private final JComboBox<ModLoader> typeCombo;
     private final JComboBox<GithubRelease> loaderVersionCombo;
-    private final JPanel mods;
     private final JPanel root;
     private final JPanel loaderVersionsPanel;
-    private JPanel modsView;
+    private final ModsView modsView;
 
-    private InstanceType lastType;
+    private ModLoader lastType;
     private boolean versionsLoaded;
 
     public ModsTab(Instance instance, JDialog dialog) {
@@ -60,7 +59,7 @@ public class ModsTab extends Tab implements ItemListener {
 
         Language language = CRLauncher.getInstance().getLanguage();
 
-        this.lastType = instance.getType();
+        this.lastType = instance.getModLoader();
 
         this.root = this.getRoot();
         this.root.setLayout(new GridBagLayout());
@@ -73,9 +72,9 @@ public class ModsTab extends Tab implements ItemListener {
         {
             JPanel modLoader = this.getTitledPanel(
                 language.getString("gui.instanceSettingsDialog.modsTab.modLoader.borderName"), 1, 1);
-            this.typeCombo = new JComboBox<>(InstanceType.values());
+            this.typeCombo = new JComboBox<>(ModLoader.values());
             for (int i = 0; i < this.typeCombo.getItemCount(); i++) {
-                if (this.typeCombo.getItemAt(i) == instance.getType()) {
+                if (this.typeCombo.getItemAt(i) == instance.getModLoader()) {
                     this.typeCombo.setSelectedIndex(i);
                     break;
                 }
@@ -109,7 +108,7 @@ public class ModsTab extends Tab implements ItemListener {
             this.loaderVersionsPanel.setVisible(false);
             this.loaderVersionsPanel.add(this.loaderVersionCombo);
 
-            if (this.getInstance().getType() != InstanceType.VANILLA) {
+            if (this.getInstance().getModLoader() != ModLoader.VANILLA) {
                 this.loadModloaderVersions();
                 this.loaderVersionsPanel.setVisible(true);
             }
@@ -119,15 +118,16 @@ public class ModsTab extends Tab implements ItemListener {
         }
 
         {
-            this.mods = this.getTitledPanel(
-                language.getString("gui.instanceSettingsDialog.modsTab.modsTable.borderName"), 1, 1);
-            this.updateModsView();
+            JPanel modsPanel = this.getTitledPanel(language.getString("gui.instanceSettingsDialog.modsTab.modsTable.borderName"), 1, 1);
 
-            this.mods.add(this.modsView);
+            this.modsView = new ModsView(instance);
+            modsPanel.add(this.modsView);
+
+            this.updateModsView();
 
             gbc.gridy++;
             gbc.weighty = 1;
-            this.root.add(this.mods, gbc);
+            this.root.add(modsPanel, gbc);
         }
 
         {
@@ -137,12 +137,22 @@ public class ModsTab extends Tab implements ItemListener {
                 language.getString("gui.instanceSettingsDialog.modsTab.openModsFolder")
             );
             openModsFolderButton.addActionListener(e -> {
-                switch (instance.getType()) {
-                    case VANILLA -> OperatingSystem.open(instance.getDataModsDir());
-                    case FABRIC -> OperatingSystem.open(instance.getFabricModsDir());
-                    case QUILT -> OperatingSystem.open(instance.getQuiltModsDir());
-                    case PUZZLE -> OperatingSystem.open(instance.getPuzzleModsDir());
-                }
+                SwingUtils.startWorker(() -> {
+                    Path modsDir = switch (instance.getModLoader()) {
+                        case VANILLA -> instance.getDataModsDir();
+                        case FABRIC -> instance.getFabricModsDir();
+                        case QUILT -> instance.getQuiltModsDir();
+                        case PUZZLE -> instance.getPuzzleModsDir();
+                    };
+
+                    try {
+                        FileUtils.createDirectoryIfNotExists(modsDir);
+                    } catch (IOException ex) {
+                        Log.error("Could not create mods folder: " + modsDir, ex);
+                    }
+
+                    OperatingSystem.open(modsDir);
+                });
             });
             bottomPanel.add(openModsFolderButton);
 
@@ -170,23 +180,23 @@ public class ModsTab extends Tab implements ItemListener {
     private void loadModloaderVersions() {
         Instance instance = this.getInstance();
 
-        if (instance.getType() == InstanceType.VANILLA) {
+        if (instance.getModLoader() == ModLoader.VANILLA) {
             this.loaderVersionsPanel.setVisible(false);
 
             return;
         }
 
-        if (this.versionsLoaded && instance.getType() == this.lastType) {
+        if (this.versionsLoaded && instance.getModLoader() == this.lastType) {
             return;
         }
 
         this.loaderVersionCombo.removeAllItems();
 
-        if (instance.getType() == InstanceType.FABRIC) {
+        if (instance.getModLoader() == ModLoader.FABRIC) {
             new FabricVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
-        } else if (instance.getType() == InstanceType.QUILT) {
+        } else if (instance.getModLoader() == ModLoader.QUILT) {
             new QuiltVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
-        } else if (instance.getType() == InstanceType.PUZZLE) {
+        } else if (instance.getModLoader() == ModLoader.PUZZLE) {
             new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
         }
 
@@ -196,22 +206,8 @@ public class ModsTab extends Tab implements ItemListener {
     }
 
     private void updateModsView() {
-        Instance instance = this.getInstance();
-
-        this.modsView = switch (instance.getType()) {
-            case VANILLA -> new DataModsView(instance);
-            case FABRIC -> new FabricModsView(instance);
-            case QUILT -> new QuiltModsView(instance);
-            case PUZZLE -> new PuzzleModsView(instance);
-        };
-
         this.loadModloaderVersions();
-
-        if (this.mods.getComponentCount() > 0) {
-            this.mods.remove(0);
-        }
-
-        this.mods.add(this.modsView);
+        this.modsView.update();
     }
 
     @Override
@@ -222,8 +218,8 @@ public class ModsTab extends Tab implements ItemListener {
 
         Instance instance = this.getInstance();
 
-        this.lastType = instance.getType();
-        instance.setType((InstanceType) e.getItem());
+        this.lastType = instance.getModLoader();
+        instance.setModLoader((ModLoader) e.getItem());
 
         this.updateModsView();
         this.getRoot().revalidate();
@@ -239,16 +235,16 @@ public class ModsTab extends Tab implements ItemListener {
     @Override
     public void save() throws IOException {
         Instance instance = this.getInstance();
-        instance.setType((InstanceType) this.typeCombo.getSelectedItem());
-        if (instance.getType() == InstanceType.FABRIC) {
+        instance.setModLoader((ModLoader) this.typeCombo.getSelectedItem());
+        if (instance.getModLoader() == ModLoader.FABRIC) {
             instance.setFabricVersion(
                 ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
             );
-        } else if (instance.getType() == InstanceType.QUILT) {
+        } else if (instance.getModLoader() == ModLoader.QUILT) {
             instance.setQuiltVersion(
                 ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
             );
-        } else if (instance.getType() == InstanceType.PUZZLE) {
+        } else if (instance.getModLoader() == ModLoader.PUZZLE) {
             instance.setPuzzleVersion(
                 ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
             );
@@ -259,7 +255,7 @@ public class ModsTab extends Tab implements ItemListener {
         return this.loaderVersionCombo;
     }
 
-    public JPanel getModsView() {
+    public ModsView getModsView() {
         return this.modsView;
     }
 }

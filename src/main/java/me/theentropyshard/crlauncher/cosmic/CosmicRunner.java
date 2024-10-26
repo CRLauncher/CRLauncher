@@ -20,24 +20,21 @@ package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
-import me.theentropyshard.crlauncher.cosmic.launcher.AbstractCosmicLauncher;
-import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
-import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
-import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
+import me.theentropyshard.crlauncher.cosmic.account.Account;
+import me.theentropyshard.crlauncher.cosmic.launcher.*;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
-import me.theentropyshard.crlauncher.cosmic.mods.jar.JarMod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionList;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
-import me.theentropyshard.crlauncher.gui.LauncherConsole;
+import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceType;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.SystemProperty;
+import me.theentropyshard.crlauncher.utils.ProcessReader;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
@@ -47,18 +44,39 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class CosmicRunner extends Thread {
+    public static final String[] FLAG_SET_1 = {
+        "-XX:+UnlockExperimentalVMOptions", "-XX:+UnlockDiagnosticVMOptions", "-XX:+AlwaysPreTouch",
+        "-XX:+DisableExplicitGC", "-XX:+UseNUMA", "-XX:NmethodSweepActivity=1", "-XX:ReservedCodeCacheSize=400M",
+        "-XX:NonNMethodCodeHeapSize=12M", "-XX:ProfiledCodeHeapSize=194M", "-XX:NonProfiledCodeHeapSize=194M",
+        "-XX:-DontCompileHugeMethods", "-XX:MaxNodeLimit=240000", "-XX:NodeLimitFudgeFactor=8000", "-XX:+UseVectorCmov",
+        "-XX:+PerfDisableSharedMem", "-XX:+UseFastUnorderedTimeStamps", "-XX:+UseCriticalJavaThreadPriority",
+        "-XX:ThreadPriorityPolicy=1", "-XX:AllocatePrefetchStyle=3", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=37",
+        "-XX:+PerfDisableSharedMem", "-XX:G1HeapRegionSize=16M", "-XX:G1NewSizePercent=23", "-XX:G1ReservePercent=20",
+        "-XX:SurvivorRatio=32", "-XX:G1MixedGCCountTarget=3", "-XX:G1HeapWastePercent=20",
+        "-XX:InitiatingHeapOccupancyPercent=10", "-XX:G1RSetUpdatingPauseTimePercent=0", "-XX:MaxTenuringThreshold=1",
+        "-XX:G1SATBBufferEnqueueingThresholdPercent=30", "-XX:G1ConcMarkStepDurationMillis=5.0",
+        "-XX:G1ConcRSHotCardLimit=16", "-XX:G1ConcRefinementServiceIntervalMillis=150", "-XX:GCTimeRatio=99",
+        "-XX:+UseLargePages", "-XX:LargePageSizeInBytes=2m"
+    };
 
+    public static final String[] FLAG_SET_2 = {
+        "-XX:+UnlockExperimentalVMOptions", "-XX:+UseG1GC", "-XX:MaxGCPauseMillis=37", "-XX:+PerfDisableSharedMem",
+        "-XX:G1HeapRegionSize=16M", "-XX:G1NewSizePercent=23", "-XX:G1ReservePercent=20", "-XX:SurvivorRatio=32",
+        "-XX:G1MixedGCCountTarget=3", "-XX:G1HeapWastePercent=20", "-XX:InitiatingHeapOccupancyPercent=10",
+        "-XX:G1RSetUpdatingPauseTimePercent=0", "-XX:MaxTenuringThreshold=1", "-XX:G1SATBBufferEnqueueingThresholdPercent=30",
+        "-XX:G1ConcMarkStepDurationMillis=5.0", "-XX:G1ConcRSHotCardLimit=16",
+        "-XX:G1ConcRefinementServiceIntervalMillis=150", "-XX:GCTimeRatio=99"
+    };
 
     private final Instance instance;
     private final InstanceItem item;
 
+    private Process process;
     private Path clientCopyTmp;
 
     public CosmicRunner(Instance instance, InstanceItem item) {
@@ -96,12 +114,7 @@ public class CosmicRunner extends Thread {
 
             Path saveDirPath = this.instance.getCosmicDir();
 
-            Path versionsDir = CRLauncher.getInstance().getVersionsDir();
-            Path clientPath = versionsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
-
             this.instance.setLastTimePlayed(LocalDateTime.now());
-
-            CosmicLauncher launcher;
 
             String javaPath = this.instance.getJavaPath();
             if (javaPath == null || javaPath.isEmpty()) {
@@ -109,9 +122,11 @@ public class CosmicRunner extends Thread {
                 this.instance.setJavaPath(javaPath);
             }
 
-            if (this.instance.getType() == InstanceType.VANILLA) {
-                clientPath = this.applyJarMods(version, versionsDir);
+            Path clientPath = this.applyJarMods(version);
 
+            CosmicLauncher launcher;
+
+            if (this.instance.getModLoader() == ModLoader.VANILLA) {
                 launcher = CosmicLauncherFactory.getLauncher(
                     javaPath,
                     LaunchType.VANILLA,
@@ -120,7 +135,7 @@ public class CosmicRunner extends Thread {
                     clientPath
                 );
             } else {
-                launcher = switch (this.instance.getType()) {
+                launcher = switch (this.instance.getModLoader()) {
                     case FABRIC -> CosmicLauncherFactory.getLauncher(
                         javaPath,
                         LaunchType.FABRIC,
@@ -148,20 +163,8 @@ public class CosmicRunner extends Thread {
                         this.instance.getPuzzleModsDir(),
                         this.instance.getPuzzleVersion()
                     );
-                    default -> throw new IllegalArgumentException("Unknown instance type: " + this.instance.getType());
+                    default -> throw new IllegalArgumentException("Unknown instance type: " + this.instance.getModLoader());
                 };
-
-                switch (this.instance.getType()) {
-                    case VANILLA -> {
-
-                    }
-                    case FABRIC ->
-                        this.updateMods(this.instance.getFabricMods(), this.instance.getFabricModsDir(), this.instance.getDisabledFabricModsDir());
-                    case QUILT ->
-                        this.updateMods(this.instance.getQuiltMods(), this.instance.getQuiltModsDir(), this.instance.getDisabledQuiltModsDir());
-                    case PUZZLE ->
-                        this.updateMods(this.instance.getPuzzleMods(), this.instance.getPuzzleModsDir(), this.instance.getDisabledPuzzleModsDir());
-                }
             }
 
             Settings settings = CRLauncher.getInstance().getSettings();
@@ -178,24 +181,44 @@ public class CosmicRunner extends Thread {
                 }
             }
 
-            if (launcher instanceof AbstractCosmicLauncher abstractLauncher) {
-                String title = this.instance.getCustomWindowTitle();
+            if (launcher instanceof PatchCosmicLauncher patchLauncher) {
+                patchLauncher.setCustomWindowTitle(this.instance.getCustomWindowTitle());
 
-                if (title != null && !title.trim().isEmpty()) {
-                    abstractLauncher.defineProperty(new SystemProperty("crloader.windowTitle", title));
+                Account currentAccount = CRLauncher.getInstance().getAccountManager().getCurrentAccount();
+
+                if (currentAccount != null) {
+                    patchLauncher.setOfflineUsername(currentAccount.getUsername());
+                    patchLauncher.setAppendUsername(CRLauncher.getInstance().getSettings().appendUsername);
+                }
+
+                int currentFlagsOption = this.instance.getCurrentFlagsOption();
+
+                if (currentFlagsOption == 0) {
+                    Set<String> customJvmFlags = this.instance.getCustomJvmFlags();
+                    if (customJvmFlags != null && !customJvmFlags.isEmpty()) {
+                        for (String customJvmFlag : customJvmFlags) {
+                            if (customJvmFlag.isEmpty()) {
+                                continue;
+                            }
+
+                            patchLauncher.addJvmFlag(customJvmFlag);
+                        }
+                    }
+                } else {
+                    String[] flags = CosmicRunner.getBuiltinFlags(currentFlagsOption);
+                    for (String customJvmFlag : flags) {
+                        if (customJvmFlag.isEmpty()) {
+                            continue;
+                        }
+
+                        patchLauncher.addJvmFlag(customJvmFlag);
+                    }
                 }
             }
 
             long start = System.currentTimeMillis();
 
-            int exitCode = launcher.launch(line -> {
-                InstanceType type = this.instance.getType();
-                if (type == InstanceType.VANILLA || type == InstanceType.FABRIC) {
-                    Log.cosmicReachVanilla(line);
-                } else {
-                    Log.cosmicReachModded(line);
-                }
-            }, launchOption == 3);
+            int exitCode = this.startProcess(launcher, launchOption == 3);
 
             long end = System.currentTimeMillis();
 
@@ -212,7 +235,12 @@ public class CosmicRunner extends Thread {
                 }
             }
 
-            Log.info("Cosmic Reach process finished with exit code " + exitCode);
+            String exitMessage = "Cosmic Reach process finished with exit code " + exitCode;
+            if (exitCode == 0) {
+                Log.info(exitMessage);
+            } else {
+                Log.error(exitMessage);
+            }
 
             long timePlayedSeconds = (end - start) / 1000;
             String timePlayed = TimeUtils.getHoursMinutesSeconds(timePlayedSeconds);
@@ -242,6 +270,37 @@ public class CosmicRunner extends Thread {
         }
     }
 
+    private int startProcess(CosmicLauncher launcher, boolean exitAfterLaunch) throws Exception {
+        this.process = launcher.launch(exitAfterLaunch);
+
+        String userHome = System.getProperty("user.home");
+
+        new ProcessReader(this.process).read(line -> {
+            if (line.contains(userHome)) {
+                line = line.replace(userHome, "<UserHome>");
+            }
+
+            ModLoader type = this.instance.getModLoader();
+            if (type == ModLoader.VANILLA || type == ModLoader.FABRIC) {
+                Log.cosmicReachVanilla(line);
+            } else {
+                Log.cosmicReachModded(line);
+            }
+        });
+
+        return this.process.waitFor();
+    }
+
+    public void stopGame() {
+        if (this.process == null || !this.process.isAlive()) {
+            return;
+        }
+
+        this.process.destroy();
+
+        Log.info("Destroyed Cosmic Reach process for instance " + this.instance.getName());
+    }
+
     private void updateCosmicVersion() {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
@@ -263,28 +322,26 @@ public class CosmicRunner extends Thread {
         }
     }
 
-    private Path applyJarMods(Version version, Path clientsDir) {
-        Path originalClientPath = clientsDir.resolve(version.getId()).resolve(version.getId() + ".jar").toAbsolutePath();
+    private Path applyJarMods(Version version) {
+        Path originalClientPath = CRLauncher.getInstance().getVersionManager().getVersionJar(version);
 
-        List<JarMod> jarMods = this.instance.getJarMods();
+        List<Mod> jarMods = this.instance.getJarMods();
 
-        if (jarMods == null || jarMods.isEmpty() || jarMods.stream().noneMatch(JarMod::isActive)) {
+        if (jarMods == null || jarMods.isEmpty() || jarMods.stream().noneMatch(Mod::isActive)) {
             return originalClientPath;
         } else {
             try {
+                Log.info("Creating modified client...");
                 this.clientCopyTmp = Files.copy(originalClientPath, this.instance.getWorkDir()
                     .resolve(originalClientPath.getFileName().toString() + System.currentTimeMillis() + ".jar"));
 
-                List<File> zipFilesToMerge = new ArrayList<>();
+                Log.info("Collecting jar mods...");
+                List<File> zipFilesToMerge = FileUtils.list(this.instance.getJarModsDir(), Files::isRegularFile)
+                    .stream()
+                    .map(Path::toFile)
+                    .toList();
 
-                for (JarMod jarMod : jarMods) {
-                    if (!jarMod.isActive()) {
-                        continue;
-                    }
-
-                    zipFilesToMerge.add(Paths.get(jarMod.getFullPath()).toFile());
-                }
-
+                Log.info("Merging modified files...");
                 try (ZipFile copyZip = new ZipFile(this.clientCopyTmp.toFile())) {
                     for (File modFile : zipFilesToMerge) {
                         Path unpackDir = this.instance.getWorkDir().resolve(modFile.getName().replace(".", "_"));
@@ -311,6 +368,8 @@ public class CosmicRunner extends Thread {
                     }
                 }
 
+                Log.info("Successfully applied jar mods");
+
                 return this.clientCopyTmp;
             } catch (IOException e) {
                 Log.error("Exception while applying jar mods", e);
@@ -320,39 +379,11 @@ public class CosmicRunner extends Thread {
         return originalClientPath;
     }
 
-    private void updateMods(List<? extends Mod> mods, Path enabledModsDir, Path disabledModsDir) throws IOException {
-        if (mods.isEmpty()) {
-            return;
-        }
-
-        FileUtils.createDirectoryIfNotExists(enabledModsDir);
-        FileUtils.createDirectoryIfNotExists(disabledModsDir);
-
-        for (Mod mod : mods) {
-            Path filePath = Paths.get(mod.getFilePath());
-
-            if (!Files.exists(filePath)) {
-                Log.warn("Mod at '" + filePath + "' does not exist!");
-
-                continue;
-            }
-
-            if ((mod.isActive() && filePath.startsWith(enabledModsDir)) ||
-                (!mod.isActive() && filePath.startsWith(disabledModsDir))) {
-
-                continue;
-            }
-
-            Path destinationDir;
-
-            if (mod.isActive()) {
-                destinationDir = enabledModsDir.resolve(filePath.getFileName());
-            } else {
-                destinationDir = disabledModsDir.resolve(filePath.getFileName());
-            }
-
-            filePath = Files.move(filePath, destinationDir, StandardCopyOption.REPLACE_EXISTING);
-            mod.setFilePath(filePath.toString());
-        }
+    public static String[] getBuiltinFlags(int option) {
+        return switch (option) {
+            case 1 -> CosmicRunner.FLAG_SET_1;
+            case 2 -> CosmicRunner.FLAG_SET_2;
+            default -> CosmicRunner.FLAG_SET_1;
+        };
     }
 }

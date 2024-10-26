@@ -22,6 +22,9 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
+import me.theentropyshard.crlauncher.cosmic.version.Version;
+import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
+import me.theentropyshard.crlauncher.gui.action.InstanceImportAction;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -54,6 +57,7 @@ public class AddInstanceDialog extends AppDialog {
     public static final String GROUP_NAME_EMPTY_MESSAGE = "messages.gui.addInstanceDialog.groupNameCannotBeEmpty";
     public static final String VERSION_NOT_SELECTED_MESSAGE = "messages.gui.addInstanceDialog.cosmicVersionNotSelected";
     public static final String UNABLE_TO_CREATE_MESSAGE = "messages.gui.addInstanceDialog.unableToCreateInstance";
+    public static final String NO_CLIENT_MESSAGE = "messages.gui.addInstanceDialog.doesNotHaveClient";
     private final JTextField nameField;
     private final JTextField groupField;
     private final JButton addButton;
@@ -164,6 +168,7 @@ public class AddInstanceDialog extends AppDialog {
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
+        scrollPane.setUI(new FlatSmoothScrollPaneUI());
 
         JPanel filterPanel = new JPanel();
         filterPanel.setLayout(new GridBagLayout());
@@ -212,8 +217,12 @@ public class AddInstanceDialog extends AppDialog {
 
         leftButtonsPanel.add(refreshManifest);
 
+        JButton importButton = new JButton();
+        importButton.setAction(new InstanceImportAction(this.getDialog()));
+        leftButtonsPanel.add(importButton);
+
         FlowLayout rightLayout = new FlowLayout(FlowLayout.RIGHT);
-        rightLayout.setHgap(10);
+        rightLayout.setHgap(0);
         rightLayout.setVgap(0);
 
         JPanel rightButtonsPanel = new JPanel(rightLayout);
@@ -248,17 +257,31 @@ public class AddInstanceDialog extends AppDialog {
 
             IconManager iconManager = CRLauncher.getInstance().getIconManager();
 
-            playView.addInstanceItem(new InstanceItem(iconManager.getIcon("cosmic_logo_x32.png").icon(), instanceName), chosenGroupName);
-            this.getDialog().dispose();
             TableModel model = versionsTable.getModel();
             int selectedRow = versionsTable.getSelectedRow();
             selectedRow = versionsTable.convertRowIndexToModel(selectedRow);
-            String mcVersion = String.valueOf(model.getValueAt(selectedRow, 0));
+            String crVersion = String.valueOf(model.getValueAt(selectedRow, 0));
             CRLauncher.getInstance().doTask(() -> {
+                try {
+                    Version version = CRLauncher.getInstance().getVersionManager().getVersion(crVersion);
+                    if (version == null) {
+                        Log.warn("Version returned for " + crVersion + " is null");
+                    } else {
+                        if (version.getClient() == null) {
+                            MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
+                                CRLauncher.getInstance().getLanguage().getString(AddInstanceDialog.NO_CLIENT_MESSAGE)
+                                    .replace("$$CR_VERSION$$", crVersion));
+                            return;
+                        }
+                    }
+                } catch (IOException ex) {
+                    Log.error("Could not get info about version " + crVersion, ex);
+                }
+
                 InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
 
                 try {
-                    instanceManager.createInstance(instanceName, chosenGroupName, mcVersion,
+                    instanceManager.createInstance(instanceName, chosenGroupName, crVersion,
                         CRLauncher.getInstance().getSettings().settingsDialogUpdateToLatest);
                 } catch (InstanceAlreadyExistsException ex) {
                     MessageBox.showErrorMessage(
@@ -267,9 +290,20 @@ public class AddInstanceDialog extends AppDialog {
                     );
 
                     Log.warn(ex.getMessage());
+
+                    return;
                 } catch (IOException ex) {
                     Log.error(language.getString(AddInstanceDialog.UNABLE_TO_CREATE_MESSAGE), ex);
                 }
+
+                SwingUtilities.invokeLater(() -> {
+                    playView.addInstanceItem(
+                        new InstanceItem(iconManager.getIcon("cosmic_logo_x32.png").icon(), instanceName),
+                        chosenGroupName, false
+                    );
+
+                    this.getDialog().dispose();
+                });
             });
         });
         rightButtonsPanel.add(this.addButton);
@@ -278,7 +312,7 @@ public class AddInstanceDialog extends AppDialog {
             this.getDialog().dispose();
         });
         rightButtonsPanel.add(cancelButton);
-        buttonsPanel.setBorder(new EmptyBorder(6, 10, 10, 0));
+        buttonsPanel.setBorder(new EmptyBorder(6, 10, 10, 10));
         root.add(buttonsPanel, BorderLayout.SOUTH);
 
         root.add(centerPanel, BorderLayout.CENTER);

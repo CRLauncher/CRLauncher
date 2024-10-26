@@ -35,19 +35,14 @@ public class Version {
     private long releaseTime;
 
     /**
-     * Download url
+     * Client artifact
      */
-    private String url;
+    private Artifact client;
 
     /**
-     * Version hash
+     * Server artifact
      */
-    private String sha256;
-
-    /**
-     * File size in bytes
-     */
-    private long size;
+    private Artifact server;
 
     public Version() {
 
@@ -58,10 +53,9 @@ public class Version {
         return "Version{" +
             "id='" + this.id + '\'' +
             ", type=" + this.type +
-            ", releaseTime='" + this.releaseTime + '\'' +
-            ", url='" + this.url + '\'' +
-            ", hash='" + this.sha256 + '\'' +
-            ", size=" + this.size +
+            ", releaseTime=" + this.releaseTime +
+            ", client=" + this.client +
+            ", server=" + this.server +
             '}';
     }
 
@@ -77,15 +71,11 @@ public class Version {
         return this.releaseTime;
     }
 
-    public String getUrl() {
-        return this.url;
+    public Artifact getClient() {
+        return this.client;
     }
 
-    public String getSha256() {
-        return this.sha256;
-    }
-
-    public long getSize() {
-        return this.size;
+    public Artifact getServer() {
+        return this.server;
     }
 }

@@ -20,70 +20,33 @@ package me.theentropyshard.crlauncher.cosmic.mods.fabric;
 
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 
-public class FabricMod implements Mod {
-    private String filePath;
+public class FabricMod {
+    private String id;
     private String name;
     private String version;
     private String description;
-    private String id;
-    private boolean active;
 
     public FabricMod() {
 
     }
 
-    @Override
-    public String getFilePath() {
-        return this.filePath;
+    public Mod toMod() {
+        return new Mod(this.id, this.name, this.version, this.description);
     }
 
-    @Override
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
-    @Override
     public String getName() {
         return this.name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
     public String getVersion() {
         return this.version;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    @Override
     public String getDescription() {
         return this.description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public String getId() {
         return this.id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Override
-    public boolean isActive() {
-        return this.active;
-    }
-
-    @Override
-    public void setActive(boolean active) {
-        this.active = active;
     }
 }

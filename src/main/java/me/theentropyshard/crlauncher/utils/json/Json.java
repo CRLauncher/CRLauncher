@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.utils.json;
 
+import com.google.gson.FormattingStyle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -27,7 +28,7 @@ import me.theentropyshard.crlauncher.cosmic.account.gson.AccountDeserializer;
 import me.theentropyshard.crlauncher.cosmic.account.gson.AccountStorageDeserializer;
 import me.theentropyshard.crlauncher.cosmic.gson.VersionTypeTypeAdapter;
 import me.theentropyshard.crlauncher.cosmic.version.VersionType;
-import me.theentropyshard.crlauncher.instance.InstanceType;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.utils.json.type.InstanceTypeTypeAdapter;
 import me.theentropyshard.crlauncher.utils.json.type.LocalDateTimeTypeAdapter;
 
@@ -41,13 +42,15 @@ public final class Json {
         //
         .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
         .registerTypeAdapter(VersionType.class, new VersionTypeTypeAdapter())
-        .registerTypeAdapter(InstanceType.class, new InstanceTypeTypeAdapter())
+        .registerTypeAdapter(ModLoader.class, new InstanceTypeTypeAdapter())
         .registerTypeAdapter(AccountStorage.class, new AccountStorageDeserializer())
         .registerTypeAdapter(Account.class, new AccountDeserializer())
         //
         .create();
 
-    private static final Gson PRETTY_GSON = Json.GSON.newBuilder().setPrettyPrinting().create();
+    private static final Gson PRETTY_GSON = Json.GSON.newBuilder()
+        .setFormattingStyle(FormattingStyle.PRETTY.withIndent(" ".repeat(4)))
+        .create();
 
     public static <T> T parse(String json, Type clazz) {
         return Json.GSON.fromJson(json, clazz);

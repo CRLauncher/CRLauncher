@@ -18,15 +18,21 @@
 
 package me.theentropyshard.crlauncher.gui.view;
 
+import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.Gui;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.nio.file.Paths;
 import java.util.Map;
 
 public class SettingsView extends JPanel {
@@ -50,7 +56,18 @@ public class SettingsView extends JPanel {
     public static final String EXIT_DO_NOTHING = "gui.settingsView.other.onGameExit.options.doNothing";
     public static final String EXIT_EXIT_LAUNCHER = "gui.settingsView.other.onGameExit.options.exitLauncher";
     public static final String CHECK_FOR_UPDATES = "gui.settingsView.other.checkForUpdatesAtStartup";
+    public static final String CHECK_UPDATES_NOW_BUTTON = "gui.settingsView.other.checkUpdatesNowButton";
+    public static final String CHECKING_UPDATES = "gui.settingsView.other.checkingForUpdates";
+    public static final String APPEND_USERNAME = "gui.settingsView.other.appendUsername";
     public static final String LANGUAGE = "gui.settingsView.other.language";
+    public static final String STORAGE_BORDER = "gui.settingsView.storageSettings.borderName";
+    public static final String VERSIONS_PATH_LABEL = "gui.settingsView.storageSettings.versionsPathLabel";
+    public static final String VERSIONS_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.versionsPathFieldPlaceholder";
+    public static final String INSTANCES_PATH_LABEL = "gui.settingsView.storageSettings.instancesPathLabel";
+    public static final String INSTANCES_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.instancesPathFieldPlaceholder";
+    public static final String MOD_LOADERS_PATH_LABEL = "gui.settingsView.storageSettings.modLoadersPathLabel";
+    public static final String MOD_LOADERS_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.modLoadersPathFieldPlaceholder";
+    public static final String TIP_LABEL = "gui.settingsView.storageSettings.tip";
 
     private final TitledBorder themeSettingsBorder;
     private final JRadioButton darkThemeButton;
@@ -58,11 +75,21 @@ public class SettingsView extends JPanel {
     private final TitledBorder uiSettingsBorder;
     private final JLabel dialogPositionLabel;
     private final JCheckBox showAmountOfTime;
+    private final TitledBorder storageSettingsBorder;
+    private final JCheckBox versionsPathCheckbox;
+    private final JTextField versionsPathField;
+    private final JCheckBox instancesPathCheckbox;
+    private final JTextField instancesPathField;
+    private final JCheckBox modLoadersPathCheckbox;
+    private final JTextField modLoadersPathField;
+    private final JLabel tipLabel;
     private final TitledBorder otherSettingsBorder;
     private final JCheckBox prettyJson;
     private final JLabel launchOptionLabel;
     private final JLabel exitOptionLabel;
     private final JCheckBox checkUpdates;
+    private final JButton checkUpdatesNowButton;
+    private final JCheckBox appendUsername;
     private final JLabel languageLabel;
     private final JComboBox<String> whenLaunchesBehavior;
     private final JComboBox<String> whenExitsBehavior;
@@ -158,7 +185,119 @@ public class SettingsView extends JPanel {
         }
 
         {
-            JPanel otherSettings = new JPanel(new GridLayout(5, 3));
+            Settings settings = CRLauncher.getInstance().getSettings();
+
+            JPanel storageSettings = new JPanel(new BorderLayout());
+            this.storageSettingsBorder = new TitledBorder(language.getString(SettingsView.STORAGE_BORDER));
+            storageSettings.setBorder(this.storageSettingsBorder);
+
+            JPanel pathsPanel = new JPanel(new GridLayout(3, 2));
+
+            this.versionsPathCheckbox = new JCheckBox(language.getString(SettingsView.VERSIONS_PATH_LABEL) + ": ");
+            this.versionsPathCheckbox.setSelected(settings.overrideVersionsPath);
+            pathsPanel.add(this.versionsPathCheckbox);
+
+            this.versionsPathField = new JTextField(settings.versionsDirPath == null ? "" : settings.versionsDirPath);
+            this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
+            this.versionsPathField.addActionListener(e -> {
+                String path = SettingsView.checkPath(this.versionsPathField);
+
+                if (path == null) {
+                    return;
+                }
+
+                this.versionsPathField.setText(path);
+
+                CRLauncher.getInstance().getSettings().overrideVersionsPath = this.versionsPathCheckbox.isSelected();
+                CRLauncher.getInstance().getSettings().versionsDirPath = path;
+            });
+            pathsPanel.add(this.versionsPathField);
+
+            this.instancesPathCheckbox = new JCheckBox(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
+            this.instancesPathCheckbox.setSelected(settings.overrideInstancesPath);
+            pathsPanel.add(this.instancesPathCheckbox);
+
+            this.instancesPathField = new JTextField(settings.instancesDirPath == null ? "" : settings.instancesDirPath);
+            this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
+            this.instancesPathField.addActionListener(e -> {
+                String path = SettingsView.checkPath(this.instancesPathField);
+
+                if (path == null) {
+                    return;
+                }
+
+                this.instancesPathField.setText(path);
+
+                CRLauncher.getInstance().getSettings().overrideInstancesPath = this.instancesPathCheckbox.isSelected();
+                CRLauncher.getInstance().getSettings().instancesDirPath = path;
+            });
+            pathsPanel.add(this.instancesPathField);
+
+            this.modLoadersPathCheckbox = new JCheckBox(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
+            this.modLoadersPathCheckbox.setSelected(settings.overrideModloadersPath);
+            pathsPanel.add(this.modLoadersPathCheckbox);
+
+            this.modLoadersPathField = new JTextField(settings.modloadersDirPath == null ? "" : settings.modloadersDirPath);
+            this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
+            this.modLoadersPathField.addActionListener(e -> {
+                String path = SettingsView.checkPath(this.modLoadersPathField);
+
+                if (path == null) {
+                    return;
+                }
+
+                this.modLoadersPathField.setText(path);
+
+                CRLauncher.getInstance().getSettings().overrideModloadersPath = this.modLoadersPathCheckbox.isSelected();
+                CRLauncher.getInstance().getSettings().modloadersDirPath = path;
+            });
+            pathsPanel.add(this.modLoadersPathField);
+
+            storageSettings.add(pathsPanel, BorderLayout.CENTER);
+
+            this.tipLabel = new JLabel("<html><b>" + language.getString(SettingsView.TIP_LABEL) + "</b></html>");
+            this.tipLabel.setBorder(new EmptyBorder(2, 2, 2, 2));
+            storageSettings.add(this.tipLabel, BorderLayout.SOUTH);
+
+            this.versionsPathField.setEnabled(this.versionsPathCheckbox.isSelected());
+            this.versionsPathCheckbox.addActionListener(e -> {
+                boolean selected = this.versionsPathCheckbox.isSelected();
+                this.versionsPathField.setEnabled(selected);
+                if (selected) {
+                    this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "");
+                } else {
+                    this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
+                }
+            });
+
+            this.instancesPathField.setEnabled(this.instancesPathCheckbox.isSelected());
+            this.instancesPathCheckbox.addActionListener(e -> {
+                boolean selected = this.instancesPathCheckbox.isSelected();
+                this.instancesPathField.setEnabled(selected);
+                if (selected) {
+                    this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "");
+                } else {
+                    this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
+                }
+            });
+
+            this.modLoadersPathField.setEnabled(this.modLoadersPathCheckbox.isSelected());
+            this.modLoadersPathCheckbox.addActionListener(e -> {
+                boolean selected = this.modLoadersPathCheckbox.isSelected();
+                this.modLoadersPathField.setEnabled(selected);
+                if (selected) {
+                    this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "");
+                } else {
+                    this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
+                }
+            });
+
+            gbc.gridy++;
+            this.add(storageSettings, gbc);
+        }
+
+        {
+            JPanel otherSettings = new JPanel(new GridLayout(6, 3));
             this.otherSettingsBorder = new TitledBorder(language.getString(SettingsView.OTHER_BORDER));
             otherSettings.setBorder(this.otherSettingsBorder);
 
@@ -217,6 +356,33 @@ public class SettingsView extends JPanel {
             this.checkUpdates.setSelected(CRLauncher.getInstance().getSettings().checkUpdatesStartup);
             otherSettings.add(this.checkUpdates);
 
+            this.checkUpdatesNowButton = new JButton(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
+            this.checkUpdatesNowButton.addActionListener(e -> {
+                this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECKING_UPDATES));
+
+                new Worker<Void, Void>("checking for updates") {
+                    @Override
+                    protected Void work() throws Exception {
+                        CRLauncher.checkForUpdates(true);
+
+                        return null;
+                    }
+
+                    @Override
+                    protected void done() {
+                        SettingsView.this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
+                    }
+                }.execute();
+            });
+            otherSettings.add(this.checkUpdatesNowButton);
+
+            this.appendUsername = new JCheckBox(language.getString(SettingsView.APPEND_USERNAME));
+            this.appendUsername.setSelected(CRLauncher.getInstance().getSettings().appendUsername);
+            this.appendUsername.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().appendUsername = this.appendUsername.isSelected();
+            });
+            otherSettings.add(this.appendUsername);
+
             otherSettings.add(Box.createHorizontalBox());
 
             this.languageLabel = new JLabel(language.getString(SettingsView.LANGUAGE));
@@ -240,6 +406,25 @@ public class SettingsView extends JPanel {
             gbc.weighty = 1;
             this.add(otherSettings, gbc);
         }
+    }
+
+    private static String checkPath(JTextField textField) {
+        String path = textField.getText();
+        boolean pathInvalid = FileUtils.isPathInvalid(path);
+
+        if (pathInvalid) {
+            textField.putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
+
+            MessageBox.showErrorMessage(
+                CRLauncher.frame, "Supplied path is invalid: " + path
+            );
+
+            return null;
+        } else {
+            textField.putClientProperty(FlatClientProperties.OUTLINE, "");
+        }
+
+        return Paths.get(path).toAbsolutePath().toString();
     }
 
     public void reloadLanguage() {
@@ -268,9 +453,18 @@ public class SettingsView extends JPanel {
         this.otherSettingsBorder.setTitle(language.getString(SettingsView.OTHER_BORDER));
         this.prettyJson.setText(language.getString(SettingsView.WRITE_PRETTY_JSON));
 
+        this.storageSettingsBorder.setTitle(language.getString(SettingsView.STORAGE_BORDER));
+        this.versionsPathCheckbox.setText(language.getString(SettingsView.VERSIONS_PATH_LABEL) + ": ");
+        this.versionsPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.VERSIONS_PATH_PLACEHOLDER));
+        this.instancesPathCheckbox.setText(language.getString(SettingsView.INSTANCES_PATH_LABEL) + ": ");
+        this.instancesPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.INSTANCES_PATH_PLACEHOLDER));
+        this.modLoadersPathCheckbox.setText(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
+        this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
+        this.tipLabel.setText("<html><b>" + language.getString(SettingsView.TIP_LABEL) + "</b></html>");
+
         this.launchOptionLabel.setText(language.getString(SettingsView.GAME_LAUNCH_LABEL));
         DefaultComboBoxModel<String> launchModel = new DefaultComboBoxModel<>(
-            new String[] {
+            new String[]{
                 language.getString(SettingsView.LAUNCH_DO_NOTHING),
                 language.getString(SettingsView.LAUNCH_HIDE_LAUNCHER),
                 language.getString(SettingsView.LAUNCH_HIDE_LAUNCHER_AND_CONSOLE),
@@ -293,6 +487,8 @@ public class SettingsView extends JPanel {
         this.whenExitsBehavior.setSelectedIndex(exitIndex);
 
         this.checkUpdates.setText(language.getString(SettingsView.CHECK_FOR_UPDATES));
+        this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
+        this.appendUsername.setText(language.getString(SettingsView.APPEND_USERNAME));
         this.languageLabel.setText(language.getString(SettingsView.LANGUAGE));
     }
 }

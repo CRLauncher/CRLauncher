@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.logging;
 
-import me.theentropyshard.crlauncher.gui.LauncherConsole;
+import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import org.apache.logging.log4j.Logger;
 
 import java.time.LocalDateTime;

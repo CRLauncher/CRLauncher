@@ -19,15 +19,20 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.gui.action.InstanceExportAction;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.JavaTab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.gamelog.GameLogTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.MainTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar.JarModsTab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java.JavaTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screenshots.ScreenshotsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds.WorldsTab;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,7 +73,10 @@ public class InstanceSettingsDialog extends AppDialog {
         this.addTab(new MainTab(instance, this.getDialog()));
         this.addTab(new JavaTab(instance, this.getDialog()));
         this.addTab(new ModsTab(instance, this.getDialog()));
+        this.addTab(new JarModsTab(instance, this.getDialog()));
         this.addTab(new WorldsTab(instance, this.getDialog()));
+        this.addTab(new ScreenshotsTab(instance, this.getDialog()));
+        this.addTab(new GameLogTab(instance, this.getDialog()));
 
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
@@ -77,7 +85,7 @@ public class InstanceSettingsDialog extends AppDialog {
                     try {
                         tab.save();
                     } catch (IOException ex) {
-                        ex.printStackTrace();
+                        Log.error("Error saving tab", ex);
                     }
                 });
 
@@ -90,14 +98,26 @@ public class InstanceSettingsDialog extends AppDialog {
                         try {
                             instance.save();
                         } catch (IOException ex) {
-                            ex.printStackTrace();
+                            Log.error("Error saving instance " + instance.getName(), ex);
                         }
                     }
                 }
             }
         });
 
-        this.setContent(this.tabbedPane);
+        JPanel root = new JPanel(new BorderLayout());
+        root.add(this.tabbedPane, BorderLayout.CENTER);
+
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        buttonsPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0,
+            UIManager.getColor("Component.borderColor")));
+
+        JButton exportButton = new JButton();
+        exportButton.setAction(new InstanceExportAction(instance));
+        buttonsPanel.add(exportButton);
+        root.add(buttonsPanel, BorderLayout.SOUTH);
+
+        this.setContent(root);
         this.center(0);
         this.setVisible(true);
     }
