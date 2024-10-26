@@ -45,43 +45,43 @@
     "gui": {
         "instanceItem": {
             "contextMenu": {
-                "edit": "Edit",
-                "icon": "Icon",
+                "edit": "Mend",
+                "icon": "Painting",
                 "rename": "Rename",
-                "delete": "Delete",
-                "openInstanceFolder": "Open instance folder",
-                "openCosmicFolder": "Open Cosmic folder"
+                "delete": "Sink",
+                "openInstanceFolder": "Open dock storage",
+                "openCosmicFolder": "Open Cosmic folder storage"
             }
         },
         "instanceSettingsDialog": {
-            "title": "Instance Settings - $$INSTANCE_NAME$$",
+            "title": "Dock Settings - $$INSTANCE_NAME$$",
             "mainTab": {
-                "name": "Main",
+                "name": "Deck",
                 "cosmicReachVersion": {
-                    "borderName": "Cosmic Reach version",
-                    "autoUpdateToLatest": "Automatically update to the latest version"
+                    "borderName": "Cosmic Reach ship build",
+                    "autoUpdateToLatest": "Automatically update to the ship build"
                 },
                 "otherSettings": {
-                    "borderName": "Other",
-                    "textFieldPlaceholder": "Set custom window title here"
+                    "borderName": "",
+                    "textFieldPlaceholder": "Set custom window name here"
                 }
             },
             "javaTab": {
                 "name": "Java",
                 "javaInstallation": {
-                    "borderName": "Java Installation",
-                    "textFieldPlaceholder": "Path to javaw.exe"
+                    "borderName": "Java dock",
+                    "textFieldPlaceholder": "Map to javaw.exe"
                 },
                 "memorySettings": {
-                    "borderName": "Memory Settings",
+                    "borderName": "Memory Cogs",
                     "minimum": "Minimum memory (Megabytes)",
                     "maximum": "Maximum memory (Megabytes)"
                 }
             },
             "modsTab": {
-                "name": "Mods",
+                "name": "Gears",
                 "modLoader": {
-                    "borderName": "Mod loader",
+                    "borderName": "Gear loader",
                     "options": {
                         "vanilla": "Vanilla",
                         "fabric": "Fabric",
@@ -90,44 +90,44 @@
                     }
                 },
                 "loaderVersion": {
-                    "borderName": "Loader version"
+                    "borderName": "Loader ship build"
                 },
                 "modsTable": {
-                    "borderName": "Mods",
+                    "borderName": "Gears",
                     "vanilla": {
-                        "modFolder": "Mod folder",
-                        "deleteModButton": "Delete data mod"
+                        "modFolder": "Gear folder",
+                        "deleteModButton": "Delete data gear"
                     },
                     "fabric": {
                         "modName": "Name",
-                        "modVersion": "Version",
+                        "modVersion": "Ship build",
                         "modDescription": "Description",
                         "modActive": "Active",
-                        "addModButton": "Add Fabric mod",
-                        "deleteModButton": "Delete Fabric mod"
+                        "addModButton": "Add Fabric gear",
+                        "deleteModButton": "Delete Fabric gear"
                     },
                     "cosmicQuilt": {
                         "modName": "Name",
-                        "modVersion": "Version",
+                        "modVersion": "Ship build",
                         "modDescription": "Description",
                         "modActive": "Active",
-                        "addModButton": "Add Quilt mod",
-                        "deleteModButton": "Delete Quilt mod"
+                        "addModButton": "Add Quilt gear",
+                        "deleteModButton": "Delete Quilt gear"
                     },
                     "puzzle": {
                         "modName": "Name",
-                        "modVersion": "Version",
+                        "modVersion": "Ship build",
                         "modDescription": "Description",
                         "modActive": "Active",
                         "addModButton": "Add Puzzle mod",
                         "deleteModButton": "Delete Puzzle mod"
                     }
                 },
-                "openModsFolder": "Open mods folder",
-                "searchModsCRMM": "Search mods on CRMM"
+                "openModsFolder": "Open gear folder",
+                "searchModsCRMM": "Search gears on CRMM"
             },
             "worldsTab": {
-                "name": "Worlds",
+                "name": "Oceans",
                 "table": {
                     "worldName": "Name",
                     "worldSeed": "Seed",
@@ -136,13 +136,13 @@
                 },
                 "contextMenu": {
                     "copySeed": "Copy seed",
-                    "delete": "Delete"
+                    "delete": "Drain"
                 },
-                "deletingWorld": "Deleting world"
+                "deletingWorld": "Draining ocean"
             }
         },
         "searchCRMMModsDialog": {
-            "title": "Search mods on CRMM",
+            "title": "Search gears on CRMM",
             "download1": "download",
             "downloads234": "downloads",
             "downloads": "downloads",
@@ -166,7 +166,7 @@
             "title": "Add account",
             "offline": {
                 "tabName": "Offline",
-                "textFieldPlaceholder": "Enter desired username"
+                "textFieldPlaceholder": "Enter ya username"
             },
             "itch": {
                 "tabName": "Itch.io",
@@ -193,18 +193,18 @@
                 "hide": "Hide console"
             },
             "tab": {
-                "play": "Play",
+                "play": "Set sail",
                 "accounts": "Accounts",
-                "settings": "Settings",
+                "settings": "Cogs",
                 "about": "About"
             }
         },
         "playView": {
-            "instanceGroup": "Instance group",
+            "instanceGroup": "Dock group",
             "account": "Account",
-            "deleteInstanceTitle": "Delete instance",
+            "deleteInstanceTitle": "Delete docks",
             "renameInstanceDialog": {
-                "title": "Rename instance",
+                "title": "Rename docks",
                 "message": "Enter new name"
             },
             "lastPlayedFor": "Last played for",
@@ -215,7 +215,7 @@
             "addAccountButton": "Click to add account",
             "deleteConfirmation": {
                 "title": "Account removal",
-                "message": "Are you sure you want to delete account '$$ACCOUNT_NAME$$'?"
+                "message": "Are you sure you want to chuck account '$$ACCOUNT_NAME$$' overboard?"
             }
         },
         "settingsView": {
@@ -260,22 +260,22 @@
         },
         "aboutView": {
             "lines": {
-                "line1": "CRLauncher $$LAUNCHER_VERSION$$ - simple Cosmic Reach launcher",
+                "line1": "CRLauncher ship build $$LAUNCHER_VERSION$$ - simple Cosmic Reach launcher",
                 "line2": "by TheEntropyShard",
                 "line3": "More at $$LAUNCHER_URL$$"
             }
         },
         "addInstanceDialog": {
-            "title": "Add New Instance",
+            "title": "Add New Dock",
             "nameFieldLabel": "Name",
             "groupFieldLabel": "Group",
-            "autoUpdateToLatest": "Automatically update to the latest version",
+            "autoUpdateToLatest": "Automatically update to the latest ship biuld",
             "filter": "Filter",
             "refreshButton": "Refresh",
             "addButton": "Add",
             "cancelButton": "Cancel",
             "table": {
-                "version": "Version",
+                "version": "Ship build",
                 "dateReleased": "Date released",
                 "versionType": "Type"
             }
