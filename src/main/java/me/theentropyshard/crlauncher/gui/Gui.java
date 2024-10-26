@@ -34,10 +34,13 @@ import me.theentropyshard.crlauncher.gui.view.accountsview.AccountsView;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AddAccountItem;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
+import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -79,6 +82,24 @@ public class Gui {
         Language language = CRLauncher.getInstance().getLanguage();
 
         this.viewSelector = new JTabbedPane(JTabbedPane.LEFT);
+
+        InputMap inputMap = this.viewSelector.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "run_last_played_instance");
+
+        ActionMap actionMap = this.viewSelector.getActionMap();
+        actionMap.put("run_last_played_instance", SwingUtils.newAction(e -> {
+            int selectedIndex = this.viewSelector.getSelectedIndex();
+
+            if (selectedIndex != 0) {
+                return;
+            }
+
+            if (this.playView == null) {
+                return;
+            }
+
+            this.playView.playLastInstance();
+        }));
 
         CRLauncher.frame = this.frame = new JFrame(title);
         this.frame.add(this.viewSelector, BorderLayout.CENTER);
