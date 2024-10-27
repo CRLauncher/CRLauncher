@@ -18,36 +18,45 @@
 
 package me.theentropyshard.crlauncher.cosmic.version;
 
-import com.google.gson.annotations.SerializedName;
-
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
-public class VersionList {
-    private Latest latest;
-    private List<Version> versions;
+public abstract class VersionList {
+    private final Map<String, Version> versions;
 
     public VersionList() {
-
+        this.versions = new LinkedHashMap<>();
     }
 
-    public static final class Latest {
-        @SerializedName("pre_alpha")
-        private String preAlpha;
-
-        public Latest() {
-
-        }
-
-        public String getPreAlpha() {
-            return this.preAlpha;
-        }
+    public boolean isEmpty() {
+        return this.versions.isEmpty();
     }
 
-    public Latest getLatest() {
-        return this.latest;
+    public abstract void load() throws IOException;
+
+    public void reload() throws IOException {
+        this.clear();
+        this.load();
     }
+
+    public void clear() {
+        this.versions.clear();
+    }
+
+    public void addVersion(Version version) {
+        this.versions.put(version.getId(), version);
+    }
+
+    public Version getVersionById(String id) {
+        return this.versions.get(id);
+    }
+
+    public abstract Version getLatestVersion();
 
     public List<Version> getVersions() {
-        return this.versions;
+        return new ArrayList<>(this.versions.values());
     }
 }

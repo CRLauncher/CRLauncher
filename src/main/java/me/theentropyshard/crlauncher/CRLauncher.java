@@ -198,7 +198,8 @@ public class CRLauncher {
         this.crmmApi = new CrmmApi(this.httpClient);
         this.mcLogsApi = new McLogsApi(this.httpClient);
 
-        this.versionManager = new VersionManager(this.versionsDir);
+        this.versionManager = new VersionManager();
+        this.versionManager.setMode(VersionManager.Mode.ONLINE);
 
         this.accountManager = new AccountManager(this.cosmicDir);
         try {

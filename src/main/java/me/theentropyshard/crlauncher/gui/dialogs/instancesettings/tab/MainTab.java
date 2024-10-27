@@ -138,7 +138,12 @@ public class MainTab extends Tab {
             protected List<Version> work() throws Exception {
                 VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
-                return versionManager.getRemoteVersions(false);
+                if (!versionManager.isLoaded()) {
+                    versionManager.setMode(VersionManager.Mode.ONLINE);
+                    versionManager.load();
+                }
+
+                return versionManager.getVersions();
             }
 
             @Override

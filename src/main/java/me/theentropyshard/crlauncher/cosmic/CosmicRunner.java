@@ -313,20 +313,25 @@ public class CosmicRunner extends Thread {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
         if (this.instance.isAutoUpdateToLatest()) {
-            VersionList versionList = versionManager.getVersionList();
-
-            if (versionList == null) {
+            if (!versionManager.isLoaded()) {
                 try {
-                    versionManager.loadRemoteVersions();
-                    versionList = versionManager.getVersionList();
+                    versionManager.load();
                 } catch (IOException e) {
-                    Log.error("Could not load remote versions, no auto-update performed", e);
+                    Log.error("Could not load game versions, not updating instance to latest");
 
                     return;
                 }
             }
 
-            this.instance.setCosmicVersion(versionList.getLatest().getPreAlpha());
+            Version latest = versionManager.getLatest();
+
+            if (latest == null) {
+                Log.warn("Latest version returned by version manager is null");
+
+                return;
+            }
+
+            this.instance.setCosmicVersion(latest.getId());
         }
     }
 

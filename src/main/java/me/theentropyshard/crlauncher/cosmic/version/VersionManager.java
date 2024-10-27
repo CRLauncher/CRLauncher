@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.cosmic.version;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.CosmicDownloader;
-import me.theentropyshard.crlauncher.network.HttpRequest;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -33,14 +33,11 @@ import java.util.*;
 public class VersionManager {
     public static final String REMOTE_VERSIONS = "https://raw.githubusercontent.com/CRModders/CosmicArchive/main/versions.json";
 
-    private final Path workDir;
-    private final Map<String, Version> remoteVersions;
-
+    private Mode mode = Mode.ONLINE;
     private VersionList versionList;
 
-    public VersionManager(Path workDir) {
-        this.workDir = workDir;
-        this.remoteVersions = new LinkedHashMap<>();
+    public VersionManager() {
+
     }
 
     public void downloadVersion(Version version, ProgressListener listener) throws IOException {
@@ -48,22 +45,34 @@ public class VersionManager {
         downloader.downloadVersion(version, listener);
     }
 
-    public void loadRemoteVersions() throws IOException {
-        try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
-            this.versionList = Json.parse(request.asString(VersionManager.REMOTE_VERSIONS), VersionList.class);
+    public void load() throws IOException {
+        this.versionList = switch (this.mode) {
+            case ONLINE -> new RemoteVersionList(VersionManager.REMOTE_VERSIONS);
+            case OFFLINE -> new LocalVersionList(CRLauncher.getInstance().getVersionsDir());
+        };
+        this.versionList.load();
+    }
 
-            for (Version version : this.versionList.getVersions()) {
-                this.remoteVersions.put(version.getId(), version);
-            }
-        }
+    public Version getVersion(String id) {
+        return this.versionList.getVersionById(id);
+    }
+
+    public Version getLatest() {
+        return this.versionList.getLatestVersion();
+    }
+
+    public boolean isLoaded() {
+        return this.versionList != null && !this.versionList.isEmpty();
     }
 
     public boolean isLatest(Version version) {
-        return version.getId().equals(this.versionList.getLatest().getPreAlpha());
+        return version.getId().equals(this.versionList.getLatestVersion().getId());
     }
 
     public Path getVersionPath(String id, String ext) {
-        return this.workDir
+        Path versionsDir = CRLauncher.getInstance().getVersionsDir();
+
+        return versionsDir
             .resolve(id)
             .resolve("client")
             .resolve(id + "." + ext);
@@ -81,33 +90,16 @@ public class VersionManager {
         return this.getVersionPath(id, "json");
     }
 
-    public Version getVersion(String id) throws IOException {
-        Path versionJson = this.getVersionJson(id);
-        if (Files.exists(versionJson)) {
-            return Json.parse(FileUtils.readUtf8(versionJson), Version.class);
-        }
-
-        if (this.remoteVersions.isEmpty()) {
-            this.loadRemoteVersions();
-        }
-
-        return this.remoteVersions.get(id);
+    public List<Version> getVersions() {
+        return this.versionList.getVersions();
     }
 
-    public List<Version> getRemoteVersions(boolean forceNetwork) throws IOException {
-        if (this.remoteVersions.isEmpty() || forceNetwork) {
-            this.remoteVersions.clear();
-            this.loadRemoteVersions();
-        }
-
-        return new ArrayList<>(this.remoteVersions.values());
+    public void setMode(Mode mode) {
+        this.mode = mode;
     }
 
-    public List<Version> getLocalAvailableVersions() throws IOException {
-        return Collections.emptyList();
-    }
-
-    public VersionList getVersionList() {
-        return this.versionList;
+    public enum Mode {
+        ONLINE,
+        OFFLINE
     }
 }
