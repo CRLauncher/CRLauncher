@@ -46,6 +46,7 @@ public class CosmicVersionsTableModel extends AbstractTableModel {
     private final String[] columnNames;
 
     private DateTimeFormatter formatter;
+    private boolean showInstalled;
 
     public CosmicVersionsTableModel(AddInstanceDialog dialog, JTable table) {
         this.dialog = dialog;
@@ -116,10 +117,15 @@ public class CosmicVersionsTableModel extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         Version version = this.versions.get(rowIndex);
 
+        VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
+
+        if (!versionManager.isInstalled(version) && this.showInstalled) {
+            return null;
+        }
+
         return switch (columnIndex) {
             case 0 -> {
                 Language language = CRLauncher.getInstance().getLanguage();
-                VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
                 if (versionManager.isLatest(version)) {
                     yield version.getId() + " " + language.getString("gui.addInstanceDialog.latestVersion");
@@ -205,5 +211,9 @@ public class CosmicVersionsTableModel extends AbstractTableModel {
                 default -> years + " " + language.getString("general.time.units.years") + " " + ago;
             };
         }
+    }
+
+    public void showInstalled(boolean selected) {
+        this.showInstalled = selected;
     }
 }

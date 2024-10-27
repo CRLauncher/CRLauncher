@@ -78,6 +78,10 @@ public class VersionManager {
             .resolve(id + "." + ext);
     }
 
+    public boolean isInstalled(Version version) {
+        return Files.exists(this.getVersionJar(version)) && Files.exists(this.getVersionJson(version.getId()));
+    }
+
     public Path getVersionPath(Version version, String ext) {
         return this.getVersionPath(version.getId(), ext);
     }

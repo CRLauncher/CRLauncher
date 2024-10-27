@@ -21,10 +21,12 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -37,6 +39,8 @@ import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
+import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
 public class MainTab extends Tab {
@@ -44,6 +48,7 @@ public class MainTab extends Tab {
     private final JTextField windowTitleField;
     private final String oldWindowTitle;
 
+    private List<Version> versions;
     private Version previousValue;
 
     public MainTab(Instance instance, JDialog dialog) {
@@ -110,6 +115,24 @@ public class MainTab extends Tab {
             });
             crVersionSettings.add(updateToLatestAutomatically);
 
+            JCheckBox showOnlyInstalled = new JCheckBox(language.getString("gui.addInstanceDialog.showOnlyInstalled"));
+            showOnlyInstalled.setSelected(CRLauncher.getInstance().getSettings().showOnlyInstalledVersions);
+            showOnlyInstalled.addActionListener(e -> {
+                CRLauncher launcher = CRLauncher.getInstance();
+                VersionManager versionManager = launcher.getVersionManager();
+                Settings settings = launcher.getSettings();
+
+                settings.showOnlyInstalledVersions = showOnlyInstalled.isSelected();
+
+                SwingUtils.startWorker(() -> {
+                    Vector<Version> data = new Vector<>(this.versions);
+                    data.removeIf(version -> (!versionManager.isInstalled(version) && settings.showOnlyInstalledVersions));
+
+                    SwingUtilities.invokeLater(() -> this.versionsCombo.setModel(new DefaultComboBoxModel<>(data)));
+                });
+            });
+            crVersionSettings.add(showOnlyInstalled);
+
             gbc.gridy++;
             root.add(crVersionSettings, gbc);
         }
@@ -163,14 +186,27 @@ public class MainTab extends Tab {
                     return;
                 }
 
+                MainTab.this.versions = versions;
+
                 String cosmicVersion = instance.getCosmicVersion();
-                Version version = ListUtils.search(versions, v -> v.getId().equals(cosmicVersion));
-                versions.forEach(MainTab.this.versionsCombo::addItem);
+                Version currentVersion = ListUtils.search(versions, v -> v.getId().equals(cosmicVersion));
 
-                MainTab.this.previousValue = version;
+                CRLauncher launcher = CRLauncher.getInstance();
+                Settings settings = launcher.getSettings();
+                VersionManager versionManager = launcher.getVersionManager();
 
-                if (version != null) {
-                    MainTab.this.versionsCombo.setSelectedItem(version);
+                for (Version version : versions) {
+                    if (!versionManager.isInstalled(version) && settings.showOnlyInstalledVersions) {
+                        continue;
+                    }
+
+                    MainTab.this.versionsCombo.addItem(version);
+                }
+
+                MainTab.this.previousValue = currentVersion;
+
+                if (currentVersion != null) {
+                    MainTab.this.versionsCombo.setSelectedItem(currentVersion);
                 }
             }
         }.execute();

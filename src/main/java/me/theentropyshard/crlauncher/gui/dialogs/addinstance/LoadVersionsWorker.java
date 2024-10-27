@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionType;
@@ -56,7 +57,9 @@ public class LoadVersionsWorker extends Worker<Void, Version> {
 
     @Override
     protected Void work() throws Exception {
-        VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
+        CRLauncher launcher = CRLauncher.getInstance();
+        VersionManager versionManager = launcher.getVersionManager();
+        Settings settings = launcher.getSettings();
 
         if (!versionManager.isLoaded() || this.forceNetwork) {
             versionManager.setMode(VersionManager.Mode.ONLINE);
@@ -66,6 +69,10 @@ public class LoadVersionsWorker extends Worker<Void, Version> {
         List<Version> versions = versionManager.getVersions();
 
         for (Version version : versions) {
+            if (!versionManager.isInstalled(version) && settings.showOnlyInstalledVersions) {
+                continue;
+            }
+
             this.publish(version);
         }
 

@@ -58,6 +58,7 @@ public class AddInstanceDialog extends AppDialog {
     public static final String VERSION_NOT_SELECTED_MESSAGE = "messages.gui.addInstanceDialog.cosmicVersionNotSelected";
     public static final String UNABLE_TO_CREATE_MESSAGE = "messages.gui.addInstanceDialog.unableToCreateInstance";
     public static final String NO_CLIENT_MESSAGE = "messages.gui.addInstanceDialog.doesNotHaveClient";
+    public static final String SHOW_ONLY_INSTALLED = "gui.addInstanceDialog.showOnlyInstalled";
     private final JTextField nameField;
     private final JTextField groupField;
     private final JButton addButton;
@@ -220,6 +221,15 @@ public class AddInstanceDialog extends AppDialog {
         JButton importButton = new JButton();
         importButton.setAction(new InstanceImportAction(this.getDialog()));
         leftButtonsPanel.add(importButton);
+
+        JCheckBox showOnlyInstalled = new JCheckBox(language.getString(AddInstanceDialog.SHOW_ONLY_INSTALLED));
+        showOnlyInstalled.setSelected(CRLauncher.getInstance().getSettings().showOnlyInstalledVersions);
+        showOnlyInstalled.addActionListener(e -> {
+            CRLauncher.getInstance().getSettings().showOnlyInstalledVersions = showOnlyInstalled.isSelected();
+            tableModel.showInstalled(showOnlyInstalled.isSelected());
+            tableModel.fireTableDataChanged();
+        });
+        leftButtonsPanel.add(showOnlyInstalled);
 
         FlowLayout rightLayout = new FlowLayout(FlowLayout.RIGHT);
         rightLayout.setHgap(0);

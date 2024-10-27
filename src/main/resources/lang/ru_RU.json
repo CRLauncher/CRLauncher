@@ -361,7 +361,8 @@
                 "dateReleased": "Дата релиза",
                 "versionType": "Тип версии"
             },
-            "latestVersion": "(Новейшая)"
+            "latestVersion": "(Новейшая)",
+            "showOnlyInstalled": "Показывать только установленные версии"
         },
         "updateDialog": {
             "title": "Обновление",

@@ -53,6 +53,7 @@ public class Settings {
     public boolean appendUsername = false;
     public boolean patchOfflineAccount = false;
     public boolean disableFileIntegrityCheck = false;
+    public boolean showOnlyInstalledVersions;
 
     public Settings() {
 
