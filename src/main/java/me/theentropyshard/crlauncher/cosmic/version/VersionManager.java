@@ -58,6 +58,10 @@ public class VersionManager {
         }
     }
 
+    public boolean isLatest(Version version) {
+        return version.getId().equals(this.versionList.getLatest().getPreAlpha());
+    }
+
     public Path getVersionPath(String id, String ext) {
         return this.workDir
             .resolve(id)

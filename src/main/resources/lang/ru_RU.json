@@ -288,7 +288,8 @@
                         "alwaysCentered": "Всегда в центре"
                     }
                 },
-                "amountOfTime": "Показывать время, прошедшее с релиза версии"
+                "amountOfTime": "Показывать время, прошедшее с релиза версии",
+                "showConsoleAtStartup": "Открывать консоль при запуске"
             },
             "storageSettings": {
                 "borderName": "Хранилище",
@@ -323,8 +324,10 @@
                 "checkUpdatesNowButton": "Проверить обновления",
                 "checkingForUpdates": "Проверяем...",
                 "noUpdatesAvailable": "Вы используете новейшую версию",
+                "patchOfflineAccount": "Установить отображаемое имя для оффлайн аккаунта, как в лаунчере",
                 "appendUsername": "Добавлять ник перед сообщениями в чате",
-                "language": "Язык"
+                "language": "Язык",
+                "disableFileIntegrityCheck": "Отключить проверку целостности файлов"
             }
         },
         "aboutView": {
@@ -357,7 +360,8 @@
                 "version": "Версия",
                 "dateReleased": "Дата релиза",
                 "versionType": "Тип версии"
-            }
+            },
+            "latestVersion": "(Новейшая)"
         },
         "updateDialog": {
             "title": "Обновление",

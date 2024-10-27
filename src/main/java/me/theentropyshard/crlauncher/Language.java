@@ -49,6 +49,12 @@ public class Language {
     }
 
     public String getString(JsonObject section, String key) {
+        if (section == null) {
+            Log.warn("Got null section for key '" + key + "'");
+
+            return key;
+        }
+
         JsonElement stringElement = section.get(key);
 
         if (stringElement == null) {

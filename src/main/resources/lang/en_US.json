@@ -288,7 +288,8 @@
                         "alwaysCentered": "Always centered"
                     }
                 },
-                "amountOfTime": "Show the amount of time that has passed since the release date"
+                "amountOfTime": "Show the amount of time that has passed since the release date",
+                "showConsoleAtStartup": "Show console at startup"
             },
             "storageSettings": {
                 "borderName": "Storage",
@@ -323,8 +324,10 @@
                 "checkUpdatesNowButton": "Check for updates",
                 "checkingForUpdates": "Checking...",
                 "noUpdatesAvailable": "You are using the latest version",
+                "patchOfflineAccount": "Set display name for offline account as in the launcher",
                 "appendUsername": "Append username before chat messages",
-                "language": "Language"
+                "language": "Language",
+                "disableFileIntegrityCheck": "Disable file integrity check"
             }
         },
         "aboutView": {
@@ -357,7 +360,8 @@
                 "version": "Version",
                 "dateReleased": "Date released",
                 "versionType": "Type"
-            }
+            },
+            "latestVersion": "(Latest)"
         },
         "updateDialog": {
             "title": "Update",

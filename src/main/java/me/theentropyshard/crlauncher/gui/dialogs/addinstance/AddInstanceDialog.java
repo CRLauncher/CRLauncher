@@ -257,25 +257,17 @@ public class AddInstanceDialog extends AppDialog {
 
             IconManager iconManager = CRLauncher.getInstance().getIconManager();
 
-            TableModel model = versionsTable.getModel();
+            CosmicVersionsTableModel model = (CosmicVersionsTableModel) versionsTable.getModel();
             int selectedRow = versionsTable.getSelectedRow();
             selectedRow = versionsTable.convertRowIndexToModel(selectedRow);
-            String crVersion = String.valueOf(model.getValueAt(selectedRow, 0));
+            Version version = model.getVersion(selectedRow);
+            String crVersion = version.getId();
             CRLauncher.getInstance().doTask(() -> {
-                try {
-                    Version version = CRLauncher.getInstance().getVersionManager().getVersion(crVersion);
-                    if (version == null) {
-                        Log.warn("Version returned for " + crVersion + " is null");
-                    } else {
-                        if (version.getClient() == null) {
-                            MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
-                                CRLauncher.getInstance().getLanguage().getString(AddInstanceDialog.NO_CLIENT_MESSAGE)
-                                    .replace("$$CR_VERSION$$", crVersion));
-                            return;
-                        }
-                    }
-                } catch (IOException ex) {
-                    Log.error("Could not get info about version " + crVersion, ex);
+                if (version.getClient() == null) {
+                    MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
+                        CRLauncher.getInstance().getLanguage().getString(AddInstanceDialog.NO_CLIENT_MESSAGE)
+                            .replace("$$CR_VERSION$$", crVersion));
+                    return;
                 }
 
                 InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();

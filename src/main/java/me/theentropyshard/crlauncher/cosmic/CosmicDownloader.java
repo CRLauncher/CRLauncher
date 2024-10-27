@@ -31,7 +31,9 @@ public class CosmicDownloader {
             FileUtils.writeUtf8(versionJson, pretty ? Json.writePretty(version) : Json.write(version));
         }
 
-        if (!Files.exists(filePath) || !HashUtils.sha256(filePath).equals(version.getClient().getSha256())) {
+        boolean disableCheck = CRLauncher.getInstance().getSettings().disableFileIntegrityCheck;
+
+        if (!Files.exists(filePath) || (!HashUtils.sha256(filePath).equals(version.getClient().getSha256()) && !disableCheck)) {
             if (Files.exists(filePath)) {
                 FileUtils.delete(filePath);
             }

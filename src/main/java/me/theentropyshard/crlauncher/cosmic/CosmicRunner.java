@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.cosmic;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
+import me.theentropyshard.crlauncher.cosmic.account.ItchIoAccount;
 import me.theentropyshard.crlauncher.cosmic.launcher.*;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
@@ -72,6 +73,8 @@ public class CosmicRunner extends Thread {
         "-XX:G1ConcMarkStepDurationMillis=5.0", "-XX:G1ConcRSHotCardLimit=16",
         "-XX:G1ConcRefinementServiceIntervalMillis=150", "-XX:GCTimeRatio=99"
     };
+
+    public static final String ITCH_IO_API_KEY_ENV_KEY = "ITCHIO_API_KEY";
 
     private final Instance instance;
     private final InstanceItem item;
@@ -188,7 +191,12 @@ public class CosmicRunner extends Thread {
 
                 if (currentAccount != null) {
                     patchLauncher.setOfflineUsername(currentAccount.getUsername());
+                    patchLauncher.setPatchOfflineAccount(CRLauncher.getInstance().getSettings().patchOfflineAccount);
                     patchLauncher.setAppendUsername(CRLauncher.getInstance().getSettings().appendUsername);
+                }
+
+                if (currentAccount instanceof ItchIoAccount itch) {
+                    patchLauncher.putEnvironment(CosmicRunner.ITCH_IO_API_KEY_ENV_KEY, itch.getItchIoApiKey());
                 }
 
                 int currentFlagsOption = this.instance.getCurrentFlagsOption();

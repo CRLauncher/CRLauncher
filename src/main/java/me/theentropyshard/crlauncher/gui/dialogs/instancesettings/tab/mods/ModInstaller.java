@@ -34,7 +34,6 @@ import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 import me.theentropyshard.crlauncher.utils.StreamUtils;
-import me.theentropyshard.crlauncher.utils.ZipUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.FileHeader;
@@ -43,11 +42,12 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Stream;
 
 public class ModInstaller {
     public static void pickMod(Instance instance, ModsTableModel tableModel) {
@@ -142,9 +142,9 @@ public class ModInstaller {
 
         Language language = CRLauncher.getInstance().getLanguage();
 
-        new Worker<Mod, Void>("picking data mod") {
+        new Worker<Void, Mod>("picking data mod") {
             @Override
-            protected Mod work() throws Exception {
+            protected Void work() throws Exception {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
                 fileChooser.setFileFilter(new FileNameExtensionFilter(
@@ -167,75 +167,101 @@ public class ModInstaller {
                 }
 
                 settings.lastDir = fileChooser.getCurrentDirectory().getAbsolutePath();
+
                 Path dataModPath = selectedFile.toPath();
-
                 Path dataModsDir = instance.getModsDir(ModLoader.VANILLA);
-
-                Mod mod = new Mod();
-                mod.setActive(true);
+                List<Mod> dataMods = instance.getDataMods();
 
                 if (Files.isDirectory(dataModPath)) {
                     Path dest = dataModsDir.resolve(dataModPath.getFileName());
                     FileUtils.delete(dest);
                     FileUtils.copyDirectory(dataModPath, dest);
 
+                    Mod mod = new Mod();
+                    mod.setActive(true);
                     mod.setFileName(dest.getFileName().toString());
                     mod.setName(dest.getFileName().toString());
-                } else {
-                    String topLevelDirectory = null;
-                    Path dest = null;
 
-                    try (ZipFile file = new ZipFile(dataModPath.toFile())) {
-                        topLevelDirectory = ZipUtils.findTopLevelDirectory(file.getFileHeaders());
-                        dest = dataModsDir.resolve(topLevelDirectory);
-                        FileUtils.delete(dest);
-                        file.extractAll(dataModsDir.toString());
-                    } catch (Exception e) {
-                        Log.error("Could not extract file " + dataModPath + " to dir: " + dest, e);
-                    }
+                    if (ListUtils.search(dataMods, m -> m.getName().equals(mod.getName())) != null) {
+                        MessageBox.showErrorMessage(CRLauncher.frame,
+                            language.getString("messages.gui.mods.modAddedName")
+                                .replace("$$MOD_NAME$$", mod.getName()));
 
-                    if (topLevelDirectory == null || dest == null) {
                         return null;
                     }
 
-                    mod.setFileName(dest.getFileName().toString());
-                    mod.setName(topLevelDirectory.replace("/", ""));
+                    dataMods.add(mod);
+                    this.publish(mod);
+                } else {
+                    try (FileSystem fileSystem = FileSystems.newFileSystem(dataModPath, Map.of("create", "false"))) {
+                        Path root = fileSystem.getPath("/");
+
+                        List<Path> folders = FileUtils.list(root);
+
+                        for (Path folder : folders) {
+                            String fileName = folder.getFileName().toString();
+
+                            Mod mod = new Mod();
+                            mod.setActive(true);
+                            mod.setName(fileName);
+                            mod.setFileName(fileName);
+
+                            if (ListUtils.search(dataMods, m -> m.getName().equals(mod.getName())) != null) {
+                                MessageBox.showErrorMessage(CRLauncher.frame,
+                                    language.getString("messages.gui.mods.modAddedName")
+                                        .replace("$$MOD_NAME$$", mod.getName()));
+
+                                return null;
+                            }
+                        }
+
+                        for (Path folder : folders) {
+                            String fileName = folder.getFileName().toString();
+
+                            Mod mod = new Mod();
+                            mod.setActive(true);
+                            mod.setName(fileName);
+                            mod.setFileName(fileName);
+
+                            try (Stream<Path> stream = Files.walk(folder)) {
+                                stream.forEach(zipFile -> {
+                                    Path targetFile = dataModsDir.resolve(zipFile.toString().substring(1));
+
+                                    try {
+                                        if (Files.isDirectory(zipFile)) {
+                                            FileUtils.createDirectoryIfNotExists(targetFile);
+                                        } else {
+                                            Files.copy(zipFile, targetFile, StandardCopyOption.REPLACE_EXISTING);
+                                        }
+                                    } catch (IOException e) {
+                                        Log.error("Could not extract file: " + targetFile, e);
+                                    }
+                                });
+                            }
+
+                            dataMods.add(mod);
+                            this.publish(mod);
+                        }
+                    }
                 }
 
-                List<Mod> dataMods = instance.getDataMods();
+                return null;
+            }
 
-                if (ListUtils.search(dataMods, m -> m.getName().equals(mod.getName())) != null) {
-                    MessageBox.showErrorMessage(CRLauncher.frame,
-                        language.getString("messages.gui.mods.modAddedName")
-                            .replace("$$MOD_NAME$$", mod.getName()));
+            @Override
+            protected void process(List<Mod> mods) {
+                for (Mod mod : mods) {
+                    if (mod == null) {
+                        return;
+                    }
 
-                    return null;
+                    tableModel.addMod(mod);
                 }
-
-                dataMods.add(mod);
-
-                return mod;
             }
 
             @Override
             protected void done() {
                 UIManager.put("FileChooser.readOnly", Boolean.FALSE);
-
-                Mod dataMod;
-
-                try {
-                    dataMod = this.get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Log.error(ex);
-
-                    return;
-                }
-
-                if (dataMod == null) {
-                    return;
-                }
-
-                tableModel.addMod(dataMod);
             }
         }.execute();
     }

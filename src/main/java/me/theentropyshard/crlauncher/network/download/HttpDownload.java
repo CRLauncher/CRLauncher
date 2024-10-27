@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.network.download;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.HashUtils;
@@ -71,7 +72,10 @@ public class HttpDownload {
     public void execute() throws IOException {
         boolean needsDownload = false;
 
-        if (Files.exists(this.saveAs)) {
+        boolean disableCheck = CRLauncher.getInstance().getSettings().disableFileIntegrityCheck;
+
+        boolean fileExists = Files.exists(this.saveAs);
+        if (fileExists && !disableCheck) {
             long size = Files.size(this.saveAs);
             boolean hashMatches = HashUtils.sha256(this.saveAs).equals(this.sha256);
 
@@ -99,9 +103,9 @@ public class HttpDownload {
         }
 
         long size = this.size();
-        boolean partiallyDownloaded = this.expectedSize > size && Files.exists(this.saveAs);
+        boolean partiallyDownloaded = !disableCheck && this.expectedSize > size && fileExists;
 
-        if (partiallyDownloaded || this.forceDownload || !Files.exists(this.saveAs) || needsDownload) {
+        if (partiallyDownloaded || this.forceDownload || !fileExists || needsDownload) {
             Request.Builder builder = new Request.Builder()
                     .url(this.url)
                     .get();
@@ -138,6 +142,10 @@ public class HttpDownload {
     }
 
     public void checkHash() throws IOException {
+        if (CRLauncher.getInstance().getSettings().disableFileIntegrityCheck) {
+            return;
+        }
+
         if (this.sha256 != null) {
             String sha256 = HashUtils.sha256(this.saveAs);
             if (!this.sha256.equals(sha256)) {

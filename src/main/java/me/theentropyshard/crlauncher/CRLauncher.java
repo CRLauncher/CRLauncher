@@ -108,6 +108,10 @@ public class CRLauncher {
         this.settingsFile = this.workDir.resolve("settings.json");
         this.settings = Settings.load(this.settingsFile);
 
+        if (this.settings.disableFileIntegrityCheck) {
+            Log.warn("File integrity check is disabled!");
+        }
+
         this.librariesDir = this.workDir.resolve("libraries");
 
         this.cosmicDir = this.workDir.resolve("cosmic-reach");

@@ -38,15 +38,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class LoadVersionsWorker extends Worker<List<Version>, Void> {
-
-
+public class LoadVersionsWorker extends Worker<Void, Version> {
     private final CosmicVersionsTableModel model;
     private final AddInstanceDialog dialog;
     private final JTable table;
     private final boolean forceNetwork;
-
-    private DateTimeFormatter formatter;
 
     public LoadVersionsWorker(CosmicVersionsTableModel model, AddInstanceDialog dialog, JTable table, boolean forceNetwork) {
         super("loading Cosmic Reach versions");
@@ -58,47 +54,25 @@ public class LoadVersionsWorker extends Worker<List<Version>, Void> {
     }
 
     @Override
-    protected List<Version> work() throws Exception {
-        Language language = CRLauncher.getInstance().getLanguage();
+    protected Void work() throws Exception {
+        List<Version> remoteVersions = CRLauncher.getInstance().getVersionManager().getRemoteVersions(this.forceNetwork);
 
-        try {
-            this.formatter = DateTimeFormatter.ofPattern(language.getString("general.time.dateFormat"));
-        } catch (Exception e) {
-            this.formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        for (Version version : remoteVersions) {
+            this.publish(version);
         }
 
-        return CRLauncher.getInstance().getVersionManager().getRemoteVersions(this.forceNetwork);
+        return null;
+    }
+
+    @Override
+    protected void process(List<Version> versions) {
+        for (Version version : versions) {
+            this.model.addVersion(version);
+        }
     }
 
     @Override
     protected void done() {
-        List<Version> versions;
-
-        try {
-            versions = this.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.error(e);
-
-            return;
-        }
-
-        boolean showAmountOfTime = CRLauncher.getInstance().getSettings().showAmountOfTime;
-
-        for (Version version : versions) {
-            Instant instant = Instant.ofEpochSecond(version.getReleaseTime());
-            OffsetDateTime releaseTime = OffsetDateTime.ofInstant(instant, ZoneId.of("UTC"));
-            String releasedDate = this.formatter.format(releaseTime) + (showAmountOfTime ?
-                " (" + LoadVersionsWorker.getAgoFromNow(releaseTime) + ")" : "");
-
-            Object[] rowData = {
-                version.getId(),
-                releasedDate,
-                version.getType()
-            };
-
-            this.model.addRow(rowData);
-        }
-
         TableRowSorter<CosmicVersionsTableModel> rowSorter = new TableRowSorter<>(this.model);
 
         this.dialog.getPreAlphasBox().addActionListener(e -> rowSorter.sort());
@@ -111,52 +85,6 @@ public class LoadVersionsWorker extends Worker<List<Version>, Void> {
 
         this.dialog.getAddButton().setEnabled(true);
 
-        if (showAmountOfTime) {
-            SwingUtils.setJTableColumnsWidth(this.table, 55, 30, 15);
-        } else {
-            SwingUtils.setJTableColumnsWidth(this.table, 70, 15, 15);
-        }
-    }
-
-    public static String getAgoFromNow(Temporal temporal) {
-        Language language = CRLauncher.getInstance().getLanguage();
-        String ago = language.getString("general.time.ago");
-
-        OffsetDateTime now = OffsetDateTime.now();
-
-        int years = (int) ChronoUnit.YEARS.between(temporal, now);
-        if (years == 0) {
-            int months = (int) ChronoUnit.MONTHS.between(temporal, now);
-            if (months == 0) {
-                int weeks = (int) ChronoUnit.WEEKS.between(temporal, now);
-                if (weeks == 0) {
-                    int days = (int) ChronoUnit.DAYS.between(temporal, now);
-                    return switch (days) {
-                        case 0 -> language.getString("general.time.units.today");
-                        case 1 -> language.getString("general.time.units.yesterday");
-                        case 2, 3, 4 -> days + " " + language.getString("general.time.units.days234") + " " + ago;
-                        default -> days + " " + language.getString("general.time.units.days") + " " + ago;
-                    };
-                } else {
-                    return switch (weeks) {
-                        case 1 -> weeks + " " + language.getString("general.time.units.week1") + " " + ago;
-                        case 2, 3, 4 -> weeks + " " + language.getString("general.time.units.weeks234") + " " + ago;
-                        default -> weeks + " " + language.getString("general.time.units.weeks") + " " + ago;
-                    };
-                }
-            } else {
-                return switch (months) {
-                    case 1 -> months + " " + language.getString("general.time.units.month1") + " " + ago;
-                    case 2, 3, 4 -> months + " " + language.getString("general.time.units.months234") + " " + ago;
-                    default -> months + " " + language.getString("general.time.units.months") + " " + ago;
-                };
-            }
-        } else {
-            return switch (years) {
-                case 1 -> years + " " + language.getString("general.time.units.year1") + " " + ago;
-                case 2, 3, 4 -> years + " " + language.getString("general.time.units.years234") + " " + ago;
-                default -> years + " " + language.getString("general.time.units.years") + " " + ago;
-            };
-        }
+        SwingUtils.setJTableColumnsWidth(this.table, this.model.getTableColumnWidthPercentages());
     }
 }

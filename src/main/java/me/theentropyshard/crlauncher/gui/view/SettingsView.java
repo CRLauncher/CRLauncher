@@ -45,6 +45,7 @@ public class SettingsView extends JPanel {
     public static final String RELATIVE_TO_PARENT = "gui.settingsView.ui.dialogPosition.options.relativeToParent";
     public static final String ALWAYS_CENTERED = "gui.settingsView.ui.dialogPosition.options.alwaysCentered";
     public static final String AMOUNT_OF_TIME = "gui.settingsView.ui.amountOfTime";
+    public static final String CONSOLE_AT_STARTUP = "gui.settingsView.ui.showConsoleAtStartup";
     public static final String OTHER_BORDER = "gui.settingsView.other.borderName";
     public static final String WRITE_PRETTY_JSON = "gui.settingsView.other.writePrettyJson";
     public static final String GAME_LAUNCH_LABEL = "gui.settingsView.other.onGameLaunch.label";
@@ -58,8 +59,10 @@ public class SettingsView extends JPanel {
     public static final String CHECK_FOR_UPDATES = "gui.settingsView.other.checkForUpdatesAtStartup";
     public static final String CHECK_UPDATES_NOW_BUTTON = "gui.settingsView.other.checkUpdatesNowButton";
     public static final String CHECKING_UPDATES = "gui.settingsView.other.checkingForUpdates";
+    public static final String PATCH_OFFLINE_ACCOUNT = "gui.settingsView.other.patchOfflineAccount";
     public static final String APPEND_USERNAME = "gui.settingsView.other.appendUsername";
     public static final String LANGUAGE = "gui.settingsView.other.language";
+    public static final String DISABLE_CHECK = "gui.settingsView.other.disableFileIntegrityCheck";
     public static final String STORAGE_BORDER = "gui.settingsView.storageSettings.borderName";
     public static final String VERSIONS_PATH_LABEL = "gui.settingsView.storageSettings.versionsPathLabel";
     public static final String VERSIONS_PATH_PLACEHOLDER = "gui.settingsView.storageSettings.versionsPathFieldPlaceholder";
@@ -75,6 +78,7 @@ public class SettingsView extends JPanel {
     private final TitledBorder uiSettingsBorder;
     private final JLabel dialogPositionLabel;
     private final JCheckBox showAmountOfTime;
+    private final JCheckBox showConsoleAtStartup;
     private final TitledBorder storageSettingsBorder;
     private final JCheckBox versionsPathCheckbox;
     private final JTextField versionsPathField;
@@ -89,8 +93,10 @@ public class SettingsView extends JPanel {
     private final JLabel exitOptionLabel;
     private final JCheckBox checkUpdates;
     private final JButton checkUpdatesNowButton;
+    private final JCheckBox patchOfflineAccount;
     private final JCheckBox appendUsername;
     private final JLabel languageLabel;
+    private final JCheckBox disableFileIntegrityCheck;
     private final JComboBox<String> whenLaunchesBehavior;
     private final JComboBox<String> whenExitsBehavior;
     private final JComboBox<String> position;
@@ -138,7 +144,7 @@ public class SettingsView extends JPanel {
         }
 
         {
-            JPanel uiSettings = new JPanel(new GridLayout(2, 2));
+            JPanel uiSettings = new JPanel(new GridLayout(3, 2));
             this.uiSettingsBorder = new TitledBorder(language.getString(SettingsView.UI_BORDER));
             uiSettings.setBorder(this.uiSettingsBorder);
 
@@ -179,6 +185,16 @@ public class SettingsView extends JPanel {
             });
             this.showAmountOfTime.setSelected(CRLauncher.getInstance().getSettings().showAmountOfTime);
             uiSettings.add(this.showAmountOfTime);
+
+            uiSettings.add(Box.createVerticalGlue());
+
+            this.showConsoleAtStartup = new JCheckBox(language.getString(SettingsView.CONSOLE_AT_STARTUP));
+            this.showConsoleAtStartup.setSelected(CRLauncher.getInstance().getSettings().showConsoleAtStartup);
+            this.showConsoleAtStartup.addActionListener(e -> {
+                Settings settings = CRLauncher.getInstance().getSettings();
+                settings.showConsoleAtStartup = !settings.showConsoleAtStartup;
+            });
+            uiSettings.add(this.showConsoleAtStartup);
 
             gbc.gridy++;
             this.add(uiSettings, gbc);
@@ -297,7 +313,7 @@ public class SettingsView extends JPanel {
         }
 
         {
-            JPanel otherSettings = new JPanel(new GridLayout(6, 3));
+            JPanel otherSettings = new JPanel(new GridLayout(8, 3));
             this.otherSettingsBorder = new TitledBorder(language.getString(SettingsView.OTHER_BORDER));
             otherSettings.setBorder(this.otherSettingsBorder);
 
@@ -376,6 +392,15 @@ public class SettingsView extends JPanel {
             });
             otherSettings.add(this.checkUpdatesNowButton);
 
+            this.patchOfflineAccount = new JCheckBox(language.getString(SettingsView.PATCH_OFFLINE_ACCOUNT));
+            this.patchOfflineAccount.setSelected(CRLauncher.getInstance().getSettings().patchOfflineAccount);
+            this.patchOfflineAccount.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().patchOfflineAccount = this.patchOfflineAccount.isSelected();
+            });
+            otherSettings.add(this.patchOfflineAccount);
+
+            otherSettings.add(Box.createVerticalGlue());
+
             this.appendUsername = new JCheckBox(language.getString(SettingsView.APPEND_USERNAME));
             this.appendUsername.setSelected(CRLauncher.getInstance().getSettings().appendUsername);
             this.appendUsername.addActionListener(e -> {
@@ -401,6 +426,13 @@ public class SettingsView extends JPanel {
                 CRLauncher.getInstance().getGui().reloadLanguage();
             });
             otherSettings.add(languageCombo);
+
+            this.disableFileIntegrityCheck = new JCheckBox(language.getString(SettingsView.DISABLE_CHECK));
+            this.disableFileIntegrityCheck.setSelected(CRLauncher.getInstance().getSettings().disableFileIntegrityCheck);
+            this.disableFileIntegrityCheck.addActionListener(e -> {
+                CRLauncher.getInstance().getSettings().disableFileIntegrityCheck = this.disableFileIntegrityCheck.isSelected();
+            });
+            otherSettings.add(this.disableFileIntegrityCheck);
 
             gbc.gridy++;
             gbc.weighty = 1;
@@ -450,6 +482,7 @@ public class SettingsView extends JPanel {
         this.position.setSelectedIndex(positionIndex);
 
         this.showAmountOfTime.setText(language.getString(SettingsView.AMOUNT_OF_TIME));
+        this.showConsoleAtStartup.setText(language.getString(SettingsView.CONSOLE_AT_STARTUP));
         this.otherSettingsBorder.setTitle(language.getString(SettingsView.OTHER_BORDER));
         this.prettyJson.setText(language.getString(SettingsView.WRITE_PRETTY_JSON));
 
@@ -490,5 +523,6 @@ public class SettingsView extends JPanel {
         this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
         this.appendUsername.setText(language.getString(SettingsView.APPEND_USERNAME));
         this.languageLabel.setText(language.getString(SettingsView.LANGUAGE));
+        this.disableFileIntegrityCheck.setText(language.getString(SettingsView.DISABLE_CHECK));
     }
 }

@@ -49,8 +49,6 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class PlayView extends JPanel {
-
-
     public static final String DEFAULT_GROUP_NAME = "<default>";
 
     private final PlayViewHeader header;
@@ -63,6 +61,8 @@ public class PlayView extends JPanel {
 
     private InstancesPanel currentPanel;
     private CosmicRunner cosmicRunner;
+    private InstanceItem lastItem;
+    private Instance lastPlayedInstance;
 
     public PlayView() {
         super(new BorderLayout());
@@ -127,6 +127,10 @@ public class PlayView extends JPanel {
                 try {
                     List<Instance> instances = this.get();
 
+                    if (instances.size() > 0) {
+                        PlayView.this.lastPlayedInstance = instances.get(0);
+                    }
+
                     for (Instance instance : instances) {
                         PlayView.this.loadInstance(instance, false);
                     }
@@ -165,6 +169,10 @@ public class PlayView extends JPanel {
             throw new IllegalArgumentException("Adding AddInstanceItem is not allowed");
         }
 
+        if (item.getAssociatedInstance() == this.lastPlayedInstance) {
+            this.lastItem = item;
+        }
+
         InstancesPanel panel = this.groups.get(groupName);
         if (panel == null) {
             AddInstanceItem addInstanceItem = new AddInstanceItem();
@@ -185,7 +193,10 @@ public class PlayView extends JPanel {
             if (mouseButton == MouseEvent.BUTTON1) { // left mouse button
                 finalPanel.makeItemFirst(item);
 
-                this.cosmicRunner = new CosmicRunner(item.getAssociatedInstance(), item);
+                this.lastItem = item;
+                this.lastPlayedInstance = item.getAssociatedInstance();
+
+                this.cosmicRunner = new CosmicRunner(this.lastPlayedInstance, this.lastItem);
                 this.cosmicRunner.start();
             } else if (mouseButton == MouseEvent.BUTTON3) { // right mouse button
                 Language language = CRLauncher.getInstance().getLanguage();
@@ -313,6 +324,13 @@ public class PlayView extends JPanel {
         ));
     }
 
+    public void playLastInstance() {
+        if (this.lastItem != null && this.lastPlayedInstance != null) {
+            this.cosmicRunner = new CosmicRunner(this.lastPlayedInstance, this.lastItem);
+            this.cosmicRunner.start();
+        }
+    }
+
     public void deleteInstance(InstanceItem item) {
         Language language = CRLauncher.getInstance().getLanguage();
 
@@ -344,6 +362,10 @@ public class PlayView extends JPanel {
 
     public void reloadLanguage() {
         this.header.reloadLanguage();
+    }
+
+    public Instance getLastPlayedInstance() {
+        return this.lastPlayedInstance;
     }
 
     public DefaultComboBoxModel<String> getModel() {

@@ -34,14 +34,15 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class PatchCosmicLauncher extends AbstractCosmicLauncher {
-    private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.3");
+    private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.4");
     private static final String CR_LOADER_JAR = "CRLoader-" + PatchCosmicLauncher.CR_LOADER_VERSION.toVersionString() + ".jar";
-    private static final String CR_LOADER_SHA256 = "5b0beced3b281a769108db328dbc90f73ceea2048d49561598941d89d5ece865";
+    private static final String CR_LOADER_SHA256 = "7870359e7500e5a52999631528be2c010ab2dfe46d8788e64d42e0ee21440f47";
 
     private boolean changeSaveLocation;
     private String customWindowTitle;
     private String offlineUsername;
     private boolean appendUsername;
+    private boolean patchOfflineAccount;
 
     public PatchCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
         super(javaPath, runDir, gameFilesLocation, clientPath);
@@ -116,6 +117,10 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
             this.defineProperty(new SystemProperty("crloader.offlineUsername", this.offlineUsername));
         }
 
+        if (this.isPatchOfflineAccount()) {
+            this.defineProperty(new SystemProperty("crloader.patchOfflineAccount", true));
+        }
+
         if (this.isAppendUsername()) {
             this.defineProperty(new SystemProperty("crloader.appendUsername", true));
         }
@@ -147,5 +152,13 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
 
     public void setAppendUsername(boolean appendUsername) {
         this.appendUsername = appendUsername;
+    }
+
+    public boolean isPatchOfflineAccount() {
+        return this.patchOfflineAccount;
+    }
+
+    public void setPatchOfflineAccount(boolean patchOfflineAccount) {
+        this.patchOfflineAccount = patchOfflineAccount;
     }
 }
