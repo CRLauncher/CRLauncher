@@ -26,14 +26,16 @@
                 "instanceNameCannotBeEmpty": "Dock must have a name!",
                 "groupNameCannotBeEmpty": "Docks must have a name!",
                 "cosmicVersionNotSelected": "Cosmic Reach ship build aint picked!",
-                "unableToCreateInstance": "Unable to build new docks!"
+                "unableToCreateInstance": "Unable to build new docks!",
+                "doesNotHaveClient": "Ship build $$CR_VERSION$$ does not have a client"
             },
             "instanceSettingsDialog": {
                 "couldNotLoadVersions": "Could not take ship builds!",
                 "ramMinCannotBeLargerMax": "Yer minimum RAM cannot be more than th' max!",
                 "ramMinCannotBeLess512MB": "Minimum RAM cannot be under 512 MiB",
                 "deleteWorldSure": "Are ye sure ya wanna  drain ocean '$$WORLD_NAME$$'?",
-                "couldNotDeleteWorld": "Couldn't drain ocean '$$WORLD_NAME$$' located at $$WORLD_DIR$$"
+                "couldNotDeleteWorld": "Couldn't drain ocean '$$WORLD_NAME$$' located at $$WORLD_DIR$$",
+                "couldNotUpdateMod": "Could not get new ship build for $$MOD_LOADER$$ mod '$$MOD_ID$$"
             },
             "mods": {
                 "modAddedName": "Sail with name '$$MOD_NAME$$' already flown!",
@@ -50,11 +52,26 @@
                 "rename": "Rename",
                 "delete": "Sink",
                 "openInstanceFolder": "Open dock storage",
-                "openCosmicFolder": "Open Cosmic folder storage"
+                "openCosmicFolder": "Open Cosmic folder storage",
+                "killProcess": "Sink process"
             }
+        },
+        "modFilesDialog": {
+            "name": "Name",
+            "compatibility": "Compatibility",
+            "datePublished": "Date published",
+            "downloads": "Downloads"
         },
         "instanceSettingsDialog": {
             "title": "Dock Settings - $$INSTANCE_NAME$$",
+            "exportInstance": {
+                "exportButton": "Export",
+                "crliFiles": "CRLauncher dock file (*.crli)",
+                "title": "Dock export",
+                "success": "Dock exported successfully!",
+                "failure": "Could not export dock",
+                "wrongExtension": "Exported file must end with .crli"
+            },
             "mainTab": {
                 "name": "Deck",
                 "cosmicReachVersion": {
@@ -62,7 +79,7 @@
                     "autoUpdateToLatest": "Automatically update to the ship build"
                 },
                 "otherSettings": {
-                    "borderName": "",
+                    "borderName": "Other",
                     "textFieldPlaceholder": "Set custom window name here"
                 }
             },
@@ -70,7 +87,9 @@
                 "name": "Java",
                 "javaInstallation": {
                     "borderName": "Java dock",
-                    "textFieldPlaceholder": "Map to javaw.exe"
+                    "textFieldPlaceholder": "Map to javaw.exe",
+                    "current": "$$CURRENT_INSTALLATION$$ (Current)",
+                    "browse": "Browse path..."
                 },
                 "memorySettings": {
                     "borderName": "Memory Cogs",
@@ -79,9 +98,9 @@
                 }
             },
             "modsTab": {
-                "name": "Gears",
+                "name": "Sails",
                 "modLoader": {
-                    "borderName": "Gear loader",
+                    "borderName": "Sail loader",
                     "options": {
                         "vanilla": "Vanilla",
                         "fabric": "Fabric",
@@ -92,39 +111,48 @@
                 "loaderVersion": {
                     "borderName": "Loader ship build"
                 },
+                "modpack": "Sailpack",
+                "customModpack": "Custom",
                 "modsTable": {
-                    "borderName": "Gears",
+                    "borderName": "Sails",
                     "vanilla": {
-                        "modFolder": "Gear folder",
-                        "deleteModButton": "Delete data gear"
+                        "modFolder": "Sail folder",
+                        "deleteModButton": "Delete data sail"
                     },
                     "fabric": {
                         "modName": "Name",
                         "modVersion": "Ship build",
                         "modDescription": "Description",
                         "modActive": "Active",
-                        "addModButton": "Add Fabric gear",
-                        "deleteModButton": "Delete Fabric gear"
+                        "addModButton": "Add Fabric sail",
+                        "deleteModButton": "Delete Fabric sail"
                     },
                     "cosmicQuilt": {
                         "modName": "Name",
                         "modVersion": "Ship build",
                         "modDescription": "Description",
                         "modActive": "Active",
-                        "addModButton": "Add Quilt gear",
-                        "deleteModButton": "Delete Quilt gear"
+                        "addModButton": "Add Quilt sail",
+                        "deleteModButton": "Delete Quilt sail"
                     },
                     "puzzle": {
                         "modName": "Name",
                         "modVersion": "Ship build",
                         "modDescription": "Description",
                         "modActive": "Active",
-                        "addModButton": "Add Puzzle mod",
-                        "deleteModButton": "Delete Puzzle mod"
+                        "addModButton": "Add Puzzle sail",
+                        "deleteModButton": "Delete Puzzle sail"
                     }
                 },
-                "openModsFolder": "Open gear folder",
-                "searchModsCRMM": "Search gears on CRMM"
+                "openModsFolder": "Open sail folder",
+                "searchModsCRMM": "Search sails on CRMM"
+            },
+            "jarModsTab": {
+                "name": "Jar Sails",
+                "modName": "Name",
+                "modActive": "Active",
+                "addModButton": "Add Jar sail",
+                "deleteModButton": "Delete Jar sail"
             },
             "worldsTab": {
                 "name": "Oceans",
@@ -141,8 +169,31 @@
                 "deletingWorld": "Draining ocean"
             }
         },
+        "screenshotsTab": {
+                "name": "Screenshots",
+                "copyImage": "Copy Image",
+                "copyFile": "Copy File",
+                "delete": "Delete",
+                "rename": "Rename",
+                "renameMessage": "Enter new name for the file"
+        },
+        "gameLogTab": {
+                "name": "Captin's Log",
+                "search": "Search",
+                "find": "Find",
+                "upload": "Upload",
+                "copyFile": "Copy File",
+                "copyText": "Copy Text",
+                "clear": "Clear",
+                "title": "Upload",
+                "uploading": "Uploading log to McLogs",
+                "failed": "Failed to upload log",
+                "largeLog": "Log size exceeds the limit, log will be truncated",
+                "successTitle": "Log uploaded",
+                "successMessage": "Log uploaded successfully! Link: $$LINK$$ (Copied to clipboard)"
+        },
         "searchCRMMModsDialog": {
-            "title": "Search gears on CRMM",
+            "title": "Search sails on CRMM",
             "download1": "download",
             "downloads234": "downloads",
             "downloads": "downloads",
@@ -150,17 +201,20 @@
             "followers234": "followers",
             "followers": "followers",
             "downloadButton": "Download",
-            "mods": "Mods",
-            "datamods": "Data Mods",
+            "primary": "primary",
+            "otherFiles": "Other files",
+            "mods": "Sails",
+            "datamods": "Data Sails",
             "resourcePacks": "Resource Packs",
             "shaders": "Shaders",
             "modpacks": "Modpacks",
             "searchButton": "Search",
-            "searchMods": "Search mods...",
-            "searchDatamods": "Search data mods...",
+            "searchMods": "Search sails...",
+            "searchDatamods": "Search data sails...",
             "searchResourcePacks": "Search resource packs...",
             "searchShaders": "Search shaders...",
-            "searchModpacks": "Search modpacks..."
+            "searchModpacks": "Search sailpacks...",
+            "modVersionsDialogTitle": "Sail versions"
         },
         "addAccountDialog": {
             "title": "Add account",
@@ -233,7 +287,18 @@
                         "alwaysCentered": "Always centered"
                     }
                 },
-                "amountOfTime": "Show the amount of time that has passed since the release date"
+                "amountOfTime": "Show the amount of time that has passed since the release date",
+                "showConsoleAtStartup": "Show captin's log at startup"
+            },
+            "storageSettings": {
+                "borderName": "Storage",
+                "versionsPathLabel": "Ship builds directory path",
+                "versionsPathFieldPlaceholder": "<launcher folder>/cosmic-reach/versions",
+                "instancesPathLabel": "Docks directory path",
+                "instancesPathFieldPlaceholder": "<launcher folder>/cosmic-reach/instances",
+                "modLoadersPathLabel": "Sail loaders directory path",
+                "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach",
+                "tip": "Remember to press ENTER to save path. Changes will be applied after restart"
             },
             "other": {
                 "borderName": "Other",
@@ -254,8 +319,14 @@
                         "exitLauncher": "Exit launcher if Cosmic Reach exit code is 0 (ok)"
                     }
                 },
-                "checkForUpdatesAtStartup": "Check for updates at startup",
-                "language": "Language"
+                "checkForUpdatesAtStartup": "Check for new ship builds at startup",
+                "checkUpdatesNowButton": "Check for ship builds",
+                "checkingForUpdates": "Checking...",
+                "noUpdatesAvailable": "You are using the latest ship build",
+                "patchOfflineAccount": "Set display name for offline account as in the launcher",
+                "appendUsername": "Append username before chat messages",
+                "language": "Lingo",
+                "disableFileIntegrityCheck": "Disable file integrity check"
             }
         },
         "aboutView": {
@@ -266,6 +337,16 @@
             }
         },
         "addInstanceDialog": {
+            "importInstance": {
+                "importButton": "Import",
+                "crliFiles": "CRLauncher dock file (*.crli)",
+                "title": "Dock import",
+                "success": "Dock imported successfully",
+                "failure": "Could not import dock",
+                "duplicate": "Dock with a folder $$INSTANCE_FOLDER$$ already exists",
+                "badFile": "Dock file is corrupted or has an invalid format",
+                "wrongExtension": "Imported file must end with .crli"
+            },
             "title": "Add New Dock",
             "nameFieldLabel": "Name",
             "groupFieldLabel": "Group",
@@ -278,7 +359,8 @@
                 "version": "Ship build",
                 "dateReleased": "Date released",
                 "versionType": "Type"
-            }
+            },
+            "latestVersion": "(Latest)"
         }
     },
     "general": {
