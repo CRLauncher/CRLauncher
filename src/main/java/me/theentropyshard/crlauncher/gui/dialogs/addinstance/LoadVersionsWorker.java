@@ -57,9 +57,7 @@ public class LoadVersionsWorker extends Worker<Void, Version> {
 
     @Override
     protected Void work() throws Exception {
-        CRLauncher launcher = CRLauncher.getInstance();
-        VersionManager versionManager = launcher.getVersionManager();
-        Settings settings = launcher.getSettings();
+        VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
         if (!versionManager.isLoaded() || this.forceNetwork) {
             versionManager.setMode(VersionManager.Mode.ONLINE);
@@ -69,10 +67,6 @@ public class LoadVersionsWorker extends Worker<Void, Version> {
         List<Version> versions = versionManager.getVersions();
 
         for (Version version : versions) {
-            if (!versionManager.isInstalled(version) && settings.showOnlyInstalledVersions) {
-                continue;
-            }
-
             this.publish(version);
         }
 
@@ -81,7 +75,15 @@ public class LoadVersionsWorker extends Worker<Void, Version> {
 
     @Override
     protected void process(List<Version> versions) {
+        CRLauncher launcher = CRLauncher.getInstance();
+        VersionManager versionManager = launcher.getVersionManager();
+        Settings settings = launcher.getSettings();
+
         for (Version version : versions) {
+            if (!versionManager.isInstalled(version) && settings.showOnlyInstalledVersions) {
+                continue;
+            }
+
             this.model.addVersion(version);
         }
     }
