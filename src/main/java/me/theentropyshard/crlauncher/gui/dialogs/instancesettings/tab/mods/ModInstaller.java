@@ -95,18 +95,17 @@ public class ModInstaller {
                 Path jarModPath = selectedFile.toPath().toAbsolutePath().normalize();
                 String fileName = jarModPath.getFileName().toString();
 
+                if (ListUtils.search(jarMods, m -> m.getName().equals(fileName)) != null) {
+                    MessageBox.showErrorMessage(CRLauncher.frame, language.getString("messages.gui.mods.modAddedName")
+                        .replace("$$MOD_NAME$$", fileName));
+
+                    return null;
+                }
+
                 Mod jarMod = new Mod();
                 jarMod.setActive(true);
                 jarMod.setName(fileName);
                 jarMod.setFileName(fileName);
-
-                if (ListUtils.search(jarMods, m -> m.getName().equals(jarMod.getName())) != null) {
-                    MessageBox.showErrorMessage(CRLauncher.frame,
-                        language.getString("messages.gui.mods.modAddedName")
-                            .replace("$$MOD_NAME$$", jarMod.getName()));
-
-                    return null;
-                }
 
                 Files.copy(jarModPath, instance.getJarModPath(jarMod));
                 jarMods.add(jarMod);
