@@ -16,12 +16,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.view;
+package me.theentropyshard.crlauncher.gui.view.settings;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
+import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
@@ -36,7 +37,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 public class SettingsView extends JPanel {
-
     public static final String THEME_BORDER = "gui.settingsView.themeSettings.borderName";
     public static final String THEME_DARK = "gui.settingsView.themeSettings.dark";
     public static final String THEME_LIGHT = "gui.settingsView.themeSettings.light";
@@ -102,7 +102,19 @@ public class SettingsView extends JPanel {
     private final JComboBox<String> position;
 
     public SettingsView() {
-        this.setLayout(new GridBagLayout());
+        super(new BorderLayout());
+
+        VerticalScrollJPanel root = new VerticalScrollJPanel(new GridBagLayout());
+
+        JScrollPane scrollPane = new JScrollPane(
+            root,
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        scrollPane.setUI(new FlatSmoothScrollPaneUI());
+        scrollPane.setHorizontalScrollBar(null);
+        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+        this.add(scrollPane, BorderLayout.CENTER);
 
         Language language = CRLauncher.getInstance().getLanguage();
 
@@ -140,7 +152,7 @@ public class SettingsView extends JPanel {
 
 
             gbc.gridy++;
-            this.add(themeSettings, gbc);
+            root.add(themeSettings, gbc);
         }
 
         {
@@ -197,7 +209,7 @@ public class SettingsView extends JPanel {
             uiSettings.add(this.showConsoleAtStartup);
 
             gbc.gridy++;
-            this.add(uiSettings, gbc);
+            root.add(uiSettings, gbc);
         }
 
         {
@@ -309,7 +321,7 @@ public class SettingsView extends JPanel {
             });
 
             gbc.gridy++;
-            this.add(storageSettings, gbc);
+            root.add(storageSettings, gbc);
         }
 
         {
@@ -436,7 +448,7 @@ public class SettingsView extends JPanel {
 
             gbc.gridy++;
             gbc.weighty = 1;
-            this.add(otherSettings, gbc);
+            root.add(otherSettings, gbc);
         }
     }
 

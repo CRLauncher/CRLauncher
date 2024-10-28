@@ -28,18 +28,16 @@ import me.theentropyshard.crlauncher.gui.laf.DarkLauncherLaf;
 import me.theentropyshard.crlauncher.gui.laf.LightLauncherLaf;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.view.AboutView;
-import me.theentropyshard.crlauncher.gui.view.SettingsView;
+import me.theentropyshard.crlauncher.gui.view.settings.SettingsView;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AccountItem;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AccountsView;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AddAccountItem;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
-import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -182,6 +180,7 @@ public class Gui {
         this.aboutView.reloadLanguage();
 
         SwingUtilities.updateComponentTreeUI(this.frame);
+        this.frame.pack();
     }
 
     public void switchTheme() {
