@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screensho
 import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.datatransfer.TransferableFile;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.datatransfer.TransferableImage;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -35,6 +36,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 
 public class ScreenshotItem extends JPanel {
@@ -62,33 +64,24 @@ public class ScreenshotItem extends JPanel {
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                ScreenshotItem.this.mouseOver = true;
-                ScreenshotItem.this.repaint();
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                ScreenshotItem.this.mouseOver = false;
-                ScreenshotItem.this.repaint();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                ScreenshotItem.this.mousePressed = true;
-                ScreenshotItem.this.repaint();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                ScreenshotItem.this.mousePressed = false;
-                ScreenshotItem.this.repaint();
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e) {
+        MouseListener listener = new MouseListenerBuilder()
+            .mouseEntered(e -> {
+                this.mouseOver = true;
+                this.repaint();
+            })
+            .mouseExited(e -> {
+                this.mouseOver = false;
+                this.repaint();
+            })
+            .mousePressed(e -> {
+                this.mousePressed = true;
+                this.repaint();
+            })
+            .mouseReleased(e -> {
+                this.mousePressed = false;
+                this.repaint();
+            })
+            .mouseClicked(e -> {
                 if (e.getButton() == MouseEvent.BUTTON1) {
                     SwingUtils.startWorker(() -> {
                         OperatingSystem.open(info.getFilePath());
@@ -162,8 +155,10 @@ public class ScreenshotItem extends JPanel {
 
                     popupMenu.show(ScreenshotItem.this, e.getX(), e.getY());
                 }
-            }
-        });
+            })
+            .build();
+
+        this.addMouseListener(listener);
     }
 
     protected void paintBackground(Graphics g) {

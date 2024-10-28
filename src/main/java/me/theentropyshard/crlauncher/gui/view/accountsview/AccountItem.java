@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
+import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayViewHeader;
@@ -29,10 +30,7 @@ import me.theentropyshard.crlauncher.gui.view.playview.PlayViewHeader;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -106,7 +104,7 @@ public class AccountItem extends JPanel {
                 this.border
         ));
 
-        this.addMouseListener(new MouseAdapter() {
+        /*this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 AccountItem.this.mouseOver = true;
@@ -133,12 +131,34 @@ public class AccountItem extends JPanel {
 
             @Override
             public void mouseClicked(MouseEvent e) {
+
+            }
+        });*/
+
+        MouseListener listener = new MouseListenerBuilder()
+            .mouseEntered(e -> {
+                this.mouseOver = true;
+                this.repaint();
+            })
+            .mouseExited(e -> {
+                this.mouseOver = false;
+                this.repaint();
+            })
+            .mousePressed(e -> {
+                this.mousePressed = true;
+                this.repaint();
+            })
+            .mouseReleased(e -> {
+                this.mousePressed = false;
+                this.repaint();
+            })
+            .mouseClicked(e -> {
                 Language language = CRLauncher.getInstance().getLanguage();
 
                 if (AccountItem.this.trashBounds.contains(e.getPoint())) {
                     boolean ok = MessageBox.showConfirmMessage(
-                            CRLauncher.frame,
-                            language.getString("gui.accountsView.deleteConfirmation.title"),
+                        CRLauncher.frame,
+                        language.getString("gui.accountsView.deleteConfirmation.title"),
                         language.getString("gui.accountsView.deleteConfirmation.message")
                             .replace("$$ACCOUNT_NAME$$", account.getUsername())
                     );
@@ -156,7 +176,7 @@ public class AccountItem extends JPanel {
                         ex.printStackTrace();
 
                         MessageBox.showErrorMessage(
-                                CRLauncher.frame,
+                            CRLauncher.frame,
                             language.getString("messages.gui.accountDelete.error")
                                 .replace("$$ACCOUNT_NAME$$", account.getUsername())
                         );
@@ -172,10 +192,12 @@ public class AccountItem extends JPanel {
                     }
                 } else {
                     ActionEvent event = new ActionEvent(AccountItem.this, 1, String.valueOf(e.getButton()));
-                    AccountItem.this.mouseClickListeners.forEach(listener -> listener.actionPerformed(event));
+                    AccountItem.this.mouseClickListeners.forEach(l -> l.actionPerformed(event));
                 }
-            }
-        });
+            })
+            .build();
+
+        this.addMouseListener(listener);
     }
 
     @Override

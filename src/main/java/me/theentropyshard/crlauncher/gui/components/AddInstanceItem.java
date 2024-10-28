@@ -25,6 +25,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class AddInstanceItem extends JPanel {
     private static final int SIDE_SIZE = 100;
@@ -50,31 +51,27 @@ public class AddInstanceItem extends JPanel {
         this.setToolTipText("Add new Cosmic instance");
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                AddInstanceItem.this.mouseOver = true;
-                AddInstanceItem.this.repaint();
-            }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                AddInstanceItem.this.mouseOver = false;
-                AddInstanceItem.this.repaint();
-            }
+        MouseListener listener = new MouseListenerBuilder()
+            .mouseEntered(e -> {
+                this.mouseOver = true;
+                this.repaint();
+            })
+            .mouseExited(e -> {
+                this.mouseOver = false;
+                this.repaint();
+            })
+            .mousePressed(e -> {
+                this.mousePressed = true;
+                this.repaint();
+            })
+            .mouseReleased(e -> {
+                this.mousePressed = false;
+                this.repaint();
+            })
+            .build();
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                AddInstanceItem.this.mousePressed = true;
-                AddInstanceItem.this.repaint();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                AddInstanceItem.this.mousePressed = false;
-                AddInstanceItem.this.repaint();
-            }
-        });
+        this.addMouseListener(listener);
     }
 
     public void onClick(MouseClickListener listener) {

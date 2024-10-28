@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
+import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
 import me.theentropyshard.crlauncher.utils.StringUtils;
 import net.miginfocom.swing.MigLayout;
 
@@ -30,6 +31,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -126,31 +128,27 @@ public class ModVersionCard extends JPanel {
         ));
 
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                ModVersionCard.this.mouseOver = true;
-                ModVersionCard.this.repaint();
-            }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                ModVersionCard.this.mouseOver = false;
-                ModVersionCard.this.repaint();
-            }
+        MouseListener listener = new MouseListenerBuilder()
+            .mouseEntered(e -> {
+                this.mouseOver = true;
+                this.repaint();
+            })
+            .mouseExited(e -> {
+                this.mouseOver = false;
+                this.repaint();
+            })
+            .mousePressed(e -> {
+                this.mousePressed = true;
+                this.repaint();
+            })
+            .mouseReleased(e -> {
+                this.mousePressed = false;
+                this.repaint();
+            })
+            .build();
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                ModVersionCard.this.mousePressed = true;
-                ModVersionCard.this.repaint();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                ModVersionCard.this.mousePressed = false;
-                ModVersionCard.this.repaint();
-            }
-        });
+        this.addMouseListener(listener);
     }
 
     @Override

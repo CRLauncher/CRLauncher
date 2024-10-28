@@ -21,12 +21,14 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
+import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 
@@ -44,7 +46,7 @@ public class FileCard extends JPanel {
     private boolean mouseOver;
     private boolean mousePressed;
 
-    public FileCard(ProjectFile file, ModVersionCard.FileListener listener, boolean primary) {
+    public FileCard(ProjectFile file, ModVersionCard.FileListener fileListener, boolean primary) {
         super(new BorderLayout());
 
         Language language = CRLauncher.getInstance().getLanguage();
@@ -74,7 +76,7 @@ public class FileCard extends JPanel {
         }
 
         this.downloadButton.addActionListener(e -> {
-            listener.fileChosen(file);
+            fileListener.fileChosen(file);
         });
         this.add(this.downloadButton, BorderLayout.EAST);
 
@@ -91,31 +93,27 @@ public class FileCard extends JPanel {
         ));
 
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                FileCard.this.mouseOver = true;
-                FileCard.this.repaint();
-            }
 
-            @Override
-            public void mouseExited(MouseEvent e) {
-                FileCard.this.mouseOver = false;
-                FileCard.this.repaint();
-            }
+        MouseListener listener = new MouseListenerBuilder()
+            .mouseEntered(e -> {
+                this.mouseOver = true;
+                this.repaint();
+            })
+            .mouseExited(e -> {
+                this.mouseOver = false;
+                this.repaint();
+            })
+            .mousePressed(e -> {
+                this.mousePressed = true;
+                this.repaint();
+            })
+            .mouseReleased(e -> {
+                this.mousePressed = false;
+                this.repaint();
+            })
+            .build();
 
-            @Override
-            public void mousePressed(MouseEvent e) {
-                FileCard.this.mousePressed = true;
-                FileCard.this.repaint();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                FileCard.this.mousePressed = false;
-                FileCard.this.repaint();
-            }
-        });
+        this.addMouseListener(listener);
     }
 
     // idk how this works, but https://stackoverflow.com/a/3758880/19857533

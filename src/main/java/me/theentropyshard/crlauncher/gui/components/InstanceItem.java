@@ -27,6 +27,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
@@ -71,47 +72,43 @@ public class InstanceItem extends JPanel {
         this.setToolTipText(instanceName);
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        this.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                if (!InstanceItem.this.mouseEnabled) {
+
+        MouseListener listener = new MouseListenerBuilder()
+            .mouseEntered(e -> {
+                if (!this.mouseEnabled) {
                     return;
                 }
 
-                InstanceItem.this.mouseOver = true;
-                InstanceItem.this.repaint();
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                if (!InstanceItem.this.mouseEnabled) {
+                this.mouseOver = true;
+                this.repaint();
+            })
+            .mouseExited(e -> {
+                if (!this.mouseEnabled) {
                     return;
                 }
 
-                InstanceItem.this.mouseOver = false;
-                InstanceItem.this.repaint();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if (!InstanceItem.this.mouseEnabled) {
+                this.mouseOver = false;
+                this.repaint();
+            })
+            .mousePressed(e -> {
+                if (!this.mouseEnabled) {
                     return;
                 }
 
-                InstanceItem.this.mousePressed = true;
-                InstanceItem.this.repaint();
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (!InstanceItem.this.mouseEnabled) {
+                this.mousePressed = true;
+                this.repaint();
+            })
+            .mouseReleased(e -> {
+                if (!this.mouseEnabled) {
                     return;
                 }
 
-                InstanceItem.this.mousePressed = false;
-                InstanceItem.this.repaint();
-            }
-        });
+                this.mousePressed = false;
+                this.repaint();
+            })
+            .build();
+
+        this.addMouseListener(listener);
     }
 
     @Override
