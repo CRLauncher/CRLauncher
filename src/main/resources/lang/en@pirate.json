@@ -117,6 +117,7 @@
                     "borderName": "Sails",
                     "vanilla": {
                         "modFolder": "Sail folder",
+                        "addModButton": "Add data sail",
                         "deleteModButton": "Delete data sail"
                     },
                     "fabric": {
