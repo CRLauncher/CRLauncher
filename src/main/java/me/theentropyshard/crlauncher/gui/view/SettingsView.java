@@ -521,6 +521,7 @@ public class SettingsView extends JPanel {
 
         this.checkUpdates.setText(language.getString(SettingsView.CHECK_FOR_UPDATES));
         this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
+        this.patchOfflineAccount.setText(language.getString(SettingsView.PATCH_OFFLINE_ACCOUNT));
         this.appendUsername.setText(language.getString(SettingsView.APPEND_USERNAME));
         this.languageLabel.setText(language.getString(SettingsView.LANGUAGE));
         this.disableFileIntegrityCheck.setText(language.getString(SettingsView.DISABLE_CHECK));
