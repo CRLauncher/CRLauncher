@@ -77,6 +77,19 @@ public class AddInstanceItem extends JPanel {
         });
     }
 
+    public void onClick(MouseClickListener listener) {
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                listener.onMouseClick(e);
+            }
+        });
+    }
+
+    public interface MouseClickListener {
+        void onMouseClick(MouseEvent event);
+    }
+
     @Override
     public void updateUI() {
         super.updateUI();
