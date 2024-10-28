@@ -92,13 +92,15 @@ public class InstanceSettingsDialog extends AppDialog {
                 InstancesPanel instancesPanel = CRLauncher.getInstance().getGui().getPlayView().getCurrentInstancesPanel();
                 JPanel itemsPanel = instancesPanel.getInstancesPanel();
                 for (Component component : itemsPanel.getComponents()) {
-                    Instance associatedInstance = ((InstanceItem) component).getAssociatedInstance();
-                    if (associatedInstance == instance) {
-                        ((InstanceItem) component).getTextLabel().setText(instance.getName());
-                        try {
-                            instance.save();
-                        } catch (IOException ex) {
-                            Log.error("Error saving instance " + instance.getName(), ex);
+                    if (component instanceof InstanceItem item) {
+                        Instance associatedInstance = item.getAssociatedInstance();
+                        if (associatedInstance == instance) {
+                            ((InstanceItem) component).getTextLabel().setText(instance.getName());
+                            try {
+                                instance.save();
+                            } catch (IOException ex) {
+                                Log.error("Error saving instance " + instance.getName(), ex);
+                            }
                         }
                     }
                 }
