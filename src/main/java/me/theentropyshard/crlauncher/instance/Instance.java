@@ -19,11 +19,14 @@
 package me.theentropyshard.crlauncher.instance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -107,6 +110,24 @@ public class Instance {
     public void updatePlaytime(long seconds) {
         this.lastPlaytime = seconds;
         this.totalPlaytime += seconds;
+    }
+
+    public Icon getIcon() {
+        IconManager iconManager = CRLauncher.getInstance().getIconManager();
+
+        Icon icon;
+
+        try {
+            icon = iconManager.getIcon(this.iconFileName).icon();
+        } catch (Exception e) {
+            Log.warn("Could not load icon '" + this.iconFileName + "' for instance '" + this.name + "'");
+
+            String validIconPath = "cosmic_logo_x32.png";
+            this.iconFileName = validIconPath;
+            icon = iconManager.getIcon(validIconPath).icon();
+        }
+
+        return icon;
     }
 
     public Path getCurrentModsDir() {

@@ -21,7 +21,6 @@ package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Language;
 import me.theentropyshard.crlauncher.Settings;
-import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.action.InstanceImportAction;
@@ -30,6 +29,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
+import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.instance.InstanceAlreadyExistsException;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -37,7 +37,6 @@ import me.theentropyshard.crlauncher.logging.Log;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -265,8 +264,6 @@ public class AddInstanceDialog extends AppDialog {
                 return;
             }
 
-            IconManager iconManager = CRLauncher.getInstance().getIconManager();
-
             CosmicVersionsTableModel model = (CosmicVersionsTableModel) versionsTable.getModel();
             int selectedRow = versionsTable.getSelectedRow();
             selectedRow = versionsTable.convertRowIndexToModel(selectedRow);
@@ -282,8 +279,10 @@ public class AddInstanceDialog extends AppDialog {
 
                 InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
 
+                Instance instance;
+
                 try {
-                    instanceManager.createInstance(instanceName, chosenGroupName, crVersion,
+                    instance = instanceManager.createInstance(instanceName, chosenGroupName, crVersion,
                         CRLauncher.getInstance().getSettings().settingsDialogUpdateToLatest);
                 } catch (InstanceAlreadyExistsException ex) {
                     MessageBox.showErrorMessage(
@@ -296,12 +295,13 @@ public class AddInstanceDialog extends AppDialog {
                     return;
                 } catch (IOException ex) {
                     Log.error(language.getString(AddInstanceDialog.UNABLE_TO_CREATE_MESSAGE), ex);
+
+                    return;
                 }
 
                 SwingUtilities.invokeLater(() -> {
                     playView.addInstanceItem(
-                        new InstanceItem(iconManager.getIcon("cosmic_logo_x32.png").icon(), instanceName),
-                        chosenGroupName, false
+                        new InstanceItem(instance), chosenGroupName, false
                     );
 
                     this.getDialog().dispose();

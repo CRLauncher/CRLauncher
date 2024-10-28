@@ -146,20 +146,7 @@ public class PlayView extends JPanel {
     }
 
     public void loadInstance(Instance instance, boolean sort) {
-        IconManager iconManager = CRLauncher.getInstance().getIconManager();
-
-        Icon icon;
-        try {
-            icon = iconManager.getIcon(instance.getIconFileName()).icon();
-        } catch (Exception e) {
-            Log.warn("Could not load icon '" + instance.getIconFileName() + "' for instance '" + instance.getName() + "'");
-
-            String validIconPath = "cosmic_logo_x32.png";
-            instance.setIconFileName(validIconPath);
-            icon = iconManager.getIcon(validIconPath).icon();
-        }
-
-        InstanceItem item = new InstanceItem(icon, instance.getName());
+        InstanceItem item = new InstanceItem(instance);
         PlayView.this.addInstanceItem(item, instance.getGroupName(), sort);
     }
 

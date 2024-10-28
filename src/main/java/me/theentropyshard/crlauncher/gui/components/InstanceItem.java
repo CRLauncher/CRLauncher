@@ -36,6 +36,8 @@ public class InstanceItem extends JPanel {
     private static final int SIDE_SIZE = 100;
     private static final Dimension PREFERRED_SIZE = new Dimension(InstanceItem.SIDE_SIZE, InstanceItem.SIDE_SIZE);
 
+    private final Instance instance;
+
     private final JLabel iconLabel;
     private final JLabel textLabel;
 
@@ -50,14 +52,16 @@ public class InstanceItem extends JPanel {
 
     private double percentComplete;
 
-    public InstanceItem(Icon icon, String instanceName) {
+    public InstanceItem(Instance instance) {
         super(new BorderLayout(), true);
 
-        this.iconLabel = new JLabel(icon);
+        this.instance = instance;
+
+        this.iconLabel = new JLabel(instance.getIcon());
         this.iconLabel.setHorizontalAlignment(JLabel.CENTER);
         this.add(this.iconLabel, BorderLayout.CENTER);
 
-        this.textLabel = new JLabel(instanceName);
+        this.textLabel = new JLabel(instance.getName());
         this.textLabel.setHorizontalAlignment(JLabel.CENTER);
         this.add(this.textLabel, BorderLayout.SOUTH);
 
@@ -69,7 +73,7 @@ public class InstanceItem extends JPanel {
         this.mouseEnabled = true;
 
         this.setOpaque(false);
-        this.setToolTipText(instanceName);
+        this.setToolTipText(instance.getName());
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
         this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
@@ -119,8 +123,7 @@ public class InstanceItem extends JPanel {
     }
 
     public Instance getAssociatedInstance() {
-        InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
-        return instanceManager.getInstanceByName(this.getTextLabel().getText());
+        return this.instance;
     }
 
     protected void paintBackground(Graphics g) {

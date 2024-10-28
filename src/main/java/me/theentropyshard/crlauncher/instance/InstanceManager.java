@@ -142,7 +142,7 @@ public class InstanceManager {
         return freeName;
     }
 
-    public void createInstance(String name, String groupName, String cosmicVersion, boolean autoUpdate) throws
+    public Instance createInstance(String name, String groupName, String cosmicVersion, boolean autoUpdate) throws
         IOException,
         InstanceAlreadyExistsException {
 
@@ -165,6 +165,8 @@ public class InstanceManager {
         FileUtils.createDirectoryIfNotExists(modsDir);
 
         instance.save();
+
+        return instance;
     }
 
     public void removeInstance(String name) throws IOException {
