@@ -20,17 +20,113 @@ package me.theentropyshard.crlauncher.gui.components;
 
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public final class AddInstanceItem extends InstanceItem {
+public class AddInstanceItem extends JPanel {
+    private static final int SIDE_SIZE = 100;
+    private static final Dimension PREFERRED_SIZE = new Dimension(AddInstanceItem.SIDE_SIZE, AddInstanceItem.SIDE_SIZE);
+
+    private Color defaultColor;
+    private Color hoveredColor;
+    private Color pressedColor;
+
+    private boolean mouseOver;
+    private boolean mousePressed;
+
     public AddInstanceItem() {
-        super(SwingUtils.getIcon("/assets/images/cross.png"), "");
+        super(new BorderLayout());
 
+        this.add(new JLabel(SwingUtils.getIcon("/assets/images/cross.png")), BorderLayout.CENTER);
+
+        this.setDefaultColor(UIManager.getColor("InstanceItem.defaultColor"));
+        this.setHoveredColor(UIManager.getColor("InstanceItem.hoveredColor"));
+        this.setPressedColor(UIManager.getColor("InstanceItem.pressedColor"));
+
+        this.setOpaque(false);
         this.setToolTipText("Add new Cosmic instance");
+        this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                AddInstanceItem.this.mouseOver = true;
+                AddInstanceItem.this.repaint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                AddInstanceItem.this.mouseOver = false;
+                AddInstanceItem.this.repaint();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                AddInstanceItem.this.mousePressed = true;
+                AddInstanceItem.this.repaint();
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                AddInstanceItem.this.mousePressed = false;
+                AddInstanceItem.this.repaint();
+            }
+        });
     }
 
     @Override
-    protected void paintArc(Graphics2D g2) {
-        // Do not paint arc on AddInstanceItem
+    public void updateUI() {
+        super.updateUI();
+
+        this.updateColors();
+    }
+
+    private void paintBackground(Graphics g) {
+        Color color = this.defaultColor;
+
+        if (this.mouseOver) {
+            color = this.hoveredColor;
+        }
+
+        if (this.mousePressed) {
+            color = this.pressedColor;
+        }
+
+        g.setColor(color);
+        g.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), 10, 10);
+    }
+
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        this.paintBackground(g);
+
+        super.paintComponent(g);
+    }
+
+    public void updateColors() {
+        this.setDefaultColor(UIManager.getColor("InstanceItem.defaultColor"));
+        this.setHoveredColor(UIManager.getColor("InstanceItem.hoveredColor"));
+        this.setPressedColor(UIManager.getColor("InstanceItem.pressedColor"));
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return AddInstanceItem.PREFERRED_SIZE;
+    }
+
+    public void setDefaultColor(Color defaultColor) {
+        this.defaultColor = defaultColor;
+    }
+
+    public void setHoveredColor(Color hoveredColor) {
+        this.hoveredColor = hoveredColor;
+    }
+
+    public void setPressedColor(Color pressedColor) {
+        this.pressedColor = pressedColor;
     }
 }

@@ -196,10 +196,6 @@ public class Gui {
 
         InstancesPanel defaultInstancesPanel = this.playView.getDefaultInstancesPanel();
 
-        for (Component component : defaultInstancesPanel.getInstancesPanel().getComponents()) {
-            ((InstanceItem) component).updateColors();
-        }
-
         for (Component component : this.accountsView.getPanel().getComponents()) {
             if (component instanceof AccountItem) {
                 ((AccountItem) component).updateColors();
@@ -212,10 +208,6 @@ public class Gui {
 
         defaultInstancesPanel.getScrollPane().setBorder(null);
         this.playView.getGroups().values().forEach(instancesPanel -> {
-
-            for (Component component : instancesPanel.getInstancesPanel().getComponents()) {
-                ((InstanceItem) component).updateColors();
-            }
             instancesPanel.getScrollPane().setBorder(null);
         });
     }

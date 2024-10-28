@@ -114,6 +114,13 @@ public class InstanceItem extends JPanel {
         });
     }
 
+    @Override
+    public void updateUI() {
+        super.updateUI();
+
+        this.updateColors();
+    }
+
     public Instance getAssociatedInstance() {
         InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
         return instanceManager.getInstanceByName(this.getTextLabel().getText());

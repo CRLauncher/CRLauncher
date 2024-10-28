@@ -54,10 +54,6 @@ public class InstancesPanel extends JPanel {
     }
 
     public void addInstanceItem(InstanceItem item, boolean sort) {
-        if (item instanceof AddInstanceItem) {
-            throw new IllegalArgumentException("Adding AddInstanceItem is not allowed");
-        }
-
         if (sort) {
             boolean added = false;
             int index = 0;

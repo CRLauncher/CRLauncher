@@ -165,10 +165,6 @@ public class PlayView extends JPanel {
     }
 
     public void addInstanceItem(InstanceItem item, String groupName, boolean sort) {
-        if (item instanceof AddInstanceItem) {
-            throw new IllegalArgumentException("Adding AddInstanceItem is not allowed");
-        }
-
         if (item.getAssociatedInstance() == this.lastPlayedInstance) {
             this.lastItem = item;
         }
