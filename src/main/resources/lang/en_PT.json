@@ -361,7 +361,8 @@
                 "dateReleased": "Date released",
                 "versionType": "Type"
             },
-            "latestVersion": "(Latest)"
+            "latestVersion": "(Latest)",
+            "showOnlyInstalled": "Show only installed ship builds"
         },
         "updateDialog": {
             "title": "Update",
