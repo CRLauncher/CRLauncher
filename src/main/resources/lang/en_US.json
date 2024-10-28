@@ -215,7 +215,11 @@
             "searchResourcePacks": "Search resource packs...",
             "searchShaders": "Search shaders...",
             "searchModpacks": "Search modpacks...",
-            "modVersionsDialogTitle": "Mod versions"
+            "modVersionsDialogTitle": "Mod versions",
+            "selectLoadersDialog": {
+                "title": "Select loaders",
+                "message": "Select loaders for the mod to install"
+            }
         },
         "addAccountDialog": {
             "title": "Add account",

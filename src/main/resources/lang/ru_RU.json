@@ -215,7 +215,11 @@
             "searchResourcePacks": "Найти ресурс-паки...",
             "searchShaders": "Найти шейдеры...",
             "searchModpacks": "Найти модпаки...",
-            "modVersionsDialogTitle": "Версии мода"
+            "modVersionsDialogTitle": "Версии мода",
+            "selectLoadersDialog": {
+                "title": "Выберите загрузчики",
+                "message": "Выберите загрузчики, для которых будет установлен мод"
+            }
         },
         "addAccountDialog": {
             "title": "Добавить аккаунт",
