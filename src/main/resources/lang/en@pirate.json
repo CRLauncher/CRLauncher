@@ -361,6 +361,11 @@
                 "versionType": "Type"
             },
             "latestVersion": "(Latest)"
+        },
+        "updateDialog": {
+            "title": "Update",
+            "updateNowButton": "Update",
+            "updateLaterButton": "Later"
         }
     },
     "general": {
