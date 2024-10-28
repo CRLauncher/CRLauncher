@@ -8,6 +8,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModInstaller;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsView;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
@@ -82,9 +83,7 @@ public class ModDownloadWorkerSupplier implements WorkerSupplier {
                 Mod mod;
 
                 try (ZipFile zipFile = new ZipFile(saveAs.toFile())) {
-                    FileHeader fileHeader = zipFile.getFileHeader(
-                        instance.getModLoader() == ModLoader.QUILT ? "quilt.mod.json" : "puzzle.mod.json"
-                    );
+                    FileHeader fileHeader = zipFile.getFileHeader(ModInstaller.getModInfoFile(instance.getModLoader()));
 
                     String json = StreamUtils.readToString(zipFile.getInputStream(fileHeader));
 
