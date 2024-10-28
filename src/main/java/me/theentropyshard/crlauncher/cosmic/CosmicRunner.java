@@ -105,9 +105,13 @@ public class CosmicRunner extends Thread {
     public void run() {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
 
-        this.updateCosmicVersion();
-
         try {
+            if (!versionManager.isLoaded()) {
+                versionManager.load();
+            }
+
+            this.updateCosmicVersion();
+
             Version version = versionManager.getVersion(this.instance.getCosmicVersion());
 
             ProgressDialog dialog = new ProgressDialog("Downloading Cosmic Reach");
