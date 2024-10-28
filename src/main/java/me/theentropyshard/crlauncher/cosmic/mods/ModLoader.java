@@ -53,6 +53,14 @@ public enum ModLoader {
         return type;
     }
 
+    public static ModLoader getFromCrmm(String crmmName) {
+        return switch (crmmName) {
+            case "quilt" -> ModLoader.QUILT;
+            case "puzzle_loader" -> ModLoader.PUZZLE;
+            default -> throw new IllegalArgumentException("Unknown mod loader from CRMM: " + crmmName);
+        };
+    }
+
     @Override
     public String toString() {
         return this.name;
