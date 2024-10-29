@@ -61,6 +61,15 @@ public enum ModLoader {
         };
     }
 
+    public static ModLoader getFromCrm2(String loader) {
+        return switch (loader) {
+            case "vanilla" -> ModLoader.VANILLA;
+            case "cosmic-quilt" -> ModLoader.QUILT;
+            case "puzzle" -> ModLoader.PUZZLE;
+            default -> throw new IllegalArgumentException("Unknown mod loader from CRM2: " + loader);
+        };
+    }
+
     @Override
     public String toString() {
         return this.name;

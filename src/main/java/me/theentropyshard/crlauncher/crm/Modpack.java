@@ -21,146 +21,127 @@ package me.theentropyshard.crlauncher.crm;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Map;
 
 public class Modpack {
-    private String name;
-    private String description;
-    private String version;
+    public static final int MINIMUM_SUPPORTED_REVISION = 2;
 
     @SerializedName("spec_revision")
     private int specRevision;
 
+    private String name;
+    private String version;
+    private String description;
+
+    /**
+     * Possible values: "vanilla", "cosmic-quilt", "puzzle"
+     */
+    private String loader;
+    private List<File> files;
+    private Map<String, String> dependencies;
+
     @SerializedName("base_url")
     private String baseUrl;
 
-    @SerializedName("game_version")
-    private String gameVersion;
-
-    private List<Mod> mods;
-
     public Modpack() {
 
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getVersion() {
-        return this.version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     public int getSpecRevision() {
         return this.specRevision;
     }
 
-    public void setSpecRevision(int specRevision) {
-        this.specRevision = specRevision;
+    public String getName() {
+        return this.name;
+    }
+
+    public String getVersion() {
+        return this.version;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public String getLoader() {
+        return this.loader;
+    }
+
+    public List<File> getFiles() {
+        return this.files;
+    }
+
+    public Map<String, String> getDependencies() {
+        return this.dependencies;
     }
 
     public String getBaseUrl() {
         return this.baseUrl;
     }
 
-    public void setBaseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public String getGameVersion() {
-        return this.gameVersion;
-    }
-
-    public void setGameVersion(String gameVersion) {
-        this.gameVersion = gameVersion;
-    }
-
-    public List<Mod> getMods() {
-        return this.mods;
-    }
-
-    public void setMods(List<Mod> mods) {
-        this.mods = mods;
-    }
-
-    public static final class Mod {
-        private String name;
+    public static final class File {
+        private String type;
         private String id;
-        private String url;
+        private String version;
 
         @SerializedName("sha512_hash")
         private String sha512;
 
-        private String version;
+        private Env env;
 
-        @SerializedName("mod_type")
-        private String modType;
+        @SerializedName("download_url")
+        private String downloadUrl;
 
-        public Mod() {
+        public File() {
 
         }
 
-        public String getName() {
-            return this.name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
+        public String getType() {
+            return this.type;
         }
 
         public String getId() {
             return this.id;
         }
 
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getUrl() {
-            return this.url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
+        public String getVersion() {
+            return this.version;
         }
 
         public String getSha512() {
             return this.sha512;
         }
 
-        public void setSha512(String sha512) {
-            this.sha512 = sha512;
+        public Env getEnv() {
+            return this.env;
         }
 
-        public String getVersion() {
-            return this.version;
+        public String getDownloadUrl() {
+            return this.downloadUrl;
+        }
+    }
+
+    public static final class Env {
+        /**
+         * Possible values: "required", "optional"
+         */
+        private String client;
+
+        /**
+         * Possible values: "required", "optional"
+         */
+        private String server;
+
+        public Env() {
+
         }
 
-        public void setVersion(String version) {
-            this.version = version;
+        public String getClient() {
+            return this.client;
         }
 
-        public String getModType() {
-            return this.modType;
-        }
-
-        public void setModType(String modType) {
-            this.modType = modType;
+        public String getServer() {
+            return this.server;
         }
     }
 }
