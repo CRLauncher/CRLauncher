@@ -79,6 +79,6 @@ public class PuzzleCosmicLauncher extends ModdedPatchCosmicLauncher {
         command.add("-classpath");
         command.add(classpath + File.pathSeparator + this.getClientPath());
 
-        command.add(PuzzleProperties.MAIN_CLASS);
+        command.add(PuzzleManager.getMainClass(this.version));
     }
 }

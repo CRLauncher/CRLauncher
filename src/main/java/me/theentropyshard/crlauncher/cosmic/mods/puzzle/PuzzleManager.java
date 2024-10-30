@@ -56,6 +56,8 @@ public class PuzzleManager {
         new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-commons", "9.6"))
     );
 
+    private static final SemanticVersion VERSION_2_0_0 = new SemanticVersion(2, 0, 0);
+
     private final Path versionsDir;
     private final Path depsDir;
 
@@ -137,9 +139,8 @@ public class PuzzleManager {
 
     public static List<PuzzleDependency> getLibraries(String version) {
         SemanticVersion puzzleVersion = SemanticVersion.parse(version);
-        SemanticVersion version2_0_0 = new SemanticVersion(2, 0, 0);
 
-        if (puzzleVersion.isLowerThan(version2_0_0)) {
+        if (puzzleVersion.isLowerThan(PuzzleManager.VERSION_2_0_0)) {
             return PuzzleManager.LIBRARIES;
         } else {
             return PuzzleManager.LIBRARIES_2_0_0;
@@ -148,12 +149,21 @@ public class PuzzleManager {
 
     public static String getClientName(String version) {
         SemanticVersion puzzleVersion = SemanticVersion.parse(version);
-        SemanticVersion version2_0_0 = new SemanticVersion(2, 0, 0);
 
-        if (puzzleVersion.isLowerThan(version2_0_0)) {
+        if (puzzleVersion.isLowerThan(PuzzleManager.VERSION_2_0_0)) {
             return "PuzzleLoader-" + version + ".jar";
         } else {
             return "PuzzleLoader-" + version + "-client.jar";
+        }
+    }
+
+    public static String getMainClass(String version) {
+        SemanticVersion puzzleVersion = SemanticVersion.parse(version);
+
+        if (puzzleVersion.isLowerThan(PuzzleManager.VERSION_2_0_0)) {
+            return PuzzleProperties.MAIN_CLASS;
+        } else {
+            return PuzzleProperties.MAIN_CLASS_2_0_0;
         }
     }
 }

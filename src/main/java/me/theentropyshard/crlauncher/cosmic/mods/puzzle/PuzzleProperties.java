@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.cosmic.mods.puzzle;
 
 public final class PuzzleProperties {
     public static final String MAIN_CLASS = "com.github.puzzle.loader.launch.Piece";
+    public static final String MAIN_CLASS_2_0_0 = "com.github.puzzle.core.loader.launch.pieces.ClientPiece";
 
     private PuzzleProperties() {
         throw new UnsupportedOperationException();
