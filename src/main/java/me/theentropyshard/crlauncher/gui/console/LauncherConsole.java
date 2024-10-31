@@ -62,6 +62,7 @@ public class LauncherConsole {
         this.textPane.setFont(LauncherConsole.FONT);
         ((DefaultCaret) this.textPane.getCaret()).setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
         this.textPane.setEditable(false);
+        //this.textPane.getDocument().addDocumentListener(new ConsoleLinesLimiter(1000));
 
         this.attrs = new SimpleAttributeSet();
 
