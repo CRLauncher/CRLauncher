@@ -136,51 +136,14 @@ public class CRLauncher {
         }
 
         this.languagesDir = this.workDir.resolve("languages");
+
         this.createDirectories();
 
         this.languages = new LinkedHashMap<>();
 
-        for (String lang : new String[]{"de_DE", "en_PT", "en_US", "fil_PH", "hr_HR", "ru_RU", "tl_PH"}) {
-            String resourcePath = "/lang/" + lang + ".json";
+        this.loadBuiltinLanguages();
 
-            String json = null;
-
-            try {
-                json = ResourceUtils.readToString(resourcePath);
-            } catch (IOException e) {
-                Log.warn("Cannot load " + resourcePath + ": " + e.getMessage());
-            }
-
-            if (json == null) {
-                continue;
-            }
-
-            Language language = new Language(json);
-            this.languages.put(language.getName(), language);
-        }
-
-        try {
-            for (Path languageJsonFile : FileUtils.list(this.languagesDir)) {
-                try {
-                    String json = FileUtils.readUtf8(languageJsonFile);
-
-                    Language language = new Language(json);
-                    String name = language.getName();
-
-                    if (this.languages.containsKey(name)) {
-                        Log.warn("Duplicate language is in 'languages' folder, it won't be loaded! Duplicated name: " + name);
-
-                        continue;
-                    }
-
-                    this.languages.put(name, language);
-                } catch (IOException e) {
-                    Log.error("Could not load custom languages", e);
-                }
-            }
-        } catch (IOException e) {
-            Log.error("Could not list '" + this.languagesDir + "'", e);
-        }
+        this.loadExternalLanguages();
 
         Language language = this.getLanguage();
         UIManager.put("OptionPane.yesButtonText", language.getString("gui.general.yes"));
@@ -354,6 +317,52 @@ public class CRLauncher {
             FileUtils.createDirectoryIfNotExists(this.modloadersDir);
         } catch (IOException e) {
             Log.error("Unable to create launcher directories", e);
+        }
+    }
+
+    private void loadBuiltinLanguages() {
+        for (String lang : new String[]{"de_DE", "en_PT", "en_US", "fil_PH", "hr_HR", "ru_RU", "tl_PH"}) {
+            String resourcePath = "/lang/" + lang + ".json";
+
+            String json = null;
+
+            try {
+                json = ResourceUtils.readToString(resourcePath);
+            } catch (IOException e) {
+                Log.warn("Cannot load " + resourcePath + ": " + e.getMessage());
+            }
+
+            if (json == null) {
+                continue;
+            }
+
+            Language language = new Language(json);
+            this.languages.put(language.getName(), language);
+        }
+    }
+
+    private void loadExternalLanguages() {
+        try {
+            for (Path languageJsonFile : FileUtils.list(this.languagesDir)) {
+                try {
+                    String json = FileUtils.readUtf8(languageJsonFile);
+
+                    Language language = new Language(json);
+                    String name = language.getName();
+
+                    if (this.languages.containsKey(name)) {
+                        Log.warn("Duplicate language is in 'languages' folder, it won't be loaded! Duplicated name: " + name);
+
+                        continue;
+                    }
+
+                    this.languages.put(name, language);
+                } catch (IOException e) {
+                    Log.error("Could not load custom languages", e);
+                }
+            }
+        } catch (IOException e) {
+            Log.error("Could not list '" + this.languagesDir + "'", e);
         }
     }
 
