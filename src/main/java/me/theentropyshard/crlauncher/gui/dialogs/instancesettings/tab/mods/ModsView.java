@@ -97,7 +97,7 @@ public class ModsView extends JPanel {
 
             ModLoader loader = instance.getModLoader();
 
-            instance.getMods(loader).remove(mod);
+            instance.getMods(loader).removeIf(m -> m.getFileName().equals(mod.getFileName()));
 
             Path modFile = instance.getModPath(mod, loader);
 

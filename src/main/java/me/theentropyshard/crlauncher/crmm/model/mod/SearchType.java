@@ -16,24 +16,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.crmm;
+package me.theentropyshard.crlauncher.crmm.model.mod;
 
-import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
+public enum SearchType {
+    MOD("mod"),
+    DATAMOD("datamod"),
+    RESOURCE_PACK("resource-pack"),
+    SHADER("shader"),
+    MODPACK("modpack");
 
-import java.util.Map;
+    private final String queryKey;
 
-public interface CrmmHttpApi {
-    @GET("search")
-    SearchModsResponse search(@QueryMap Map<String, String> query);
+    SearchType(String queryKey) {
+        this.queryKey = queryKey;
+    }
 
-    @GET("project/{slug}")
-    ProjectResponse getProject(@Path("slug") String slug);
-
-    @GET("project/{slug}/version")
-    ProjectVersionResponse getProjectVersions(@Path("slug") String slug);
+    public String getQueryKey() {
+        return this.queryKey;
+    }
 }

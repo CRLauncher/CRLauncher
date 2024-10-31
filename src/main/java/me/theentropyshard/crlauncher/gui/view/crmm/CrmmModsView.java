@@ -20,6 +20,8 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.crmm.CrmmApi;
+import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
@@ -88,19 +90,19 @@ public class CrmmModsView extends JPanel {
         this.modsViewsPanel = new JPanel(this.cardLayout);
         this.modsViewsPanel.setBorder(new EmptyBorder(5, 0, 0, 0));
 
-        this.modsModsView = new SearchCrmmModsView(instance, modsTab);
+        this.modsModsView = new SearchCrmmModsView(instance, modsTab, SearchType.MOD);
         this.modsViewsPanel.add(this.modsModsView, "0");
 
-        this.dataModsModsView = new SearchCrmmDataModsView(instance, modsTab, DataModType.DATAMOD);
+        this.dataModsModsView = new SearchCrmmModsView(instance, modsTab, SearchType.DATAMOD);
         this.modsViewsPanel.add(this.dataModsModsView, "1");
 
-        this.resourcePacksModsView = new SearchCrmmDataModsView(instance, modsTab, DataModType.RESOURCE_PACK);
+        this.resourcePacksModsView = new SearchCrmmModsView(instance, modsTab, SearchType.RESOURCE_PACK);
         this.modsViewsPanel.add(this.resourcePacksModsView, "2");
 
-        this.shadersModsView = new SearchCrmmDataModsView(instance, modsTab, DataModType.SHADER);
+        this.shadersModsView = new SearchCrmmModsView(instance, modsTab, SearchType.SHADER);
         this.modsViewsPanel.add(this.shadersModsView, "3");
 
-        this.modpacksView = new SearchCrmmDataModsView(instance, modsTab, DataModType.MODPACK);
+        this.modpacksView = new SearchCrmmModsView(instance, modsTab, SearchType.MODPACK);
         this.modsViewsPanel.add(this.modpacksView, "4");
 
         this.modsModsView.searchMods("");

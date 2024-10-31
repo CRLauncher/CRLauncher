@@ -16,25 +16,22 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.view.crmm;
+package me.theentropyshard.crlauncher.crmm.filter;
 
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.instance.Instance;
+public enum SortBy {
+    RELEVANCE("relevance"),
+    DOWNLOADS("downloads"),
+    FOLLOW_COUNT("follow_count"),
+    RECENTLY_UPDATED("recently_updated"),
+    RECENTLY_PUBLISHED("recently_published");
 
-public class SearchCrmmDataModsView extends SearchCrmmModsView {
-    private final DataModType modType;
+    private final String value;
 
-    public SearchCrmmDataModsView(Instance instance, ModsTab modsTab, DataModType modType) {
-        super(instance, modsTab);
-
-        this.modType = modType;
+    SortBy(String value) {
+        this.value = value;
     }
 
-    @Override
-    public void searchMods(String query) {
-        new DataModsSearchWorker(
-            query, this.getModCardsPanel(), this.getInstance(), this.getModsTab(),
-            this.modType
-        ).execute();
+    public String getValue() {
+        return this.value;
     }
 }

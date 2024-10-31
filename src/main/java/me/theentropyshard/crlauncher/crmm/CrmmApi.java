@@ -18,14 +18,18 @@
 
 package me.theentropyshard.crlauncher.crmm;
 
-import me.theentropyshard.crlauncher.crmm.model.datapack.SearchDatapacksResponse;
+import me.theentropyshard.crlauncher.crmm.filter.SortBy;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
+import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
 import me.theentropyshard.crlauncher.utils.CallUnwrapAdapter;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CrmmApi {
     public static final String BASE_URL = "https://api.crmm.tech/api/";
@@ -44,44 +48,17 @@ public class CrmmApi {
         this.crmmApi = this.retrofit.create(CrmmHttpApi.class);
     }
 
-    public SearchModsResponse searchMods(String query) {
-        if (query.trim().isEmpty()) {
-            return this.crmmApi.searchMods();
-        } else {
-            return this.crmmApi.searchMods(query);
-        }
-    }
+    public SearchModsResponse search(SearchType searchType, SortBy sortBy, String searchQuery) {
+        Map<String, String> queryMap = new LinkedHashMap<>();
 
-    public SearchDatapacksResponse searchDataMods(String query) {
-        if (query.trim().isEmpty()) {
-            return this.crmmApi.searchDatapacks();
-        } else {
-            return this.crmmApi.searchDatapacks(query);
-        }
-    }
+        queryMap.put("type", searchType.getQueryKey());
+        queryMap.put("sortby", sortBy.getValue());
 
-    public SearchDatapacksResponse searchResourcePacks(String query) {
-        if (query.trim().isEmpty()) {
-            return this.crmmApi.searchResourcePacks();
-        } else {
-            return this.crmmApi.searchResourcePacks(query);
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            queryMap.put("q", searchQuery);
         }
-    }
 
-    public SearchDatapacksResponse searchShaders(String query) {
-        if (query.trim().isEmpty()) {
-            return this.crmmApi.searchShaders();
-        } else {
-            return this.crmmApi.searchShaders(query);
-        }
-    }
-
-    public SearchDatapacksResponse searchModpacks(String query) {
-        if (query.trim().isEmpty()) {
-            return this.crmmApi.searchModpacks();
-        } else {
-            return this.crmmApi.searchModpacks(query);
-        }
+        return this.crmmApi.search(queryMap);
     }
 
     public ProjectResponse getProject(String slug) {
