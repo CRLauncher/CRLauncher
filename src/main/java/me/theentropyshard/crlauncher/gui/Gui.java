@@ -20,7 +20,6 @@ package me.theentropyshard.crlauncher.gui;
 
 import com.formdev.flatlaf.FlatLaf;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.laf.DarkLauncherLaf;
@@ -33,6 +32,8 @@ import me.theentropyshard.crlauncher.gui.view.accountsview.AddAccountItem;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
 import me.theentropyshard.crlauncher.gui.view.settings.SettingsView;
+import me.theentropyshard.crlauncher.language.Language;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
@@ -76,6 +77,11 @@ public class Gui {
 
         this.switchTheme();
 
+        LauncherConsole console = new LauncherConsole();
+        LauncherConsole.instance = console;
+
+        Log.start();
+
         Language language = CRLauncher.getInstance().getLanguage();
 
         this.viewSelector = new JTabbedPane(JTabbedPane.LEFT);
@@ -115,9 +121,6 @@ public class Gui {
             OperatingSystem.open(CRLauncher.getInstance().getWorkDir());
         });
         bottomPanel.add(this.openFolderButton);
-
-        LauncherConsole console = new LauncherConsole();
-        LauncherConsole.instance = console;
 
         Settings settings = CRLauncher.getInstance().getSettings();
         if (settings.showConsoleAtStartup) {

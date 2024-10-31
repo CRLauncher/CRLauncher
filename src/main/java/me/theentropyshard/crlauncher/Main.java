@@ -25,11 +25,11 @@ public class Main {
         Args theArgs = Args.parse(args);
 
         LauncherProperties.LOGS_DIR.install(theArgs.getWorkDir().resolve("logs"));
-        Log.start();
 
         try {
             new CRLauncher(theArgs, args, theArgs.getWorkDir());
         } catch (Throwable t) {
+            Log.start();
             Log.error("Unable to start the launcher", t);
             System.exit(1);
         }

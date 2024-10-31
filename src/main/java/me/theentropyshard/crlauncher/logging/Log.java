@@ -18,7 +18,6 @@
 
 package me.theentropyshard.crlauncher.logging;
 
-import com.twelvemonkeys.imageio.metadata.tiff.IFD;
 import me.theentropyshard.crlauncher.cosmic.AnsiCosmicLogEvent;
 import me.theentropyshard.crlauncher.cosmic.TimeCosmicLogEvent;
 
@@ -39,7 +38,13 @@ public final class Log {
     private static final Pattern EXCEPTION_PATTERN = Pattern.compile("([a-zA-Z_$][a-zA-Z\\d_$]*\\.)+[a-zA-Z_$]?[a-zA-Z\\d_$]*(Exception|Error|Throwable)");
     private static final Pattern MORE_PATTERN = Pattern.compile("\\.\\.\\. \\d+ more$");
 
+    private static boolean started;
+
     public static void start() {
+        if (Log.started) {
+            return;
+        }
+
         new LogQueueProcessor(Log.EVENT_QUEUE).start();
 
         //System.setOut(new SystemOutInterceptor(System.out, LogLevel.DEBUG));
@@ -48,7 +53,7 @@ public final class Log {
             System.setErr(new SystemOutInterceptor(System.err, LogLevel.ERROR));
         }
 
-        Log.info("Initialized logging");
+        Log.started = true;
     }
 
     public static void info(String message) {
