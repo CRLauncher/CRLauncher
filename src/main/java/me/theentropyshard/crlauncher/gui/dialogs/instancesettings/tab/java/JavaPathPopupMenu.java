@@ -1,7 +1,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;

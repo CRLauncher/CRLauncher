@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.gui.view.settings;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.Gui;

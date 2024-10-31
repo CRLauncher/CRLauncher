@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.crmm.SearchCrmmModsDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;

@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.addaccount;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AccountsView;
 

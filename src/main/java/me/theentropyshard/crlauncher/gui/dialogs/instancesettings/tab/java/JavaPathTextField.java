@@ -2,7 +2,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;

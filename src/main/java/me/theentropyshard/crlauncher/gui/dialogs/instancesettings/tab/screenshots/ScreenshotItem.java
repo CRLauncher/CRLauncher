@@ -20,12 +20,11 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screensho
 
 import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.datatransfer.TransferableFile;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.datatransfer.TransferableImage;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
@@ -34,7 +33,6 @@ import net.miginfocom.swing.MigLayout;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -88,18 +86,18 @@ public class ScreenshotItem extends JPanel {
                     });
                 } else if (e.getButton() == MouseEvent.BUTTON3) {
                     Language language = CRLauncher.getInstance().getLanguage();
-                    JsonObject section = language.getSection("gui.instanceSettingsDialog.screenshotsTab");
+                    LanguageSection section = language.getSection("gui.instanceSettingsDialog.screenshotsTab");
 
                     JPopupMenu popupMenu = new JPopupMenu();
 
-                    JMenuItem copyImageItem = new JMenuItem(language.getString(section, "copyImage"));
+                    JMenuItem copyImageItem = new JMenuItem(section.getString("copyImage"));
                     copyImageItem.addActionListener(copy -> {
                         SwingUtils.startWorker(() -> {
                             OperatingSystem.copyToClipboard(info.getOriginalImage());
                         });
                     });
 
-                    JMenuItem copyFileItem = new JMenuItem(language.getString(section, "copyFile"));
+                    JMenuItem copyFileItem = new JMenuItem(section.getString("copyFile"));
                     copyFileItem.addActionListener(copy -> {
                         SwingUtils.startWorker(() -> {
                             OperatingSystem.copyToClipboard(info.getFilePath());
@@ -107,7 +105,7 @@ public class ScreenshotItem extends JPanel {
                     });
 
                     // TODO: add confirmation dialog
-                    JMenuItem deleteFileItem = new JMenuItem(language.getString(section, "delete"));
+                    JMenuItem deleteFileItem = new JMenuItem(section.getString("delete"));
                     deleteFileItem.addActionListener(delete -> {
                         SwingUtils.startWorker(() -> {
                             try {
@@ -119,15 +117,15 @@ public class ScreenshotItem extends JPanel {
                         });
                     });
 
-                    JMenuItem renameFileItem = new JMenuItem(language.getString(section, "rename"));
+                    JMenuItem renameFileItem = new JMenuItem(section.getString("rename"));
                     renameFileItem.addActionListener(rename -> {
                         SwingUtils.startWorker(() -> {
                             String oldFileName = info.getFilePath().getFileName().toString();
 
                             String newFileName = MessageBox.showInputMessage(
                                 CRLauncher.frame,
-                                language.getString(section, "rename"),
-                                language.getString(section, "renameMessage"),
+                                section.getString("rename"),
+                                section.getString("renameMessage"),
                                 oldFileName
                             );
 

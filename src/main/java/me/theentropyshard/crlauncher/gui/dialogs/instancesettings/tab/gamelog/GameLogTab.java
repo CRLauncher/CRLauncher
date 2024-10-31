@@ -21,7 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.gamelog;
 import com.formdev.flatlaf.ui.FlatScrollPaneBorder;
 import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.BrowseHyperlinkListener;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
@@ -31,6 +31,7 @@ import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.mclogs.McLogsApi;
 import me.theentropyshard.crlauncher.mclogs.model.LimitsResponse;
@@ -62,7 +63,7 @@ public class GameLogTab extends Tab {
         super(CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.gameLogTab.name"), instance, dialog);
 
         Language language = CRLauncher.getInstance().getLanguage();
-        JsonObject section = language.getSection("gui.instanceSettingsDialog.gameLogTab");
+        LanguageSection section = language.getSection("gui.instanceSettingsDialog.gameLogTab");
 
         JPanel root = this.getRoot();
         root.setBorder(new EmptyBorder(3, 3, 3, 3));
@@ -72,13 +73,13 @@ public class GameLogTab extends Tab {
         JPanel topSearchPanel = new JPanel(new BorderLayout());
         topSearchPanel.setBorder(new EmptyBorder(0, 4, 3, 4));
 
-        JLabel searchLabel = new JLabel(language.getString(section, "search") + ": ");
+        JLabel searchLabel = new JLabel(section.getString("search") + ": ");
         topSearchPanel.add(searchLabel, BorderLayout.WEST);
 
         JTextField searchField = new JTextField();
         topSearchPanel.add(searchField, BorderLayout.CENTER);
 
-        JButton searchButton = new JButton(language.getString(section, "find"));
+        JButton searchButton = new JButton(section.getString("find"));
         searchButton.addActionListener(e -> {
             new Worker<Void, Void>("searching text") {
                 @Override
@@ -137,9 +138,9 @@ public class GameLogTab extends Tab {
         JPanel bottomButtonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         bottomButtonsPanel.setBorder(new EmptyBorder(2, 0, 0, 0));
 
-        this.uploadButton = new JButton(language.getString(section, "upload"));
+        this.uploadButton = new JButton(section.getString("upload"));
         this.uploadButton.addActionListener(e -> {
-            this.uploadButton.setText(language.getString(section, "uploading") + "...");
+            this.uploadButton.setText(section.getString("uploading") + "...");
 
             SwingUtils.startWorker(() -> {
                 String log;
@@ -149,7 +150,7 @@ public class GameLogTab extends Tab {
                     log = FileUtils.readUtf8(logFile);
                 } catch (IOException ex) {
                     Log.error("Could not read file: " + logFile, ex);
-                    MessageBox.showErrorMessage(CRLauncher.frame, language.getString(section, "failed") + ": " + ex.getMessage());
+                    MessageBox.showErrorMessage(CRLauncher.frame, section.getString("failed") + ": " + ex.getMessage());
 
                     return;
                 }
@@ -160,7 +161,7 @@ public class GameLogTab extends Tab {
                 int maxLength = limits.getMaxLength();
 
                 if (log.getBytes(StandardCharsets.UTF_8).length > maxLength) {
-                    MessageBox.showWarningMessage(CRLauncher.frame, language.getString(section, "largeLog"));
+                    MessageBox.showWarningMessage(CRLauncher.frame, section.getString("largeLog"));
                 }
 
                 PasteResponse pasteResponse = api.pasteLog(log);
@@ -172,27 +173,27 @@ public class GameLogTab extends Tab {
                     messagePane.setContentType("text/html");
                     messagePane.setEditable(false);
                     messagePane.setEditorKit(new HTMLEditorKit());
-                    messagePane.setText("<html>" + language.getString(section, "successMessage").replace(
+                    messagePane.setText("<html>" + section.getString("successMessage").replace(
                         "$$LINK$$",
                         "<a href=\"" + pasteResponse.getUrl() + "\">" + pasteResponse.getUrl() + "</a>"
                     ) + "</html>");
                     messagePane.addHyperlinkListener(new BrowseHyperlinkListener());
 
 
-                    MessageBox.showPlainMessage(CRLauncher.frame, language.getString(section, "successTitle"), messagePane);
+                    MessageBox.showPlainMessage(CRLauncher.frame, section.getString("successTitle"), messagePane);
                 } else {
                     Log.error("Could not upload log: " + pasteResponse.getError());
-                    MessageBox.showErrorMessage(CRLauncher.frame, language.getString(section, "failed") + ": " + pasteResponse.getError());
+                    MessageBox.showErrorMessage(CRLauncher.frame, section.getString("failed") + ": " + pasteResponse.getError());
                 }
 
                 SwingUtilities.invokeLater(() -> {
-                    this.uploadButton.setText(language.getString(section, "upload"));
+                    this.uploadButton.setText(section.getString("upload"));
                 });
             });
         });
         bottomButtonsPanel.add(this.uploadButton);
 
-        this.copyFileButton = new JButton(language.getString(section, "copyFile"));
+        this.copyFileButton = new JButton(section.getString("copyFile"));
         Path logFile = this.getInstance().getCosmicDir().resolve("errorLogLatest.txt");
         this.copyFileButton.addActionListener(e -> {
             SwingUtils.startWorker(() -> {
@@ -201,7 +202,7 @@ public class GameLogTab extends Tab {
         });
         bottomButtonsPanel.add(this.copyFileButton);
 
-        this.copyTextButton = new JButton(language.getString(section, "copyText"));
+        this.copyTextButton = new JButton(section.getString("copyText"));
         this.copyTextButton.addActionListener(e -> {
             SwingUtils.startWorker(() -> {
                 OperatingSystem.copyToClipboard(this.logArea.getText());
@@ -209,7 +210,7 @@ public class GameLogTab extends Tab {
         });
         bottomButtonsPanel.add(this.copyTextButton);
 
-        this.clearButton = new JButton(language.getString(section, "clear"));
+        this.clearButton = new JButton(section.getString("clear"));
         this.clearButton.addActionListener(e -> {
             SwingUtils.startWorker(() -> {
                 try {

@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.gui;
 
 import com.formdev.flatlaf.FlatLaf;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.laf.DarkLauncherLaf;

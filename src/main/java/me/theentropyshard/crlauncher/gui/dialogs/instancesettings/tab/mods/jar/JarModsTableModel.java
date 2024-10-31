@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;

@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
 import me.theentropyshard.crlauncher.instance.Instance;

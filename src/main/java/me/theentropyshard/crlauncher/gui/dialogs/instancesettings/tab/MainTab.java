@@ -20,7 +20,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
@@ -39,7 +39,6 @@ import java.awt.event.ItemEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 

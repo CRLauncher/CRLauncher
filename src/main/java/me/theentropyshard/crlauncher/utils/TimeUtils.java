@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.utils;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 
 public final class TimeUtils {
     public static String getHoursMinutesSeconds(long totalSeconds) {

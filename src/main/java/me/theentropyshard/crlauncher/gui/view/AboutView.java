@@ -20,12 +20,10 @@ package me.theentropyshard.crlauncher.gui.view;
 
 import me.theentropyshard.crlauncher.BuildConfig;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.BrowseHyperlinkListener;
-import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
-import javax.swing.event.HyperlinkEvent;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 

@@ -2,7 +2,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.addaccount;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.account.ItchIoAccount;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;

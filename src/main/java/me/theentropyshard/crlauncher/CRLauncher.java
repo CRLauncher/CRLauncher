@@ -33,6 +33,7 @@ import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.java.JavaLocator;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.mclogs.McLogsApi;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;

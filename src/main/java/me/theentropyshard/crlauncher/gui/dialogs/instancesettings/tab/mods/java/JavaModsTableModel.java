@@ -20,13 +20,14 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java
 
 import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.Language;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
@@ -49,13 +50,13 @@ public class JavaModsTableModel extends ModsTableModel {
         this.loader = loader;
 
         Language language = CRLauncher.getInstance().getLanguage();
-        JsonObject section = language.getSection("gui.instanceSettingsDialog.modsTab.modsTable.cosmicQuilt");
+        LanguageSection section = language.getSection("gui.instanceSettingsDialog.modsTab.modsTable.cosmicQuilt");
 
         this.columnNames = new String[]{
-            language.getString(section, "modName"),
-            language.getString(section, "modVersion"),
-            language.getString(section, "modDescription"),
-            language.getString(section, "modActive")
+            section.getString("modName"),
+            section.getString("modVersion"),
+            section.getString("modDescription"),
+            section.getString("modActive")
         };
 
         new JavaModsLoader(instance, this).execute();
