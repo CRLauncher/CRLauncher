@@ -51,7 +51,12 @@ public class SearchCrmmModsView extends JPanel {
         this.modsTab = modsTab;
         this.searchType = searchType;
 
-        this.modCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
+        this.modCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10)) {
+            @Override
+            public void scrollRectToVisible(Rectangle aRect) {
+
+            }
+        };
         this.modCardsPanel.setBorder(new EmptyBorder(0, 3, 0, 10));
         JPanel borderPanel = new JPanel(new BorderLayout());
         borderPanel.add(this.modCardsPanel, BorderLayout.PAGE_START);
@@ -63,27 +68,28 @@ public class SearchCrmmModsView extends JPanel {
     }
 
     public void clear() {
+        if (this.modCardsPanel.getComponentCount() == 0) {
+            return;
+        }
+
         this.modCardsPanel.removeAll();
         this.modCardsPanel.revalidate();
     }
 
     public void searchMods(String query, SortBy sortBy) {
-        this.clear();
-
         new Worker<List<CrmmMod>, Void>("searching mods") {
             @Override
             protected List<CrmmMod> work() {
-                CrmmApi crmmApi = CRLauncher.getInstance().getCrmmApi();
-
-                SearchModsResponse searchModsResponse = crmmApi.search(SearchCrmmModsView.this.searchType, sortBy, query);
-
-                return searchModsResponse.getMods();
+                return CRLauncher.getInstance().getCrmmApi().search(SearchCrmmModsView.this.searchType, sortBy, query).getMods();
             }
 
             @Override
             @SuppressWarnings("unchecked")
             protected void done() {
+                SearchCrmmModsView.this.clear();
+
                 List<CrmmMod> crmmMods = null;
+
                 try {
                     crmmMods = this.get();
                 } catch (InterruptedException | ExecutionException ex) {
@@ -96,15 +102,15 @@ public class SearchCrmmModsView extends JPanel {
 
                 for (CrmmMod crmmMod : crmmMods) {
                     ModInfo modInfo = crmmMod.toModInfo();
+
                     ModCard card = new ModCard(modInfo);
                     card.addMouseListener(new MouseClickListener(e -> {
                         new ModVersionsDialog(modInfo, SearchCrmmModsView.this.instance, SearchCrmmModsView.this.modsTab,
                             new ModDownloadWorkerSupplier());
                     }));
+
                     SearchCrmmModsView.this.modCardsPanel.add(card);
                 }
-
-                SearchCrmmModsView.this.modCardsPanel.revalidate();
             }
         }.execute();
     }

@@ -31,6 +31,8 @@ import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 
@@ -140,7 +142,7 @@ public class CrmmModsView extends JPanel {
         this.navBar.addTabListener(tab -> {
             this.tab = tab;
             this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, placeHolders[tab]);
-            ((SearchCrmmModsView) this.modsViewsPanel.getComponent(tab)).searchMods(this.searchField.getText(), this.sortBy);
+            this.search();
             this.cardLayout.show(this.modsViewsPanel, String.valueOf(tab));
         });
 
@@ -151,9 +153,30 @@ public class CrmmModsView extends JPanel {
 
             this.sortBy = (SortBy) this.searchTypeCombo.getSelectedItem();
 
-            ((SearchCrmmModsView) this.modsViewsPanel.getComponent(this.tab)).searchMods(this.searchField.getText(), this.sortBy);
+            this.search();
+        });
+
+        this.searchField.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                CrmmModsView.this.search();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                CrmmModsView.this.search();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+
+            }
         });
 
         this.add(this.modsViewsPanel, BorderLayout.CENTER);
+    }
+
+    private void search() {
+        ((SearchCrmmModsView) this.modsViewsPanel.getComponent(this.tab)).searchMods(this.searchField.getText(), this.sortBy);
     }
 }
