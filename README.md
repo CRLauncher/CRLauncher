@@ -1,5 +1,7 @@
 # CRLauncher
 
+![](https://img.shields.io/github/downloads/CRLauncher/CRLauncher/total)
+
 > [!WARNING]  
 > This project is unfinished. Do not have any expectations.
 
