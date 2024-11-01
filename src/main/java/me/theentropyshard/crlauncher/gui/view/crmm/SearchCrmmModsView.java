@@ -67,7 +67,7 @@ public class SearchCrmmModsView extends JPanel {
         this.modCardsPanel.revalidate();
     }
 
-    public void searchMods(String query) {
+    public void searchMods(String query, SortBy sortBy) {
         this.clear();
 
         new Worker<List<CrmmMod>, Void>("searching mods") {
@@ -75,7 +75,7 @@ public class SearchCrmmModsView extends JPanel {
             protected List<CrmmMod> work() {
                 CrmmApi crmmApi = CRLauncher.getInstance().getCrmmApi();
 
-                SearchModsResponse searchModsResponse = crmmApi.search(SearchCrmmModsView.this.searchType, SortBy.RELEVANCE, query);
+                SearchModsResponse searchModsResponse = crmmApi.search(SearchCrmmModsView.this.searchType, sortBy, query);
 
                 return searchModsResponse.getMods();
             }

@@ -209,7 +209,6 @@
             "resourcePacks": "Resource Packs",
             "shaders": "Shaders",
             "modpacks": "Modpacks",
-            "searchButton": "Search",
             "searchMods": "Search mods...",
             "searchDatamods": "Search data mods...",
             "searchResourcePacks": "Search resource packs...",
@@ -219,6 +218,13 @@
             "selectLoadersDialog": {
                 "title": "Select loaders",
                 "message": "Select loaders for the mod to install"
+            },
+            "sortBy": {
+                "relevance": "Relevance",
+                "downloads": "Downloads",
+                "follow_count":  "Follow count",
+                "recently_updated": "Recently updated",
+                "recently_published":  "Recently published"
             }
         },
         "addAccountDialog": {

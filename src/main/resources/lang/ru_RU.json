@@ -209,7 +209,6 @@
             "resourcePacks": "Ресурс-паки",
             "shaders": "Шейдеры",
             "modpacks": "Модпаки",
-            "searchButton": "Найти",
             "searchMods": "Найти моды...",
             "searchDatamods": "Найти дата-моды...",
             "searchResourcePacks": "Найти ресурс-паки...",
@@ -219,6 +218,13 @@
             "selectLoadersDialog": {
                 "title": "Выберите загрузчики",
                 "message": "Выберите загрузчики, для которых будет установлен мод"
+            },
+            "sortBy": {
+                "relevance": "Релевантность",
+                "downloads": "Скачивания",
+                "follow_count":  "Фолловеры",
+                "recently_updated": "Недавно обновлённые",
+                "recently_published":  "Недавно опубликованные"
             }
         },
         "addAccountDialog": {

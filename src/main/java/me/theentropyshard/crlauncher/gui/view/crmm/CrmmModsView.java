@@ -20,16 +20,19 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.crmm.CrmmApi;
+import me.theentropyshard.crlauncher.crmm.filter.SortBy;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
-import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.language.Language;
+import me.theentropyshard.crlauncher.language.LanguageSection;
+import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 
 public class CrmmModsView extends JPanel {
     public static final String MODS_TAB = "gui.searchCRMMModsDialog.mods";
@@ -38,7 +41,6 @@ public class CrmmModsView extends JPanel {
     public static final String SHADERS_TAB = "gui.searchCRMMModsDialog.shaders";
     public static final String MODPACKS_TAB = "gui.searchCRMMModsDialog.modpacks";
     public static final String SEARCH_MODS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchMods";
-    public static final String SEARCH_BUTTON = "gui.searchCRMMModsDialog.searchButton";
     public static final String SEARCH_DATAMODS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchDatamods";
     public static final String SEARCH_RESOURCE_PACKS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchResourcePacks";
     public static final String SEARCH_SHADERS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchShaders";
@@ -46,7 +48,7 @@ public class CrmmModsView extends JPanel {
 
     private final NavBar navBar;
     private final JTextField searchField;
-    private final JButton searchButton;
+    private final JComboBox<SortBy> searchTypeCombo;
     private final CardLayout cardLayout;
     private final JPanel modsViewsPanel;
 
@@ -56,10 +58,14 @@ public class CrmmModsView extends JPanel {
     private final SearchCrmmModsView shadersModsView;
     private final SearchCrmmModsView modpacksView;
 
+    private SortBy sortBy;
+
     private int tab;
 
     public CrmmModsView(Instance instance, ModsTab modsTab) {
         super(new BorderLayout());
+
+        this.sortBy = SortBy.RELEVANCE;
 
         Language language = CRLauncher.getInstance().getLanguage();
 
@@ -79,8 +85,24 @@ public class CrmmModsView extends JPanel {
         this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(CrmmModsView.SEARCH_MODS_PLACEHOLDER));
         searchPanel.add(this.searchField, BorderLayout.CENTER);
 
-        this.searchButton = new JButton(language.getString(CrmmModsView.SEARCH_BUTTON));
-        searchPanel.add(this.searchButton, BorderLayout.EAST);
+        LanguageSection sortBySection = language.getSection("gui.searchCRMMModsDialog.sortBy");
+
+        this.searchTypeCombo = new JComboBox<>(SortBy.values());
+        this.searchTypeCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value instanceof SortBy sort && c instanceof JLabel label) {
+                    label.setText(sortBySection.getString(sort.getValue()));
+                } else {
+                    Log.warn("Got something unexpected: " + value.getClass() + ", " + c.getClass());
+                }
+
+                return c;
+            }
+        });
+        searchPanel.add(this.searchTypeCombo, BorderLayout.EAST);
 
         topPanel.add(searchPanel);
 
@@ -105,7 +127,7 @@ public class CrmmModsView extends JPanel {
         this.modpacksView = new SearchCrmmModsView(instance, modsTab, SearchType.MODPACK);
         this.modsViewsPanel.add(this.modpacksView, "4");
 
-        this.modsModsView.searchMods("");
+        this.modsModsView.searchMods("", this.sortBy);
 
         String[] placeHolders = {
             language.getString(CrmmModsView.SEARCH_MODS_PLACEHOLDER),
@@ -118,12 +140,18 @@ public class CrmmModsView extends JPanel {
         this.navBar.addTabListener(tab -> {
             this.tab = tab;
             this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, placeHolders[tab]);
-            ((SearchCrmmModsView) this.modsViewsPanel.getComponent(tab)).searchMods(this.searchField.getText());
+            ((SearchCrmmModsView) this.modsViewsPanel.getComponent(tab)).searchMods(this.searchField.getText(), this.sortBy);
             this.cardLayout.show(this.modsViewsPanel, String.valueOf(tab));
         });
 
-        this.searchButton.addActionListener(e -> {
-            ((SearchCrmmModsView) this.modsViewsPanel.getComponent(this.tab)).searchMods(this.searchField.getText());
+        this.searchTypeCombo.addItemListener(e -> {
+            if (e.getStateChange() != ItemEvent.SELECTED) {
+                return;
+            }
+
+            this.sortBy = (SortBy) this.searchTypeCombo.getSelectedItem();
+
+            ((SearchCrmmModsView) this.modsViewsPanel.getComponent(this.tab)).searchMods(this.searchField.getText(), this.sortBy);
         });
 
         this.add(this.modsViewsPanel, BorderLayout.CENTER);
