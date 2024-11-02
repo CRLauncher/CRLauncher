@@ -40,7 +40,7 @@ public class Language {
     }
 
     private LanguageSection parseSection(JsonObject jsonObject) {
-        LanguageSection section = new LanguageSection();
+        LanguageSection section = new MapLanguageSection();
 
         for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
             String key = entry.getKey();

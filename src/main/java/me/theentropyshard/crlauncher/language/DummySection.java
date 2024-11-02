@@ -18,12 +18,28 @@
 
 package me.theentropyshard.crlauncher.language;
 
-public interface LanguageSection {
-    void addString(String key, String value);
+public class DummySection implements LanguageSection {
+    public DummySection() {
 
-    void addSection(String key, LanguageSection section);
+    }
 
-    String getString(String key);
+    @Override
+    public void addString(String key, String value) {
 
-    LanguageSection getSection(String key);
+    }
+
+    @Override
+    public void addSection(String key, LanguageSection section) {
+
+    }
+
+    @Override
+    public String getString(String key) {
+        return key;
+    }
+
+    @Override
+    public LanguageSection getSection(String key) {
+        return this;
+    }
 }
