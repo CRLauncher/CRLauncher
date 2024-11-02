@@ -168,17 +168,16 @@
                     "delete": "Drain"
                 },
                 "deletingWorld": "Draining ocean"
-            }
-        },
-        "screenshotsTab": {
+            },
+            "screenshotsTab": {
                 "name": "Screenshots",
                 "copyImage": "Copy Image",
                 "copyFile": "Copy File",
                 "delete": "Delete",
                 "rename": "Rename",
                 "renameMessage": "Enter new name for the file"
-        },
-        "gameLogTab": {
+            },
+            "gameLogTab": {
                 "name": "Captin's Log",
                 "search": "Search",
                 "find": "Find",
@@ -192,6 +191,7 @@
                 "largeLog": "Log size exceeds the limit, log will be truncated",
                 "successTitle": "Log uploaded",
                 "successMessage": "Log uploaded successfully! Link: $$LINK$$ (Copied to clipboard)"
+            }
         },
         "searchCRMMModsDialog": {
             "title": "Search sails on CRMM",
