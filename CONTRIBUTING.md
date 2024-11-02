@@ -25,3 +25,24 @@ There are some things about my code style that I have got used to:
  - Do not use `var`, we are not programming in JavaScript
 
 If you have question "why?" - doing so makes things more clear.
+
+# Translating
+If you want to translate the launcher to your language, take `en_US.json` as a base and change string values as appropriate.
+To test your changes you don't have to build the project, instead, you can open base folder of the launcher on your machine and
+put your translation file in `languages` folder (create if it does not exist) and run the launcher. Your language should appear in
+combobox in settings view.
+
+After some time your translation will become incomplete, as new strings are added. To know what you need to add to your translation, 
+you can use `lang_diff.py` Python script located in `scripts` folder. You need to supply two files: first goes path to the complete translation
+and second goes your translation file. The script will output missing keys and their values from complete translation like this:
+```
+$ python ./scripts/lang_diff.py ./src/main/resources/lang/en_US.json ./src/main/resources/lang/en_PT.json
+Keys that are missing in en_PT.json: 
+gui.searchCRMMModsDialog.selectLoadersDialog.message = Select loaders for the mod to install
+gui.searchCRMMModsDialog.selectLoadersDialog.title = Select loaders                         
+gui.searchCRMMModsDialog.sortBy.downloads = Downloads                                       
+gui.searchCRMMModsDialog.sortBy.follow_count = Follow count                                 
+gui.searchCRMMModsDialog.sortBy.recently_published = Recently published                     
+gui.searchCRMMModsDialog.sortBy.recently_updated = Recently updated                         
+gui.searchCRMMModsDialog.sortBy.relevance = Relevance
+```
