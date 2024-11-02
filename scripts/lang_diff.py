@@ -37,6 +37,8 @@ def main():
     print_json(checking, checking_set, checking_dict)
 
     diff = template_set.difference(checking_set)
+    diff = list(diff)
+    diff.sort()
 
     print(f"Keys that are missing in {os.path.basename(checking_path)}: ")
 
