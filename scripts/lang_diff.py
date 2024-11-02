@@ -1,3 +1,4 @@
+import os
 import sys
 import json
 
@@ -14,6 +15,8 @@ def print_json(obj, kst, vst, parent_key=''):
 
 def main():
     if not len(sys.argv) == 3:
+        print(f"Usage: python {sys.argv[0]} <complete_LANGUAGE.json> <incomplete_LANGUAGE.json>")
+
         return
 
     template_path = sys.argv[1]
@@ -35,12 +38,10 @@ def main():
 
     diff = template_set.difference(checking_set)
 
-    print("Keys that are missing in " + checking_path + ": ")
-    print()
+    print(f"Keys that are missing in {os.path.basename(checking_path)}: ")
 
     for d in diff:
-        print("Key:", d + ", Value:", template_dict[d])
-        print(d, " = ", )
+        print(d, "=", template_dict[d])
 
 
 if __name__ == "__main__":
