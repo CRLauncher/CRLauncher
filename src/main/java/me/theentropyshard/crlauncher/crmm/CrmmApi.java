@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.crmm;
 
+import me.theentropyshard.crlauncher.crmm.filter.ShowPerPage;
 import me.theentropyshard.crlauncher.crmm.filter.SortBy;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
@@ -48,11 +49,12 @@ public class CrmmApi {
         this.crmmApi = this.retrofit.create(CrmmHttpApi.class);
     }
 
-    public SearchModsResponse search(SearchType searchType, SortBy sortBy, String searchQuery) {
+    public SearchModsResponse search(SearchType searchType, SortBy sortBy, ShowPerPage showPerPage, String searchQuery) {
         Map<String, String> queryMap = new LinkedHashMap<>();
 
         queryMap.put("type", searchType.getQueryKey());
         queryMap.put("sortby", sortBy.getValue());
+        queryMap.put("limit", showPerPage.getValue());
 
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
             queryMap.put("q", searchQuery);

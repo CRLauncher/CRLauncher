@@ -20,14 +20,15 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.crmm.filter.ShowPerPage;
 import me.theentropyshard.crlauncher.crmm.filter.SortBy;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -37,20 +38,10 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 
 public class CrmmModsView extends JPanel {
-    public static final String MODS_TAB = "gui.searchCRMMModsDialog.mods";
-    public static final String DATAMODS_TAB = "gui.searchCRMMModsDialog.datamods";
-    public static final String RESOURCE_PACKS_TAB = "gui.searchCRMMModsDialog.resourcePacks";
-    public static final String SHADERS_TAB = "gui.searchCRMMModsDialog.shaders";
-    public static final String MODPACKS_TAB = "gui.searchCRMMModsDialog.modpacks";
-    public static final String SEARCH_MODS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchMods";
-    public static final String SEARCH_DATAMODS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchDatamods";
-    public static final String SEARCH_RESOURCE_PACKS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchResourcePacks";
-    public static final String SEARCH_SHADERS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchShaders";
-    public static final String SEARCH_MODPACKS_PLACEHOLDER = "gui.searchCRMMModsDialog.searchModpacks";
-
     private final NavBar navBar;
     private final JTextField searchField;
     private final JComboBox<SortBy> searchTypeCombo;
+    private final JComboBox<ShowPerPage> showPerPageCombo;
     private final CardLayout cardLayout;
     private final JPanel modsViewsPanel;
 
@@ -61,6 +52,7 @@ public class CrmmModsView extends JPanel {
     private final SearchCrmmModsView modpacksView;
 
     private SortBy sortBy;
+    private ShowPerPage showPerPage;
 
     private int tab;
 
@@ -68,26 +60,37 @@ public class CrmmModsView extends JPanel {
         super(new BorderLayout());
 
         this.sortBy = SortBy.RELEVANCE;
+        this.showPerPage = ShowPerPage.TWENTY;
 
-        Language language = CRLauncher.getInstance().getLanguage();
+        LanguageSection crmmDialogSection = CRLauncher.getInstance().getLanguage().getSection("gui.searchCRMMModsDialog");
 
         JPanel topPanel = new JPanel(new GridLayout(2, 1, 0, 5));
 
+        LanguageSection navbarSection = crmmDialogSection.getSection("navbar");
+
         this.navBar = new NavBar();
-        this.navBar.addItem(language.getString(CrmmModsView.MODS_TAB));
-        this.navBar.addItem(language.getString(CrmmModsView.DATAMODS_TAB));
-        this.navBar.addItem(language.getString(CrmmModsView.RESOURCE_PACKS_TAB));
-        this.navBar.addItem(language.getString(CrmmModsView.SHADERS_TAB));
-        this.navBar.addItem(language.getString(CrmmModsView.MODPACKS_TAB));
+        this.navBar.addItem(navbarSection.getString("mods"));
+        this.navBar.addItem(navbarSection.getString("datamods"));
+        this.navBar.addItem(navbarSection.getString("resourcePacks"));
+        this.navBar.addItem(navbarSection.getString("shaders"));
+        this.navBar.addItem(navbarSection.getString("modpacks"));
         topPanel.add(this.navBar);
 
-        JPanel searchPanel = new JPanel(new BorderLayout(2, 0));
+        LanguageSection searchSection = crmmDialogSection.getSection("search");
+
+        JPanel searchPanel = new JPanel(new MigLayout("nogrid, fillx, insets 2 2 2 2", "[fill][fill][fill][fill][fill]", "[]"));
 
         this.searchField = new JTextField();
-        this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(CrmmModsView.SEARCH_MODS_PLACEHOLDER));
-        searchPanel.add(this.searchField, BorderLayout.CENTER);
 
-        LanguageSection sortBySection = language.getSection("gui.searchCRMMModsDialog.sortBy");
+        LanguageSection inputPlaceholderSection = searchSection.getSection("inputPlaceholder");
+        this.searchField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, inputPlaceholderSection.getString("searchMods"));
+        searchPanel.add(this.searchField, "grow");
+
+        LanguageSection sortBySection = searchSection.getSection("sortBy");
+        LanguageSection sortByOptions = sortBySection.getSection("options");
+
+        JLabel sortByLabel = new JLabel(searchSection.getString(sortBySection.getString("label")));
+        searchPanel.add(sortByLabel);
 
         this.searchTypeCombo = new JComboBox<>(SortBy.values());
         this.searchTypeCombo.setRenderer(new DefaultListCellRenderer() {
@@ -96,7 +99,7 @@ public class CrmmModsView extends JPanel {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
                 if (value instanceof SortBy sort && c instanceof JLabel label) {
-                    label.setText(sortBySection.getString(sort.getValue()));
+                    label.setText(sortByOptions.getString(sort.getValue()));
                 } else {
                     Log.warn("Got something unexpected: " + value.getClass() + ", " + c.getClass());
                 }
@@ -104,7 +107,31 @@ public class CrmmModsView extends JPanel {
                 return c;
             }
         });
-        searchPanel.add(this.searchTypeCombo, BorderLayout.EAST);
+        searchPanel.add(this.searchTypeCombo);
+
+        LanguageSection showPerPageSection = searchSection.getSection("showPerPage");
+        LanguageSection showPerPageOptions = showPerPageSection.getSection("options");
+
+        JLabel showPerPageLabel = new JLabel(showPerPageSection.getString("label"));
+        searchPanel.add(showPerPageLabel);
+
+        this.showPerPageCombo = new JComboBox<>(ShowPerPage.values());
+        this.showPerPageCombo.setSelectedIndex(ShowPerPage.TWENTY.ordinal());
+        this.showPerPageCombo.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+                if (value instanceof ShowPerPage s && c instanceof JLabel label) {
+                    label.setText(showPerPageOptions.getString(s.getKey()));
+                } else {
+                    Log.warn("Got something unexpected: " + value.getClass() + ", " + c.getClass());
+                }
+
+                return c;
+            }
+        });
+        searchPanel.add(this.showPerPageCombo);
 
         topPanel.add(searchPanel);
 
@@ -129,14 +156,14 @@ public class CrmmModsView extends JPanel {
         this.modpacksView = new SearchCrmmModsView(instance, modsTab, SearchType.MODPACK);
         this.modsViewsPanel.add(this.modpacksView, "4");
 
-        this.modsModsView.searchMods("", this.sortBy);
+        this.search();
 
         String[] placeHolders = {
-            language.getString(CrmmModsView.SEARCH_MODS_PLACEHOLDER),
-            language.getString(CrmmModsView.SEARCH_DATAMODS_PLACEHOLDER),
-            language.getString(CrmmModsView.SEARCH_RESOURCE_PACKS_PLACEHOLDER),
-            language.getString(CrmmModsView.SEARCH_SHADERS_PLACEHOLDER),
-            language.getString(CrmmModsView.SEARCH_MODPACKS_PLACEHOLDER),
+            inputPlaceholderSection.getString("searchMods"),
+            inputPlaceholderSection.getString("searchDatamods"),
+            inputPlaceholderSection.getString("searchResourcePacks"),
+            inputPlaceholderSection.getString("searchShaders"),
+            inputPlaceholderSection.getString("searchModpacks")
         };
 
         this.navBar.addTabListener(tab -> {
@@ -152,6 +179,16 @@ public class CrmmModsView extends JPanel {
             }
 
             this.sortBy = (SortBy) this.searchTypeCombo.getSelectedItem();
+
+            this.search();
+        });
+
+        this.showPerPageCombo.addItemListener(e -> {
+            if (e.getStateChange() != ItemEvent.SELECTED) {
+                return;
+            }
+
+            this.showPerPage = (ShowPerPage) this.showPerPageCombo.getSelectedItem();
 
             this.search();
         });
@@ -177,6 +214,8 @@ public class CrmmModsView extends JPanel {
     }
 
     private void search() {
-        ((SearchCrmmModsView) this.modsViewsPanel.getComponent(this.tab)).searchMods(this.searchField.getText(), this.sortBy);
+        ((SearchCrmmModsView) this.modsViewsPanel.getComponent(this.tab)).searchMods(
+            this.searchField.getText(), this.sortBy, this.showPerPage
+        );
     }
 }

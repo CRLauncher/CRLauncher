@@ -204,27 +204,47 @@
             "downloadButton": "Download",
             "primary": "primary",
             "otherFiles": "Other files",
-            "mods": "Mods",
-            "datamods": "Data Mods",
-            "resourcePacks": "Resource Packs",
-            "shaders": "Shaders",
-            "modpacks": "Modpacks",
-            "searchMods": "Search mods...",
-            "searchDatamods": "Search data mods...",
-            "searchResourcePacks": "Search resource packs...",
-            "searchShaders": "Search shaders...",
-            "searchModpacks": "Search modpacks...",
             "modVersionsDialogTitle": "Mod versions",
             "selectLoadersDialog": {
                 "title": "Select loaders",
                 "message": "Select loaders for the mod to install"
             },
-            "sortBy": {
-                "relevance": "Relevance",
-                "downloads": "Downloads",
-                "follow_count":  "Follow count",
-                "recently_updated": "Recently updated",
-                "recently_published":  "Recently published"
+            "navbar": {
+                "mods": "Mods",
+                "datamods": "Data Mods",
+                "resourcePacks": "Resource Packs",
+                "shaders": "Shaders",
+                "modpacks": "Modpacks"
+            },
+            "search": {
+                "inputPlaceholder": {
+                    "searchMods": "Search mods...",
+                    "searchDatamods": "Search data mods...",
+                    "searchResourcePacks": "Search resource packs...",
+                    "searchShaders": "Search shaders...",
+                    "searchModpacks": "Search modpacks..."
+                },
+                "sortBy": {
+                    "label": "Sort by",
+                    "options": {
+                        "relevance": "Relevance",
+                        "downloads": "Downloads",
+                        "follow_count": "Follow count",
+                        "recently_updated": "Recently updated",
+                        "recently_published": "Recently published"
+                    }
+                },
+                "showPerPage": {
+                    "label": "Show per page",
+                    "options": {
+                        "five": "5",
+                        "ten": "10",
+                        "fifteen": "15",
+                        "twenty": "20",
+                        "fifty": "50",
+                        "oneHundred": "100"
+                    }
+                }
             }
         },
         "addAccountDialog": {

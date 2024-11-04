@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
+import me.theentropyshard.crlauncher.crmm.filter.ShowPerPage;
 import me.theentropyshard.crlauncher.crmm.filter.SortBy;
 import me.theentropyshard.crlauncher.crmm.model.mod.CrmmMod;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
@@ -76,11 +77,11 @@ public class SearchCrmmModsView extends JPanel {
         this.modCardsPanel.revalidate();
     }
 
-    public void searchMods(String query, SortBy sortBy) {
+    public void searchMods(String query, SortBy sortBy, ShowPerPage showPerPage) {
         new Worker<List<CrmmMod>, Void>("searching mods") {
             @Override
             protected List<CrmmMod> work() {
-                return CRLauncher.getInstance().getCrmmApi().search(SearchCrmmModsView.this.searchType, sortBy, query).getMods();
+                return CRLauncher.getInstance().getCrmmApi().search(SearchCrmmModsView.this.searchType, sortBy, showPerPage, query).getMods();
             }
 
             @Override

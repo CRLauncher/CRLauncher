@@ -204,27 +204,47 @@
             "downloadButton": "Скачать",
             "primary": "основной",
             "otherFiles": "Другие файлы",
-            "mods": "Моды",
-            "datamods": "Дата-моды",
-            "resourcePacks": "Ресурс-паки",
-            "shaders": "Шейдеры",
-            "modpacks": "Модпаки",
-            "searchMods": "Найти моды...",
-            "searchDatamods": "Найти дата-моды...",
-            "searchResourcePacks": "Найти ресурс-паки...",
-            "searchShaders": "Найти шейдеры...",
-            "searchModpacks": "Найти модпаки...",
             "modVersionsDialogTitle": "Версии мода",
             "selectLoadersDialog": {
                 "title": "Выберите загрузчики",
                 "message": "Выберите загрузчики, для которых будет установлен мод"
             },
-            "sortBy": {
-                "relevance": "Релевантность",
-                "downloads": "Скачивания",
-                "follow_count":  "Фолловеры",
-                "recently_updated": "Недавно обновлённые",
-                "recently_published":  "Недавно опубликованные"
+            "navbar": {
+                "mods": "Моды",
+                "datamods": "Дата-моды",
+                "resourcePacks": "Ресурс-паки",
+                "shaders": "Шейдеры",
+                "modpacks": "Модпаки"
+            },
+            "search": {
+                "inputPlaceholder": {
+                    "searchMods": "Найти моды...",
+                    "searchDatamods": "Найти дата-моды...",
+                    "searchResourcePacks": "Найти ресурс-паки...",
+                    "searchShaders": "Найти шейдеры...",
+                    "searchModpacks": "Найти модпаки..."
+                },
+                "sortBy": {
+                    "label": "Сортировать по",
+                    "options": {
+                        "relevance": "Релевантности",
+                        "downloads": "Кол-ву скачиваний",
+                        "follow_count":  "Кол-ву фолловеров",
+                        "recently_updated": "Дате обновления",
+                        "recently_published":  "Дате публикации"
+                    }
+                },
+                "showPerPage": {
+                    "label": "На странице",
+                    "options": {
+                        "five": "5",
+                        "ten": "10",
+                        "fifteen": "15",
+                        "twenty": "20",
+                        "fifty": "50",
+                        "oneHundred": "100"
+                    }
+                }
             }
         },
         "addAccountDialog": {
