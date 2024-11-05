@@ -38,6 +38,14 @@ public abstract class Tab {
 
     public abstract void save() throws IOException;
 
+    public void shown() {
+
+    }
+
+    public void hidden() {
+
+    }
+
     public String getName() {
         return this.name;
     }

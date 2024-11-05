@@ -22,12 +22,12 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.action.InstanceExportAction;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.gamelog.GameLogTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.MainTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar.JarModsTab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.gamelog.GameLogTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java.JavaTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar.JarModsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screenshots.ScreenshotsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds.WorldsTab;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
@@ -47,6 +47,8 @@ import java.util.List;
 public class InstanceSettingsDialog extends AppDialog {
     private final JTabbedPane tabbedPane;
     private final List<Tab> tabs;
+
+    private int lastSelectedTab = 0;
 
     public InstanceSettingsDialog(Instance instance) {
         super(CRLauncher.frame,
@@ -78,16 +80,31 @@ public class InstanceSettingsDialog extends AppDialog {
         this.addTab(new ScreenshotsTab(instance, this.getDialog()));
         this.addTab(new GameLogTab(instance, this.getDialog()));
 
+        this.tabbedPane.addChangeListener(e -> {
+            int index = this.tabbedPane.getSelectedIndex();
+
+            if (index == -1) {
+                return;
+            }
+
+            this.tabs.get(this.lastSelectedTab).hidden();
+            this.tabs.get(index).shown();
+
+            this.lastSelectedTab = index;
+        });
+
+        this.tabs.get(0).shown();
+
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                InstanceSettingsDialog.this.tabs.forEach(tab -> {
+                for (Tab tab : InstanceSettingsDialog.this.tabs) {
                     try {
                         tab.save();
                     } catch (IOException ex) {
                         Log.error("Error saving tab", ex);
                     }
-                });
+                }
 
                 InstancesPanel instancesPanel = CRLauncher.getInstance().getGui().getPlayView().getCurrentInstancesPanel();
                 JPanel itemsPanel = instancesPanel.getInstancesPanel();

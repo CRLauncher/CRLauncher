@@ -78,9 +78,21 @@
                     "borderName": "Версия Cosmic Reach",
                     "autoUpdateToLatest": "Автоматически обновлять до последней версии"
                 },
-                "otherSettings": {
-                    "borderName": "Другое",
-                    "textFieldPlaceholder": "Впишите кастомное название окна Cosmic Reach"
+                "windowSettings": {
+                    "borderName": "Окно",
+                    "customTitle": {
+                        "label": "Кастомное название",
+                        "textFieldPlaceholder": "Введите кастомное название окна Cosmic Reach"
+                    },
+                    "startup": {
+                        "fullscreen": "Полный экран",
+                        "maximized": "Полный экран (оконный режим)",
+                        "customSize": {
+                            "radioButton": "Кастомный размер",
+                            "width": "Ширина",
+                            "height": "Высота"
+                        }
+                    }
                 }
             },
             "javaTab": {

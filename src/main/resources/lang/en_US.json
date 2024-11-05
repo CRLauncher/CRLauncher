@@ -78,9 +78,21 @@
                     "borderName": "Cosmic Reach version",
                     "autoUpdateToLatest": "Automatically update to the latest version"
                 },
-                "otherSettings": {
-                    "borderName": "Other",
-                    "textFieldPlaceholder": "Set custom window title here"
+                "windowSettings": {
+                    "borderName": "Window",
+                    "customTitle": {
+                        "label": "Custom title",
+                        "textFieldPlaceholder": "Type custom window title here"
+                    },
+                    "startup": {
+                        "fullscreen": "Fullscreen",
+                        "maximized": "Maximized",
+                        "customSize": {
+                            "radioButton": "Custom Size",
+                            "width": "Width",
+                            "height": "Height"
+                        }
+                    }
                 }
             },
             "javaTab": {

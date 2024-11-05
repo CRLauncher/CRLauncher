@@ -20,22 +20,22 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
-import me.theentropyshard.crlauncher.gui.utils.MessageBox;
-import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
-import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.gui.utils.*;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.language.Language;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import javax.swing.text.AbstractDocument;
 import java.awt.*;
-import java.awt.event.ItemEvent;
+import java.awt.event.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -46,6 +46,8 @@ public class MainTab extends Tab {
     private final JComboBox<Version> versionsCombo;
     private final JTextField windowTitleField;
     private final String oldWindowTitle;
+    private final JTextField widthField;
+    private final JTextField heightField;
 
     private List<Version> versions;
     private Version previousValue;
@@ -139,21 +141,127 @@ public class MainTab extends Tab {
         {
             this.oldWindowTitle = instance.getCustomWindowTitle();
 
-            this.windowTitleField = new JTextField(instance.getCustomWindowTitle());
-            this.windowTitleField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT,
-                language.getString("gui.instanceSettingsDialog.mainTab.otherSettings.textFieldPlaceholder"));
+            LanguageSection section = language.getSection("gui.instanceSettingsDialog.mainTab.windowSettings");
 
-            JPanel otherSettings = new JPanel(new GridLayout(1, 1));
-            otherSettings.setBorder(new TitledBorder(
-                language.getString("gui.instanceSettingsDialog.mainTab.otherSettings.borderName")
+            JPanel windowSettings = new JPanel(new GridLayout(6, 2));
+            windowSettings.setBorder(new TitledBorder(section.getString("borderName")));
+
+            JLabel windowTitleLabel = new JLabel(section.getString("customTitle.label") + ": ");
+            windowSettings.add(windowTitleLabel);
+
+            this.windowTitleField = new JTextField(this.oldWindowTitle);
+            this.windowTitleField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, section.getString("customTitle.textFieldPlaceholder"));
+
+            windowSettings.add(this.windowTitleField);
+
+            ButtonGroup buttonGroup = new ButtonGroup();
+
+            JRadioButton startFullScreen = new JRadioButton("Fullscreen");
+            windowSettings.add(startFullScreen);
+            windowSettings.add(Box.createHorizontalGlue());
+
+            JRadioButton startMaximized = new JRadioButton("Maximized");
+            windowSettings.add(startMaximized);
+            windowSettings.add(Box.createHorizontalGlue());
+
+            JRadioButton customSize = new JRadioButton("Custom Size");
+            windowSettings.add(customSize);
+            windowSettings.add(Box.createHorizontalGlue());
+
+            JLabel widthLabel = new JLabel("Width: ");
+            windowSettings.add(widthLabel);
+
+            this.widthField = new JTextField(String.valueOf(
+                instance.getCosmicWindowWidth() <= 0 ? 1024 : instance.getCosmicWindowWidth()
             ));
+            this.widthField.getDocument().addDocumentListener(new SimpleDocumentListener(() -> {
+                String text = this.widthField.getText();
 
-            otherSettings.add(this.windowTitleField);
+                if (text.trim().isEmpty()) {
+                    return;
+                }
+
+                this.widthField.putClientProperty(FlatClientProperties.OUTLINE, null);
+                instance.setCosmicWindowWidth(Integer.parseInt(text));
+            }));
+            ((AbstractDocument) this.widthField.getDocument()).setDocumentFilter(new IntegerDocumentFilter(wrongInput -> {}, true));
+            windowSettings.add(this.widthField);
+
+            JLabel heightLabel = new JLabel("Height: ");
+            windowSettings.add(heightLabel);
+
+            this.heightField = new JTextField(String.valueOf(
+                instance.getCosmicWindowHeight() <= 0 ? 576 : instance.getCosmicWindowHeight()
+            ));
+            this.heightField.getDocument().addDocumentListener(new SimpleDocumentListener(() -> {
+                String text = this.heightField.getText();
+
+                if (text.trim().isEmpty()) {
+                    return;
+                }
+
+                this.heightField.putClientProperty(FlatClientProperties.OUTLINE, null);
+                instance.setCosmicWindowHeight(Integer.parseInt(text));
+            }));
+            ((AbstractDocument) this.heightField.getDocument()).setDocumentFilter(new IntegerDocumentFilter(wrongInput -> {}, true));
+            windowSettings.add(this.heightField);
+
+            buttonGroup.add(startFullScreen);
+            buttonGroup.add(startMaximized);
+            buttonGroup.add(customSize);
+
+            startFullScreen.addActionListener(e -> {
+                this.toggleFields(false);
+                instance.setFullscreen(true);
+                instance.setMaximized(false);
+            });
+            startFullScreen.setSelected(instance.isFullscreen());
+
+            startMaximized.addActionListener(e -> {
+                this.toggleFields(false);
+                instance.setFullscreen(false);
+                instance.setMaximized(true);
+            });
+            startMaximized.setSelected(instance.isMaximized());
+
+            customSize.addActionListener(e -> {
+                this.toggleFields(true);
+                instance.setFullscreen(false);
+                instance.setMaximized(false);
+            });
+
+            boolean currentlySelected = !instance.isFullscreen() && !instance.isMaximized();
+            this.toggleFields(currentlySelected);
+            customSize.setSelected(currentlySelected);
 
             gbc.gridy++;
             gbc.weighty = 1;
-            root.add(otherSettings, gbc);
+            root.add(windowSettings, gbc);
         }
+
+        this.getDialog().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                boolean widthEmpty = false;
+                boolean heightEmpty = false;
+
+                if (MainTab.this.widthField.getText().trim().isEmpty()) {
+                    MainTab.this.widthField.putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
+                    widthEmpty = true;
+                }
+
+                if (MainTab.this.heightField.getText().trim().isEmpty()) {
+                    MainTab.this.heightField.putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
+                    heightEmpty = true;
+                }
+
+                if (widthEmpty || heightEmpty) {
+                    return;
+                }
+
+                MainTab.this.getDialog().dispose();
+            }
+        });
 
         new Worker<List<Version>, Void>("getting remote versions") {
             @Override
@@ -209,6 +317,21 @@ public class MainTab extends Tab {
                 }
             }
         }.execute();
+    }
+
+    private void toggleFields(boolean enabled) {
+        this.widthField.setEnabled(enabled);
+        this.heightField.setEnabled(enabled);
+    }
+
+    @Override
+    public void shown() {
+        this.getDialog().setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+    }
+
+    @Override
+    public void hidden() {
+        this.getDialog().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
     @Override

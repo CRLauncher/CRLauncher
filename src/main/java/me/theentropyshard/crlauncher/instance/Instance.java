@@ -63,8 +63,10 @@ public class Instance {
     private String cosmicVersion;
     private String javaPath;
     private String iconFileName = "/assets/images/icons/cosmic_logo_x32.png";
-    private int cosmicWindowWidth;
-    private int cosmicWindowHeight;
+    private boolean fullscreen;
+    private boolean maximized;
+    private int cosmicWindowWidth = 1024;
+    private int cosmicWindowHeight = 576;
     private String customWindowTitle;
     private int minimumMemoryInMegabytes = 512;
     private int maximumMemoryInMegabytes = 2048;
@@ -364,6 +366,22 @@ public class Instance {
 
     public void setIconFileName(String iconFileName) {
         this.iconFileName = iconFileName;
+    }
+
+    public boolean isFullscreen() {
+        return this.fullscreen;
+    }
+
+    public void setFullscreen(boolean fullscreen) {
+        this.fullscreen = fullscreen;
+    }
+
+    public boolean isMaximized() {
+        return this.maximized;
+    }
+
+    public void setMaximized(boolean maximized) {
+        this.maximized = maximized;
     }
 
     public int getCosmicWindowWidth() {
