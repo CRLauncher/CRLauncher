@@ -156,19 +156,19 @@ public class MainTab extends Tab {
 
             ButtonGroup buttonGroup = new ButtonGroup();
 
-            JRadioButton startFullScreen = new JRadioButton("Fullscreen");
+            JRadioButton startFullScreen = new JRadioButton(section.getString("startup.fullscreen"));
             windowSettings.add(startFullScreen);
             windowSettings.add(Box.createHorizontalGlue());
 
-            JRadioButton startMaximized = new JRadioButton("Maximized");
+            JRadioButton startMaximized = new JRadioButton(section.getString("startup.maximized"));
             windowSettings.add(startMaximized);
             windowSettings.add(Box.createHorizontalGlue());
 
-            JRadioButton customSize = new JRadioButton("Custom Size");
+            JRadioButton customSize = new JRadioButton(section.getString("startup.customSize.radioButton"));
             windowSettings.add(customSize);
             windowSettings.add(Box.createHorizontalGlue());
 
-            JLabel widthLabel = new JLabel("Width: ");
+            JLabel widthLabel = new JLabel(section.getString("startup.customSize.width") + ": ");
             windowSettings.add(widthLabel);
 
             this.widthField = new JTextField(String.valueOf(
@@ -187,7 +187,7 @@ public class MainTab extends Tab {
             ((AbstractDocument) this.widthField.getDocument()).setDocumentFilter(new IntegerDocumentFilter(wrongInput -> {}, true));
             windowSettings.add(this.widthField);
 
-            JLabel heightLabel = new JLabel("Height: ");
+            JLabel heightLabel = new JLabel(section.getString("startup.customSize.height") + ": ");
             windowSettings.add(heightLabel);
 
             this.heightField = new JTextField(String.valueOf(
