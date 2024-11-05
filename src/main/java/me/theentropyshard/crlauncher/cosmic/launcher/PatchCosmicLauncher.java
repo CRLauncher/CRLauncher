@@ -43,6 +43,10 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
     private String offlineUsername;
     private boolean appendUsername;
     private boolean patchOfflineAccount;
+    private boolean fullscreen;
+    private boolean maximized;
+    private int windowWidth;
+    private int windowHeight;
 
     public PatchCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
         super(javaPath, runDir, gameFilesLocation, clientPath);
@@ -125,6 +129,15 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
             this.defineProperty(new SystemProperty("crloader.appendUsername", true));
         }
 
+        if (this.isFullscreen()) {
+            this.defineProperty(new SystemProperty("crloader.windowFullscreen", true));
+        } else if (this.isMaximized()) {
+            this.defineProperty(new SystemProperty("crloader.windowMaximized", true));
+        } else {
+            this.defineProperty(new SystemProperty("crloader.windowWidth", this.windowWidth));
+            this.defineProperty(new SystemProperty("crloader.windowHeight", this.windowHeight));
+        }
+
         super.buildCommand(command);
 
         command.add("-javaagent:" + this.setupLoader());
@@ -160,5 +173,37 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
 
     public void setPatchOfflineAccount(boolean patchOfflineAccount) {
         this.patchOfflineAccount = patchOfflineAccount;
+    }
+
+    public boolean isFullscreen() {
+        return this.fullscreen;
+    }
+
+    public void setFullscreen(boolean fullscreen) {
+        this.fullscreen = fullscreen;
+    }
+
+    public boolean isMaximized() {
+        return this.maximized;
+    }
+
+    public void setMaximized(boolean maximized) {
+        this.maximized = maximized;
+    }
+
+    public int getWindowWidth() {
+        return this.windowWidth;
+    }
+
+    public void setWindowWidth(int windowWidth) {
+        this.windowWidth = windowWidth;
+    }
+
+    public int getWindowHeight() {
+        return this.windowHeight;
+    }
+
+    public void setWindowHeight(int windowHeight) {
+        this.windowHeight = windowHeight;
     }
 }

@@ -203,6 +203,15 @@ public class CosmicRunner extends Thread {
                     patchLauncher.putEnvironment(CosmicRunner.ITCH_IO_API_KEY_ENV_KEY, itch.getItchIoApiKey());
                 }
 
+                if (this.instance.isFullscreen()) {
+                    patchLauncher.setFullscreen(true);
+                } else if (this.instance.isMaximized()) {
+                    patchLauncher.setMaximized(true);
+                } else {
+                    patchLauncher.setWindowWidth(this.instance.getCosmicWindowWidth());
+                    patchLauncher.setWindowHeight(this.instance.getCosmicWindowHeight());
+                }
+
                 int currentFlagsOption = this.instance.getCurrentFlagsOption();
 
                 if (currentFlagsOption == 0) {
