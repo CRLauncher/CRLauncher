@@ -133,28 +133,28 @@ public class ModCard extends JPanel {
         JPanel downloadsFollowersPanel = new JPanel(new GridLayout(2, 1));
         downloadsFollowersPanel.setOpaque(false);
 
-        int downloads = Integer.parseInt(modInfo.getDownloads());
+        int downloadsLastDigit = Integer.parseInt(modInfo.getDownloads()) % 10;
         String downloadsText;
-        if (downloads == 1) {
-            downloadsText = downloads + " " + language.getString("gui.searchCRMMModsDialog.download1");
-        } else if (downloads == 2 || downloads == 3 || downloads == 4) {
-            downloadsText = downloads + " " + language.getString("gui.searchCRMMModsDialog.downloads234");
+        if (downloadsLastDigit == 1) {
+            downloadsText = downloadsLastDigit + " " + language.getString("gui.searchCRMMModsDialog.download1");
+        } else if (downloadsLastDigit == 2 || downloadsLastDigit == 3 || downloadsLastDigit == 4) {
+            downloadsText = downloadsLastDigit + " " + language.getString("gui.searchCRMMModsDialog.downloads234");
         } else {
-            downloadsText = downloads + " " + language.getString("gui.searchCRMMModsDialog.downloads");
+            downloadsText = downloadsLastDigit + " " + language.getString("gui.searchCRMMModsDialog.downloads");
         }
         JLabel downloadsLabel = new JLabel(downloadsText);
         downloadsLabel.setFont(downloadsLabel.getFont().deriveFont(14.0f));
         downloadsLabel.setHorizontalAlignment(JLabel.RIGHT);
         downloadsFollowersPanel.add(downloadsLabel);
 
-        int followers = Integer.parseInt(modInfo.getFollowers());
+        int followersLastDigit = Integer.parseInt(modInfo.getFollowers()) % 10;
         String followersText;
-        if (followers == 1) {
-            followersText = followers + " " + language.getString("gui.searchCRMMModsDialog.follower1");
-        } else if (followers == 2 || followers == 3 || followers == 4) {
-            followersText = followers + " " + language.getString("gui.searchCRMMModsDialog.followers234");
+        if (followersLastDigit == 1) {
+            followersText = followersLastDigit + " " + language.getString("gui.searchCRMMModsDialog.follower1");
+        } else if (followersLastDigit == 2 || followersLastDigit == 3 || followersLastDigit == 4) {
+            followersText = followersLastDigit + " " + language.getString("gui.searchCRMMModsDialog.followers234");
         } else {
-            followersText = followers + " " + language.getString("gui.searchCRMMModsDialog.followers");
+            followersText = followersLastDigit + " " + language.getString("gui.searchCRMMModsDialog.followers");
         }
         JLabel followersLabel = new JLabel(followersText);
         followersLabel.setFont(followersLabel.getFont().deriveFont(14.0f));
