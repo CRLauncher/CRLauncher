@@ -56,6 +56,11 @@ public final class FileUtils {
     public static boolean isPathInvalid(String path) {
         try {
             Path file = Paths.get(path).toAbsolutePath();
+
+            if (Files.exists(file)) {
+                return false;
+            }
+
             FileUtils.createFileIfNotExists(file);
             FileUtils.delete(file);
         } catch (InvalidPathException | IOException e) {
