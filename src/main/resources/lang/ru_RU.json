@@ -336,11 +336,11 @@
             "storageSettings": {
                 "borderName": "Хранилище",
                 "versionsPathLabel": "Путь к папке с версиями",
-                "versionsPathFieldPlaceholder": "<launcher folder>/cosmic-reach/versions",
+                "versionsPathFieldPlaceholder": "<папка лаунчера>/cosmic-reach/versions",
                 "instancesPathLabel": "Путь к папке с инстансами",
-                "instancesPathFieldPlaceholder": "<launcher folder>/cosmic-reach/instances",
+                "instancesPathFieldPlaceholder": "<папка лаунчера>/cosmic-reach/instances",
                 "modLoadersPathLabel": "Путь к папке с загрузчиками модов",
-                "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach",
+                "modLoadersPathFieldPlaceholder": "<папка лаунчера>/cosmic-reach/modloaders",
                 "tip": "Не забудьте нажать ENTER, чтобы сохранить путь. Изменения будут применены после перезапуска"
             },
             "other": {
