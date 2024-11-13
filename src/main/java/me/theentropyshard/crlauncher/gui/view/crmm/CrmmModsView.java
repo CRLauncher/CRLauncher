@@ -89,7 +89,7 @@ public class CrmmModsView extends JPanel {
         LanguageSection sortBySection = searchSection.getSection("sortBy");
         LanguageSection sortByOptions = sortBySection.getSection("options");
 
-        JLabel sortByLabel = new JLabel(searchSection.getString(sortBySection.getString("label")));
+        JLabel sortByLabel = new JLabel(sortBySection.getString("label"));
         searchPanel.add(sortByLabel);
 
         this.searchTypeCombo = new JComboBox<>(SortBy.values());
