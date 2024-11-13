@@ -279,7 +279,7 @@ public class ModCard extends JPanel {
                 String iconUrl = modInfo.getIconUrl();
 
                 if (iconUrl == null) {
-                    return ModNoIcon.INSTANCE;
+                    return ModNoIcon.getInstance();
                 }
 
                 Request request = new Request.Builder()
@@ -317,7 +317,7 @@ public class ModCard extends JPanel {
                 }
 
                 if (icon == null) {
-                    icon = ModNoIcon.INSTANCE;
+                    icon = ModNoIcon.getInstance();
                 }
 
                 ModCard.this.iconLabel.setIcon(icon);
