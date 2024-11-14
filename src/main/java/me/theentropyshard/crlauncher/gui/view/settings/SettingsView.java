@@ -386,11 +386,11 @@ public class SettingsView extends JPanel {
 
             this.checkUpdatesNowButton = new JButton(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
             this.checkUpdatesNowButton.addActionListener(e -> {
-                this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECKING_UPDATES));
+                this.checkUpdatesNowButton.setText(CRLauncher.getInstance().getLanguage().getString(SettingsView.CHECKING_UPDATES));
 
                 new Worker<Void, Void>("checking for updates") {
                     @Override
-                    protected Void work() throws Exception {
+                    protected Void work() {
                         CRLauncher.checkForUpdates(true);
 
                         return null;
@@ -398,7 +398,9 @@ public class SettingsView extends JPanel {
 
                     @Override
                     protected void done() {
-                        SettingsView.this.checkUpdatesNowButton.setText(language.getString(SettingsView.CHECK_UPDATES_NOW_BUTTON));
+                        SettingsView.this.checkUpdatesNowButton.setText(
+                            CRLauncher.getInstance().getLanguage().getString(SettingsView.CHECK_UPDATES_NOW_BUTTON)
+                        );
                     }
                 }.execute();
             });
