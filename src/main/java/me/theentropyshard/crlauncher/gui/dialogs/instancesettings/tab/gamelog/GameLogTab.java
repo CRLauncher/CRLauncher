@@ -19,9 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.gamelog;
 
 import com.formdev.flatlaf.ui.FlatScrollPaneBorder;
-import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.BrowseHyperlinkListener;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
@@ -31,6 +29,7 @@ import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.mclogs.McLogsApi;
@@ -38,6 +37,8 @@ import me.theentropyshard.crlauncher.mclogs.model.LimitsResponse;
 import me.theentropyshard.crlauncher.mclogs.model.PasteResponse;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
+import me.theentropyshard.crlauncher.utils.Pair;
+import me.theentropyshard.crlauncher.utils.TextSearch;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -50,14 +51,21 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameLogTab extends Tab {
-
     private final JTextPane logArea;
     private final JButton uploadButton;
     private final JButton copyFileButton;
     private final JButton copyTextButton;
     private final JButton clearButton;
+
+    private String lastWordSearched;
+    private List<Pair<Integer, Integer>> searchIndices;
+    private int searchPairIndex;
 
     public GameLogTab(Instance instance, JDialog dialog) {
         super(CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.gameLogTab.name"), instance, dialog);
@@ -69,7 +77,6 @@ public class GameLogTab extends Tab {
         root.setBorder(new EmptyBorder(3, 3, 3, 3));
         root.setLayout(new BorderLayout());
 
-        // TODO: make search actually work
         JPanel topSearchPanel = new JPanel(new BorderLayout());
         topSearchPanel.setBorder(new EmptyBorder(0, 4, 3, 4));
 
@@ -81,31 +88,39 @@ public class GameLogTab extends Tab {
 
         JButton searchButton = new JButton(section.getString("find"));
         searchButton.addActionListener(e -> {
-            new Worker<Void, Void>("searching text") {
-                @Override
-                protected Void work() throws Exception {
-                    // TODO: improve text search
+            String searchText = searchField.getText();
 
-                    String text = searchField.getText();
-                    String areaText = GameLogTab.this.logArea.getText();
-                    int index = areaText.indexOf(text);
+            if (searchText.equals(this.lastWordSearched)) {
+                this.performSearch();
+            } else {
+                this.lastWordSearched = searchText;
+                this.searchPairIndex = 0;
 
-                    if (index == -1) {
-                        return null;
+                new Worker<List<Pair<Integer, Integer>>, Void>("searching text") {
+                    @Override
+                    protected List<Pair<Integer, Integer>> work() throws Exception {
+                        String areaText = GameLogTab.this.logArea.getText();
+                        String searchText = searchField.getText();
+
+                        TextSearch textSearch = TextSearch.create();
+
+                        return textSearch.findOccurrences(areaText, searchText);
                     }
 
-                    int line = GameLogTab.findLine(areaText, index);
-                    int i = index - line + 1;
+                    @Override
+                    protected void done() {
+                        try {
+                            GameLogTab.this.searchIndices = this.get();
+                        } catch (InterruptedException | ExecutionException ex) {
+                            Log.error("Unexpected error", ex);
 
-                    SwingUtilities.invokeLater(() -> {
-                        GameLogTab.this.logArea.requestFocus();
-                        GameLogTab.this.logArea.select(i, i + text.length());
-                        GameLogTab.this.logArea.repaint();
-                    });
+                            return;
+                        }
 
-                    return null;
-                }
-            }.execute();
+                        GameLogTab.this.performSearch();
+                    }
+                }.execute();
+            }
         });
         topSearchPanel.add(searchButton, BorderLayout.EAST);
 
@@ -236,6 +251,16 @@ public class GameLogTab extends Tab {
         new GameLogLoader(this).execute();
     }
 
+    private void performSearch() {
+        if (this.searchIndices != null && this.searchIndices.size() != 0) {
+            int pairIndex = (this.searchPairIndex++) % this.searchIndices.size();
+            Pair<Integer, Integer> indices = this.searchIndices.get(pairIndex);
+            GameLogTab.this.logArea.requestFocus();
+            GameLogTab.this.logArea.select(indices.getLeft(), indices.getRight());
+            GameLogTab.this.logArea.repaint();
+        }
+    }
+
     public void appendLine(String line) {
         Document doc = this.logArea.getDocument();
 
@@ -256,19 +281,5 @@ public class GameLogTab extends Tab {
     @Override
     public void save() throws IOException {
 
-    }
-
-    public static int findLine(String text, int index) {
-        String[] lines = text.split("\n");
-        int charCount = 0;
-
-        for (int lineNumber = 0; lineNumber < lines.length; lineNumber++) {
-            charCount += lines[lineNumber].length() + 1; // Add line length and 1 for the newline character
-            if (charCount > index) {
-                return lineNumber + 1; // Return the line number (1-based index)
-            }
-        }
-
-        return -1;
     }
 }
