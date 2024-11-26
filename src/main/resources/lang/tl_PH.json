@@ -8,37 +8,39 @@
             "error": "Kamalian",
             "addAccountDialog": {
                 "offline": {
-                    "enterUsername": "Maglagay ng pangalan ng gagamit"
+                    "enterUsername": "Maglagay ng ngalan ng gagamit"
                 },
                 "itch": {
-                    "apiKeyCannotBeEmpty": "Hindi maaaring walang laman ang susi ng API"
+                    "apiKeyCannotBeEmpty": "Hindi maaaring walang laman ang susi ng Pook Ugnayan sa Pagpapalagawaan ng Paglalapat"
                 }
             },
             "accountDelete": {
-                "error": "Hindi maalis ang akawnt na '$$ACCOUNT_NAME$$'"
+                "error": "Hindi maalis ang tuos ng gagamit na '$$ACCOUNT_NAME$$'"
             },
             "playView": {
-                "deleteInstanceConfirm": "Tiyak ka ba sa pagtanggal ng instansiyang '$$INSTANCE_NAME$$'?",
-                "cannotDeleteInstance": "Could not delete $$INSTANCE_DIR$$",
+                "deleteInstanceConfirm": "Tiyak ka ba sa pagbura ng pagkakataong '$$INSTANCE_NAME$$'?",
+                "cannotDeleteInstance": "Hindi mabura ang $$INSTANCE_DIR$$",
                 "invalidInstanceName": "Isang di-wastong pangalan ang ibinigay! Nakalikha ng wastong pangalan."
             },
             "addInstanceDialog": {
-                "instanceNameCannotBeEmpty": "Hindi maaring walang laman ang pangalan ng instansiya!",
-                "groupNameCannotBeEmpty": "Hindi maaring walang laman ang pangalan ng grupo!",
-                "cosmicVersionNotSelected": "Hindi nakapili ng bersyon ng Cosmic Reach!",
-                "unableToCreateInstance": "Hindi makalikha ng bagong instansiya"
+                "instanceNameCannotBeEmpty": "Hindi maaring walang laman ang ngalan ng pagkakataon!",
+                "groupNameCannotBeEmpty": "Hindi maaring walang laman ang ngalan ng lipon!",
+                "cosmicVersionNotSelected": "Hindi nakapili ng banyuri ng Cosmic Reach!",
+                "unableToCreateInstance": "Hindi makalikha ng bagong pagkakataon",
+                "doesNotHaveClient": "Walang kliyente ang banyuring $$CR_VERSION$$"
             },
             "instanceSettingsDialog": {
-                "couldNotLoadVersions": "Hindi makakuha ng mga bersyon",
-                "ramMinCannotBeLargerMax": "Hindi maaaring maaring humigit ang pinakamababang bilang ng RAM sa pinakamataas",
-                "ramMinCannotBeLess512MB": "Hindi maaaring maaring kumulang ang pinakamababang bilang ng RAM sa bilang na 512 MiB",
-                "deleteWorldSure": "Tiyak ka ba sa pagbubura ng mundong '$$WORLD_NAME$$'?",
-                "couldNotDeleteWorld": "Hindi mabura ang mundong '$$WORLD_NAME$$' located at $$WORLD_DIR$$"
+                "couldNotLoadVersions": "Hindi makuha ang mga banyuri",
+                "ramMinCannotBeLargerMax": "Hindi maaaring humigit ang kubduling alaalang alisagang kuha sa higdulan",
+                "ramMinCannotBeLess512MB": "Hindi maaaring kumulang ang kubduling alaalang alisagang kuha sa bilang na 512 MiB",
+                "deleteWorldSure": "Tiyak ka ba sa pagbura ng daigdig na '$$WORLD_NAME$$'?",
+                "couldNotDeleteWorld": "Hindi mabura ang daigdig na '$$WORLD_NAME$$' na nakalagay sa $$WORLD_DIR$$",
+                "couldNotUpdateMod": "Hindi mabago ang pagbabagong $$MOD_LOADER$$ '$$MOD_ID$$"
             },
             "mods": {
-                "modAddedName": "Naidagdag na ang mod na nagngangalang '$$MOD_NAME$$'!",
-                "modAddedId": "Naidagdag na ang mod na may id na '$$MOD_ID$$'!",
-                "modInvalid": "Isang di-wastong $$MOD_LOADER$$ mod ang $$MOD_PATH$$!"
+                "modAddedName": "Naidagdag na ang pagbabagong nagngangalang '$$MOD_NAME$$'!",
+                "modAddedId": "Naidagdag na ang pagbabagong may aydentipikasyong '$$MOD_ID$$'!",
+                "modInvalid": "Isang di-wastong pagbabagong $$MOD_LOADER$$ ang $$MOD_PATH$$!"
             }
         }
     },
@@ -48,54 +50,69 @@
                 "edit": "Baguhin",
                 "icon": "Ikono",
                 "rename": "Palit-ngalan",
-                "delete": "Tanggalin",
-                "openInstanceFolder": "Buksan ang paniklop ng instansiya",
-                "openCosmicFolder": "Buksan ang paniklop ng Cosmic"
+                "delete": "Burahin",
+                "openInstanceFolder": "Buksan ang ligpitan ng pagkakataon",
+                "openCosmicFolder": "Buksan ang ligpitang Cosmic",
+                "killProcess": "Patayin ang inilunsad"
             }
         },
         "modFilesDialog": {
             "name": "Pangalan",
-            "compatibility": "Kombatibilidad",
-            "datePublished": "Petsang pinublish",
-            "downloads": "Mga babang-karga"
+            "compatibility": "Pagkakatugma",
+            "datePublished": "Taburaw ng paglathala",
+            "downloads": "Dalaiba"
         },
         "instanceSettingsDialog": {
-            "title": "Pagsasaayos ng Instansiya - $$INSTANCE_NAME$$",
+            "title": "Pagsasaayos ng Pagkakataon - $$INSTANCE_NAME$$",
             "exportInstance": {
                 "exportButton": "Iluwas",
-                "crliFiles": "CRLauncher instance file (*.crli)",
-                "title": "Pagluwas ng instansiya",
-                "success": "Matagumpay na nailuwas ang instansiya!",
-                "failure": "Hindi mailuwas ang instansiya",
-                "wrongExtension": "Iluluwas na file ay dapat nagtatapos sa .crli"
+                "crliFiles": "Ligpit na Pagkakataong CRLauncher (*.crli)",
+                "title": "Pagluwas ng pagkakataon",
+                "success": "Matagumpay na nailuwas ang pagkakataon!",
+                "failure": "Hindi mailuwas ang pagkakataon",
+                "wrongExtension": "Dapat nagtatapos sa .crli ang iluluwas na ligpit"
             },
             "mainTab": {
-                "name": "Main",
+                "name": "Pangunahin",
                 "cosmicReachVersion": {
-                    "borderName": "Bersyon ng Cosmic Reach",
-                    "autoUpdateToLatest": "Kusang magpapalit sa pinakabagong bersyon ng Cosmic Reach"
+                    "borderName": "Banyuri ng Cosmic Reach",
+                    "autoUpdateToLatest": "Sarimong pagpapalit sa pinakabagong banyuri"
                 },
-                "otherSettings": {
-                    "borderName": "Iba pa",
-                    "textFieldPlaceholder": "Baguhin ang pamagat ng bintana"
+                "windowSettings": {
+                    "borderName": "Bintana",
+                    "customTitle": {
+                        "label": "Kaugaliang pamagat",
+                        "textFieldPlaceholder": "Dito ang uri ng kaugaliang pamagat ng bintana"
+                    },
+                    "startup": {
+                        "fullscreen": "Buongtabing",
+                        "maximized": "Pasukdol",
+                        "customSize": {
+                            "radioButton": "Kaugaliang Sukat",
+                            "width": "Lapad",
+                            "height": "Taas"
+                        }
+                    }
                 }
             },
             "javaTab": {
                 "name": "Java",
                 "javaInstallation": {
-                    "borderName": "Instalasyon ng Java",
-                    "textFieldPlaceholder": "Landas patungo sa javaw.exe"
+                    "borderName": "Lagayan ng Java",
+                    "textFieldPlaceholder": "Landas patungong javaw.exe",
+                    "current": "$$CURRENT_INSTALLATION$$ (Kasalukuyan)",
+                    "browse": "Maghanap ng landas..."
                 },
                 "memorySettings": {
-                    "borderName": "Pagsasaayos ng Memorya",
-                    "minimum": "Pinakamababang memorya (Megabito)",
-                    "maximum": "Pinakamataas na memorya (Megabito)"
+                    "borderName": "Pagsasaayos ng Alaala",
+                    "minimum": "Kubduling alaala (Dakbyte)",
+                    "maximum": "Higduling alaala (Dakbyte)"
                 }
             },
             "modsTab": {
-                "name": "Mga Mod",
+                "name": "Pagbabago",
                 "modLoader": {
-                    "borderName": "Mod loader",
+                    "borderName": "Mangdadala ng pagbabago",
                     "options": {
                         "vanilla": "Vanilla",
                         "fabric": "Fabric",
@@ -104,44 +121,54 @@
                     }
                 },
                 "loaderVersion": {
-                    "borderName": "Bersyon ng loader"
+                    "borderName": "Banyuri ng mangdadala"
                 },
+                "modpack": "Balot ng Pagbabago",
+                "customModpack": "Kaugalian",
                 "modsTable": {
-                    "borderName": "Mga Mod",
+                    "borderName": "Pagbabago",
                     "vanilla": {
-                        "modFolder": "Polder ng mod",
-                        "deleteModButton": "Tanggalin ang data mod"
+                        "modFolder": "Ligpitan ng pagbabago",
+                        "addModButton": "Dumagdag ng pagbabagong data",
+                        "deleteModButton": "Tanggalin ang pagbabagong data"
                     },
                     "fabric": {
                         "modName": "Pangalan",
-                        "modVersion": "Bersyon",
+                        "modVersion": "Banyuri",
                         "modDescription": "Paglalarawan",
-                        "modActive": "Aktibo",
-                        "addModButton": "Dumagdag ng Fabric mod",
-                        "deleteModButton": "Tanggalin ang Fabric mod"
+                        "modActive": "Mabilos",
+                        "addModButton": "Dumagdag ng pagbabagong Fabric",
+                        "deleteModButton": "Tanggalin ang pagbabagong Fabric"
                     },
                     "cosmicQuilt": {
                         "modName": "Pangalan",
-                        "modVersion": "Bersyon",
+                        "modVersion": "Banyuri",
                         "modDescription": "Paglalarawan",
-                        "modActive": "Aktibo",
-                        "addModButton": "Dumagdag ng Quilt mod",
-                        "deleteModButton": "Tanggalin ang Quilt mod"
+                        "modActive": "Mabilos",
+                        "addModButton": "Dumagdag ng pagbabagong Quilt",
+                        "deleteModButton": "Tanggalin ang pagbabagong Quilt"
                     },
                     "puzzle": {
                         "modName": "Pangalan",
-                        "modVersion": "Bersyon",
+                        "modVersion": "Banyuri",
                         "modDescription": "Paglalarawan",
-                        "modActive": "Aktibo",
-                        "addModButton": "Dumagdag ng Puzzle mod",
-                        "deleteModButton": "Tanggalin ang Puzzle mod"
+                        "modActive": "Mabilos",
+                        "addModButton": "Dumagdag ng pagbabagong Puzzle",
+                        "deleteModButton": "Tanggalin ang pagbabagong Puzzle"
                     }
                 },
-                "openModsFolder": "Buksan ang paniklop ng mga mod",
-                "searchModsCRMM": "Maghanap ng mga mod sa CRMM"
+                "openModsFolder": "Buksan ang ligpitan ng mga pagbabago",
+                "searchModsCRMM": "Maghanap ng mga pagbabago sa CRMM"
+            },
+            "jarModsTab": {
+                "name": "Pagbabagong Sinupang Java",
+                "modName": "Pangalan",
+                "modActive": "Mabilos",
+                "addModButton": "Dumagdag ng pagbabagong Jar",
+                "deleteModButton": "Tanggalin ang pagbabagong Jar"
             },
             "worldsTab": {
-                "name": "Mga Mundo",
+                "name": "Daigdig",
                 "table": {
                     "worldName": "Pangalan",
                     "worldSeed": "Binhi",
@@ -149,51 +176,104 @@
                     "createdAt": "Ginawa noong"
                 },
                 "contextMenu": {
-                    "copySeed": "Kopyahin ang binhi",
+                    "copySeed": "Sipiin ang binhi",
                     "delete": "Burahin"
                 },
-                "deletingWorld": "Burahin ang mundo"
+                "deletingWorld": "Binibura ang daigdig"
+            },
+            "screenshotsTab": {
+                "name": "Kunan Tabing",
+                "copyImage": "Sipiin ang Laragway",
+                "copyFile": "Sipiin ang Ligpit",
+                "delete": "Burahin",
+                "rename": "Palit-ngalan",
+                "renameMessage": "Ilagay ang bagong ngalan ng ligpit"
+            },
+            "gameLogTab": {
+                "name": "Tala ng Laro",
+                "search": "Maghanap",
+                "find": "Hanapin",
+                "upload": "Dalaitas",
+                "copyFile": "Sipiin ang Ligpit",
+                "copyText": "Sipiin ang Lamandiwa",
+                "clear": "Linawan",
+                "title": "Dalaitas",
+                "uploading": "Dinadalaitas ang tala sa McLogs",
+                "failed": "Bigong madalaitas ang tala",
+                "largeLog": "Lumampas sa hanggan ang sukat ng tala, tatapyasin ang tala",
+                "successTitle": "Nadalaitas ang Tala",
+                "successMessage": "Tagumpay ang pagdalaitas ng tala! Paroonan: $$LINK$$ (Sinipi sa tablahing pang-ipit)"
             }
         },
         "searchCRMMModsDialog": {
-            "title": "Maghanap ng mga mod sa CRMM",
-            "download1": "babang-karga",
-            "downloads234": "babang-karga",
-            "downloads": "babang-karga",
+            "title": "Maghanap ng mga pagbabago sa CRMM",
+            "download1": "dalaiba",
+            "downloads234": "dalaiba",
+            "downloads": "dalaiba",
             "follower1": "tagasunod",
             "followers234": "tagasunod",
             "followers": "tagasunod",
-            "downloadButton": "babang-karga",
+            "downloadButton": "Dalaibahin",
             "primary": "pangunahin",
-            "otherFiles": "Ibang mga file",
-            "mods": "Mga Mod",
-            "datamods": "Mga Data Mod",
-            "resourcePacks": "Mga Resource Pack",
-            "shaders": "Mga Shader",
-            "modpacks": "Mga Modpack",
-            "searchButton": "Maghanap",
-            "searchMods": "Maghanap ng mga mod...",
-            "searchDatamods": "Maghanap ng mga data mod...",
-            "searchResourcePacks": "Maghanap ng mga resource pack...",
-            "searchShaders": "Maghanap ng mga shader...",
-            "searchModpacks": "Magahanp ng mga modpack...",
-            "modVersionsDialogTitle": "Mga bersyon ng mod"
+            "otherFiles": "Ibang mga ligpit",
+            "modVersionsDialogTitle": "Mga banyuri ng pagbabago",
+            "selectLoadersDialog": {
+                "title": "Pumili ng mangdadala",
+                "message": "Pumili ng mangdadala upang maidagdag ang pagbabago"
+            },
+            "navbar": {
+                "mods": "Pagbabago",
+                "datamods": "Pagbabagong Data",
+                "resourcePacks": "Balot ng Mapagkukunan",
+                "shaders": "Mangtatabing",
+                "modpacks": "Balot ng Pagbabago"
+            },
+            "search": {
+                "inputPlaceholder": {
+                    "searchMods": "Maghanap ng pagbabago...",
+                    "searchDatamods": "Maghanap ng pagbabagong data...",
+                    "searchResourcePacks": "Maghanap ng balot ng mapagkukunan...",
+                    "searchShaders": "Mghanao ng mangtatabing...",
+                    "searchModpacks": "Magahanap ng mga balot ng pagbabago..."
+                },
+                "sortBy": {
+                    "label": "Pagsusunod-sunod",
+                    "options": {
+                        "relevance": "Pinakatumpak",
+                        "downloads": "Dalaiba",
+                        "follow_count": "Bilang ng tagasunod",
+                        "recently_updated": "Taburaw ng pagbago",
+                        "recently_published": "Taburaw ng paglathala"
+                    }
+                },
+                "showPerPage": {
+                    "label": "Ipapakita sa bawat pahina",
+                    "options": {
+                        "five": "5",
+                        "ten": "10",
+                        "fifteen": "15",
+                        "twenty": "20",
+                        "fifty": "50",
+                        "oneHundred": "100"
+                    }
+                }
+            }
         },
         "addAccountDialog": {
-            "title": "Magdagdag ng akawnt",
+            "title": "Magdagdag ng tuos ng gagamit",
             "offline": {
-                "tabName": "Naka-offline",
-                "textFieldPlaceholder": "Ilagay ang ginustong pangalang ng gagamit"
+                "tabName": "Maguhitngit",
+                "textFieldPlaceholder": "Ilagay ang ginustong ngalan ng gagamit"
             },
             "itch": {
                 "tabName": "Itch.io",
-                "textFieldPlaceholder": "Ilagay ang susi ng Itch.io API"
+                "textFieldPlaceholder": "Ilagay ang susi ng Pook Ugnayan sa Pagpapalagawaan ng Paglalapat ng Itch.io"
             },
-            "accountExists": "Mayroon ng account na nagngangalang '$$ACCOUNT_NAME$$'",
+            "accountExists": "Mayroon ng tuos na nagngangalang '$$ACCOUNT_NAME$$'",
             "addButton": "Dumdagdag"
         },
         "console": {
-            "title": "Konsol ng CRLauncher",
+            "title": "Tala ng Pangyayari sa CRLauncher",
             "scrollDown": "Mag-scroll pababa",
             "copyButton": "Kopyahin",
             "clearButton": "Burahin"
@@ -202,92 +282,99 @@
             "yes": "Oo",
             "no": "Hindi",
             "ok": "Sige",
-            "cancel": "Kanselahin",
+            "cancel": "Payiin",
             "archives": "Mga arkibo",
-            "openLauncherFolder": "Buksan ang paniklop ng launcher",
+            "openLauncherFolder": "Buksan ang ligpitan ng manglulungsad",
             "consoleButton": {
-                "show": "Buksan ang konsol",
-                "hide": "Taguin ang konsol"
+                "show": "Buksan ang tala ng pangyayari",
+                "hide": "Taguin ang tala ng pangyayari"
             },
             "tab": {
                 "play": "Maglaro",
-                "accounts": "Mga Akawnt",
+                "accounts": "Tuos ng Gagamit",
                 "settings": "Pagsasaayos",
                 "about": "Tunkgol sa"
             }
         },
         "playView": {
-            "instanceGroup": "Grupo ng instansiya",
-            "account": "Akawnt",
-            "deleteInstanceTitle": "Tanggalin ang instansiya",
+            "instanceGroup": "Lipon ng pagkakataon",
+            "account": "Tuos ng gagamit",
+            "deleteInstanceTitle": "Burahin ang pagkakataon",
             "renameInstanceDialog": {
-                "title": "Muling pangalanan ang instansiya",
+                "title": "Muling pangalanan ang pagkakataon",
                 "message": "Ilagay ang bagong pangalan"
             },
-            "lastPlayedFor": "Huling naglaro",
-            "totalPlayedFor": "Kabuuang paglaro",
+            "lastPlayedFor": "Huling naglaro ng",
+            "totalPlayedFor": "Kabuuang naglaro sa loob ng",
             "running": "Tumatakbo"
         },
         "accountsView": {
-            "addAccountButton": "Pindutin upang makagawa ng akawnt",
+            "addAccountButton": "Pindutin upang makagawa ng tuos ng gagamit",
             "deleteConfirmation": {
-                "title": "Pagtanggal ng akawnt",
-                "message": "Tiyak ka ba sa pagtanggal ng akawnt na '$$ACCOUNT_NAME$$'?"
+                "title": "Pagtanggal ng tuos ng gagamit",
+                "message": "Tiyak ka ba sa pagtanggal ng tuos ng gagamit na '$$ACCOUNT_NAME$$'?"
             }
         },
         "settingsView": {
             "themeSettings": {
-                "borderName": "Tema",
+                "borderName": "Paksandiwa",
                 "light": "Maliwanag",
                 "dark": "Madilim"
             },
             "ui": {
-                "borderName": "UI",
+                "borderName": "Pook Ugnayan",
                 "dialogPosition": {
-                    "label": "Posisyon ng diyalogo",
+                    "label": "Katayuan ng dalwausap",
                     "options": {
-                        "relativeToParent": "Relative to parent",
+                        "relativeToParent": "Matugnay sa magulang",
                         "alwaysCentered": "Lagi sa gitna"
                     }
                 },
-                "amountOfTime": "Ipakita ang bilang ng oras na lumipas ang petsa ng pagrelisa"
+                "amountOfTime": "Ipakita ang lumipas na oras noong taburaw ng pinakawalan",
+                "showConsoleAtStartup": "Buksan ang tala ng pangyayari sa pagbukas"
             },
             "storageSettings": {
                 "borderName": "Storage",
-                "versionsPathLabel": "Landas ng direktoryo ng mga bersyon",
-                "versionsPathFieldPlaceholder": "<paniklop ng launcher>/cosmic-reach/versions",
-                "instancesPathLabel": "Landas ng direktoryo ng mga instansiya",
-                "instancesPathFieldPlaceholder": "<paniklop ng launcher>/cosmic-reach/instances",
-                "modLoadersPathLabel": "Landas ng direktoryo ng mga mod loader",
-                "modLoadersPathFieldPlaceholder": "<paniklop ng launcher>/cosmic-reach",
-                "tip": "Alalahaning pindutin ang ENTER upang masave ang landas"
+                "versionsPathLabel": "Landas ng talahanapan ng mga banyuri",
+                "versionsPathFieldPlaceholder": "<ligpitan ng manglulungsad>/cosmic-reach/versions",
+                "instancesPathLabel": "Landas ng talahanapan ng mga pagkakataon",
+                "instancesPathFieldPlaceholder": "<ligpitan ng manglulungsad>/cosmic-reach/instances",
+                "modLoadersPathLabel": "Landas ng talahanapan ng mga mangkakarga ng pagbabago",
+                "modLoadersPathFieldPlaceholder": "<ligpitan ng manglulungsad>/cosmic-reach",
+                "tip": "Alalahaning pindutin ang ENTER upang maligtas ang landas"
             },
             "other": {
                 "borderName": "Iba pa",
-                "writePrettyJson": "Sumulat ng mga magandang JSON file (Mapapakinabangan sa pagdedevelop/pagdedebug)",
+                "writePrettyJson": "Sumulat ng mga ligpit na magaganda ang JSON (Mapapakinabangan sa pagdedevelop/pagdedebug)",
                 "onGameLaunch": {
                     "label": "Pagbukas ng Cosmic Reach",
                     "options": {
                         "doNothing": "Walang gagawin",
-                        "hideLauncher": "Taguin ang launcher",
-                        "hideLauncherAndConsole": "Taguin ang launcher at ang konsol",
-                        "exitLauncher": "Isara ang launcher (Hindi mabibilang ang oras sa paggamit ng instansiya)"
+                        "hideLauncher": "Taguin ang manglulungsad",
+                        "hideLauncherAndConsole": "Taguin ang manglulungsad at ang tala ng pangyayari",
+                        "exitLauncher": "Isara ang manglulungsad (Hindi mabibilang ang oras sa paggamit ng pagkakataon)"
                     }
                 },
                 "onGameExit": {
                     "label": "Pagsara ng Cosmic Reach",
                     "options": {
                         "doNothing": "Walang gagawin",
-                        "exitLauncher": "Isara ang launcher kung 0 (ok) ang exit code ng Cosmic Reach"
+                        "exitLauncher": "Isara ang manglulungsad kung 0 (ayos lang) ang pansarang code ng Cosmic Reach"
                     }
                 },
-                "checkForUpdatesAtStartup": "Magsusuri ng updates sa pagbukas",
-                "language": "Wika"
+                "checkForUpdatesAtStartup": "Magsusuri ng mga pagbabago sa pagbukas",
+                "checkUpdatesNowButton": "Magsusuri ng mga pagababago",
+                "checkingForUpdates": "Nagsusuri...",
+                "noUpdatesAvailable": "Ang pinakabagong banyrui ang ginagamit mo",
+                "patchOfflineAccount": "Tumbasan mula sa manglulungsad ang ngalan ng guhitngitang tuos ng gagamit",
+                "appendUsername": "Idagdag ang ngalan ng gagamit sa simula ng bawat pahatid",
+                "language": "Wika",
+                "disableFileIntegrityCheck": "Baldaduhin ang pagsuri sa katiningang-asal ng ligpit"
             }
         },
         "aboutView": {
             "lines": {
-                "line1": "CRLauncher $$LAUNCHER_VERSION$$ - simpleng Cosmic Reach launcher",
+                "line1": "CRLauncher $$LAUNCHER_VERSION$$ - payak na manglulungsad ng Cosmic Reach",
                 "line2": "gawa ni TheEntropyShard",
                 "line3": "Higit pa sa $$LAUNCHER_URL$$"
             }
@@ -295,41 +382,48 @@
         "addInstanceDialog": {
             "importInstance": {
                 "importButton": "Mag-angkat",
-                "crliFiles": "CRLauncher instance file (*.crli)",
-                "title": "Pag-angkat ng Instansiya",
-                "success": "Matagumpay na naiangkat ang instansiya!",
-                "failure": "Hindi maiangkat ang instansiya",
-                "duplicate": "Mayroon ng instansiya sa polder na $$INSTANCE_FOLDER$$",
-                "badFile": "Sira ang file ng instansiya o ang pormat ay di-wasto",
-                "wrongExtension": "Iaangkat na file ay dapat nagtatapos sa .crli"
+                "crliFiles": "Ligpit ng pagkakataong CRLauncher (*.crli)",
+                "title": "Pag-angkat ng Pagkakataon",
+                "success": "Matagumpay na naiangkat ang pagkakataon!",
+                "failure": "Hindi maiangkat ang pagkakataon",
+                "duplicate": "Mayroon ng pagkakataon sa ligpitang $$INSTANCE_FOLDER$$",
+                "badFile": "Sira ang ligpit ng pagkakataon o ang pormat ay di-wasto",
+                "wrongExtension": "Iaangkat na ligpit ay dapat nagtatapos sa .crli"
             },
-            "title": "Magdagdag ng Bagong Instansiya",
+            "title": "Magdagdag ng Bagong Pagkakataon",
             "nameFieldLabel": "Pangalan",
-            "groupFieldLabel": "Grupo",
-            "autoUpdateToLatest": "Kusang magpapalit sa pinakabagong bersyon ng Cosmic Reach",
+            "groupFieldLabel": "Lipon",
+            "autoUpdateToLatest": "Sarimong pagpapalit sa pinakabagong banyuri ng Cosmic Reach",
             "filter": "Salain",
             "refreshButton": "Sariwain",
             "addButton": "Idagdag",
-            "cancelButton": "Kanselahin",
+            "cancelButton": "Payiin",
             "table": {
-                "version": "Bersyon",
-                "dateReleased": "Petsang nairelisa",
-                "versionType": "Tipo"
-            }
+                "version": "Banyuri",
+                "dateReleased": "Taburaw ng pinakawalan",
+                "versionType": "Uri"
+            },
+            "latestVersion": "(Pinakabago)",
+            "showOnlyInstalled": "Ipakita lamang ang mga banyuring naidagdag"
+        },
+        "updateDialog": {
+            "title": "Pagbago",
+            "updateNowButton": "Baguhin na",
+            "updateLaterButton": "Mamaya"
         }
     },
     "general": {
         "updated": "Nagbago",
         "time": {
-            "dateFormat": "MM/dd/yyyy",
+            "dateFormat": "dd/MM/yyyy",
             "ago": "nakalipas",
             "units": {
-                "second1": "segundo",
-                "seconds234": "segundo",
-                "seconds": "segundo",
-                "minute1": "minuto",
-                "minutes234": "minuto",
-                "minutes": "minuto",
+                "second1": "saglit",
+                "seconds234": "saglit",
+                "seconds": "saglit",
+                "minute1": "sandali",
+                "minutes234": "sandali",
+                "minutes": "sandali",
                 "hour1": "oras",
                 "hours234": "oras",
                 "hours": "oras",
