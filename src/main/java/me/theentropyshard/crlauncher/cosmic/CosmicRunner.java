@@ -36,6 +36,7 @@ import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ProcessReader;
+import me.theentropyshard.crlauncher.utils.SystemProperty;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
@@ -189,6 +190,9 @@ public class CosmicRunner extends Thread {
             }
 
             if (launcher instanceof PatchCosmicLauncher patchLauncher) {
+                patchLauncher.defineProperty(new SystemProperty("file.encoding", "utf-8"));
+                patchLauncher.defineProperty(new SystemProperty("console.encoding", "utf-8"));
+
                 patchLauncher.setCustomWindowTitle(this.instance.getCustomWindowTitle());
 
                 Account currentAccount = CRLauncher.getInstance().getAccountManager().getCurrentAccount();
