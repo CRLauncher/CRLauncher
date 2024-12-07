@@ -70,4 +70,8 @@ public abstract class ModsTableModel extends AbstractTableModel {
         this.mods.remove(index);
         this.fireTableStructureChanged();
     }
+
+    public List<Mod> getMods() {
+        return this.mods;
+    }
 }

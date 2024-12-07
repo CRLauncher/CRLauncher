@@ -39,6 +39,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 public class JavaModsLoader extends Worker<Void, Mod> {
     private final Path modsDir;
@@ -69,7 +70,11 @@ public class JavaModsLoader extends Worker<Void, Mod> {
     }
 
     private void removeNonExistentMods() {
-        this.mods.removeIf(mod -> !Files.exists(this.instance.getModPath(mod, this.loader)));
+        Predicate<Mod> modPredicate = mod -> mod.getFileName() == null || !Files.exists(this.instance.getModPath(mod, this.loader));
+
+        if (this.mods.removeIf(modPredicate)) {
+            this.tableModel.getMods().removeIf(modPredicate);
+        }
     }
 
     private void loadActiveMods() throws IOException {
