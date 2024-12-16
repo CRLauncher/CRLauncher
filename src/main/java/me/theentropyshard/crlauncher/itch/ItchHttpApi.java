@@ -29,5 +29,5 @@ public interface ItchHttpApi {
     BuildsResponse getBuilds(@Path("id") int uploadId, @Query("api_key") String apiKey);
 
     @GET("builds/{id}")
-    BuildResponse getBuild(@Path("id") int buildId);
+    BuildResponse getBuild(@Path("id") int buildId, @Query("api_key") String apiKey);
 }

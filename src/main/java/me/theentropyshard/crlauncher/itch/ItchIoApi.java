@@ -51,8 +51,8 @@ public class ItchIoApi {
         return builds.getBuilds();
     }
 
-    public DetailedBuild getBuild(int buildId) {
-        BuildResponse buildResponse = Objects.requireNonNull(this.itchApi.getBuild(buildId));
+    public DetailedBuild getBuild(int buildId, String apiKey) {
+        BuildResponse buildResponse = Objects.requireNonNull(this.itchApi.getBuild(buildId, apiKey));
 
         return buildResponse.getBuild();
     }
