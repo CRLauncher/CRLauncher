@@ -16,22 +16,28 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.itch;
+package me.theentropyshard.crlauncher.cosmic.itch;
 
-import java.util.List;
+import me.theentropyshard.crlauncher.cosmic.version.Version;
+import me.theentropyshard.crlauncher.cosmic.version.VersionType;
+import me.theentropyshard.crlauncher.itch.DetailedBuild;
 
-public class DetailedBuild extends ShortBuild {
-    private List<BuildFile> files;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
-    public DetailedBuild() {
-
+public class ItchVersion extends DetailedBuild implements Version {
+    @Override
+    public String getId() {
+        return this.getUserVersion();
     }
 
-    public List<BuildFile> getFiles() {
-        return this.files;
+    @Override
+    public long getReleaseTime() {
+        return OffsetDateTime.parse(this.getCreatedAt(), DateTimeFormatter.ISO_DATE_TIME).toEpochSecond();
     }
 
-    public void setFiles(List<BuildFile> files) {
-        this.files = files;
+    @Override
+    public VersionType getType() {
+        return VersionType.PRE_ALPHA;
     }
 }

@@ -87,6 +87,9 @@ public class SettingsView extends JPanel {
     private final JCheckBox modLoadersPathCheckbox;
     private final JTextField modLoadersPathField;
     private final JLabel tipLabel;
+    private final TitledBorder gameSettingsBorder;
+    private final JLabel versionsSourceLabel;
+    private final JComboBox<String> versionsSourcesCombo;
     private final TitledBorder otherSettingsBorder;
     private final JCheckBox prettyJson;
     private final JLabel launchOptionLabel;
@@ -325,6 +328,37 @@ public class SettingsView extends JPanel {
         }
 
         {
+            JPanel gameSettings = new JPanel(new GridLayout(1, 2));
+            this.gameSettingsBorder = new TitledBorder(language.getString("gui.settingsView.game.borderName"));
+            gameSettings.setBorder(this.gameSettingsBorder);
+
+            this.versionsSourceLabel = new JLabel(language.getString("gui.settingsView.game.versionsSourceLabel") + ": ");
+            gameSettings.add(this.versionsSourceLabel);
+
+            String[] versionsSourcesOptions = {
+                language.getString("gui.settingsView.game.versionsSourceCombo.options.cosmicArchive"),
+                language.getString("gui.settingsView.game.versionsSourceCombo.options.itch")
+            };
+            this.versionsSourcesCombo = new JComboBox<>(versionsSourcesOptions);
+            this.versionsSourcesCombo.addItemListener(e -> {
+                if (e.getStateChange() != ItemEvent.SELECTED) {
+                    return;
+                }
+
+                CRLauncher.getInstance().getSettings().versionsSourceOption = this.versionsSourcesCombo.getSelectedIndex();
+            });
+            int whenLaunchesIndex = CRLauncher.getInstance().getSettings().versionsSourceOption;
+            if (whenLaunchesIndex < 0 || whenLaunchesIndex >= versionsSourcesOptions.length) {
+                whenLaunchesIndex = 0;
+            }
+            this.versionsSourcesCombo.setSelectedIndex(whenLaunchesIndex);
+            gameSettings.add(this.versionsSourcesCombo);
+
+            gbc.gridy++;
+            root.add(gameSettings, gbc);
+        }
+
+        {
             JPanel otherSettings = new JPanel(new GridLayout(8, 3));
             this.otherSettingsBorder = new TitledBorder(language.getString(SettingsView.OTHER_BORDER));
             otherSettings.setBorder(this.otherSettingsBorder);
@@ -508,6 +542,18 @@ public class SettingsView extends JPanel {
         this.modLoadersPathCheckbox.setText(language.getString(SettingsView.MOD_LOADERS_PATH_LABEL) + ": ");
         this.modLoadersPathField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, language.getString(SettingsView.MOD_LOADERS_PATH_PLACEHOLDER));
         this.tipLabel.setText("<html><b>" + language.getString(SettingsView.TIP_LABEL) + "</b></html>");
+
+        this.gameSettingsBorder.setTitle(language.getString("gui.settingsView.game.borderName"));
+        this.versionsSourceLabel.setText(language.getString("gui.settingsView.game.versionsSourceLabel") + ": ");
+        DefaultComboBoxModel<String> versionsSourceModel = new DefaultComboBoxModel<>(
+            new String[]{
+                language.getString("gui.settingsView.game.versionsSourceCombo.options.cosmicArchive"),
+                language.getString("gui.settingsView.game.versionsSourceCombo.options.itch")
+            }
+        );
+        int versionsIndex = this.versionsSourcesCombo.getSelectedIndex();
+        this.versionsSourcesCombo.setModel(versionsSourceModel);
+        this.versionsSourcesCombo.setSelectedIndex(versionsIndex);
 
         this.launchOptionLabel.setText(language.getString(SettingsView.GAME_LAUNCH_LABEL));
         DefaultComboBoxModel<String> launchModel = new DefaultComboBoxModel<>(

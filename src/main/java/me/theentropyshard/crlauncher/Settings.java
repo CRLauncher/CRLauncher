@@ -54,6 +54,7 @@ public class Settings {
     public boolean patchOfflineAccount = false;
     public boolean disableFileIntegrityCheck = false;
     public boolean showOnlyInstalledVersions;
+    public int versionsSourceOption = 0;
 
     public Settings() {
 

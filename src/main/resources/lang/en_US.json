@@ -343,6 +343,16 @@
                 "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach/modloaders",
                 "tip": "Remember to press ENTER to save path. Changes will be applied after restart"
             },
+            "game": {
+                "borderName": "Game",
+                "versionsSourceLabel": "Versions source",
+                "versionsSourceCombo": {
+                    "options": {
+                        "cosmicArchive": "Cosmic Archive",
+                        "itch": "Itch"
+                    }
+                }
+            },
             "other": {
                 "borderName": "Other",
                 "writePrettyJson": "Write pretty JSON files (useful for development/debugging)",

@@ -54,7 +54,7 @@ public class RemoteVersionList extends VersionList {
 
     private static final class RawVersionList {
         private Latest latest;
-        private List<Version> versions;
+        private List<CosmicArchiveVersion> versions;
 
         public RawVersionList() {
 
@@ -77,7 +77,7 @@ public class RemoteVersionList extends VersionList {
             return this.latest;
         }
 
-        public List<Version> getVersions() {
+        public List<? extends Version> getVersions() {
             return this.versions;
         }
     }

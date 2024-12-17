@@ -19,11 +19,10 @@
 package me.theentropyshard.crlauncher.cosmic.version;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.CosmicDownloader;
-import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.cosmic.CosmicArchiveDownloader;
+import me.theentropyshard.crlauncher.cosmic.ItchDownloader;
+import me.theentropyshard.crlauncher.cosmic.itch.ItchVersion;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
-import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.json.Json;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -41,13 +40,23 @@ public class VersionManager {
     }
 
     public void downloadVersion(Version version, ProgressListener listener) throws IOException {
-        CosmicDownloader downloader = new CosmicDownloader();
-        downloader.downloadVersion(version, listener);
+        if (version instanceof CosmicArchiveVersion cosmicArchiveVersion) {
+            CosmicArchiveDownloader downloader = new CosmicArchiveDownloader();
+            downloader.downloadVersion(cosmicArchiveVersion, listener);
+        } else if (version instanceof ItchVersion itchVersion) {
+           ItchDownloader downloader = new ItchDownloader();
+           downloader.downloadVersion(itchVersion, listener);
+        }
     }
 
     public void load() throws IOException {
+        int option = CRLauncher.getInstance().getSettings().versionsSourceOption;
         this.versionList = switch (this.mode) {
-            case ONLINE -> new RemoteVersionList(VersionManager.REMOTE_VERSIONS);
+            case ONLINE -> switch (option) {
+                case 0 -> new RemoteVersionList(VersionManager.REMOTE_VERSIONS);
+                case 1 -> new ItchVersionList();
+                default -> new RemoteVersionList(VersionManager.REMOTE_VERSIONS);
+            };
             case OFFLINE -> new LocalVersionList(CRLauncher.getInstance().getVersionsDir());
         };
         this.versionList.load();
@@ -69,29 +78,34 @@ public class VersionManager {
         return version.getId().equals(this.versionList.getLatestVersion().getId());
     }
 
-    public Path getVersionPath(String id, String ext) {
-        Path versionsDir = CRLauncher.getInstance().getVersionsDir();
-
-        return versionsDir
-            .resolve(id)
-            .resolve("client")
-            .resolve(id + "." + ext);
-    }
-
     public boolean isInstalled(Version version) {
-        return Files.exists(this.getVersionJar(version)) && Files.exists(this.getVersionJson(version.getId()));
-    }
-
-    public Path getVersionPath(Version version, String ext) {
-        return this.getVersionPath(version.getId(), ext);
+        return Files.exists(this.getVersionJar(version));
     }
 
     public Path getVersionJar(Version version) {
-        return this.getVersionPath(version, "jar");
+        Path versionsDir = CRLauncher.getInstance().getVersionsDir();
+
+        return versionsDir
+            .resolve("bin")
+            .resolve(version.getId())
+            .resolve("client")
+            .resolve(version.getId() + ".jar");
     }
 
-    public Path getVersionJson(String id) {
-        return this.getVersionPath(id, "json");
+    public Path getCosmicArchiveVersionJson(String id) {
+        Path versionsDir = CRLauncher.getInstance().getVersionsDir();
+
+        return versionsDir
+            .resolve("cosmic-archive")
+            .resolve(id + ".json");
+    }
+
+    public Path getItchVersionJson(String id) {
+        Path versionsDir = CRLauncher.getInstance().getVersionsDir();
+
+        return versionsDir
+            .resolve("itch")
+            .resolve(id + ".json");
     }
 
     public List<Version> getVersions() {

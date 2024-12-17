@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
+import me.theentropyshard.crlauncher.cosmic.version.CosmicArchiveVersion;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
@@ -92,7 +93,7 @@ public class MainTab extends Tab {
 
                 Version version = (Version) e.getItem();
 
-                if (version.getClient() == null) {
+                if (version instanceof CosmicArchiveVersion caVersion && caVersion.getClient() == null) {
                     MessageBox.showErrorMessage(this.getDialog(),
                         CRLauncher.getInstance().getLanguage().getString(AddInstanceDialog.NO_CLIENT_MESSAGE)
                             .replace("$$CR_VERSION$$", version.getId()));

@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.version.CosmicArchiveVersion;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
@@ -270,7 +271,7 @@ public class AddInstanceDialog extends AppDialog {
             Version version = model.getVersion(selectedRow);
             String crVersion = version.getId();
             CRLauncher.getInstance().doTask(() -> {
-                if (version.getClient() == null) {
+                if (version instanceof CosmicArchiveVersion caVersion && caVersion.getClient() == null) {
                     MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
                         CRLauncher.getInstance().getLanguage().getString(AddInstanceDialog.NO_CLIENT_MESSAGE)
                             .replace("$$CR_VERSION$$", crVersion));

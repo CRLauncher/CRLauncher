@@ -21,7 +21,8 @@ package me.theentropyshard.crlauncher.itch;
 import com.google.gson.annotations.SerializedName;
 
 public class ShortBuild {
-    private int id;
+    @SerializedName("id")
+    private int buildId;
 
     @SerializedName("parent_build_id")
     private int parentBuildId;
@@ -41,27 +42,51 @@ public class ShortBuild {
 
     }
 
-    public int getId() {
-        return this.id;
+    public int getBuildId() {
+        return this.buildId;
+    }
+
+    public void setBuildId(int buildId) {
+        this.buildId = buildId;
     }
 
     public int getParentBuildId() {
         return this.parentBuildId;
     }
 
+    public void setParentBuildId(int parentBuildId) {
+        this.parentBuildId = parentBuildId;
+    }
+
     public int getVersion() {
         return this.version;
+    }
+
+    public void setVersion(int version) {
+        this.version = version;
     }
 
     public String getUserVersion() {
         return this.userVersion;
     }
 
+    public void setUserVersion(String userVersion) {
+        this.userVersion = userVersion;
+    }
+
     public String getCreatedAt() {
         return this.createdAt;
     }
 
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public String getUpdatedAt() {
         return this.updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

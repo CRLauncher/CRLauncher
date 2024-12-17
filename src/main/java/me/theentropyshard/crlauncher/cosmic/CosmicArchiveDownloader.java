@@ -1,6 +1,7 @@
 package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.version.CosmicArchiveVersion;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
@@ -15,16 +16,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class CosmicDownloader {
-    public CosmicDownloader() {
+public class CosmicArchiveDownloader {
+    public CosmicArchiveDownloader() {
 
     }
 
-    public void downloadVersion(Version version, ProgressListener listener) throws IOException {
+    public void downloadVersion(CosmicArchiveVersion version, ProgressListener listener) throws IOException {
         VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
         Path filePath = versionManager.getVersionJar(version);
 
-        Path versionJson = filePath.getParent().resolve(version.getId() + ".json");
+        Path versionJson = versionManager.getCosmicArchiveVersionJson(version.getId());
 
         if (!Files.exists(versionJson)) {
             boolean pretty = CRLauncher.getInstance().getSettings().writePrettyJson;
