@@ -41,6 +41,9 @@
                 "modAddedName": "Mod with name '$$MOD_NAME$$' already added!",
                 "modAddedId": "Mod with id '$$MOD_ID$$' already added!",
                 "modInvalid": "$$MOD_PATH$$ is not a valid $$MOD_LOADER$$ mod!"
+            },
+            "progressDialog": {
+                "nonexistentVersion": "Version $$VERSION_ID$$ does not exist in $$VERSION_LIST$$"
             }
         }
     },

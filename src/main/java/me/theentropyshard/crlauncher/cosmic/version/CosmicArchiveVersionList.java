@@ -27,12 +27,12 @@ import me.theentropyshard.crlauncher.utils.json.Json;
 import java.io.IOException;
 import java.util.List;
 
-public class RemoteVersionList extends VersionList {
+public class CosmicArchiveVersionList extends VersionList {
     private final String url;
 
     private Version latestVersion;
 
-    public RemoteVersionList(String url) {
+    public CosmicArchiveVersionList(String url) {
         this.url = url;
     }
 

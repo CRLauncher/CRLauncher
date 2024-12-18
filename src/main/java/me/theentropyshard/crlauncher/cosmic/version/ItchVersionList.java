@@ -57,6 +57,10 @@ public class ItchVersionList extends VersionList {
         Account currentAccount = CRLauncher.getInstance().getAccountManager().getCurrentAccount();
         ItchVersion version = (ItchVersion) super.getVersionById(id);
 
+        if (version == null) {
+            return null;
+        }
+
         if (version.getFiles() == null) {
             ItchIoApi itchIoApi = CRLauncher.getInstance().getItchIoApi();
             DetailedBuild build = itchIoApi.getBuild(version.getBuildId(), ((ItchIoAccount) currentAccount).getItchIoApiKey());

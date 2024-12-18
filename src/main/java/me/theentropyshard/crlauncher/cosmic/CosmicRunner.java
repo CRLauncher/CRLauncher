@@ -30,6 +30,7 @@ import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
+import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.java.JavaLocator;
@@ -115,10 +116,25 @@ public class CosmicRunner extends Thread {
 
             Version version = versionManager.getVersion(this.instance.getCosmicVersion());
 
-            ProgressDialog dialog = new ProgressDialog("Downloading Cosmic Reach");
-            SwingUtilities.invokeLater(() -> dialog.setVisible(true));
-            versionManager.downloadVersion(version, dialog);
-            dialog.getDialog().dispose();
+            if (version == null) {
+                SwingUtilities.invokeLater(() -> {
+                    String s = CRLauncher.getInstance().getLanguage().getString("messages.gui.progressDialog.nonexistentVersion");
+                    MessageBox.showErrorMessage(CRLauncher.frame, s
+                        .replace("$$VERSION_ID$$", this.instance.getCosmicVersion())
+                        .replace("$$VERSION_LIST$$",
+                            switch (CRLauncher.getInstance().getSettings().versionsSourceOption) {
+                                case 1 -> "Itch";
+                                default -> "Cosmic Archive";
+                            }));
+                });
+
+                return;
+            } else {
+                ProgressDialog dialog = new ProgressDialog("Downloading Cosmic Reach");
+                SwingUtilities.invokeLater(() -> dialog.setVisible(true));
+                versionManager.downloadVersion(version, dialog);
+                dialog.getDialog().dispose();
+            }
 
             Path saveDirPath = this.instance.getCosmicDir();
 

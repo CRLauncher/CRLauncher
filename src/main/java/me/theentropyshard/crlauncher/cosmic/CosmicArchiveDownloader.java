@@ -2,7 +2,6 @@ package me.theentropyshard.crlauncher.cosmic;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.version.CosmicArchiveVersion;
-import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
@@ -40,15 +39,15 @@ public class CosmicArchiveDownloader {
             }
 
             OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient().newBuilder()
-                    .addNetworkInterceptor(new ProgressNetworkInterceptor(listener))
-                    .build();
+                .addNetworkInterceptor(new ProgressNetworkInterceptor(listener))
+                .build();
 
             HttpDownload download = new HttpDownload.Builder()
-                    .url(version.getClient().getUrl())
-                    .expectedSize(version.getClient().getSize())
-                    .httpClient(httpClient)
-                    .saveAs(filePath)
-                    .build();
+                .url(version.getClient().getUrl())
+                .expectedSize(version.getClient().getSize())
+                .httpClient(httpClient)
+                .saveAs(filePath)
+                .build();
 
             download.execute();
         }

@@ -41,6 +41,9 @@
                 "modAddedName": "Мод с названием '$$MOD_NAME$$' уже добавлен!",
                 "modAddedId": "Мод с id '$$MOD_ID$$' уже добавлен!",
                 "modInvalid": "$$MOD_PATH$$ это невалидный мод для $$MOD_LOADER$$!"
+            },
+            "progressDialog": {
+                "nonexistentVersion": "Версия $$VERSION_ID$$ не существует в $$VERSION_LIST$$"
             }
         }
     },

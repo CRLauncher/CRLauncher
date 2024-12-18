@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.view.settings;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
@@ -346,6 +347,7 @@ public class SettingsView extends JPanel {
                 }
 
                 CRLauncher.getInstance().getSettings().versionsSourceOption = this.versionsSourcesCombo.getSelectedIndex();
+                CRLauncher.getInstance().getVersionManager().updateVersionList();
             });
             int whenLaunchesIndex = CRLauncher.getInstance().getSettings().versionsSourceOption;
             if (whenLaunchesIndex < 0 || whenLaunchesIndex >= versionsSourcesOptions.length) {

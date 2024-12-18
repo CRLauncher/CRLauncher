@@ -49,20 +49,23 @@ public class VersionManager {
         }
     }
 
-    public void load() throws IOException {
+    public void updateVersionList() {
         int option = CRLauncher.getInstance().getSettings().versionsSourceOption;
         this.versionList = switch (this.mode) {
             case ONLINE -> switch (option) {
-                // case 0 -> new RemoteVersionList(VersionManager.REMOTE_VERSIONS);
                 case 1 -> new ItchVersionList();
-                default -> new RemoteVersionList(VersionManager.REMOTE_VERSIONS);
+                default -> new CosmicArchiveVersionList(VersionManager.REMOTE_VERSIONS);
             };
             case OFFLINE -> switch (option) {
-                // case 0 -> new LocalVersionList(CRLauncher.getInstance().getVersionsDir(), "cosmic-archive", CosmicArchiveVersion.class);
                 case 1 -> new LocalVersionList(CRLauncher.getInstance().getVersionsDir(), "itch", ItchVersion.class);
                 default -> new LocalVersionList(CRLauncher.getInstance().getVersionsDir(), "cosmic-archive", CosmicArchiveVersion.class);
             };
         };
+    }
+
+    public void load() throws IOException {
+        this.updateVersionList();
+
         this.versionList.load();
     }
 
