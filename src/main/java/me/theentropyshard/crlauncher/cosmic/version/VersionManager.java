@@ -27,7 +27,7 @@ import me.theentropyshard.crlauncher.network.progress.ProgressListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.List;
 
 public class VersionManager {
     public static final String REMOTE_VERSIONS = "https://raw.githubusercontent.com/CRModders/CosmicArchive/main/versions.json";
@@ -44,8 +44,8 @@ public class VersionManager {
             CosmicArchiveDownloader downloader = new CosmicArchiveDownloader();
             downloader.downloadVersion(cosmicArchiveVersion, listener);
         } else if (version instanceof ItchVersion itchVersion) {
-           ItchDownloader downloader = new ItchDownloader();
-           downloader.downloadVersion(itchVersion, listener);
+            ItchDownloader downloader = new ItchDownloader();
+            downloader.downloadVersion(itchVersion, listener);
         }
     }
 
@@ -53,11 +53,15 @@ public class VersionManager {
         int option = CRLauncher.getInstance().getSettings().versionsSourceOption;
         this.versionList = switch (this.mode) {
             case ONLINE -> switch (option) {
-                case 0 -> new RemoteVersionList(VersionManager.REMOTE_VERSIONS);
+                // case 0 -> new RemoteVersionList(VersionManager.REMOTE_VERSIONS);
                 case 1 -> new ItchVersionList();
                 default -> new RemoteVersionList(VersionManager.REMOTE_VERSIONS);
             };
-            case OFFLINE -> new LocalVersionList(CRLauncher.getInstance().getVersionsDir());
+            case OFFLINE -> switch (option) {
+                // case 0 -> new LocalVersionList(CRLauncher.getInstance().getVersionsDir(), "cosmic-archive", CosmicArchiveVersion.class);
+                case 1 -> new LocalVersionList(CRLauncher.getInstance().getVersionsDir(), "itch", ItchVersion.class);
+                default -> new LocalVersionList(CRLauncher.getInstance().getVersionsDir(), "cosmic-archive", CosmicArchiveVersion.class);
+            };
         };
         this.versionList.load();
     }

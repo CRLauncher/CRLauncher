@@ -28,29 +28,21 @@ import java.util.List;
 
 public class LocalVersionList extends VersionList {
     private final Path workDir;
+    private final String dirName;
+    private final Class<? extends Version> versionClass;
 
-    public LocalVersionList(Path workDir) {
+    public LocalVersionList(Path workDir, String dirName, Class<? extends Version> versionClass) {
         this.workDir = workDir;
+        this.dirName = dirName;
+        this.versionClass = versionClass;
     }
 
     @Override
     public void load() throws IOException {
-        List<Path> dirs = FileUtils.list(this.workDir, Files::isDirectory);
+        List<Path> itchJsonFiles = FileUtils.list(this.getWorkDir().resolve(this.dirName), Files::isRegularFile);
 
-        for (Path dir : dirs) {
-            Path clientDir = dir.resolve("client");
-
-            if (!Files.exists(clientDir)) {
-                continue;
-            }
-
-            Path clientJson = clientDir.resolve(dir.getFileName() + ".json");
-
-            if (!Files.exists(clientJson) || Files.size(clientJson) == 0L) {
-                return;
-            }
-
-            this.addVersion(Json.parse(FileUtils.readUtf8(clientJson), Version.class));
+        for (Path itchJsonFile : itchJsonFiles) {
+            this.addVersion(Json.parse(FileUtils.readUtf8(itchJsonFile), this.versionClass));
         }
     }
 
@@ -63,5 +55,9 @@ public class LocalVersionList extends VersionList {
         }
 
         return null;
+    }
+
+    public Path getWorkDir() {
+        return this.workDir;
     }
 }
