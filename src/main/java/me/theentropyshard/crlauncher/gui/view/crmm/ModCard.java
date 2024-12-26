@@ -19,12 +19,13 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
 import me.theentropyshard.crlauncher.gui.utils.ClickThroughListener;
+import me.theentropyshard.crlauncher.gui.utils.GifIcon;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.ImageUtils;
 import me.theentropyshard.crlauncher.utils.StringUtils;
@@ -289,6 +290,10 @@ public class ModCard extends JPanel {
                     .build();
 
                 try (Response response = httpClient.newCall(request).execute()) {
+                    if (iconUrl.endsWith(".gif")) {
+                        return new GifIcon(Objects.requireNonNull(response.body()).byteStream(), 64, 64, ModCard.this);
+                    }
+
                     BufferedImage bufferedImage = ImageIO.read(Objects.requireNonNull(response.body()).byteStream());
                     BufferedImage scaledImage = ImageUtils.toBufferedImage(bufferedImage.getScaledInstance(64, 64, BufferedImage.SCALE_SMOOTH));
 
