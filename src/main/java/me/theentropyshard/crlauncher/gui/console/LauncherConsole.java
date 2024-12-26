@@ -19,20 +19,26 @@
 package me.theentropyshard.crlauncher.gui.console;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.language.Language;
+import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
+import me.theentropyshard.crlauncher.utils.Pair;
+import me.theentropyshard.crlauncher.utils.TextSearch;
 
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.WindowListener;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class LauncherConsole {
     private static final int DEFAULT_X = 80;
     private static final int DEFAULT_Y = 80;
-    private static final int INITIAL_WIDTH = 576;
-    private static final int INITIAL_HEIGHT = 336;
+    private static final int INITIAL_WIDTH = 960;
+    private static final int INITIAL_HEIGHT = 540;
     private static final int INITIAL_FONT_SIZE = 14;
     public static final Font FONT = new Font(Font.MONOSPACED, Font.PLAIN, LauncherConsole.INITIAL_FONT_SIZE);
 
@@ -40,6 +46,9 @@ public class LauncherConsole {
     public static final String COPY = "gui.console.copyButton";
     public static final String CLEAR = "gui.console.clearButton";
     public static final String TITLE = "gui.console.title";
+
+    // TODO thats dumb but uhh
+    public static final String SEARCH_BUTTON = "gui.instanceSettingsDialog.gameLogTab.find";
 
     private final JCheckBox scrollDown;
     public static LauncherConsole instance;
@@ -49,8 +58,16 @@ public class LauncherConsole {
     private final JScrollPane scrollPane;
     private final JButton copyButton;
     private final JButton clearButton;
+    private final JTextField searchField;
+    private final JButton searchButton;
+
+    private String lastWordSearched;
+    private List<Pair<Integer, Integer>> searchIndices;
+    private int searchPairIndex;
 
     public LauncherConsole() {
+        Language language = CRLauncher.getInstance().getLanguage();
+
         this.textPane = new NoWrapJTextPane() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -77,10 +94,56 @@ public class LauncherConsole {
         root.setPreferredSize(new Dimension(LauncherConsole.INITIAL_WIDTH, LauncherConsole.INITIAL_HEIGHT));
         root.add(this.scrollPane, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        JPanel bottomPanel = new JPanel(new GridLayout(1, 2));
         root.add(bottomPanel, BorderLayout.SOUTH);
 
-        Language language = CRLauncher.getInstance().getLanguage();
+        JPanel leftButtonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        bottomPanel.add(leftButtonsPanel);
+
+        this.searchField = new JTextField();
+        this.searchField.setPreferredSize(new Dimension(250, this.searchField.getPreferredSize().height));
+        leftButtonsPanel.add(this.searchField);
+
+        this.searchButton = new JButton(language.getString(LauncherConsole.SEARCH_BUTTON));
+        this.searchButton.addActionListener(e -> {
+            String searchText = this.searchField.getText();
+
+            if (searchText.equals(this.lastWordSearched)) {
+                this.performSearch();
+            } else {
+                this.lastWordSearched = searchText;
+                this.searchPairIndex = 0;
+
+                new Worker<List<Pair<Integer, Integer>>, Void>("searching text") {
+                    @Override
+                    protected List<Pair<Integer, Integer>> work() throws Exception {
+                        String areaText = LauncherConsole.this.textPane.getText();
+                        String searchText = LauncherConsole.this.searchField.getText();
+
+                        TextSearch textSearch = TextSearch.create();
+
+                        return textSearch.findOccurrences(areaText, searchText);
+                    }
+
+                    @Override
+                    protected void done() {
+                        try {
+                            LauncherConsole.this.searchIndices = this.get();
+                        } catch (InterruptedException | ExecutionException ex) {
+                            Log.error("Unexpected error", ex);
+
+                            return;
+                        }
+
+                        LauncherConsole.this.performSearch();
+                    }
+                }.execute();
+            }
+        });
+        leftButtonsPanel.add(this.searchButton);
+
+        JPanel rightButtonsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        bottomPanel.add(rightButtonsPanel);
 
         this.scrollDown = new JCheckBox(language.getString(LauncherConsole.SCROLL_DOWN));
         this.scrollDown.setSelected(CRLauncher.getInstance().getSettings().consoleScrollDown);
@@ -89,25 +152,38 @@ public class LauncherConsole {
             this.scrollToBottom();
         });
 
-        bottomPanel.add(this.scrollDown);
+        rightButtonsPanel.add(this.scrollDown);
 
         this.copyButton = new JButton(language.getString(LauncherConsole.COPY));
         this.copyButton.addActionListener(e -> {
             OperatingSystem.copyToClipboard(this.textPane.getText());
         });
-        bottomPanel.add(this.copyButton);
+        rightButtonsPanel.add(this.copyButton);
 
         this.clearButton = new JButton(language.getString(LauncherConsole.CLEAR));
         this.clearButton.addActionListener(e -> {
             this.textPane.setText("");
+            this.searchIndices = null;
+            this.searchPairIndex = 0;
+            this.lastWordSearched = "";
         });
-        bottomPanel.add(this.clearButton);
+        rightButtonsPanel.add(this.clearButton);
 
         this.frame = new JFrame(language.getString(LauncherConsole.TITLE));
         this.frame.setModalExclusionType(Dialog.ModalExclusionType.APPLICATION_EXCLUDE);
         this.frame.add(root, BorderLayout.CENTER);
         this.frame.pack();
         this.frame.setLocation(LauncherConsole.DEFAULT_X, LauncherConsole.DEFAULT_Y);
+    }
+
+    private void performSearch() {
+        if (this.searchIndices != null && this.searchIndices.size() != 0) {
+            int pairIndex = (this.searchPairIndex++) % this.searchIndices.size();
+            Pair<Integer, Integer> indices = this.searchIndices.get(pairIndex);
+            LauncherConsole.this.textPane.requestFocus();
+            LauncherConsole.this.textPane.select(indices.getLeft(), indices.getRight());
+            LauncherConsole.this.textPane.repaint();
+        }
     }
 
     private void scrollToBottom() {
@@ -166,5 +242,6 @@ public class LauncherConsole {
         this.scrollDown.setText(language.getString(LauncherConsole.SCROLL_DOWN));
         this.copyButton.setText(language.getString(LauncherConsole.COPY));
         this.clearButton.setText(language.getString(LauncherConsole.CLEAR));
+        this.searchButton.setText(language.getString(LauncherConsole.SEARCH_BUTTON));
     }
 }
