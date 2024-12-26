@@ -49,12 +49,13 @@ public class CrmmApi {
         this.crmmApi = this.retrofit.create(CrmmHttpApi.class);
     }
 
-    public SearchModsResponse search(SearchType searchType, SortBy sortBy, ShowPerPage showPerPage, String searchQuery) {
+    public SearchModsResponse search(SearchType searchType, SortBy sortBy, ShowPerPage showPerPage, String searchQuery, int page) {
         Map<String, String> queryMap = new LinkedHashMap<>();
 
         queryMap.put("type", searchType.getQueryKey());
         queryMap.put("sortby", sortBy.getValue());
         queryMap.put("limit", showPerPage.getValue());
+        queryMap.put("page", String.valueOf(page));
 
         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
             queryMap.put("q", searchQuery);
