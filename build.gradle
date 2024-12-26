@@ -55,6 +55,10 @@ ext {
     jna = '5.14.0'
     log4j = '2.20.0'
     retrofit = '2.11.0'
+    miglayout = '5.3'
+    commonmark = '0.23.0'
+    imageiowebp = '3.12.0'
+    gifdecoder = 'animated-gif-lib-1.7'
 }
 
 dependencies {
@@ -71,10 +75,10 @@ dependencies {
     implementation "org.apache.logging.log4j:log4j-core:$log4j"
     implementation "com.squareup.retrofit2:retrofit:$retrofit"
     implementation "com.squareup.retrofit2:converter-gson:$retrofit"
-    implementation 'com.miglayout:miglayout-swing:5.3'
-    implementation 'org.commonmark:commonmark:0.23.0'
-    implementation 'com.twelvemonkeys.imageio:imageio-webp:3.12.0'
-    implementation 'com.github.rtyley:animated-gif-lib-for-java:animated-gif-lib-1.7'
+    implementation "com.miglayout:miglayout-swing:$miglayout"
+    implementation "org.commonmark:commonmark:$commonmark"
+    implementation "com.twelvemonkeys.imageio:imageio-webp:$imageiowebp"
+    implementation "com.github.rtyley:animated-gif-lib-for-java:$gifdecoder"
 }
 
 java {
