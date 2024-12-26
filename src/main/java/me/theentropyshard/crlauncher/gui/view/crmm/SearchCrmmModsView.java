@@ -18,26 +18,14 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
-import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.crmm.CrmmApi;
-import me.theentropyshard.crlauncher.crmm.ModInfo;
-import me.theentropyshard.crlauncher.crmm.filter.ShowPerPage;
-import me.theentropyshard.crlauncher.crmm.filter.SortBy;
-import me.theentropyshard.crlauncher.crmm.model.mod.CrmmMod;
-import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
-import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class SearchCrmmModsView extends JPanel {
     private final JPanel modCardsPanel;
@@ -77,43 +65,8 @@ public class SearchCrmmModsView extends JPanel {
         this.modCardsPanel.revalidate();
     }
 
-    public void searchMods(String query, SortBy sortBy, ShowPerPage showPerPage) {
-        new Worker<List<CrmmMod>, Void>("searching mods") {
-            @Override
-            protected List<CrmmMod> work() {
-                return CRLauncher.getInstance().getCrmmApi().search(SearchCrmmModsView.this.searchType, sortBy, showPerPage, query).getMods();
-            }
-
-            @Override
-            @SuppressWarnings("unchecked")
-            protected void done() {
-                SearchCrmmModsView.this.clear();
-
-                List<CrmmMod> crmmMods = null;
-
-                try {
-                    crmmMods = this.get();
-                } catch (InterruptedException | ExecutionException ex) {
-                    Log.error(ex);
-                }
-
-                if (crmmMods == null) {
-                    return;
-                }
-
-                for (CrmmMod crmmMod : crmmMods) {
-                    ModInfo modInfo = crmmMod.toModInfo();
-
-                    ModCard card = new ModCard(modInfo);
-                    card.addMouseListener(new MouseClickListener(e -> {
-                        new ModVersionsDialog(modInfo, SearchCrmmModsView.this.instance, SearchCrmmModsView.this.modsTab,
-                            new ModDownloadWorkerSupplier());
-                    }));
-
-                    SearchCrmmModsView.this.modCardsPanel.add(card);
-                }
-            }
-        }.execute();
+    public SearchType getSearchType() {
+        return this.searchType;
     }
 
     public Instance getInstance() {

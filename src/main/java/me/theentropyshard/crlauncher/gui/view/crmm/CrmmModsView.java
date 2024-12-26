@@ -20,11 +20,18 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.crmm.filter.ShowPerPage;
 import me.theentropyshard.crlauncher.crmm.filter.SortBy;
+import me.theentropyshard.crlauncher.crmm.model.mod.CrmmMod;
+import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
+import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
+import me.theentropyshard.crlauncher.gui.view.crmm.pagination.PageButton;
+import me.theentropyshard.crlauncher.gui.view.crmm.pagination.PaginationPanel;
 import me.theentropyshard.crlauncher.instance.Instance;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -36,14 +43,20 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class CrmmModsView extends JPanel {
+    private final Instance instance;
+    private final ModsTab modsTab;
+
     private final NavBar navBar;
     private final JTextField searchField;
     private final JComboBox<SortBy> searchTypeCombo;
     private final JComboBox<ShowPerPage> showPerPageCombo;
     private final CardLayout cardLayout;
     private final JPanel modsViewsPanel;
+    private final PaginationPanel paginationPanel;
 
     private final SearchCrmmModsView modsModsView;
     private final SearchCrmmModsView dataModsModsView;
@@ -55,9 +68,14 @@ public class CrmmModsView extends JPanel {
     private ShowPerPage showPerPage;
 
     private int tab;
+    private int page = 1;
+    private int totalPages;
 
     public CrmmModsView(Instance instance, ModsTab modsTab) {
         super(new BorderLayout());
+
+        this.instance = instance;
+        this.modsTab = modsTab;
 
         this.sortBy = SortBy.RELEVANCE;
         this.showPerPage = ShowPerPage.TWENTY;
@@ -211,11 +229,91 @@ public class CrmmModsView extends JPanel {
         });
 
         this.add(this.modsViewsPanel, BorderLayout.CENTER);
+
+        this.paginationPanel = new PaginationPanel();
+        this.paginationPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
+
+        this.paginationPanel.addPageSelectedListener(page -> {
+            this.page = page;
+            this.search();
+        });
+
+        this.paginationPanel.addPrevPageButtonListener(e -> {
+            this.page = Math.max(1, this.page - 1);
+            this.search();
+        });
+
+        this.paginationPanel.addNextPageButtonListener(e -> {
+            this.page = Math.min(this.totalPages, this.page + 1);
+            this.search();
+        });
+
+        this.add(this.paginationPanel, BorderLayout.SOUTH);
     }
 
     private void search() {
-        ((SearchCrmmModsView) this.modsViewsPanel.getComponent(this.tab)).searchMods(
-            this.searchField.getText(), this.sortBy, this.showPerPage
-        );
+        SearchCrmmModsView searchModsView = (SearchCrmmModsView) this.modsViewsPanel.getComponent(this.tab);
+
+        new Worker<List<CrmmMod>, Void>("searching mods") {
+            @Override
+            protected List<CrmmMod> work() {
+                SearchModsResponse response = CRLauncher.getInstance().getCrmmApi().search(
+                    searchModsView.getSearchType(),
+                    CrmmModsView.this.sortBy,
+                    CrmmModsView.this.showPerPage,
+                    CrmmModsView.this.searchField.getText(),
+                    CrmmModsView.this.page
+                );
+
+                int hits = response.getEstimatedTotalHits();
+                int showPerPage = Integer.parseInt(CrmmModsView.this.showPerPage.getValue());
+                CrmmModsView.this.totalPages = (hits / showPerPage) + ((hits % showPerPage) == 0 ? 0 : 1);
+
+                if (CrmmModsView.this.page > CrmmModsView.this.totalPages) {
+                    CrmmModsView.this.page = 1;
+                }
+
+                SwingUtilities.invokeLater(() -> {
+                    CrmmModsView.this.paginationPanel.clearAll();
+                    for (int i = 0; i < CrmmModsView.this.totalPages; i++) {
+                        CrmmModsView.this.paginationPanel.addButton(new PageButton(String.valueOf(i + 1), i + 1));
+                    }
+                    CrmmModsView.this.paginationPanel.selectPage(CrmmModsView.this.page);
+                });
+
+
+                return response.getMods();
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            protected void done() {
+                searchModsView.clear();
+
+                List<CrmmMod> crmmMods = null;
+
+                try {
+                    crmmMods = this.get();
+                } catch (InterruptedException | ExecutionException ex) {
+                    Log.error(ex);
+                }
+
+                if (crmmMods == null) {
+                    return;
+                }
+
+                for (CrmmMod crmmMod : crmmMods) {
+                    ModInfo modInfo = crmmMod.toModInfo();
+
+                    ModCard card = new ModCard(modInfo);
+                    card.addMouseListener(new MouseClickListener(e -> {
+                        new ModVersionsDialog(modInfo, CrmmModsView.this.instance, CrmmModsView.this.modsTab,
+                            new ModDownloadWorkerSupplier());
+                    }));
+
+                    searchModsView.getModCardsPanel().add(card);
+                }
+            }
+        }.execute();
     }
 }
