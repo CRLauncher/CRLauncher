@@ -236,18 +236,19 @@ public class ModsTab extends Tab implements ItemListener {
     public void save() throws IOException {
         Instance instance = this.getInstance();
         instance.setModLoader((ModLoader) this.typeCombo.getSelectedItem());
-        if (instance.getModLoader() == ModLoader.FABRIC) {
-            instance.setFabricVersion(
-                ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
-            );
-        } else if (instance.getModLoader() == ModLoader.QUILT) {
-            instance.setQuiltVersion(
-                ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
-            );
-        } else if (instance.getModLoader() == ModLoader.PUZZLE) {
-            instance.setPuzzleVersion(
-                ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
-            );
+
+        if (instance.getModLoader() == ModLoader.VANILLA) return;
+
+        GithubRelease versionCombo = (GithubRelease) this.loaderVersionCombo.getSelectedItem();
+        if (versionCombo == null) {
+            Log.warn("Game version combo unavailable");
+            return;
+        }
+
+        switch (instance.getModLoader()) {
+            case FABRIC -> instance.setFabricVersion(versionCombo.tag_name);
+            case QUILT -> instance.setQuiltVersion(versionCombo.tag_name);
+            case PUZZLE -> instance.setPuzzleVersion(versionCombo.tag_name);
         }
     }
 
