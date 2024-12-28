@@ -28,7 +28,11 @@ public abstract class AppDialog {
     private final JDialog dialog;
 
     public AppDialog(JFrame owner, String title) {
-        this.dialog = new JDialog(owner, title, true);
+        this(owner, title, true);
+    }
+
+    public AppDialog(JFrame owner, String title, boolean modal) {
+        this.dialog = new JDialog(owner, title, modal);
         this.dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
 
