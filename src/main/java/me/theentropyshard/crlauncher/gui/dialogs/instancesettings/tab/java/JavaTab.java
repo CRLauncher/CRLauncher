@@ -130,7 +130,9 @@ public class JavaTab extends Tab {
             }
 
             private void textUpdated() {
-                JavaTab.this.getInstance().setCustomJvmFlags(new LinkedHashSet<>(List.of(JavaTab.this.flagsArea.getText().split("\\s"))));
+                if (instance.getCurrentFlagsOption() == 0) {
+                    instance.setCustomJvmFlags(new LinkedHashSet<>(List.of(JavaTab.this.flagsArea.getText().split("\\s"))));
+                }
             }
         });
 
@@ -147,6 +149,8 @@ public class JavaTab extends Tab {
 
             int selectedIndex = this.flagsOptions.getSelectedIndex();
 
+            instance.setCurrentFlagsOption(selectedIndex);
+
             if (selectedIndex != 0) {
                 this.flagsArea.setEditable(false);
                 String[] builtinFlags = CosmicRunner.getBuiltinFlags(selectedIndex);
@@ -155,8 +159,6 @@ public class JavaTab extends Tab {
                 JavaTab.setFlags(this.flagsArea, instance.getCustomJvmFlags());
                 this.flagsArea.setEditable(true);
             }
-
-            instance.setCurrentFlagsOption(selectedIndex);
         });
 
         JavaTab.setFlags(this.flagsArea, instance.getCustomJvmFlags());
@@ -227,8 +229,6 @@ public class JavaTab extends Tab {
 
     @Override
     public void save() throws IOException {
-        if (this.flagsOptions.getSelectedIndex() == 0) {
-            this.getInstance().setCustomJvmFlags(new LinkedHashSet<>(List.of(this.flagsArea.getText().split("\\s"))));
-        }
+
     }
 }
