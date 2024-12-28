@@ -23,7 +23,7 @@ import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionsResponse;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
@@ -80,7 +80,7 @@ public class ModVersionsView extends JPanel {
                     throw new Exception("Could not get project by slug " + slug);
                 }
 
-                ProjectVersionResponse response = crmmApi.getProjectVersions(slug);
+                ProjectVersionsResponse response = crmmApi.getProjectVersions(slug);
 
                 if (response.isSuccess()) {
                     List<ProjectVersion> projectVersions = response.getProjectVersions();

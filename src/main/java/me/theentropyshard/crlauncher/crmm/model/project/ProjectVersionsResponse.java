@@ -20,13 +20,15 @@ package me.theentropyshard.crlauncher.crmm.model.project;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProjectVersionResponse {
+import java.util.List;
+
+public class ProjectVersionsResponse {
     private boolean success;
 
     @SerializedName("data")
-    private ProjectVersion projectVersion;
+    private List<ProjectVersion> projectVersions;
 
-    public ProjectVersionResponse() {
+    public ProjectVersionsResponse() {
 
     }
 
@@ -34,7 +36,7 @@ public class ProjectVersionResponse {
         return this.success;
     }
 
-    public ProjectVersion getProjectVersion() {
-        return this.projectVersion;
+    public List<ProjectVersion> getProjectVersions() {
+        return this.projectVersions;
     }
 }
