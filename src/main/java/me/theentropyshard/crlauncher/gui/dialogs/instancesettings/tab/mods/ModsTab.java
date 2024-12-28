@@ -192,12 +192,10 @@ public class ModsTab extends Tab implements ItemListener {
 
         this.loaderVersionCombo.removeAllItems();
 
-        if (instance.getModLoader() == ModLoader.FABRIC) {
-            new FabricVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
-        } else if (instance.getModLoader() == ModLoader.QUILT) {
-            new QuiltVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
-        } else if (instance.getModLoader() == ModLoader.PUZZLE) {
-            new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+        switch (instance.getModLoader()) {
+            case FABRIC -> new FabricVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+            case QUILT -> new QuiltVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+            case PUZZLE -> new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
         }
 
         this.versionsLoaded = true;
@@ -236,18 +234,16 @@ public class ModsTab extends Tab implements ItemListener {
     public void save() throws IOException {
         Instance instance = this.getInstance();
         instance.setModLoader((ModLoader) this.typeCombo.getSelectedItem());
-        if (instance.getModLoader() == ModLoader.FABRIC) {
-            instance.setFabricVersion(
-                ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
-            );
-        } else if (instance.getModLoader() == ModLoader.QUILT) {
-            instance.setQuiltVersion(
-                ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
-            );
-        } else if (instance.getModLoader() == ModLoader.PUZZLE) {
-            instance.setPuzzleVersion(
-                ((GithubRelease) Objects.requireNonNull(this.loaderVersionCombo.getSelectedItem())).tag_name
-            );
+
+        if (instance.getModLoader() == ModLoader.VANILLA) return;
+
+        GithubRelease versionCombo = (GithubRelease) this.loaderVersionCombo.getSelectedItem();
+        if (versionCombo == null) return;
+
+        switch (instance.getModLoader()) {
+            case FABRIC -> instance.setFabricVersion(versionCombo.tag_name);
+            case QUILT -> instance.setQuiltVersion(versionCombo.tag_name);
+            case PUZZLE -> instance.setPuzzleVersion(versionCombo.tag_name);
         }
     }
 
