@@ -45,7 +45,10 @@ import java.util.Objects;
 
 public class ModsTab extends Tab implements ItemListener {
     private final JComboBox<ModLoader> typeCombo;
+
     private final JComboBox<GithubRelease> loaderVersionCombo;
+    private final ToggleableItemListener loaderVersionListener;
+
     private final JPanel root;
     private final JPanel loaderVersionsPanel;
     private final ModsView modsView;
@@ -102,6 +105,22 @@ public class ModsTab extends Tab implements ItemListener {
                     return c;
                 }
             });
+
+            this.loaderVersionListener = new ToggleableItemListener(e -> {
+                GithubRelease versionCombo = (GithubRelease) e.getItem();
+
+                if (versionCombo == null) {
+                    return;
+                }
+
+                switch (instance.getModLoader()) {
+                    case FABRIC -> instance.setFabricVersion(versionCombo.tag_name);
+                    case QUILT -> instance.setQuiltVersion(versionCombo.tag_name);
+                    case PUZZLE -> instance.setPuzzleVersion(versionCombo.tag_name);
+                }
+            });
+
+            this.loaderVersionCombo.addItemListener(this.loaderVersionListener);
 
             this.loaderVersionsPanel = this.getTitledPanel(
                 language.getString("gui.instanceSettingsDialog.modsTab.loaderVersion.borderName"), 1, 1);
@@ -193,9 +212,9 @@ public class ModsTab extends Tab implements ItemListener {
         this.loaderVersionCombo.removeAllItems();
 
         switch (instance.getModLoader()) {
-            case FABRIC -> new FabricVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
-            case QUILT -> new QuiltVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
-            case PUZZLE -> new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+            case FABRIC -> new FabricVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
+            case QUILT -> new QuiltVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
+            case PUZZLE -> new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
         }
 
         this.versionsLoaded = true;
@@ -232,23 +251,15 @@ public class ModsTab extends Tab implements ItemListener {
 
     @Override
     public void save() throws IOException {
-        Instance instance = this.getInstance();
-        instance.setModLoader((ModLoader) this.typeCombo.getSelectedItem());
 
-        if (instance.getModLoader() == ModLoader.VANILLA) return;
-
-        GithubRelease versionCombo = (GithubRelease) this.loaderVersionCombo.getSelectedItem();
-        if (versionCombo == null) return;
-
-        switch (instance.getModLoader()) {
-            case FABRIC -> instance.setFabricVersion(versionCombo.tag_name);
-            case QUILT -> instance.setQuiltVersion(versionCombo.tag_name);
-            case PUZZLE -> instance.setPuzzleVersion(versionCombo.tag_name);
-        }
     }
 
     public JComboBox<GithubRelease> getLoaderVersionCombo() {
         return this.loaderVersionCombo;
+    }
+
+    public ToggleableItemListener getLoaderVersionListener() {
+        return this.loaderVersionListener;
     }
 
     public ModsView getModsView() {

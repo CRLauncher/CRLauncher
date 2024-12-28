@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java
 
 import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ToggleableItemListener;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.Instance;
 
@@ -29,12 +30,14 @@ import java.util.concurrent.ExecutionException;
 
 public class FabricVersionsLoaderWorker extends Worker<List<GithubRelease>, Void> {
     private final JComboBox<GithubRelease> versionsCombo;
+    private final ToggleableItemListener listener;
     private final Instance instance;
 
-    public FabricVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, Instance instance) {
+    public FabricVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, ToggleableItemListener listener, Instance instance) {
         super("loading Fabric versions");
 
         this.versionsCombo = versionsCombo;
+        this.listener = listener;
         this.instance = instance;
     }
 
@@ -52,9 +55,13 @@ public class FabricVersionsLoaderWorker extends Worker<List<GithubRelease>, Void
             throw new RuntimeException(e);
         }
 
+        this.listener.setActive(false);
+
         for (GithubRelease release : releases) {
             this.versionsCombo.addItem(release);
         }
+
+        this.listener.setActive(true);
 
         for (int i = 0; i < this.versionsCombo.getItemCount(); i++) {
             GithubRelease release = this.versionsCombo.getItemAt(i);
