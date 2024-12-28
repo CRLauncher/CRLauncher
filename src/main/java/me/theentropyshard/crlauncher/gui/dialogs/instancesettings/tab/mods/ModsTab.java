@@ -238,10 +238,7 @@ public class ModsTab extends Tab implements ItemListener {
         if (instance.getModLoader() == ModLoader.VANILLA) return;
 
         GithubRelease versionCombo = (GithubRelease) this.loaderVersionCombo.getSelectedItem();
-        if (versionCombo == null) {
-            Log.warn("Game version combo unavailable");
-            return;
-        }
+        if (versionCombo == null) return;
 
         switch (instance.getModLoader()) {
             case FABRIC -> instance.setFabricVersion(versionCombo.tag_name);
