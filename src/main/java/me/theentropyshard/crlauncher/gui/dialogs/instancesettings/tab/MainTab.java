@@ -36,10 +36,11 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.text.AbstractDocument;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 
@@ -152,6 +153,9 @@ public class MainTab extends Tab {
 
             this.windowTitleField = new JTextField(this.oldWindowTitle);
             this.windowTitleField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, section.getString("customTitle.textFieldPlaceholder"));
+            this.windowTitleField.getDocument().addDocumentListener(new SimpleDocumentListener(() -> {
+                instance.setCustomWindowTitle(this.windowTitleField.getText());
+            }));
 
             windowSettings.add(this.windowTitleField);
 
@@ -337,12 +341,6 @@ public class MainTab extends Tab {
 
     @Override
     public void save() throws IOException {
-        String windowTitle = this.windowTitleField.getText();
 
-        if (Objects.equals(this.oldWindowTitle, windowTitle)) {
-            return;
-        }
-
-        this.getInstance().setCustomWindowTitle(windowTitle);
     }
 }
