@@ -192,12 +192,10 @@ public class ModsTab extends Tab implements ItemListener {
 
         this.loaderVersionCombo.removeAllItems();
 
-        if (instance.getModLoader() == ModLoader.FABRIC) {
-            new FabricVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
-        } else if (instance.getModLoader() == ModLoader.QUILT) {
-            new QuiltVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
-        } else if (instance.getModLoader() == ModLoader.PUZZLE) {
-            new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+        switch (instance.getModLoader()) {
+            case FABRIC -> new FabricVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+            case QUILT -> new QuiltVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
+            case PUZZLE -> new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, instance).execute();
         }
 
         this.versionsLoaded = true;

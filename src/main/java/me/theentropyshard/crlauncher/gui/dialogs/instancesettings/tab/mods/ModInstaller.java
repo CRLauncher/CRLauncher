@@ -331,14 +331,11 @@ public class ModInstaller {
                     } else {
                         String json = StreamUtils.readToString(file.getInputStream(fileHeader));
 
-                        if (loader == ModLoader.FABRIC) {
-                            mod = Json.parse(json, FabricMod.class).toMod();
-                        } else if (loader == ModLoader.QUILT) {
-                            mod = Json.parse(json, QuiltMod.class).toMod();
-                        } else if (loader == ModLoader.PUZZLE) {
-                            mod = Json.parse(json, PuzzleMod.class).toMod();
-                        } else {
-                            mod = null;
+                        switch (loader) {
+                            case FABRIC -> mod = Json.parse(json, FabricMod.class).toMod();
+                            case QUILT -> mod = Json.parse(json, QuiltMod.class).toMod();
+                            case PUZZLE -> mod = Json.parse(json, PuzzleMod.class).toMod();
+                            default -> mod = null;
                         }
 
                         if (mod == null) {
