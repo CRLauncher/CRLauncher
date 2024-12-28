@@ -226,9 +226,4 @@ public class JavaTab extends Tab {
             textArea.setText(String.join(" ", flags));
         }
     }
-
-    @Override
-    public void save() throws IOException {
-
-    }
 }

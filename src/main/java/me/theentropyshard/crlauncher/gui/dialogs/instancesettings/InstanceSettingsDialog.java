@@ -98,14 +98,6 @@ public class InstanceSettingsDialog extends AppDialog {
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                for (Tab tab : InstanceSettingsDialog.this.tabs) {
-                    try {
-                        tab.save();
-                    } catch (IOException ex) {
-                        Log.error("Error saving tab", ex);
-                    }
-                }
-
                 InstancesPanel instancesPanel = CRLauncher.getInstance().getGui().getPlayView().getCurrentInstancesPanel();
                 JPanel itemsPanel = instancesPanel.getInstancesPanel();
                 for (Component component : itemsPanel.getComponents()) {

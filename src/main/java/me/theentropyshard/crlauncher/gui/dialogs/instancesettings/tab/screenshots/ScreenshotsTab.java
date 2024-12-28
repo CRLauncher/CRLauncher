@@ -44,9 +44,4 @@ public class ScreenshotsTab extends Tab {
     public void loadScreenshots() {
         new ScreenshotsLoader(this.screenshotsPanel, this.getInstance().getCosmicDir().resolve("screenshots")).execute();
     }
-
-    @Override
-    public void save() throws IOException {
-
-    }
 }

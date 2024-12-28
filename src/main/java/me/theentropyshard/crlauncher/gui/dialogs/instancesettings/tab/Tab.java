@@ -36,8 +36,6 @@ public abstract class Tab {
         this.root = new JPanel();
     }
 
-    public abstract void save() throws IOException;
-
     public void shown() {
 
     }

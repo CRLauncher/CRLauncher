@@ -166,9 +166,4 @@ public class WorldsTab extends Tab {
         root.setLayout(new BorderLayout());
         root.add(scrollPane, BorderLayout.CENTER);
     }
-
-    @Override
-    public void save() throws IOException {
-
-    }
 }

@@ -249,11 +249,6 @@ public class ModsTab extends Tab implements ItemListener {
         return panel;
     }
 
-    @Override
-    public void save() throws IOException {
-
-    }
-
     public JComboBox<GithubRelease> getLoaderVersionCombo() {
         return this.loaderVersionCombo;
     }

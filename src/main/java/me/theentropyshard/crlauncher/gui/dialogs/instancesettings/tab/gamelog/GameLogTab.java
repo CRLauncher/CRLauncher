@@ -277,9 +277,4 @@ public class GameLogTab extends Tab {
         this.copyTextButton.setEnabled(enabled);
         this.clearButton.setEnabled(enabled);
     }
-
-    @Override
-    public void save() throws IOException {
-
-    }
 }

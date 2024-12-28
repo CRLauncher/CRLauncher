@@ -338,9 +338,4 @@ public class MainTab extends Tab {
     public void hidden() {
         this.getDialog().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
     }
-
-    @Override
-    public void save() throws IOException {
-
-    }
 }

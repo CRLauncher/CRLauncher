@@ -61,9 +61,4 @@ public class JarModsTab extends Tab {
 
         root.add(bottomPanel, BorderLayout.SOUTH);
     }
-
-    @Override
-    public void save() throws IOException {
-
-    }
 }
