@@ -112,24 +112,36 @@ public class CosmicRunner extends Thread {
                 versionManager.load();
             }
 
+            Log.info("Starting instance \"" + this.instance.getName() + "\"");
+            Log.info("Cosmic Reach version: " + this.instance.getCosmicVersion());
+
             this.updateCosmicVersion();
 
+            Log.info("Mod Loader: " + this.instance.getModLoader());
+
             Version version = versionManager.getVersion(this.instance.getCosmicVersion());
+
+            Log.info("Versions source: " + (CRLauncher.getInstance().getSettings().versionsSourceOption == 1 ? "Itch" : "Cosmic Archive"));
 
             if (version == null) {
                 SwingUtilities.invokeLater(() -> {
                     String s = CRLauncher.getInstance().getLanguage().getString("messages.gui.progressDialog.nonexistentVersion");
-                    MessageBox.showErrorMessage(CRLauncher.frame, s
+                    String message = s
                         .replace("$$VERSION_ID$$", this.instance.getCosmicVersion())
                         .replace("$$VERSION_LIST$$",
                             switch (CRLauncher.getInstance().getSettings().versionsSourceOption) {
                                 case 1 -> "Itch";
                                 default -> "Cosmic Archive";
-                            }));
+                            });
+
+                    Log.error(message);
+                    MessageBox.showErrorMessage(CRLauncher.frame, message);
                 });
 
                 return;
             } else {
+                Log.info("Downloading/verifying Cosmic Reach");
+
                 ProgressDialog dialog = new ProgressDialog("Downloading Cosmic Reach");
                 SwingUtilities.invokeLater(() -> dialog.setVisible(true));
                 versionManager.downloadVersion(version, dialog);
@@ -137,6 +149,7 @@ public class CosmicRunner extends Thread {
             }
 
             Path saveDirPath = this.instance.getCosmicDir();
+            Log.info("Working directory: " + saveDirPath);
 
             this.instance.setLastTimePlayed(LocalDateTime.now());
 
@@ -145,6 +158,8 @@ public class CosmicRunner extends Thread {
                 javaPath = JavaLocator.getJavaPath();
                 this.instance.setJavaPath(javaPath);
             }
+
+            Log.info("Java path: " + javaPath);
 
             Path clientPath = this.applyJarMods(version);
 
@@ -365,6 +380,8 @@ public class CosmicRunner extends Thread {
             }
 
             this.instance.setCosmicVersion(latest.getId());
+
+            Log.info("Updated Cosmic Reach version to " + latest.getId());
         }
     }
 

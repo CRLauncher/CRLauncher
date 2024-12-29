@@ -108,6 +108,11 @@ public class CRLauncher {
 
         CRLauncher.setInstance(this);
 
+        Log.info(BuildConfig.APP_NAME + " " + BuildConfig.APP_VERSION);
+        Log.info("Operating system: " + OperatingSystem.getName() + " " + OperatingSystem.getVersion() + " x" + OperatingSystem.getBits());
+        Log.info("Java " + System.getProperty("java.version") + " by " + System.getProperty("java.vm.vendor"));
+        Log.info("Java path: " + JavaLocator.getJavaPath());
+
         this.settingsFile = this.workDir.resolve("settings.json");
         this.settings = Settings.load(this.settingsFile);
 
