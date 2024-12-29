@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 public class PuzzleManager {
@@ -57,6 +58,7 @@ public class PuzzleManager {
     );
 
     private static final SemanticVersion VERSION_2_0_0 = new SemanticVersion(2, 0, 0);
+    private static final SemanticVersion VERSION_2_1_15 = new SemanticVersion(2, 1, 15);
 
     private final Path versionsDir;
     private final Path depsDir;
@@ -140,6 +142,14 @@ public class PuzzleManager {
     public static List<PuzzleDependency> getLibraries(String version) {
         SemanticVersion puzzleVersion = SemanticVersion.parse(version);
 
+        if (puzzleVersion == null) {
+            throw new RuntimeException("Could not parse semantic version: " + version);
+        }
+
+        if (puzzleVersion.isHigherThan(PuzzleManager.VERSION_2_1_15)) {
+            return Collections.emptyList();
+        }
+
         if (puzzleVersion.isLowerThan(PuzzleManager.VERSION_2_0_0)) {
             return PuzzleManager.LIBRARIES;
         } else {
@@ -150,6 +160,10 @@ public class PuzzleManager {
     public static String getClientName(String version) {
         SemanticVersion puzzleVersion = SemanticVersion.parse(version);
 
+        if (puzzleVersion == null) {
+            throw new RuntimeException("Could not parse semantic version: " + version);
+        }
+
         if (puzzleVersion.isLowerThan(PuzzleManager.VERSION_2_0_0)) {
             return "PuzzleLoader-" + version + ".jar";
         } else {
@@ -159,6 +173,10 @@ public class PuzzleManager {
 
     public static String getMainClass(String version) {
         SemanticVersion puzzleVersion = SemanticVersion.parse(version);
+
+        if (puzzleVersion == null) {
+            throw new RuntimeException("Could not parse semantic version: " + version);
+        }
 
         if (puzzleVersion.isLowerThan(PuzzleManager.VERSION_2_0_0)) {
             return PuzzleProperties.MAIN_CLASS;
