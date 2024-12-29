@@ -143,7 +143,7 @@ public class ModDownloadWorker extends Worker<Void, Pair<Mod, ModLoader>> {
 
         FileUtils.createDirectoryIfNotExists(modFolder);
 
-        Path modPath = Files.move(
+        Path modPath = Files.copy(
             saveAs, modFolder.resolve(saveAs.getFileName()), StandardCopyOption.REPLACE_EXISTING
         );
 
