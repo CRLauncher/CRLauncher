@@ -107,6 +107,8 @@ public class ModDownloadWorker extends Worker<Void, Pair<Mod, ModLoader>> {
             }
         }
 
+        FileUtils.delete(saveAs);
+
         return null;
     }
 
