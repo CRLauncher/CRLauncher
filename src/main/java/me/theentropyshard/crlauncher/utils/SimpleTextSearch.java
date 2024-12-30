@@ -19,11 +19,16 @@
 package me.theentropyshard.crlauncher.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SimpleTextSearch implements TextSearch {
     @Override
     public List<Pair<Integer, Integer>> findOccurrences(String haystack, String needle) {
+        if (haystack.isEmpty() || needle.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         List<Pair<Integer, Integer>> occurrences = new ArrayList<>();
 
         List<Integer> rawOccurrences = SimpleTextSearch.findSequenceOccurrences(haystack, needle);
