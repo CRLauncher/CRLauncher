@@ -48,8 +48,12 @@ public class QuiltVersionsLoaderWorker extends Worker<List<GithubRelease>, Void>
     protected List<GithubRelease> work() throws Exception {
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
             String string = request.asString("https://codeberg.org/api/v1/repos/CRModders/cosmic-quilt/releases");
+            List<GithubRelease> versionArray = new ArrayList<>(List.of(Json.parse(string, GithubRelease[].class)));
 
-            return new ArrayList<>(List.of(Json.parse(string, GithubRelease[].class)));
+            if (this.instance.getQuiltVersion() == null)
+                this.instance.setQuiltVersion(versionArray.getFirst().tag_name);
+
+            return versionArray;
         }
     }
 
