@@ -51,10 +51,13 @@ public class InstanceSettingsDialog extends AppDialog {
     private int lastSelectedTab = 0;
 
     public InstanceSettingsDialog(Instance instance) {
-        super(CRLauncher.frame,
-            CRLauncher.getInstance().getLanguage()
-                .getString("gui.instanceSettingsDialog.title")
-                .replace("$$INSTANCE_NAME$$", instance.getName()));
+        super(
+                CRLauncher.frame,
+                CRLauncher.getInstance().getLanguage()
+                    .getString("gui.instanceSettingsDialog.title")
+                    .replace("$$INSTANCE_NAME$$", instance.getName()),
+                false // Allow clicking the parent window to launch the window
+        );
 
         this.tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
         this.tabbedPane.setPreferredSize(new Dimension(900, 480));

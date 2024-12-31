@@ -43,7 +43,12 @@ public class FabricVersionsLoaderWorker extends Worker<List<GithubRelease>, Void
 
     @Override
     protected List<GithubRelease> work() throws Exception {
-        return new GithubApi().getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");
+        List<GithubRelease> versionArray = new GithubApi().getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");
+
+        if (this.instance.getFabricVersion() == null)
+            this.instance.setFabricVersion(versionArray.getFirst().tag_name);
+
+        return versionArray;
     }
 
     @Override
