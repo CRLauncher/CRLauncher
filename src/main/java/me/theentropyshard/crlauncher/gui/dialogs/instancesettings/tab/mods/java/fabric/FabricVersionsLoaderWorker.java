@@ -45,8 +45,9 @@ public class FabricVersionsLoaderWorker extends Worker<List<GithubRelease>, Void
     protected List<GithubRelease> work() throws Exception {
         List<GithubRelease> versionArray = new GithubApi().getAllReleases("ForwarD-Nern", "CosmicReach-Mod-Loader");
 
-        if (this.instance.getFabricVersion() == null)
-            this.instance.setFabricVersion(versionArray.getFirst().tag_name);
+        if (this.instance.getFabricVersion() == null) {
+            this.instance.setFabricVersion(versionArray.get(0).tag_name);
+        }
 
         return versionArray;
     }

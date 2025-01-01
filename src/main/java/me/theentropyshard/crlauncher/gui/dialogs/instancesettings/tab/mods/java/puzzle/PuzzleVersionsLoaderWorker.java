@@ -45,8 +45,9 @@ public class PuzzleVersionsLoaderWorker extends Worker<List<GithubRelease>, Void
     protected List<GithubRelease> work() throws Exception {
         List<GithubRelease> versionArray = new GithubApi().getAllReleases("PuzzleLoader", "PuzzleLoader");
 
-        if (this.instance.getPuzzleVersion() == null)
-            this.instance.setPuzzleVersion(versionArray.getFirst().tag_name);
+        if (this.instance.getPuzzleVersion() == null) {
+            this.instance.setPuzzleVersion(versionArray.get(0).tag_name);
+        }
 
         return versionArray;
     }

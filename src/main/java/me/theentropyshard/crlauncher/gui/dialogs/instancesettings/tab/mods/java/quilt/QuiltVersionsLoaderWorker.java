@@ -50,8 +50,9 @@ public class QuiltVersionsLoaderWorker extends Worker<List<GithubRelease>, Void>
             String string = request.asString("https://codeberg.org/api/v1/repos/CRModders/cosmic-quilt/releases");
             List<GithubRelease> versionArray = new ArrayList<>(List.of(Json.parse(string, GithubRelease[].class)));
 
-            if (this.instance.getQuiltVersion() == null)
-                this.instance.setQuiltVersion(versionArray.getFirst().tag_name);
+            if (this.instance.getQuiltVersion() == null) {
+                this.instance.setQuiltVersion(versionArray.get(0).tag_name);
+            }
 
             return versionArray;
         }
