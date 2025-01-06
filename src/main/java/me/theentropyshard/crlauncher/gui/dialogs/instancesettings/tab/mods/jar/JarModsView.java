@@ -23,7 +23,7 @@ import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModInstaller;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 
@@ -37,7 +37,7 @@ public class JarModsView extends JPanel {
     private final JTable jarModsTable;
     private final JarModsTableModel jarModsTableModel;
 
-    public JarModsView(Instance instance) {
+    public JarModsView(CosmicInstance instance) {
         super(new BorderLayout());
 
         this.jarModsTable = new JTable();

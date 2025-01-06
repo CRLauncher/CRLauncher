@@ -25,7 +25,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModInstaller;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
@@ -46,10 +46,10 @@ public class JavaModsLoader extends Worker<Void, Mod> {
     private final Path disabledModsDir;
     private final List<Mod> mods;
     private final ModLoader loader;
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final JavaModsTableModel tableModel;
 
-    public JavaModsLoader(Instance instance, JavaModsTableModel tableModel) {
+    public JavaModsLoader(CosmicInstance instance, JavaModsTableModel tableModel) {
         super("loading " + instance.getModLoader().getName() + " mods");
 
         this.modsDir = instance.getCurrentModsDir();

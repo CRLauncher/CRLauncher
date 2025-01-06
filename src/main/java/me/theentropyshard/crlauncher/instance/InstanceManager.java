@@ -21,7 +21,6 @@ package me.theentropyshard.crlauncher.instance;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import me.theentropyshard.crlauncher.utils.StringUtils;
 import me.theentropyshard.crlauncher.utils.ZipUtils;
 import me.theentropyshard.crlauncher.utils.json.Json;
@@ -41,8 +40,8 @@ public class InstanceManager {
 
 
     private final Path workDir;
-    private final List<Instance> instances;
-    private final Map<String, Instance> instancesByName;
+    private final List<CosmicInstance> instances;
+    private final Map<String, CosmicInstance> instancesByName;
 
     public InstanceManager(Path workDir) {
         this.workDir = workDir;
@@ -62,14 +61,14 @@ public class InstanceManager {
         }
     }
 
-    private Instance loadInstance(Path instanceDir) throws IOException {
+    private CosmicInstance loadInstance(Path instanceDir) throws IOException {
         Path instanceFile = instanceDir.resolve("instance.json");
 
         if (!Files.exists(instanceFile)) {
             return null;
         }
 
-        Instance instance = Json.parse(FileUtils.readUtf8(instanceFile), Instance.class);
+        CosmicInstance instance = Json.parse(FileUtils.readUtf8(instanceFile), CosmicInstance.class);
         instance.setWorkDir(instanceDir);
 
         this.cacheInstance(instance);
@@ -82,7 +81,7 @@ public class InstanceManager {
         this.load();
     }
 
-    private void cacheInstance(Instance instance) {
+    private void cacheInstance(CosmicInstance instance) {
         if (this.instancesByName.containsKey(instance.getName())) {
             return;
         }
@@ -91,7 +90,7 @@ public class InstanceManager {
         this.instancesByName.put(instance.getName(), instance);
     }
 
-    private void uncacheInstance(Instance instance) {
+    private void uncacheInstance(CosmicInstance instance) {
         if (!this.instancesByName.containsKey(instance.getName())) {
             return;
         }
@@ -142,7 +141,7 @@ public class InstanceManager {
         return freeName;
     }
 
-    public Instance createInstance(String name, String groupName, String cosmicVersion, boolean autoUpdate) throws
+    public CosmicInstance createInstance(String name, String groupName, String cosmicVersion, boolean autoUpdate) throws
         IOException,
         InstanceAlreadyExistsException {
 
@@ -150,7 +149,7 @@ public class InstanceManager {
             throw new InstanceAlreadyExistsException(name);
         }
 
-        Instance instance = new Instance(name, groupName, cosmicVersion);
+        CosmicInstance instance = new CosmicInstance(name, groupName, cosmicVersion);
         instance.setWorkDir(this.getInstanceWorkDir(name, cosmicVersion));
         instance.setAutoUpdateToLatest(autoUpdate);
         instance.setJavaPath(JavaLocator.getJavaPath());
@@ -170,7 +169,7 @@ public class InstanceManager {
     }
 
     public void removeInstance(String name) throws IOException {
-        Instance instance = this.getInstanceByName(name);
+        CosmicInstance instance = this.getInstanceByName(name);
 
         if (instance == null) {
             return;
@@ -181,7 +180,7 @@ public class InstanceManager {
         this.uncacheInstance(instance);
     }
 
-    public boolean renameInstance(Instance instance, String newName) throws IOException {
+    public boolean renameInstance(CosmicInstance instance, String newName) throws IOException {
         this.uncacheInstance(instance);
 
         Path newInstanceDir = this.getInstanceWorkDir(newName, instance.getCosmicVersion());
@@ -225,7 +224,7 @@ public class InstanceManager {
             zipFile.extractAll(this.workDir.toString());
 
             Path instanceDir = this.workDir.resolve(fileName);
-            Instance instance = this.loadInstance(instanceDir);
+            CosmicInstance instance = this.loadInstance(instanceDir);
             if (instance == null) {
                 FileUtils.delete(instanceDir);
 
@@ -263,11 +262,11 @@ public class InstanceManager {
         INSTANCE_EXISTS
     }
 
-    public Instance getInstanceByName(String name) {
+    public CosmicInstance getInstanceByName(String name) {
         return this.instancesByName.get(name);
     }
 
-    public List<Instance> getInstances() {
+    public List<CosmicInstance> getInstances() {
         return this.instances;
     }
 }

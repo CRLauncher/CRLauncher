@@ -25,7 +25,7 @@ import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.layouts.WrapLayout;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
@@ -37,7 +37,7 @@ import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 public class SelectIconDialog extends AppDialog {
-    public SelectIconDialog(InstanceItem item, Instance instance) {
+    public SelectIconDialog(InstanceItem item, CosmicInstance instance) {
         super(CRLauncher.frame, "Select an Icon - " + instance.getName());
 
         JPanel root = new JPanel(new BorderLayout());

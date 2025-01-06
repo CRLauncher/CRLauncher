@@ -27,7 +27,7 @@ import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionsResponse;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
@@ -38,11 +38,11 @@ import java.util.List;
 public class ModVersionsView extends JPanel {
     private final JPanel modVersionCardsPanel;
     private final ModInfo modInfo;
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final ModsTab modsTab;
     private final WorkerSupplier<?, Void> workerSupplier;
 
-    public ModVersionsView(ModInfo modInfo, Instance instance, ModsTab modsTab, WorkerSupplier<?, Void> workerSupplier) {
+    public ModVersionsView(ModInfo modInfo, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> workerSupplier) {
         super(new BorderLayout());
 
         this.modInfo = modInfo;
@@ -120,7 +120,7 @@ public class ModVersionsView extends JPanel {
         return this.modInfo;
     }
 
-    public Instance getInstance() {
+    public CosmicInstance getInstance() {
         return this.instance;
     }
 

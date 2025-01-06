@@ -24,7 +24,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
@@ -35,10 +35,10 @@ public class DataModsTableModel extends ModsTableModel {
     private static final double[] WIDTH_PERCENTAGES = {90.0D, 10.0D};
 
     private final JTable modsTable;
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final String[] columnNames;
 
-    public DataModsTableModel(JTable modsTable, Instance instance) {
+    public DataModsTableModel(JTable modsTable, CosmicInstance instance) {
         super(instance.getDataMods());
 
         this.modsTable = modsTable;

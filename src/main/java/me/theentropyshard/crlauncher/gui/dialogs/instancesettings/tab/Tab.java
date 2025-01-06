@@ -18,18 +18,17 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
 
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
-import java.io.IOException;
 
 public abstract class Tab {
     private final JDialog dialog;
     private final String name;
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final JPanel root;
 
-    public Tab(String name, Instance instance, JDialog dialog) {
+    public Tab(String name, CosmicInstance instance, JDialog dialog) {
         this.name = name;
         this.instance = instance;
         this.dialog = dialog;
@@ -48,7 +47,7 @@ public abstract class Tab {
         return this.name;
     }
 
-    public Instance getInstance() {
+    public CosmicInstance getInstance() {
         return this.instance;
     }
 

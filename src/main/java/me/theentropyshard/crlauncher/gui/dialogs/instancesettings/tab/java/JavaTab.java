@@ -24,7 +24,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.CosmicRunner;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -33,7 +33,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class JavaTab extends Tab {
     private final JTextArea flagsArea;
     private final JComboBox<String> flagsOptions;
 
-    public JavaTab(Instance instance, JDialog dialog) {
+    public JavaTab(CosmicInstance instance, JDialog dialog) {
         super(CRLauncher.getInstance().getLanguage()
             .getString("gui.instanceSettingsDialog.javaTab.name"), instance, dialog);
 

@@ -25,7 +25,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.data.DataModsTableModel;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.JavaModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 
@@ -37,7 +37,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class ModsView extends JPanel {
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final JComboBox<String> modpackCombo;
     private final JTable modsTable;
     private final JButton addModButton;
@@ -45,7 +45,7 @@ public class ModsView extends JPanel {
 
     private ModsTableModel modsTableModel;
 
-    public ModsView(Instance instance) {
+    public ModsView(CosmicInstance instance) {
         super(new BorderLayout());
 
         this.instance = instance;

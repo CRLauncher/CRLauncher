@@ -28,7 +28,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.quilt.QuiltVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -41,7 +41,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Objects;
 
 public class ModsTab extends Tab implements ItemListener {
     private final JComboBox<ModLoader> typeCombo;
@@ -56,7 +55,7 @@ public class ModsTab extends Tab implements ItemListener {
     private ModLoader lastType;
     private boolean versionsLoaded;
 
-    public ModsTab(Instance instance, JDialog dialog) {
+    public ModsTab(CosmicInstance instance, JDialog dialog) {
         super(CRLauncher.getInstance().getLanguage()
             .getString("gui.instanceSettingsDialog.modsTab.name"), instance, dialog);
 
@@ -197,7 +196,7 @@ public class ModsTab extends Tab implements ItemListener {
     }
 
     private void loadModloaderVersions() {
-        Instance instance = this.getInstance();
+        CosmicInstance instance = this.getInstance();
 
         if (instance.getModLoader() == ModLoader.VANILLA) {
             this.loaderVersionsPanel.setVisible(false);
@@ -233,7 +232,7 @@ public class ModsTab extends Tab implements ItemListener {
             return;
         }
 
-        Instance instance = this.getInstance();
+        CosmicInstance instance = this.getInstance();
 
         this.lastType = instance.getModLoader();
         instance.setModLoader((ModLoader) e.getItem());

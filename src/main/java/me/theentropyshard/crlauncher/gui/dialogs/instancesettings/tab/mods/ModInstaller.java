@@ -29,7 +29,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar.JarModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
@@ -50,7 +50,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 public class ModInstaller {
-    public static void pickMod(Instance instance, ModsTableModel tableModel) {
+    public static void pickMod(CosmicInstance instance, ModsTableModel tableModel) {
         ModLoader loader = instance.getModLoader();
 
         if (loader == ModLoader.VANILLA) {
@@ -60,7 +60,7 @@ public class ModInstaller {
         }
     }
 
-    public static void pickJarMod(Instance instance, JarModsTableModel tableModel) {
+    public static void pickJarMod(CosmicInstance instance, JarModsTableModel tableModel) {
         UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 
         Language language = CRLauncher.getInstance().getLanguage();
@@ -136,7 +136,7 @@ public class ModInstaller {
         }.execute();
     }
 
-    public static void pickDataMod(Instance instance, ModsTableModel tableModel) {
+    public static void pickDataMod(CosmicInstance instance, ModsTableModel tableModel) {
         UIManager.put("FileChooser.readOnly", Boolean.TRUE);
 
         Language language = CRLauncher.getInstance().getLanguage();
@@ -265,7 +265,7 @@ public class ModInstaller {
         }.execute();
     }
 
-    public static void pickJavaMod(Instance instance, ModsTableModel tableModel) {
+    public static void pickJavaMod(CosmicInstance instance, ModsTableModel tableModel) {
         ModLoader loader = instance.getModLoader();
 
         if (loader == ModLoader.VANILLA) {

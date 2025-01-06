@@ -26,7 +26,7 @@ import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
 import me.theentropyshard.crlauncher.gui.utils.*;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -39,7 +39,6 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
@@ -54,7 +53,7 @@ public class MainTab extends Tab {
     private List<Version> versions;
     private Version previousValue;
 
-    public MainTab(Instance instance, JDialog dialog) {
+    public MainTab(CosmicInstance instance, JDialog dialog) {
         super(CRLauncher.getInstance().getLanguage()
             .getString("gui.instanceSettingsDialog.mainTab.name"), instance, dialog);
 

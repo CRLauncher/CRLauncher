@@ -22,12 +22,12 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import java.awt.*;
 
 public class ModVersionsDialog extends AppDialog {
-    public ModVersionsDialog(ModInfo modInfo, Instance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
+    public ModVersionsDialog(ModInfo modInfo, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
         super(CRLauncher.frame,
             CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modVersionsDialogTitle") +
                 " - " + modInfo.getName());

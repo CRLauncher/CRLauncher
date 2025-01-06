@@ -25,13 +25,12 @@ import me.theentropyshard.crlauncher.cosmic.account.ItchIoAccount;
 import me.theentropyshard.crlauncher.cosmic.launcher.*;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
-import me.theentropyshard.crlauncher.cosmic.version.VersionList;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -78,13 +77,13 @@ public class CosmicRunner extends Thread {
 
     public static final String ITCH_IO_API_KEY_ENV_KEY = "ITCHIO_API_KEY";
 
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final InstanceItem item;
 
     private Process process;
     private Path clientCopyTmp;
 
-    public CosmicRunner(Instance instance, InstanceItem item) {
+    public CosmicRunner(CosmicInstance instance, InstanceItem item) {
         this.instance = instance;
         this.item = item;
 

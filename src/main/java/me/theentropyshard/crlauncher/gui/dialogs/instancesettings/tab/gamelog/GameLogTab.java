@@ -28,7 +28,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -51,10 +51,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class GameLogTab extends Tab {
     private final JTextPane logArea;
@@ -67,7 +65,7 @@ public class GameLogTab extends Tab {
     private List<Pair<Integer, Integer>> searchIndices;
     private int searchPairIndex;
 
-    public GameLogTab(Instance instance, JDialog dialog) {
+    public GameLogTab(CosmicInstance instance, JDialog dialog) {
         super(CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.gameLogTab.name"), instance, dialog);
 
         Language language = CRLauncher.getInstance().getLanguage();

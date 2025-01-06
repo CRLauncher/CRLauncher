@@ -30,7 +30,7 @@ import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
 import me.theentropyshard.crlauncher.gui.utils.MouseEnterExitListener;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
@@ -61,7 +61,7 @@ public class PlayView extends JPanel {
     private InstancesPanel currentPanel;
     private CosmicRunner cosmicRunner;
     private InstanceItem lastItem;
-    private Instance lastPlayedInstance;
+    private CosmicInstance lastPlayedInstance;
 
     public PlayView() {
         super(new BorderLayout());
@@ -105,12 +105,12 @@ public class PlayView extends JPanel {
 
         this.add(this.instanceInfoLabel, BorderLayout.SOUTH);
 
-        new Worker<List<Instance>, Void>("loading instances") {
+        new Worker<List<CosmicInstance>, Void>("loading instances") {
             @Override
-            protected List<Instance> work() throws Exception {
+            protected List<CosmicInstance> work() throws Exception {
                 InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
 
-                List<Instance> instances = instanceManager.getInstances();
+                List<CosmicInstance> instances = instanceManager.getInstances();
                 instances.sort((instance1, instance2) -> {
                     LocalDateTime lastTimePlayed1 = instance1.getLastTimePlayed();
                     LocalDateTime lastTimePlayed2 = instance2.getLastTimePlayed();
@@ -123,13 +123,13 @@ public class PlayView extends JPanel {
             @Override
             protected void done() {
                 try {
-                    List<Instance> instances = this.get();
+                    List<CosmicInstance> instances = this.get();
 
                     if (instances.size() > 0) {
                         PlayView.this.lastPlayedInstance = instances.get(0);
                     }
 
-                    for (Instance instance : instances) {
+                    for (CosmicInstance instance : instances) {
                         PlayView.this.loadInstance(instance, false);
                     }
 
@@ -144,7 +144,7 @@ public class PlayView extends JPanel {
         }.execute();
     }
 
-    public void loadInstance(Instance instance, boolean sort) {
+    public void loadInstance(CosmicInstance instance, boolean sort) {
         InstanceItem item = new InstanceItem(instance);
         PlayView.this.addInstanceItem(item, instance.getGroupName(), sort);
     }
@@ -181,7 +181,7 @@ public class PlayView extends JPanel {
             } else if (mouseButton == MouseEvent.BUTTON3) { // right mouse button
                 Language language = CRLauncher.getInstance().getLanguage();
 
-                Instance instance = item.getAssociatedInstance();
+                CosmicInstance instance = item.getAssociatedInstance();
 
                 JPopupMenu popupMenu = new JPopupMenu();
 
@@ -260,7 +260,7 @@ public class PlayView extends JPanel {
             enter -> {
                 this.instanceInfoLabel.setVisible(true);
 
-                Instance instance = item.getAssociatedInstance();
+                CosmicInstance instance = item.getAssociatedInstance();
 
                 if (instance == null) {
                     return;
@@ -314,7 +314,7 @@ public class PlayView extends JPanel {
     public void deleteInstance(InstanceItem item) {
         Language language = CRLauncher.getInstance().getLanguage();
 
-        Instance instance = item.getAssociatedInstance();
+        CosmicInstance instance = item.getAssociatedInstance();
 
         boolean ok = MessageBox.showConfirmMessage(
             CRLauncher.frame,
@@ -344,7 +344,7 @@ public class PlayView extends JPanel {
         this.header.reloadLanguage();
     }
 
-    public Instance getLastPlayedInstance() {
+    public CosmicInstance getLastPlayedInstance() {
         return this.lastPlayedInstance;
     }
 

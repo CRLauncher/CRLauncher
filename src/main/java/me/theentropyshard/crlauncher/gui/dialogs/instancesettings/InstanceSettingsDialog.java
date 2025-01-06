@@ -31,7 +31,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar.J
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screenshots.ScreenshotsTab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds.WorldsTab;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 
 import javax.swing.*;
@@ -50,7 +50,7 @@ public class InstanceSettingsDialog extends AppDialog {
 
     private int lastSelectedTab = 0;
 
-    public InstanceSettingsDialog(Instance instance) {
+    public InstanceSettingsDialog(CosmicInstance instance) {
         super(
                 CRLauncher.frame,
                 CRLauncher.getInstance().getLanguage()
@@ -105,7 +105,7 @@ public class InstanceSettingsDialog extends AppDialog {
                 JPanel itemsPanel = instancesPanel.getInstancesPanel();
                 for (Component component : itemsPanel.getComponents()) {
                     if (component instanceof InstanceItem item) {
-                        Instance associatedInstance = item.getAssociatedInstance();
+                        CosmicInstance associatedInstance = item.getAssociatedInstance();
                         if (associatedInstance == instance) {
                             ((InstanceItem) component).getTextLabel().setText(instance.getName());
                             try {

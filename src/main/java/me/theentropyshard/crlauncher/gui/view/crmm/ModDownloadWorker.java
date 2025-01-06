@@ -29,7 +29,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModInstaller;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
@@ -51,12 +51,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Stream;
 
 public class ModDownloadWorker extends Worker<Void, Pair<Mod, ModLoader>> {
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final ModsTableModel tableModel;
     private final ProjectVersion version;
     private final ProjectFile file;
 
-    public ModDownloadWorker(Instance instance, ModsTableModel tableModel, ProjectVersion version, ProjectFile file) {
+    public ModDownloadWorker(CosmicInstance instance, ModsTableModel tableModel, ProjectVersion version, ProjectFile file) {
         super("downloading mod " + version.getTitle());
 
         this.instance = instance;

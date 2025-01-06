@@ -22,7 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 import net.lingala.zip4j.ZipFile;
 
@@ -33,9 +33,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class InstanceExportAction extends AbstractAction {
-    private final Instance instance;
+    private final CosmicInstance instance;
 
-    public InstanceExportAction(Instance instance) {
+    public InstanceExportAction(CosmicInstance instance) {
         super(CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.exportInstance.exportButton"));
 
         this.instance = instance;

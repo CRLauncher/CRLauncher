@@ -21,7 +21,7 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,11 +29,11 @@ import java.awt.*;
 
 public class SearchCrmmModsView extends JPanel {
     private final JPanel modCardsPanel;
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final ModsTab modsTab;
     private final SearchType searchType;
 
-    public SearchCrmmModsView(Instance instance, ModsTab modsTab, SearchType searchType) {
+    public SearchCrmmModsView(CosmicInstance instance, ModsTab modsTab, SearchType searchType) {
         super(new BorderLayout());
 
         this.instance = instance;
@@ -69,7 +69,7 @@ public class SearchCrmmModsView extends JPanel {
         return this.searchType;
     }
 
-    public Instance getInstance() {
+    public CosmicInstance getInstance() {
         return this.instance;
     }
 

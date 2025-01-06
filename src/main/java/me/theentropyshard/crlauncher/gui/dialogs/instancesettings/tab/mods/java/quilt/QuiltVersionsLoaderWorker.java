@@ -22,7 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ToggleableItemListener;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.network.HttpRequest;
 import me.theentropyshard.crlauncher.utils.json.Json;
 
@@ -34,9 +34,9 @@ import java.util.concurrent.ExecutionException;
 public class QuiltVersionsLoaderWorker extends Worker<List<GithubRelease>, Void> {
     private final JComboBox<GithubRelease> versionsCombo;
     private final ToggleableItemListener listener;
-    private final Instance instance;
+    private final CosmicInstance instance;
 
-    public QuiltVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, ToggleableItemListener listener, Instance instance) {
+    public QuiltVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, ToggleableItemListener listener, CosmicInstance instance) {
         super("loading Cosmic Quilt versions");
 
         this.versionsCombo = versionsCombo;

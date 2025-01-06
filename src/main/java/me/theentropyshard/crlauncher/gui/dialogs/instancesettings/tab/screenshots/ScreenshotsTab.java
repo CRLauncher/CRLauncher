@@ -20,16 +20,15 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screensho
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.IOException;
 
 public class ScreenshotsTab extends Tab {
     private final ScreenshotsPanel screenshotsPanel;
 
-    public ScreenshotsTab(Instance instance, JDialog dialog) {
+    public ScreenshotsTab(CosmicInstance instance, JDialog dialog) {
         super(CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.screenshotsTab.name"), instance, dialog);
 
         JPanel root = this.getRoot();

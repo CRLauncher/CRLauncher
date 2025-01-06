@@ -23,7 +23,7 @@ import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
 
@@ -136,7 +136,7 @@ public class InstanceImportAction extends AbstractAction {
                 }
 
                 CRLauncher.getInstance().getGui().getPlayView().loadInstance(
-                    ((Instance) result.getMessage()), true
+                    ((CosmicInstance) result.getMessage()), true
                 );
             }
         }.execute();

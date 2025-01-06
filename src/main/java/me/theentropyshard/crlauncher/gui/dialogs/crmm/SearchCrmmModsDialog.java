@@ -22,13 +22,13 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.CrmmModsView;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class SearchCrmmModsDialog extends AppDialog {
-    public SearchCrmmModsDialog(Instance instance, ModsTab modsTab) {
+    public SearchCrmmModsDialog(CosmicInstance instance, ModsTab modsTab) {
         super(CRLauncher.frame, CRLauncher.getInstance().getLanguage()
             .getString("gui.searchCRMMModsDialog.title"));
 

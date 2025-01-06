@@ -18,7 +18,6 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java;
 
-import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
@@ -26,7 +25,7 @@ import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 
@@ -38,11 +37,11 @@ public class JavaModsTableModel extends ModsTableModel {
     private static final double[] WIDTH_PERCENTAGES = {30.0D, 10.0D, 50.0D, 10.0D};
 
     private final JTable modsTable;
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final ModLoader loader;
     private final String[] columnNames;
 
-    public JavaModsTableModel(JTable modsTable, Instance instance, ModLoader loader) {
+    public JavaModsTableModel(JTable modsTable, CosmicInstance instance, ModLoader loader) {
         super(instance.getMods(loader));
 
         this.modsTable = modsTable;

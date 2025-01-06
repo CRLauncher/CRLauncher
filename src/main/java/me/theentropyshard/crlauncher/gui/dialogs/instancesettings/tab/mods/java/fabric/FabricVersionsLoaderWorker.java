@@ -22,7 +22,7 @@ import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ToggleableItemListener;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
 import java.util.List;
@@ -31,9 +31,9 @@ import java.util.concurrent.ExecutionException;
 public class FabricVersionsLoaderWorker extends Worker<List<GithubRelease>, Void> {
     private final JComboBox<GithubRelease> versionsCombo;
     private final ToggleableItemListener listener;
-    private final Instance instance;
+    private final CosmicInstance instance;
 
-    public FabricVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, ToggleableItemListener listener, Instance instance) {
+    public FabricVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, ToggleableItemListener listener, CosmicInstance instance) {
         super("loading Fabric versions");
 
         this.versionsCombo = versionsCombo;

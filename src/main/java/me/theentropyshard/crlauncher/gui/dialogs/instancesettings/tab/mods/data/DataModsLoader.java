@@ -21,8 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.data
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
 
@@ -35,10 +34,10 @@ public class DataModsLoader extends Worker<Void, Mod> {
     private final Path dataModsDir;
     private final Path disabledDataModsDir;
     private final List<Mod> dataMods;
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final DataModsTableModel tableModel;
 
-    public DataModsLoader(Instance instance, DataModsTableModel tableModel) {
+    public DataModsLoader(CosmicInstance instance, DataModsTableModel tableModel) {
         super("loading data mods");
 
         this.dataModsDir = instance.getDataModsDir();

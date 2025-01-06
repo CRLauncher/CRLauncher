@@ -18,15 +18,11 @@
 
 package me.theentropyshard.crlauncher.gui.components;
 
-import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.instance.Instance;
-import me.theentropyshard.crlauncher.instance.InstanceManager;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.Arc2D;
 import java.awt.geom.Area;
@@ -36,7 +32,7 @@ public class InstanceItem extends JPanel {
     private static final int SIDE_SIZE = 100;
     private static final Dimension PREFERRED_SIZE = new Dimension(InstanceItem.SIDE_SIZE, InstanceItem.SIDE_SIZE);
 
-    private final Instance instance;
+    private final CosmicInstance instance;
 
     private final JLabel iconLabel;
     private final JLabel textLabel;
@@ -52,7 +48,7 @@ public class InstanceItem extends JPanel {
 
     private double percentComplete;
 
-    public InstanceItem(Instance instance) {
+    public InstanceItem(CosmicInstance instance) {
         super(new BorderLayout(), true);
 
         this.instance = instance;
@@ -122,7 +118,7 @@ public class InstanceItem extends JPanel {
         this.updateColors();
     }
 
-    public Instance getAssociatedInstance() {
+    public CosmicInstance getAssociatedInstance() {
         return this.instance;
     }
 
@@ -199,7 +195,7 @@ public class InstanceItem extends JPanel {
         this.arcColor = UIManager.getColor("AccountItem.borderColor");
     }
 
-    public void instanceChanged(Instance instance) {
+    public void instanceChanged(CosmicInstance instance) {
         this.textLabel.setText(instance.getName());
     }
 

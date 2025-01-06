@@ -21,18 +21,17 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.io.IOException;
 
 public class JarModsTab extends Tab {
     private final JarModsView jarModsView;
 
-    public JarModsTab(Instance instance, JDialog dialog) {
+    public JarModsTab(CosmicInstance instance, JDialog dialog) {
         super(CRLauncher.getInstance().getLanguage()
             .getString("gui.instanceSettingsDialog.jarModsTab.name"), instance, dialog);
 

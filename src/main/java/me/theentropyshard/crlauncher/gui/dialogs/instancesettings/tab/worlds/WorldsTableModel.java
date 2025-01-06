@@ -22,7 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.SemanticVersion;
@@ -51,7 +51,7 @@ public class WorldsTableModel extends AbstractTableModel {
 
     private final List<CosmicWorld> worlds;
 
-    public WorldsTableModel(JTable table, Instance instance) {
+    public WorldsTableModel(JTable table, CosmicInstance instance) {
         this.worlds = new ArrayList<>();
 
         Language language = CRLauncher.getInstance().getLanguage();

@@ -30,7 +30,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.instance.InstanceAlreadyExistsException;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -280,7 +280,7 @@ public class AddInstanceDialog extends AppDialog {
 
                 InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
 
-                Instance instance;
+                CosmicInstance instance;
 
                 try {
                     instance = instanceManager.createInstance(instanceName, chosenGroupName, crVersion,

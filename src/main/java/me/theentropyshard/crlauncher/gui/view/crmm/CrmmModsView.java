@@ -32,7 +32,7 @@ import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
 import me.theentropyshard.crlauncher.gui.view.crmm.pagination.PageButton;
 import me.theentropyshard.crlauncher.gui.view.crmm.pagination.PaginationPanel;
-import me.theentropyshard.crlauncher.instance.Instance;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 import net.miginfocom.swing.MigLayout;
@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class CrmmModsView extends JPanel {
-    private final Instance instance;
+    private final CosmicInstance instance;
     private final ModsTab modsTab;
 
     private final NavBar navBar;
@@ -71,7 +71,7 @@ public class CrmmModsView extends JPanel {
     private int page = 1;
     private int totalPages;
 
-    public CrmmModsView(Instance instance, ModsTab modsTab) {
+    public CrmmModsView(CosmicInstance instance, ModsTab modsTab) {
         super(new BorderLayout());
 
         this.instance = instance;
