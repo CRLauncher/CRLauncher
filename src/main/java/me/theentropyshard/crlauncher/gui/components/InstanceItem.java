@@ -168,8 +168,6 @@ public class InstanceItem extends JPanel {
     }
 
     protected void paintArc(Graphics2D g2) {
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
         if (this.percentComplete > 0.0D) {
             g2.setColor(Color.LIGHT_GRAY);
             g2.fill(this.getArc(1.0D));
@@ -181,11 +179,14 @@ public class InstanceItem extends JPanel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        this.paintBackground(g);
+        Graphics2D g2d = ((Graphics2D) g);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        super.paintComponent(g);
+        this.paintBackground(g2d);
 
-        this.paintArc((Graphics2D) g);
+        super.paintComponent(g2d);
+
+        this.paintArc(g2d);
     }
 
     public void updateColors() {
