@@ -228,6 +228,7 @@ public class CosmicRunner extends Thread {
                 Account currentAccount = CRLauncher.getInstance().getAccountManager().getCurrentAccount();
 
                 if (currentAccount != null) {
+                    patchLauncher.putEnvironment("COSMIC_REACH_OFFLINE_DISPLAY_NAME", currentAccount.getUsername());
                     patchLauncher.setOfflineUsername(currentAccount.getUsername());
                     patchLauncher.setPatchOfflineAccount(CRLauncher.getInstance().getSettings().patchOfflineAccount);
                     patchLauncher.setAppendUsername(CRLauncher.getInstance().getSettings().appendUsername);
