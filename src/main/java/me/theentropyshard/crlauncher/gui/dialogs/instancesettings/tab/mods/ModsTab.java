@@ -149,7 +149,9 @@ public class ModsTab extends Tab implements ItemListener {
         }
 
         {
-            JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            JPanel bottomPanel = new JPanel(new BorderLayout());
+
+            JPanel leftBottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
             JButton openModsFolderButton = new JButton(
                 language.getString("gui.instanceSettingsDialog.modsTab.openModsFolder")
@@ -172,7 +174,7 @@ public class ModsTab extends Tab implements ItemListener {
                     OperatingSystem.open(modsDir);
                 });
             });
-            bottomPanel.add(openModsFolderButton);
+            leftBottomPanel.add(openModsFolderButton);
 
             JButton searchModsButton = new JButton(
                 language.getString("gui.instanceSettingsDialog.modsTab.searchModsCRMM")
@@ -187,7 +189,25 @@ public class ModsTab extends Tab implements ItemListener {
                     }
                 }.execute();
             });
-            bottomPanel.add(searchModsButton);
+            leftBottomPanel.add(searchModsButton);
+
+            bottomPanel.add(leftBottomPanel, BorderLayout.WEST);
+
+            JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+
+            JCheckBox updateModsStartup = new JCheckBox("Update mods before running");
+            updateModsStartup.addActionListener(e -> {
+                instance.setUpdateMods(updateModsStartup.isSelected());
+            });
+            rightBottomPanel.add(updateModsStartup);
+
+            JButton updateMods = new JButton("Update mods");
+            updateMods.addActionListener(e -> {
+
+            });
+            rightBottomPanel.add(updateMods);
+
+            bottomPanel.add(rightBottomPanel, BorderLayout.EAST);
 
             gbc.gridy++;
             gbc.weighty = 0;
