@@ -64,6 +64,7 @@ public class CosmicInstance extends JavaInstance {
     private String quiltVersion;
     private String puzzleVersion;
     private boolean autoUpdateToLatest;
+    private boolean updateMods;
 
     private int currentFlagsOption;
 
@@ -320,5 +321,13 @@ public class CosmicInstance extends JavaInstance {
 
     public void setCurrentFlagsOption(int currentFlagsOption) {
         this.currentFlagsOption = currentFlagsOption;
+    }
+
+    public boolean isUpdateMods() {
+        return this.updateMods;
+    }
+
+    public void setUpdateMods(boolean updateMods) {
+        this.updateMods = updateMods;
     }
 }
