@@ -76,6 +76,7 @@ public class CosmicRunner extends Thread {
     };
 
     public static final String ITCH_IO_API_KEY_ENV_KEY = "ITCHIO_API_KEY";
+    public static final String COSMIC_REACH_OFFLINE_DISPLAY_NAME = "COSMIC_REACH_OFFLINE_DISPLAY_NAME";
 
     private final CosmicInstance instance;
     private final InstanceItem item;
@@ -228,7 +229,7 @@ public class CosmicRunner extends Thread {
                 Account currentAccount = CRLauncher.getInstance().getAccountManager().getCurrentAccount();
 
                 if (currentAccount != null) {
-                    patchLauncher.putEnvironment("COSMIC_REACH_OFFLINE_DISPLAY_NAME", currentAccount.getUsername());
+                    patchLauncher.putEnvironment(CosmicRunner.COSMIC_REACH_OFFLINE_DISPLAY_NAME, currentAccount.getUsername());
                     patchLauncher.setOfflineUsername(currentAccount.getUsername());
                     patchLauncher.setPatchOfflineAccount(CRLauncher.getInstance().getSettings().patchOfflineAccount);
                     patchLauncher.setAppendUsername(CRLauncher.getInstance().getSettings().appendUsername);
