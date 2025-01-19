@@ -18,20 +18,24 @@
 
 package me.theentropyshard.crlauncher.cosmic;
 
+import me.theentropyshard.crlauncher.BuildConfig;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.cosmic.account.ItchIoAccount;
-import me.theentropyshard.crlauncher.cosmic.launcher.*;
+import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncher;
+import me.theentropyshard.crlauncher.cosmic.launcher.CosmicLauncherFactory;
+import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
+import me.theentropyshard.crlauncher.cosmic.launcher.PatchCosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
-import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
+import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
-import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
@@ -77,6 +81,7 @@ public class CosmicRunner extends Thread {
 
     public static final String ITCH_IO_API_KEY_ENV_KEY = "ITCHIO_API_KEY";
     public static final String COSMIC_REACH_OFFLINE_DISPLAY_NAME = "COSMIC_REACH_OFFLINE_DISPLAY_NAME";
+    public static final String COSMIC_REACH_LAUNCHER_NAME = "COSMIC_REACH_LAUNCHER_NAME";
 
     private final CosmicInstance instance;
     private final InstanceItem item;
@@ -202,7 +207,8 @@ public class CosmicRunner extends Thread {
                         this.instance.getPuzzleModsDir(),
                         this.instance.getPuzzleVersion()
                     );
-                    default -> throw new IllegalArgumentException("Unknown instance type: " + this.instance.getModLoader());
+                    default ->
+                        throw new IllegalArgumentException("Unknown instance type: " + this.instance.getModLoader());
                 };
             }
 
@@ -221,6 +227,8 @@ public class CosmicRunner extends Thread {
             }
 
             if (launcher instanceof PatchCosmicLauncher patchLauncher) {
+                patchLauncher.putEnvironment(CosmicRunner.COSMIC_REACH_LAUNCHER_NAME, BuildConfig.APP_NAME + " " + BuildConfig.APP_VERSION);
+
                 patchLauncher.defineProperty(new SystemProperty("file.encoding", "utf-8"));
                 patchLauncher.defineProperty(new SystemProperty("console.encoding", "utf-8"));
 
