@@ -53,6 +53,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class CosmicRunner extends Thread {
     public static final String[] FLAG_SET_1 = {
@@ -340,17 +341,21 @@ public class CosmicRunner extends Thread {
 
         String userHome = System.getProperty("user.home");
 
+        Consumer<String> consumer;
+
+        ModLoader type = this.instance.getModLoader();
+        if (type == ModLoader.VANILLA || type == ModLoader.FABRIC) {
+            consumer = Log::cosmicReachVanilla;
+        } else {
+            consumer = Log::cosmicReachModded;
+        }
+
         new ProcessReader(this.process).read(line -> {
             if (line.contains(userHome)) {
                 line = line.replace(userHome, "<UserHome>");
             }
 
-            ModLoader type = this.instance.getModLoader();
-            if (type == ModLoader.VANILLA || type == ModLoader.FABRIC) {
-                Log.cosmicReachVanilla(line);
-            } else {
-                Log.cosmicReachModded(line);
-            }
+            consumer.accept(line);
         });
 
         return this.process.waitFor();
