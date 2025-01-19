@@ -42,6 +42,7 @@ import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ProcessReader;
 import me.theentropyshard.crlauncher.utils.SystemProperty;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
+import me.theentropyshard.crlauncher.utils.ansi.AnsiColor;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;
 
@@ -89,6 +90,8 @@ public class CosmicRunner extends Thread {
 
     private Process process;
     private Path clientCopyTmp;
+
+    private String errorLine;
 
     public CosmicRunner(CosmicInstance instance, InstanceItem item) {
         this.instance = instance;
@@ -317,6 +320,25 @@ public class CosmicRunner extends Thread {
             this.instance.updatePlaytime(timePlayedSeconds);
             this.instance.save();
 
+            if (this.errorLine != null && !this.errorLine.trim().isEmpty()) {
+                this.errorLine = this.errorLine.strip();
+                this.errorLine = AnsiColor.stripAnsiCodes(this.errorLine);
+
+                String path = this.errorLine
+                    .replace("java.lang.RuntimeException: Error parsing block: ", "")
+                    .replace("java.lang.RuntimeException: Error parsing item: ", "")
+                    .replace("java.lang.RuntimeException: Error parsing recipes: ", "")
+                    .replace("java.lang.RuntimeException: Error parsing loot: ", "");
+
+                String namespace = path.split(":")[0];
+
+                String message = CRLauncher.getInstance().getLanguage().getString("messages.gui.errorParsingModGameMessage")
+                    .replace("$$FILE_PATH$$", path)
+                    .replace("$$MOD_NAMESPACE$$", namespace);
+
+                MessageBox.showErrorMessage(CRLauncher.frame, message);
+            }
+
             if (exitCode == 0 && exitsOption == 1) {
                 CRLauncher.getInstance().shutdown();
             }
@@ -353,6 +375,12 @@ public class CosmicRunner extends Thread {
         new ProcessReader(this.process).read(line -> {
             if (line.contains(userHome)) {
                 line = line.replace(userHome, "<UserHome>");
+            }
+
+            if (line.contains("Error parsing block:") || line.contains("Error parsing item:") ||
+                line.contains("Error parsing recipes:") || line.contains("Error parsing loot:")) {
+
+                this.errorLine = line;
             }
 
             consumer.accept(line);

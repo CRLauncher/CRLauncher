@@ -6,6 +6,7 @@
     "messages": {
         "gui": {
             "error": "Error",
+            "errorParsingModGameMessage": "<html>There was an error parsing the following file: <b>$$FILE_PATH$$</b> from mod with namespace <b>$$MOD_NAMESPACE$$</b>. Please check your mods!</html>",
             "addAccountDialog": {
                 "offline": {
                     "enterUsername": "Enter a username"

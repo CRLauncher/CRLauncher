@@ -6,6 +6,7 @@
     "messages": {
         "gui": {
             "error": "Ошибка",
+            "errorParsingModGameMessage": "<html>Не удалось распарсить следующий файл: <b>$$FILE_PATH$$</b> из мода с пространством имён <b>$$MOD_NAMESPACE$$</b>. Проверьте ваши моды!</html>",
             "addAccountDialog": {
                 "offline": {
                     "enterUsername": "Введите имя"
