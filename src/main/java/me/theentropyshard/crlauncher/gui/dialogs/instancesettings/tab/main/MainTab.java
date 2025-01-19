@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab;
+package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.main;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
@@ -25,6 +25,7 @@ import me.theentropyshard.crlauncher.cosmic.version.CosmicArchiveVersion;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.utils.*;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.Language;
@@ -73,6 +74,8 @@ public class MainTab extends Tab {
                 language.getString("gui.instanceSettingsDialog.mainTab.cosmicReachVersion.borderName")
             ));
 
+            JPanel borderPanel = new JPanel(new BorderLayout());
+
             this.versionsCombo = new JComboBox<>();
             this.versionsCombo.setRenderer(new DefaultListCellRenderer() {
                 @Override
@@ -106,7 +109,20 @@ public class MainTab extends Tab {
                     this.previousValue = version;
                 }
             });
-            crVersionSettings.add(this.versionsCombo);
+            borderPanel.add(this.versionsCombo, BorderLayout.CENTER);
+            JButton refreshButton = new JButton(language.getString("gui.addInstanceDialog.refreshButton"));
+            refreshButton.addActionListener(e -> {
+                refreshButton.setEnabled(false);
+
+                this.versionsCombo.removeAllItems();
+
+                new VersionsLoadWorker(instance, this, () -> {
+                    refreshButton.setEnabled(true);
+                }, true).execute();
+            });
+            borderPanel.add(refreshButton, BorderLayout.EAST);
+
+            crVersionSettings.add(borderPanel);
 
             JCheckBox updateToLatestAutomatically = new JCheckBox(
                 language.getString("gui.instanceSettingsDialog.mainTab.cosmicReachVersion.autoUpdateToLatest")
@@ -267,60 +283,7 @@ public class MainTab extends Tab {
             }
         });
 
-        new Worker<List<Version>, Void>("getting remote versions") {
-            @Override
-            protected List<Version> work() throws Exception {
-                VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
-
-                if (!versionManager.isLoaded()) {
-                    versionManager.setMode(VersionManager.Mode.ONLINE);
-                    versionManager.load();
-                }
-
-                return versionManager.getVersions();
-            }
-
-            @Override
-            protected void done() {
-                List<Version> versions;
-                try {
-                    versions = this.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    Log.error("Could not get versions", e);
-
-                    MessageBox.showErrorMessage(
-                        CRLauncher.frame,
-                        language.getString("messages.gui.instanceSettingsDialog.couldNotLoadVersions") +
-                            ": " + e.getMessage()
-                    );
-
-                    return;
-                }
-
-                MainTab.this.versions = versions;
-
-                String cosmicVersion = instance.getCosmicVersion();
-                Version currentVersion = ListUtils.search(versions, v -> v.getId().equals(cosmicVersion));
-
-                CRLauncher launcher = CRLauncher.getInstance();
-                Settings settings = launcher.getSettings();
-                VersionManager versionManager = launcher.getVersionManager();
-
-                for (Version version : versions) {
-                    if (!versionManager.isInstalled(version) && settings.showOnlyInstalledVersions) {
-                        continue;
-                    }
-
-                    MainTab.this.versionsCombo.addItem(version);
-                }
-
-                MainTab.this.previousValue = currentVersion;
-
-                if (currentVersion != null) {
-                    MainTab.this.versionsCombo.setSelectedItem(currentVersion);
-                }
-            }
-        }.execute();
+        new VersionsLoadWorker(instance, this).execute();
     }
 
     private void toggleFields(boolean enabled) {
@@ -336,5 +299,25 @@ public class MainTab extends Tab {
     @Override
     public void hidden() {
         this.getDialog().setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+    }
+
+    public List<Version> getVersions() {
+        return this.versions;
+    }
+
+    public void setVersions(List<Version> versions) {
+        this.versions = versions;
+    }
+
+    public JComboBox<Version> getVersionsCombo() {
+        return this.versionsCombo;
+    }
+
+    public Version getPreviousValue() {
+        return this.previousValue;
+    }
+
+    public void setPreviousValue(Version previousValue) {
+        this.previousValue = previousValue;
     }
 }
