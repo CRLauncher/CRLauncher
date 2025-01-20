@@ -270,6 +270,12 @@ public class CosmicRunner extends Thread {
                                 continue;
                             }
 
+                            if (customJvmFlag.startsWith("-Xms") || customJvmFlag.startsWith("-Xmx")) {
+                                Log.warn("Found -Xms or -Xmx argument in custom JVM flags");
+
+                                continue;
+                            }
+
                             patchLauncher.addJvmFlag(customJvmFlag);
                         }
                     }
@@ -280,9 +286,18 @@ public class CosmicRunner extends Thread {
                             continue;
                         }
 
+                        if (customJvmFlag.startsWith("-Xms") || customJvmFlag.startsWith("-Xmx")) {
+                            Log.warn("Found -Xms or -Xmx argument in builtin JVM flags");
+
+                            continue;
+                        }
+
                         patchLauncher.addJvmFlag(customJvmFlag);
                     }
                 }
+
+                patchLauncher.addJvmFlag("-Xms" + this.instance.getMinimumMemoryInMegabytes() + "m");
+                patchLauncher.addJvmFlag("-Xmx" + this.instance.getMaximumMemoryInMegabytes() + "m");
             }
 
             long start = System.currentTimeMillis();
