@@ -93,6 +93,12 @@ public class CosmicRunner extends Thread {
 
     private String errorLine;
 
+    private boolean errorOccurredDuringInitializationOfVM;
+    private String objectHeapError;
+    private boolean tooSmallHeap;
+
+    private boolean outOfMemory;
+
     public CosmicRunner(CosmicInstance instance, InstanceItem item) {
         this.instance = instance;
         this.item = item;
@@ -354,6 +360,20 @@ public class CosmicRunner extends Thread {
                 MessageBox.showErrorMessage(CRLauncher.frame, message);
             }
 
+            if (this.errorOccurredDuringInitializationOfVM && this.objectHeapError != null && !this.objectHeapError.isEmpty()) {
+                String message = CRLauncher.getInstance().getLanguage().getString("messages.gui.errorTooMuchMemoryGiven")
+                    .replace("$$MIN_MEMORY$$", String.valueOf(this.instance.getMinimumMemoryInMegabytes()))
+                    .replace("$$MAX_MEMORY$$", String.valueOf(this.instance.getMaximumMemoryInMegabytes()));
+
+                MessageBox.showErrorMessage(CRLauncher.frame, message);
+            }
+
+            if (this.outOfMemory) {
+                String message = CRLauncher.getInstance().getLanguage().getString("messages.gui.gameOutOfMemory");
+
+                MessageBox.showErrorMessage(CRLauncher.frame, message);
+            }
+
             if (exitCode == 0 && exitsOption == 1) {
                 CRLauncher.getInstance().shutdown();
             }
@@ -396,6 +416,20 @@ public class CosmicRunner extends Thread {
                 line.contains("Error parsing recipes:") || line.contains("Error parsing loot:")) {
 
                 this.errorLine = line;
+            }
+
+            if (line.contains("Error occurred during initialization of VM")) {
+                this.errorOccurredDuringInitializationOfVM = true;
+            }
+
+            if (this.errorOccurredDuringInitializationOfVM) {
+                if (line.startsWith("Could not reserve enough space for")) {
+                    this.objectHeapError = line;
+                }
+            }
+
+            if (line.contains("java.lang.OutOfMemoryError: Java heap space") || line.contains("Exception: java.lang.OutOfMemoryError thrown from the")) {
+                this.outOfMemory = true;
             }
 
             consumer.accept(line);

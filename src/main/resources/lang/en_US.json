@@ -7,6 +7,8 @@
         "gui": {
             "error": "Error",
             "errorParsingModGameMessage": "<html>There was an error parsing the following file: <b>$$FILE_PATH$$</b> from mod with namespace <b>$$MOD_NAMESPACE$$</b>. Please check your mods!</html>",
+            "errorTooMuchMemoryGiven": "The Java Virtual Machine could not allocate the amount of memory set for this instance (min: $$MIN_MEMORY$$ MB, max: $$MAX_MEMORY$$ MB). Either buy more RAM or decrease the amount of memory in instance settings.",
+            "gameOutOfMemory": "Game has ran out of memory. Increase the amount of memory in instance settings.",
             "addAccountDialog": {
                 "offline": {
                     "enterUsername": "Enter a username"
