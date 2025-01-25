@@ -71,86 +71,10 @@ public class WorldsTableModel extends AbstractTableModel {
 
         this.formatter = formatter;
 
-        new Worker<Void, CosmicWorld>("loading worlds") {
-            @Override
-            protected Void work() throws Exception {
-                String version = instance.getCosmicVersion();
-                SemanticVersion cosmicVersion = SemanticVersion.parse(version);
-
-                if (cosmicVersion == null) {
-                    Log.warn("Could not parse game version " + version + " of instance " + instance.getName() +
-                        ", trying to extract with regex");
-
-                    Pattern versionPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+");
-                    Matcher matcher = versionPattern.matcher(version);
-                    if (matcher.find()) {
-                        String parsedVersion = matcher.group(0);
-                        cosmicVersion = SemanticVersion.parse(parsedVersion);
-                        Log.info("Successfully extracted game version with regex: " + parsedVersion);
-                    }
-                }
-
-                if (cosmicVersion == null) {
-                    Log.warn("Could not extract game version with regex, defaulting to 0.1.33");
-
-                    cosmicVersion = new SemanticVersion(0, 1, 33);
-                }
-
-                Path worldsDir = instance.getCosmicDir().resolve("worlds");
-
-                if (!Files.exists(worldsDir)) {
-                    return null;
-                }
-
-                List<Path> worldDirs = FileUtils.list(worldsDir);
-
-                for (Path worldDir : worldDirs) {
-                    Path worldInfoFile = worldDir.resolve("worldInfo.json");
-
-                    String content;
-
-                    if (cosmicVersion.getMinor() < 2 && cosmicVersion.getPatch() < 40) {
-                        content = FileUtils.read(worldInfoFile, Charset.defaultCharset());
-                    } else {
-                        content = FileUtils.readUtf8(worldInfoFile);
-                    }
-
-                    CosmicWorld world;
-
-                    if (cosmicVersion.getMinor() < 2 && cosmicVersion.getPatch() < 34) {
-                        world = Json.parse(content, CosmicWorld.class);
-
-                        Path playerFile = worldDir.resolve("players").resolve("localPlayer.json");
-                        if (Files.exists(playerFile)) {
-                            BasicFileAttributes attribs = Files.readAttributes(playerFile, BasicFileAttributes.class);
-                            world.setLastPlayed(WorldsTableModel.fromEpochMillis(attribs.lastModifiedTime().toMillis()));
-                        }
-                    } else {
-                        world = Json.parse(content, UpdatedCosmicWorld.class);
-                    }
-
-                    world.setWorldDir(worldDir);
-
-                    this.publish(world);
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void process(List<CosmicWorld> chunks) {
-                WorldsTableModel.this.worlds.addAll(chunks);
-            }
-
-            @Override
-            protected void done() {
-                WorldsTableModel.this.fireTableDataChanged();
-                SwingUtils.setJTableColumnsWidth(table, 45, 25, 15, 15);
-            }
-        }.execute();
+        new WorldLoadWorker(instance, this, table).execute();
     }
 
-    private static OffsetDateTime fromEpochMillis(long epochMillis) {
+    public static OffsetDateTime fromEpochMillis(long epochMillis) {
         return Instant.ofEpochMilli(epochMillis).atZone(ZoneId.systemDefault()).toOffsetDateTime();
     }
 
@@ -206,5 +130,9 @@ public class WorldsTableModel extends AbstractTableModel {
     public void removeRow(int rowIndex) {
         this.worlds.remove(rowIndex);
         this.fireTableStructureChanged();
+    }
+
+    public List<CosmicWorld> getWorlds() {
+        return this.worlds;
     }
 }
