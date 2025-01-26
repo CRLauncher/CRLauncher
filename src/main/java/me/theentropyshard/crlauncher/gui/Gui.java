@@ -29,6 +29,7 @@ import me.theentropyshard.crlauncher.gui.view.AboutView;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AccountItem;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AccountsView;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AddAccountItem;
+import me.theentropyshard.crlauncher.gui.view.devlog.DevlogView;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
 import me.theentropyshard.crlauncher.gui.view.settings.SettingsView;
@@ -47,6 +48,7 @@ public class Gui {
     public static final String CONSOLE_BUTTON_SHOW = "gui.general.consoleButton.show";
     public static final String CONSOLE_BUTTON_HIDE = "gui.general.consoleButton.hide";
     public static final String TAB_PLAY = "gui.general.tab.play";
+    public static final String TAB_DEVLOG = "gui.general.tab.devlog";
     public static final String TAB_ACCOUNTS = "gui.general.tab.accounts";
     public static final String TAB_SETTINGS = "gui.general.tab.settings";
     public static final String TAB_ABOUT = "gui.general.tab.about";
@@ -56,6 +58,7 @@ public class Gui {
     private final JButton consoleButton;
 
     private PlayView playView;
+    private DevlogView devlogView;
     private AccountsView accountsView;
     private SettingsView settingsView;
     private AboutView aboutView;
@@ -164,9 +167,10 @@ public class Gui {
         UIManager.put("OptionPane.cancelButtonText", language.getString("gui.general.cancel"));
 
         this.viewSelector.setTitleAt(0, language.getString(Gui.TAB_PLAY));
-        this.viewSelector.setTitleAt(1, language.getString(Gui.TAB_ACCOUNTS));
-        this.viewSelector.setTitleAt(2, language.getString(Gui.TAB_SETTINGS));
-        this.viewSelector.setTitleAt(3, language.getString(Gui.TAB_ABOUT));
+        this.viewSelector.setTitleAt(1, language.getString(Gui.TAB_DEVLOG));
+        this.viewSelector.setTitleAt(2, language.getString(Gui.TAB_ACCOUNTS));
+        this.viewSelector.setTitleAt(3, language.getString(Gui.TAB_SETTINGS));
+        this.viewSelector.setTitleAt(4, language.getString(Gui.TAB_ABOUT));
 
         this.openFolderButton.setText(language.getString(Gui.OPEN_LAUNCHER_FOLDER));
 
@@ -177,6 +181,7 @@ public class Gui {
 
         LauncherConsole.instance.reloadLanguage();
         this.playView.reloadLanguage();
+        this.devlogView.reloadLanguage();
         this.accountsView.reloadLanguage();
         this.settingsView.reloadLanguage();
         this.aboutView.reloadLanguage();
@@ -239,6 +244,7 @@ public class Gui {
     public void showGui() {
         SwingUtilities.invokeLater(() -> {
             this.playView = new PlayView();
+            this.devlogView = new DevlogView();
             this.accountsView = new AccountsView();
             this.settingsView = new SettingsView();
             this.aboutView = new AboutView();
@@ -246,6 +252,7 @@ public class Gui {
             Language language = CRLauncher.getInstance().getLanguage();
 
             this.viewSelector.addTab(language.getString(Gui.TAB_PLAY), this.playView);
+            this.viewSelector.addTab(language.getString(Gui.TAB_DEVLOG), this.devlogView);
             this.viewSelector.addTab(language.getString(Gui.TAB_ACCOUNTS), this.accountsView);
             this.viewSelector.addTab(language.getString(Gui.TAB_SETTINGS), this.settingsView);
             this.viewSelector.addTab(language.getString(Gui.TAB_ABOUT), this.aboutView);
@@ -270,6 +277,10 @@ public class Gui {
 
     public PlayView getPlayView() {
         return this.playView;
+    }
+
+    public DevlogView getDevlogView() {
+        return this.devlogView;
     }
 
     public AccountsView getAccountsView() {

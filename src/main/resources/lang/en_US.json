@@ -297,6 +297,7 @@
             },
             "tab": {
                 "play": "Play",
+                "devlog": "Devlog",
                 "accounts": "Accounts",
                 "settings": "Settings",
                 "about": "About"
