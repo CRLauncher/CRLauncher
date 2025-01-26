@@ -30,6 +30,7 @@ import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.UpdateDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.itch.ItchIoApi;
@@ -44,6 +45,7 @@ import okhttp3.Protocol;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -85,7 +87,7 @@ public class CRLauncher {
 
     private final ExecutorService taskPool;
 
-    private final Gui gui;
+    private Gui gui;
 
     private volatile boolean shutdown;
 
@@ -202,16 +204,28 @@ public class CRLauncher {
 
         this.taskPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-        this.gui = new Gui(BuildConfig.APP_NAME, this.settings.darkTheme);
-        this.gui.getFrame().addWindowListener(new WindowClosingListener(e -> CRLauncher.this.shutdown()));
+        try {
+            SwingUtilities.invokeAndWait(() -> {
+                this.gui = new Gui(BuildConfig.APP_NAME, this.settings.darkTheme);
+                this.gui.getFrame().addWindowListener(new WindowClosingListener(e -> CRLauncher.this.shutdown()));
 
-        if (this.settings.checkUpdatesStartup) {
-            this.taskPool.execute(() -> {
-                CRLauncher.checkForUpdates(false);
+                if (this.settings.checkUpdatesStartup) {
+                    this.taskPool.execute(() -> {
+                        CRLauncher.checkForUpdates(false);
+                    });
+                }
+
+                this.gui.showGui();
             });
-        }
+        } catch (InterruptedException e) {
+            Log.error("Could not wait for GUI to show", e);
 
-        this.gui.showGui();
+            this.shutdown(1);
+        } catch (InvocationTargetException e) {
+            Log.error("There was an error creating the GUI", e);
+
+            this.shutdown(1);
+        }
     }
 
     public static void checkForUpdates(boolean showDialogIfNoUpdates) {
@@ -379,6 +393,10 @@ public class CRLauncher {
     }
 
     public void shutdown() {
+        this.shutdown(0);
+    }
+
+    public void shutdown(int code) {
         if (this.shutdown) {
             return;
         }
@@ -405,7 +423,7 @@ public class CRLauncher {
 
         this.settings.save(this.settingsFile);
 
-        System.exit(0);
+        System.exit(code);
     }
 
     private static CRLauncher instance;
