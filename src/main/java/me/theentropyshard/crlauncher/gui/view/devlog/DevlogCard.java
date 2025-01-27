@@ -54,7 +54,7 @@ public class DevlogCard extends JPanel {
     private boolean mouseOver;
     private boolean mousePressed;
 
-    public DevlogCard(PostInfo postInfo) {
+    public DevlogCard(PostInfo postInfo, Runnable onClick) {
         super(new BorderLayout());
 
         JPanel centerPanel = new JPanel();
@@ -118,9 +118,21 @@ public class DevlogCard extends JPanel {
                 this.mousePressed = false;
                 this.repaint();
             })
+            .mouseClicked(e -> {
+                onClick.run();
+            })
             .build();
 
         this.addMouseListener(listener);
+    }
+
+    @Override
+    public void updateUI() {
+        super.updateUI();
+
+        this.setDefaultColor(UIManager.getColor("InstanceItem.defaultColor"));
+        this.setHoveredColor(UIManager.getColor("InstanceItem.hoveredColor"));
+        this.setPressedColor(UIManager.getColor("InstanceItem.pressedColor"));
     }
 
     private void fetchImage(PostInfo postInfo, JLabel imageLabel) {

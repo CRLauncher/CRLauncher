@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.view.devlog;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
+import me.theentropyshard.crlauncher.gui.utils.CardLayoutPanel;
 import me.theentropyshard.crlauncher.gui.utils.ScrollablePanel;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.network.HttpRequest;
@@ -33,34 +34,51 @@ import java.io.IOException;
 import java.util.List;
 
 public class DevlogView extends JPanel {
+    private final CardLayoutPanel cardPanel;
     private final JPanel devlogCardsPanel;
+    private final DevlogPostView devlogPostView;
 
     public DevlogView() {
         super(new BorderLayout());
 
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        this.devlogCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
+        this.cardPanel = new CardLayoutPanel();
+        this.add(this.cardPanel, BorderLayout.CENTER);
+
+        this.devlogCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10)) {
+            @Override
+            public void scrollRectToVisible(Rectangle aRect) {
+
+            }
+        };
         this.devlogCardsPanel.setBorder(new EmptyBorder(0, 0, 0, 10));
 
         JPanel borderPanel = new ScrollablePanel(new BorderLayout());
         borderPanel.add(this.devlogCardsPanel, BorderLayout.PAGE_START);
 
-        JScrollPane modCardsScrollPane = new JScrollPane(borderPanel);
-        modCardsScrollPane.setUI(new FlatSmoothScrollPaneUI());
-        modCardsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        modCardsScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        this.add(modCardsScrollPane, BorderLayout.CENTER);
+        JScrollPane scrollPane = new JScrollPane(borderPanel);
+        scrollPane.setUI(new FlatSmoothScrollPaneUI());
+        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+
+        this.cardPanel.addComponent(scrollPane, "cards");
+        this.cardPanel.showComponent("cards");
+
+        this.devlogPostView = new DevlogPostView(() -> {
+            this.cardPanel.showComponent("cards");
+        });
+        this.cardPanel.addComponent(this.devlogPostView, "postView");
 
         new Worker<Void, PostInfo>("loading devlogs") {
             @Override
             protected Void work() throws Exception {
-                Document document = this.fetchDocument();
-
-                List<PostInfo> postInfos = PostInfo.fromDocument(document);
+                List<PostInfo> postInfos = PostInfo.fromDocument(this.fetchDocument());
 
                 for (PostInfo postInfo : postInfos) {
                     this.publish(postInfo);
+
+                    Thread.sleep(16L);
                 }
 
                 return null;
@@ -69,7 +87,12 @@ public class DevlogView extends JPanel {
             @Override
             protected void process(List<PostInfo> chunks) {
                 for (PostInfo postInfo : chunks) {
-                    DevlogView.this.addDevlogCard(new DevlogCard(postInfo));
+                    Runnable r = () -> {
+                        DevlogView.this.devlogPostView.load(postInfo);
+                        DevlogView.this.cardPanel.showComponent("postView");
+                    };
+
+                    DevlogView.this.addDevlogCard(new DevlogCard(postInfo, r));
                 }
             }
 

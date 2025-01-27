@@ -30,14 +30,16 @@ public class PostInfo {
     private final String author;
     private final String summary;
     private final String imageUrl;
+    private final String postUrl;
     private final int likes;
 
-    public PostInfo(String title, String date, String author, String summary, String imageUrl, int likes) {
+    public PostInfo(String title, String date, String author, String summary, String imageUrl, String postUrl, int likes) {
         this.title = title;
         this.date = date;
         this.author = author;
         this.summary = summary;
         this.imageUrl = imageUrl;
+        this.postUrl = postUrl;
         this.likes = likes;
     }
 
@@ -47,23 +49,18 @@ public class PostInfo {
         Element postElementsList = document.selectXpath("/html/body/div[1]/div/div[2]/div/ul").get(0);
 
         for (Element postElement : postElementsList.children()) {
-            String title = postElement.child(0).child(0).ownText();
+            Element aElement = postElement.child(0).child(0);
+            String title = aElement.ownText();
             Element postContent = postElement.child(1).child(0);
             Element metaRow = postContent.child(0);
             String date = metaRow.child(0).child(0).attr("title");
             String author = metaRow.child(0).child(1).ownText();
             String summary = postContent.child(1).child(0).child(0).ownText();
             String imageUrl = postElement.child(1).childrenSize() == 2 ? postElement.child(1).child(1).attr("src") : null;
+            String postUrl = aElement.attr("abs:href");
             int likes = metaRow.childrenSize() == 2 ? Integer.parseInt(metaRow.child(1).ownText()) : 0;
 
-            postInfos.add(new PostInfo(
-                title,
-                date,
-                author,
-                summary,
-                imageUrl,
-                likes
-            ));
+            postInfos.add(new PostInfo(title, date, author, summary, imageUrl, postUrl, likes));
         }
 
         return postInfos;
@@ -87,6 +84,10 @@ public class PostInfo {
 
     public String getImageUrl() {
         return this.imageUrl;
+    }
+
+    public String getPostUrl() {
+        return this.postUrl;
     }
 
     public int getLikes() {
