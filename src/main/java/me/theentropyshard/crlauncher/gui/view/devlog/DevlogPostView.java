@@ -26,6 +26,8 @@ import me.theentropyshard.crlauncher.gui.utils.ScrollablePanel;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.HttpRequest;
+import org.commonmark.Extension;
+import org.commonmark.ext.image.attributes.ImageAttributesExtension;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.jsoup.Jsoup;
@@ -35,6 +37,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseListener;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 public class DevlogPostView extends JPanel {
@@ -137,19 +140,32 @@ public class DevlogPostView extends JPanel {
 
                 StringBuilder markdown = new StringBuilder();
 
-                for (Element paragraph : section.children()) {
-                    String text = paragraph.ownText();
+                if (section.child(0).tagName().equals("ul")) {
+                    markdown.append(section.child(0).toString()).append("\r\n");
+                } else {
+                    for (Element paragraph : section.children()) {
+                        if (paragraph.childrenSize() >= 1 && paragraph.child(0).tagName().equals("img")) {
+                            Element imgElement = paragraph.child(0);
 
-                    if (text.startsWith("* ")) {
-                        markdown.append("- ").append(text.substring(2)).append("\r\n");
-                    } else {
-                        markdown.append("\r\n").append(text).append("\r\n");
+                            markdown.append("\r\n![img](").append(imgElement.attr("src")).append("){width=568}")
+                                .append("\r\n").append("\r\n");
+                        } else {
+                            String text = paragraph.ownText();
+
+                            if (text.startsWith("* ")) {
+                                markdown.append("- ").append(text.substring(2)).append("\r\n");
+                            } else {
+                                markdown.append("\r\n").append(text).append("\r\n");
+                            }
+                        }
                     }
                 }
 
                 markdown.deleteCharAt(markdown.length() - 1);
 
-                return HtmlRenderer.builder().build().render(Parser.builder().build().parse(markdown.toString()));
+                List<Extension> extensions = List.of(ImageAttributesExtension.create());
+
+                return HtmlRenderer.builder().extensions(extensions).build().render(Parser.builder().extensions(extensions).build().parse(markdown.toString()));
             }
         }
 
