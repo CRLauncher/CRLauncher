@@ -24,6 +24,7 @@ import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.version.CosmicArchiveVersion;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
+import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.utils.*;
@@ -59,7 +60,20 @@ public class MainTab extends Tab {
             .getString("gui.instanceSettingsDialog.mainTab.name"), instance, dialog);
 
         JPanel root = this.getRoot();
-        root.setLayout(new GridBagLayout());
+        root.setLayout(new BorderLayout());
+
+        JPanel panel = new ScrollablePanel(new GridBagLayout());
+
+        JScrollPane scrollPane = new JScrollPane(
+            panel,
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        scrollPane.setUI(new FlatSmoothScrollPaneUI());
+        scrollPane.setHorizontalScrollBar(null);
+        scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
+
+        root.add(scrollPane, BorderLayout.CENTER);
 
         Language language = CRLauncher.getInstance().getLanguage();
 
@@ -152,7 +166,7 @@ public class MainTab extends Tab {
             crVersionSettings.add(showOnlyInstalled);
 
             gbc.gridy++;
-            root.add(crVersionSettings, gbc);
+            panel.add(crVersionSettings, gbc);
         }
 
         {
@@ -256,7 +270,7 @@ public class MainTab extends Tab {
 
             gbc.gridy++;
             gbc.weighty = 1;
-            root.add(windowSettings, gbc);
+            panel.add(windowSettings, gbc);
         }
 
         this.getDialog().addWindowListener(new WindowAdapter() {
