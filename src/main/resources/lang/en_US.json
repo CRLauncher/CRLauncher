@@ -99,6 +99,12 @@
                             "height": "Height"
                         }
                     }
+                },
+                "environmentVariables": {
+                    "borderName": "Environment variables",
+                    "nameFieldPlaceholder": "Name",
+                    "valueFieldPlaceholder": "Value",
+                    "addEnvVarButton": "Add environment variable"
                 }
             },
             "javaTab": {

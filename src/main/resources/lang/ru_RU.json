@@ -99,6 +99,12 @@
                             "height": "Высота"
                         }
                     }
+                },
+                "environmentVariables": {
+                    "borderName": "Переменные среды",
+                    "nameFieldPlaceholder": "Имя",
+                    "valueFieldPlaceholder": "Значение",
+                    "addEnvVarButton": "Добавить переменную среды"
                 }
             },
             "javaTab": {

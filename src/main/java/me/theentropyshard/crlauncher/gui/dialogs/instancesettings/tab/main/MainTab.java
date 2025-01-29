@@ -33,6 +33,7 @@ import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.ListUtils;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -269,8 +270,15 @@ public class MainTab extends Tab {
             customSize.setSelected(currentlySelected);
 
             gbc.gridy++;
-            gbc.weighty = 1;
             panel.add(windowSettings, gbc);
+        }
+
+        {
+            EnvironmentVariablesPanel environmentVariablesPanel = new EnvironmentVariablesPanel();
+
+            gbc.gridy++;
+            gbc.weighty = 1;
+            panel.add(environmentVariablesPanel, gbc);
         }
 
         this.getDialog().addWindowListener(new WindowAdapter() {
