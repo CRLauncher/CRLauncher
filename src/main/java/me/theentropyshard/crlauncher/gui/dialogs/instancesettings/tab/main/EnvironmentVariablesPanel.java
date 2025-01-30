@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.main;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 import net.miginfocom.swing.MigLayout;
@@ -35,7 +36,7 @@ public class EnvironmentVariablesPanel extends JPanel {
     private int row;
 
     public EnvironmentVariablesPanel() {
-        this.layout = new MigLayout("fill, insets 2, gap 5 5", "[50%][50%]", "[top]");
+        this.layout = new MigLayout("fill, insets 2, gap 5 5", "[50%][50%][]", "[top]");
 
         this.setLayout(this.layout);
 
@@ -63,11 +64,14 @@ public class EnvironmentVariablesPanel extends JPanel {
 
         JTextField valueField = new JTextField();
         valueField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, this.valueFieldPlaceholder);
-        this.add(valueField, "growx, wrap, cell 1 " + this.row);
+        this.add(valueField, "growx, cell 1 " + this.row);
+
+        this.add(new JButton(new FlatSVGIcon(EnvironmentVariablesPanel.class.getResource("/assets/images/delete.svg"))),
+            "wrap, cell 2 " + this.row);
 
         this.row++;
 
-        this.add(this.addEnvVarButton, "span 2, growx");
+        this.add(this.addEnvVarButton, "span 3, growx");
 
         this.revalidate();
     }
