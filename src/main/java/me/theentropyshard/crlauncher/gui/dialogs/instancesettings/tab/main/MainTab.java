@@ -274,7 +274,7 @@ public class MainTab extends Tab {
         }
 
         {
-            EnvironmentVariablesPanel environmentVariablesPanel = new EnvironmentVariablesPanel();
+            EnvironmentVariablesPanel environmentVariablesPanel = new EnvironmentVariablesPanel(instance);
 
             gbc.gridy++;
             gbc.weighty = 1;
