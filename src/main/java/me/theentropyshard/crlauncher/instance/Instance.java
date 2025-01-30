@@ -28,6 +28,8 @@ import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public abstract class Instance {
     private static final String INSTANCE_FILE_NAME = "instance.json";
@@ -40,6 +42,7 @@ public abstract class Instance {
     private LocalDateTime lastTimePlayed = LocalDateTime.MIN;
     private long lastPlaytime;
     private long totalPlaytime;
+    private Map<String, String> environmentVariables = new LinkedHashMap<>();
 
     private transient volatile boolean running;
 
@@ -130,6 +133,14 @@ public abstract class Instance {
 
     public void setTotalPlaytime(long totalPlaytime) {
         this.totalPlaytime = totalPlaytime;
+    }
+
+    public Map<String, String> getEnvironmentVariables() {
+        return this.environmentVariables;
+    }
+
+    public void setEnvironmentVariables(LinkedHashMap<String, String> environmentVariables) {
+        this.environmentVariables = environmentVariables;
     }
 
     public boolean isRunning() {
