@@ -1,6 +1,7 @@
 # CRLauncher
 
 [![GitHub Downloads](https://img.shields.io/github/downloads/CRLauncher/CRLauncher/total?label=downloads&labelColor=27303D&color=0D1117&logo=github&logoColor=FFFFFF&style=flat)](https://github.com/CRLauncher/CRLauncher/releases)
+[![GitHub Downloads](https://img.shields.io/badge/Join-CRLauncher-blue?logo=discord&color=0D1117&style=flat&labelColor=27303D)](https://discord.gg/TAMA6K6xuA)
 
 > [!WARNING]  
 > This project is unfinished. Do not have any expectations.
