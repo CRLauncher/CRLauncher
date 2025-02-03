@@ -166,6 +166,12 @@ artifacts {
     archives file(path.replace('.jar', '.zip').replace('libs', 'distributions'))
 }
 
+tasks.register('updateLanguageFiles', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = "me.theentropyshard.crlauncher.utils.UpdateLanguageFiles"
+    args = [projectDir.getAbsolutePath()]
+}
+
 tasks.register('copyArtifacts', Copy) {
     dependsOn build
     from shadowJar
