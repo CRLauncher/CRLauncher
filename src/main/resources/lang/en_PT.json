@@ -6,6 +6,9 @@
     "messages": {
         "gui": {
             "error": "Sinking Ship!",
+            "errorParsingModGameMessage": "<html>There was an error parsing the following file: <b>$$FILE_PATH$$</b> from mod with namespace <b>$$MOD_NAMESPACE$$</b>. Please check your mods!</html>",
+            "errorTooMuchMemoryGiven": "The Java Virtual Machine could not allocate the amount of memory set for this instance (min: $$MIN_MEMORY$$ MB, max: $$MAX_MEMORY$$ MB). Either buy more RAM or decrease the amount of memory in instance settings.",
+            "gameOutOfMemory": "Game has ran out of memory. Increase the amount of memory in instance settings.",
             "addAccountDialog": {
                 "offline": {
                     "enterUsername": "Add yer username."
@@ -41,6 +44,9 @@
                 "modAddedName": "Sail with name '$$MOD_NAME$$' already flown!",
                 "modAddedId": "Sail with id '$$MOD_ID$$' already flown!",
                 "modInvalid": "$$MOD_PATH$$ is not a fitting $$MOD_LOADER$$ sail!"
+            },
+            "progressDialog": {
+                "nonexistentVersion": "Version $$VERSION_ID$$ does not exist in $$VERSION_LIST$$"
             }
         }
     },
@@ -78,9 +84,24 @@
                     "borderName": "Cosmic Reach ship build",
                     "autoUpdateToLatest": "Automatically update to the ship build"
                 },
-                "otherSettings": {
-                    "borderName": "Other",
-                    "textFieldPlaceholder": "Set custom window name here"
+                "windowSettings": {
+                    "borderName": "Window",
+                    "customTitle": {
+                        "label": "Custom title",
+                        "textFieldPlaceholder": "Type custom window title here"
+                    },
+                    "startup": {
+                        "fullscreen": "Fullscreen",
+                        "maximized": "Maximized",
+                        "customSize": {
+                            "radioButton": "Custom Size",
+                            "width": "Width",
+                            "height": "Height"
+                        }
+                    }
+                },
+                "environmentVariables": {
+                    "borderName": "<html>Environment variables. Separate with semicolon: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
                 }
             },
             "javaTab": {
@@ -95,6 +116,15 @@
                     "borderName": "Memory Cogs",
                     "minimum": "Minimum memory (Megabytes)",
                     "maximum": "Maximum memory (Megabytes)"
+                },
+                "jvmFlags": {
+                    "borderName": "JVM Flags",
+                    "options": {
+                        "customFlags": "Custom flags",
+                        "optimizedFlags1": "Optimized set of flags #1 (Client and Server, G1 GC)",
+                        "optimizedFlags2": "Optimized set of flags #2 (Client, G1 GC)"
+                    },
+                    "notice": "Add custom JVM flags here. Separate with spaces"
                 }
             },
             "modsTab": {
@@ -204,18 +234,48 @@
             "downloadButton": "Download",
             "primary": "primary",
             "otherFiles": "Other files",
-            "mods": "Sails",
-            "datamods": "Data Sails",
-            "resourcePacks": "Resource Packs",
-            "shaders": "Shaders",
-            "modpacks": "Modpacks",
-            "searchButton": "Search",
-            "searchMods": "Search sails...",
-            "searchDatamods": "Search data sails...",
-            "searchResourcePacks": "Search resource packs...",
-            "searchShaders": "Search shaders...",
-            "searchModpacks": "Search sailpacks...",
-            "modVersionsDialogTitle": "Sail versions"
+            "modVersionsDialogTitle": "Sail versions",
+            "selectLoadersDialog": {
+                "title": "Select loaders",
+                "message": "Select loaders for the mod to install"
+            },
+            "navbar": {
+                "mods": "Mods",
+                "datamods": "Data Mods",
+                "resourcePacks": "Resource Packs",
+                "shaders": "Shaders",
+                "modpacks": "Modpacks"
+            },
+            "search": {
+                "inputPlaceholder": {
+                    "searchMods": "Search mods...",
+                    "searchDatamods": "Search data mods...",
+                    "searchResourcePacks": "Search resource packs...",
+                    "searchShaders": "Search shaders...",
+                    "searchModpacks": "Search modpacks..."
+                },
+                "sortBy": {
+                    "label": "Sort by",
+                    "options": {
+                        "relevance": "Relevance",
+                        "downloads": "Downloads",
+                        "follow_count": "Follow count",
+                        "recently_updated": "Recently updated",
+                        "recently_published": "Recently published"
+                    }
+                },
+                "showPerPage": {
+                    "label": "Show per page",
+                    "options": {
+                        "five": "5",
+                        "ten": "10",
+                        "fifteen": "15",
+                        "twenty": "20",
+                        "fifty": "50",
+                        "oneHundred": "100"
+                    }
+                }
+            }
         },
         "addAccountDialog": {
             "title": "Add account",
@@ -249,6 +309,7 @@
             },
             "tab": {
                 "play": "Set sail",
+                "devlog": "Devlog",
                 "accounts": "Accounts",
                 "settings": "Cogs",
                 "about": "About"
@@ -300,6 +361,16 @@
                 "modLoadersPathLabel": "Sail loaders directory path",
                 "modLoadersPathFieldPlaceholder": "<launcher folder>/cosmic-reach",
                 "tip": "Remember to press ENTER to save path. Changes will be applied after restart"
+            },
+            "game": {
+                "borderName": "Game",
+                "versionsSourceLabel": "Versions source",
+                "versionsSourceCombo": {
+                    "options": {
+                        "cosmicArchive": "Cosmic Archive",
+                        "itch": "Itch"
+                    }
+                }
             },
             "other": {
                 "borderName": "Other",

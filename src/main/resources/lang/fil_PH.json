@@ -6,6 +6,9 @@
     "messages": {
         "gui": {
             "error": "Error",
+            "errorParsingModGameMessage": "<html>There was an error parsing the following file: <b>$$FILE_PATH$$</b> from mod with namespace <b>$$MOD_NAMESPACE$$</b>. Please check your mods!</html>",
+            "errorTooMuchMemoryGiven": "The Java Virtual Machine could not allocate the amount of memory set for this instance (min: $$MIN_MEMORY$$ MB, max: $$MAX_MEMORY$$ MB). Either buy more RAM or decrease the amount of memory in instance settings.",
+            "gameOutOfMemory": "Game has ran out of memory. Increase the amount of memory in instance settings.",
             "addAccountDialog": {
                 "offline": {
                     "enterUsername": "Maglagay ng username"
@@ -41,6 +44,9 @@
                 "modAddedName": "Naidagdag na ang modipikasyong nagngangalang '$$MOD_NAME$$'!",
                 "modAddedId": "Naidagdag na ang modipikasyong may aydentipikasyong '$$MOD_ID$$'!",
                 "modInvalid": "Isang di-wastong modipikasyong $$MOD_LOADER$$ ang $$MOD_PATH$$!"
+            },
+            "progressDialog": {
+                "nonexistentVersion": "Version $$VERSION_ID$$ does not exist in $$VERSION_LIST$$"
             }
         }
     },
@@ -93,6 +99,9 @@
                             "height": "Height"
                         }
                     }
+                },
+                "environmentVariables": {
+                    "borderName": "<html>Environment variables. Separate with semicolon: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
                 }
             },
             "javaTab": {
@@ -107,6 +116,15 @@
                     "borderName": "Settings ng Memorya",
                     "minimum": "Pinakamababang memorya (Megabytes)",
                     "maximum": "Pinakamataas na memorya (Megabytes)"
+                },
+                "jvmFlags": {
+                    "borderName": "JVM Flags",
+                    "options": {
+                        "customFlags": "Custom flags",
+                        "optimizedFlags1": "Optimized set of flags #1 (Client and Server, G1 GC)",
+                        "optimizedFlags2": "Optimized set of flags #2 (Client, G1 GC)"
+                    },
+                    "notice": "Add custom JVM flags here. Separate with spaces"
                 }
             },
             "modsTab": {
@@ -291,6 +309,7 @@
             },
             "tab": {
                 "play": "Maglaro",
+                "devlog": "Devlog",
                 "accounts": "Akawnt",
                 "settings": "Pagsasaayos",
                 "about": "Tunkgol sa"
@@ -342,6 +361,16 @@
                 "modLoadersPathLabel": "Landas ng talahanapan ng mga mangkakarga ng modipikasyon",
                 "modLoadersPathFieldPlaceholder": "<polder ng manglulungsad>/cosmic-reach",
                 "tip": "Alalahaning pindutin ang ENTER upang maligtas ang landas"
+            },
+            "game": {
+                "borderName": "Game",
+                "versionsSourceLabel": "Versions source",
+                "versionsSourceCombo": {
+                    "options": {
+                        "cosmicArchive": "Cosmic Archive",
+                        "itch": "Itch"
+                    }
+                }
             },
             "other": {
                 "borderName": "Iba pa",

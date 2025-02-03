@@ -6,6 +6,9 @@
     "messages": {
         "gui": {
             "error": "Error",
+            "errorParsingModGameMessage": "<html>There was an error parsing the following file: <b>$$FILE_PATH$$</b> from mod with namespace <b>$$MOD_NAMESPACE$$</b>. Please check your mods!</html>",
+            "errorTooMuchMemoryGiven": "The Java Virtual Machine could not allocate the amount of memory set for this instance (min: $$MIN_MEMORY$$ MB, max: $$MAX_MEMORY$$ MB). Either buy more RAM or decrease the amount of memory in instance settings.",
+            "gameOutOfMemory": "Game has ran out of memory. Increase the amount of memory in instance settings.",
             "addAccountDialog": {
                 "offline": {
                     "enterUsername": "Benutzername eingeben"
@@ -41,6 +44,9 @@
                 "modAddedName": "Die Mod '$$MOD_NAME$$' wurde bereits hinzugefügt!",
                 "modAddedId": "Die Mod mit der Id '$$MOD_ID$$' wurde bereits hinzugefügt!",
                 "modInvalid": "$$MOD_PATH$$ ist keine valide $$MOD_LOADER$$ Mod!"
+            },
+            "progressDialog": {
+                "nonexistentVersion": "Version $$VERSION_ID$$ does not exist in $$VERSION_LIST$$"
             }
         }
     },
@@ -78,9 +84,24 @@
                     "borderName": "Cosmic Reach Version",
                     "autoUpdateToLatest": "Automatisch auf die neuste Version updaten"
                 },
-                "otherSettings": {
-                    "borderName": "Anderes",
-                    "textFieldPlaceholder": "Fenstertitel hier setzen"
+                "windowSettings": {
+                    "borderName": "Window",
+                    "customTitle": {
+                        "label": "Custom title",
+                        "textFieldPlaceholder": "Type custom window title here"
+                    },
+                    "startup": {
+                        "fullscreen": "Fullscreen",
+                        "maximized": "Maximized",
+                        "customSize": {
+                            "radioButton": "Custom Size",
+                            "width": "Width",
+                            "height": "Height"
+                        }
+                    }
+                },
+                "environmentVariables": {
+                    "borderName": "<html>Environment variables. Separate with semicolon: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
                 }
             },
             "javaTab": {
@@ -95,6 +116,15 @@
                     "borderName": "Memory Einstellungen",
                     "minimum": "Minimum Memory (Megabytes)",
                     "maximum": "Maximum Memory (Megabytes)"
+                },
+                "jvmFlags": {
+                    "borderName": "JVM Flags",
+                    "options": {
+                        "customFlags": "Custom flags",
+                        "optimizedFlags1": "Optimized set of flags #1 (Client and Server, G1 GC)",
+                        "optimizedFlags2": "Optimized set of flags #2 (Client, G1 GC)"
+                    },
+                    "notice": "Add custom JVM flags here. Separate with spaces"
                 }
             },
             "modsTab": {
@@ -111,6 +141,8 @@
                 "loaderVersion": {
                     "borderName": "Loader-Version"
                 },
+                "modpack": "Modpack",
+                "customModpack": "Custom",
                 "modsTable": {
                     "borderName": "Mods",
                     "vanilla": {
@@ -166,6 +198,29 @@
                     "delete": "Löschen"
                 },
                 "deletingWorld": "Welt wird gelöscht"
+            },
+            "screenshotsTab": {
+                "name": "Screenshots",
+                "copyImage": "Copy Image",
+                "copyFile": "Copy File",
+                "delete": "Delete",
+                "rename": "Rename",
+                "renameMessage": "Enter new name for the file"
+            },
+            "gameLogTab": {
+                "name": "Game Log",
+                "search": "Search",
+                "find": "Find",
+                "upload": "Upload",
+                "copyFile": "Copy File",
+                "copyText": "Copy Text",
+                "clear": "Clear",
+                "title": "Upload",
+                "uploading": "Uploading log to McLogs",
+                "failed": "Failed to upload log",
+                "largeLog": "Log size exceeds the limit, log will be truncated",
+                "successTitle": "Log uploaded",
+                "successMessage": "Log uploaded successfully! Link: $$LINK$$ (Copied to clipboard)"
             }
         },
         "searchCRMMModsDialog": {
@@ -179,18 +234,48 @@
             "downloadButton": "Runterladen",
             "primary": "Primär",
             "otherFiles": "Andere Dateien",
-            "mods": "Mods",
-            "datamods": "Data-Mods",
-            "resourcePacks": "Resource-Packs",
-            "shaders": "Shader",
-            "modpacks": "Modpacks",
-            "searchButton": "Suchen",
-            "searchMods": "Mods suchen...",
-            "searchDatamods": "Data-Mods suchen...",
-            "searchResourcePacks": "Resource-Packs suchen...",
-            "searchShaders": "Shader suchen...",
-            "searchModpacks": "Modpacks suchen...",
-            "modVersionsDialogTitle": "Mod-Versionen"
+            "modVersionsDialogTitle": "Mod-Versionen",
+            "selectLoadersDialog": {
+                "title": "Select loaders",
+                "message": "Select loaders for the mod to install"
+            },
+            "navbar": {
+                "mods": "Mods",
+                "datamods": "Data Mods",
+                "resourcePacks": "Resource Packs",
+                "shaders": "Shaders",
+                "modpacks": "Modpacks"
+            },
+            "search": {
+                "inputPlaceholder": {
+                    "searchMods": "Search mods...",
+                    "searchDatamods": "Search data mods...",
+                    "searchResourcePacks": "Search resource packs...",
+                    "searchShaders": "Search shaders...",
+                    "searchModpacks": "Search modpacks..."
+                },
+                "sortBy": {
+                    "label": "Sort by",
+                    "options": {
+                        "relevance": "Relevance",
+                        "downloads": "Downloads",
+                        "follow_count": "Follow count",
+                        "recently_updated": "Recently updated",
+                        "recently_published": "Recently published"
+                    }
+                },
+                "showPerPage": {
+                    "label": "Show per page",
+                    "options": {
+                        "five": "5",
+                        "ten": "10",
+                        "fifteen": "15",
+                        "twenty": "20",
+                        "fifty": "50",
+                        "oneHundred": "100"
+                    }
+                }
+            }
         },
         "addAccountDialog": {
             "title": "Account hinzufügen",
@@ -224,6 +309,7 @@
             },
             "tab": {
                 "play": "Spielen",
+                "devlog": "Devlog",
                 "accounts": "Accounts",
                 "settings": "Einstellungen",
                 "about": "About"
@@ -263,7 +349,8 @@
                         "alwaysCentered": "Immer mittig"
                     }
                 },
-                "amountOfTime": "Vergangene Zeit seit der Veröffentlichung anzeigen"
+                "amountOfTime": "Vergangene Zeit seit der Veröffentlichung anzeigen",
+                "showConsoleAtStartup": "Show console at startup"
             },
             "storageSettings": {
                 "borderName": "Speicher",
@@ -274,6 +361,16 @@
                 "modLoadersPathLabel": "Mod-Loader-Datenpfad",
                 "modLoadersPathFieldPlaceholder": "<Launcher-Ordner>/cosmic-reach",
                 "tip": "ENTER drücken um den Datenpfad zu speichern. Änderungen treten nach Neustart ein."
+            },
+            "game": {
+                "borderName": "Game",
+                "versionsSourceLabel": "Versions source",
+                "versionsSourceCombo": {
+                    "options": {
+                        "cosmicArchive": "Cosmic Archive",
+                        "itch": "Itch"
+                    }
+                }
             },
             "other": {
                 "borderName": "Anderes",
@@ -298,8 +395,10 @@
                 "checkUpdatesNowButton": "Nach Updates suchen",
                 "checkingForUpdates": "Suchen...",
                 "noUpdatesAvailable": "Du benutzt die neuste Version.",
+                "patchOfflineAccount": "Set display name for offline account as in the launcher",
                 "appendUsername": "Nutzername vor Chat-Nachrichten setzen",
-                "language": "Sprache"
+                "language": "Sprache",
+                "disableFileIntegrityCheck": "Disable file integrity check"
             }
         },
         "aboutView": {
@@ -332,7 +431,9 @@
                 "version": "Version",
                 "dateReleased": "Veröffentlichungsdatum",
                 "versionType": "Typ"
-            }
+            },
+            "latestVersion": "(Latest)",
+            "showOnlyInstalled": "Show only installed versions"
         },
         "updateDialog": {
             "title": "Aktualisierung",
