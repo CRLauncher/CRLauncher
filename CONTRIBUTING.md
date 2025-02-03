@@ -32,17 +32,6 @@ To test your changes you don't have to build the project, instead, you can open 
 put your translation file in `languages` folder (create if it does not exist) and run the launcher. Your language should appear in
 combobox in settings view.
 
-After some time your translation will become incomplete, as new strings are added. To know what you need to add to your translation, 
-you can use `lang_diff.py` Python script located in `scripts` folder. You need to supply two files: first goes path to the complete translation
-and second goes your translation file. The script will output missing keys and their values from complete translation like this:
-```
-$ python ./scripts/lang_diff.py ./src/main/resources/lang/en_US.json ./src/main/resources/lang/en_PT.json
-Keys that are missing in en_PT.json: 
-gui.searchCRMMModsDialog.selectLoadersDialog.message = Select loaders for the mod to install
-gui.searchCRMMModsDialog.selectLoadersDialog.title = Select loaders                         
-gui.searchCRMMModsDialog.sortBy.downloads = Downloads                                       
-gui.searchCRMMModsDialog.sortBy.follow_count = Follow count                                 
-gui.searchCRMMModsDialog.sortBy.recently_published = Recently published                     
-gui.searchCRMMModsDialog.sortBy.recently_updated = Recently updated                         
-gui.searchCRMMModsDialog.sortBy.relevance = Relevance
-```
+After some time your translation will become incomplete, as new strings are added. Just update your fork of the project, translate new strings and make a pull request.
+
+Want to know when new strings are added? Join our Discord server, where the announcements are posted: https://discord.gg/TAMA6K6xuA
