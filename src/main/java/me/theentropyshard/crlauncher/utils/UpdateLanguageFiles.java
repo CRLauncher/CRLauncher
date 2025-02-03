@@ -33,6 +33,10 @@ public class UpdateLanguageFiles {
 
         Path langDir = Paths.get("src", "main", "resources", "lang");
 
+        if (args.length == 1) {
+            langDir = Paths.get(args[0]).resolve(langDir);
+        }
+
         for (Path file : FileUtils.list(langDir)) {
             JsonObject englishObject = gson.fromJson(FileUtils.readUtf8(langDir.resolve("en_US.json")), JsonObject.class);
 
