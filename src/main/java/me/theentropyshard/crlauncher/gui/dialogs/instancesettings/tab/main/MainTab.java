@@ -33,9 +33,6 @@ import me.theentropyshard.crlauncher.gui.utils.*;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.language.LanguageSection;
-import me.theentropyshard.crlauncher.logging.Log;
-import me.theentropyshard.crlauncher.utils.ListUtils;
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -47,7 +44,6 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 public class MainTab extends Tab {
@@ -311,49 +307,59 @@ public class MainTab extends Tab {
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                Map<String, String> envVars = instance.getEnvironmentVariables();
-                envVars.clear();
-
-                String envVarsText = MainTab.this.envVarsArea.getText();
-                String[] pairs = envVarsText.split(";");
-                for (String pair : pairs) {
-                    pair = pair.trim();
-
-                    if (pair.isEmpty()) {
-                        continue;
-                    }
-
-                    String[] nameValue = pair.split("=");
-
-                    if (nameValue.length != 2) {
-                        continue;
-                    }
-
-                    envVars.put(nameValue[0], nameValue[1]);
+                if (MainTab.this.onWindowClose(instance)) {
+                    MainTab.this.getDialog().dispose();
                 }
-
-                boolean widthEmpty = false;
-                boolean heightEmpty = false;
-
-                if (MainTab.this.widthField.getText().trim().isEmpty()) {
-                    MainTab.this.widthField.putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
-                    widthEmpty = true;
-                }
-
-                if (MainTab.this.heightField.getText().trim().isEmpty()) {
-                    MainTab.this.heightField.putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
-                    heightEmpty = true;
-                }
-
-                if (widthEmpty || heightEmpty) {
-                    return;
-                }
-
-                MainTab.this.getDialog().dispose();
             }
         });
 
         new VersionsLoadWorker(instance, this).execute();
+    }
+
+    private void saveEnvVars(CosmicInstance instance) {
+        Map<String, String> envVars = instance.getEnvironmentVariables();
+        envVars.clear();
+
+        String[] pairs = this.envVarsArea.getText().split(";");
+
+        for (String pair : pairs) {
+            pair = pair.trim();
+
+            if (pair.isEmpty()) {
+                continue;
+            }
+
+            String[] nameValue = pair.split("=");
+
+            if (nameValue.length != 2) {
+                continue;
+            }
+
+            envVars.put(nameValue[0], nameValue[1]);
+        }
+    }
+
+    private boolean checkFieldsValidity() {
+        boolean widthEmpty = false;
+        boolean heightEmpty = false;
+
+        if (MainTab.this.widthField.getText().trim().isEmpty()) {
+            MainTab.this.widthField.putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
+            widthEmpty = true;
+        }
+
+        if (MainTab.this.heightField.getText().trim().isEmpty()) {
+            MainTab.this.heightField.putClientProperty(FlatClientProperties.OUTLINE, FlatClientProperties.OUTLINE_ERROR);
+            heightEmpty = true;
+        }
+
+        return !widthEmpty && !heightEmpty;
+    }
+
+    private boolean onWindowClose(CosmicInstance instance) {
+        this.saveEnvVars(instance);
+
+        return this.checkFieldsValidity();
     }
 
     private void toggleFields(boolean enabled) {
