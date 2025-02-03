@@ -26,6 +26,7 @@ import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.CosmicRunner;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -52,6 +53,7 @@ public class JavaTab extends Tab {
         root.setLayout(new GridBagLayout());
 
         Language language = CRLauncher.getInstance().getLanguage();
+        LanguageSection javaTabSection = language.getSection("gui.instanceSettingsDialog.javaTab");
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.weightx = 2;
@@ -62,17 +64,11 @@ public class JavaTab extends Tab {
         JavaPathTextField javaPathTextField = new JavaPathTextField();
         javaPathTextField.setText(instance.getJavaPath());
         javaInstallation.add(javaPathTextField);
-        javaInstallation.setBorder(new TitledBorder(
-            language.getString("gui.instanceSettingsDialog.javaTab.javaInstallation.borderName")
-        ));
+        javaInstallation.setBorder(new TitledBorder(javaTabSection.getString("javaInstallation.borderName")));
 
         JPanel memorySettings = new JPanel(new GridLayout(2, 2));
-        JLabel minMemoryLabel = new JLabel(
-            language.getString("gui.instanceSettingsDialog.javaTab.memorySettings.minimum") +
-                ":");
-        JLabel maxMemoryLabel = new JLabel(
-            language.getString("gui.instanceSettingsDialog.javaTab.memorySettings.maximum") +
-                ":");
+        JLabel minMemoryLabel = new JLabel(javaTabSection.getString("memorySettings.minimum") + ":");
+        JLabel maxMemoryLabel = new JLabel(javaTabSection.getString("memorySettings.maximum") + ":");
         JTextField minMemoryField = new JTextField();
         minMemoryField.setText(String.valueOf(instance.getMinimumMemoryInMegabytes()));
         minMemoryField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, "512");
@@ -83,9 +79,7 @@ public class JavaTab extends Tab {
         memorySettings.add(minMemoryField);
         memorySettings.add(maxMemoryLabel);
         memorySettings.add(maxMemoryField);
-        memorySettings.setBorder(new TitledBorder(
-            language.getString("gui.instanceSettingsDialog.javaTab.memorySettings.borderName")
-        ));
+        memorySettings.setBorder(new TitledBorder(javaTabSection.getString("memorySettings.borderName")));
 
         gbc.gridy++;
         root.add(javaInstallation, gbc);
@@ -94,12 +88,12 @@ public class JavaTab extends Tab {
         root.add(memorySettings, gbc);
 
         JPanel jvmFlags = new JPanel(new BorderLayout());
-        jvmFlags.setBorder(BorderFactory.createTitledBorder("JVM Flags"));
+        jvmFlags.setBorder(BorderFactory.createTitledBorder(javaTabSection.getString("jvmFlags.borderName")));
 
         String[] items = {
-            "Custom flags",
-            "Optimized set of flags #1 (Client and Server, G1 GC)",
-            "Optimized set of flags #2 (Client, G1 GC)"
+            javaTabSection.getString("jvmFlags.options.customFlags"),
+            javaTabSection.getString("jvmFlags.options.optimizedFlags1"),
+            javaTabSection.getString("jvmFlags.options.optimizedFlags2")
         };
         this.flagsOptions = new JComboBox<>(items);
         int currentFlagsOption = instance.getCurrentFlagsOption();
@@ -174,7 +168,7 @@ public class JavaTab extends Tab {
         scrollPane.setBorder(new FlatScrollPaneBorder());
         jvmFlags.add(scrollPane, BorderLayout.CENTER);
 
-        JLabel noticeLabel = new JLabel("Add custom JVM flags here. Separate with spaces");
+        JLabel noticeLabel = new JLabel(javaTabSection.getString("jvmFlags.notice"));
         noticeLabel.setBorder(new EmptyBorder(0, 2, 1, 2));
         jvmFlags.add(noticeLabel, BorderLayout.SOUTH);
 

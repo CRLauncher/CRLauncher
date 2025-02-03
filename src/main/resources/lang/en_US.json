@@ -116,6 +116,15 @@
                     "borderName": "Memory Settings",
                     "minimum": "Minimum memory (Megabytes)",
                     "maximum": "Maximum memory (Megabytes)"
+                },
+                "jvmFlags": {
+                    "borderName": "JVM Flags",
+                    "options": {
+                        "customFlags": "Custom flags",
+                        "optimizedFlags1": "Optimized set of flags #1 (Client and Server, G1 GC)",
+                        "optimizedFlags2": "Optimized set of flags #2 (Client, G1 GC)"
+                    },
+                    "notice": "Add custom JVM flags here. Separate with spaces"
                 }
             },
             "modsTab": {
