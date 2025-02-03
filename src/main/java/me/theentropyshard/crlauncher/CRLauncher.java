@@ -36,6 +36,7 @@ import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.itch.ItchIoApi;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.language.Language;
+import me.theentropyshard.crlauncher.language.LanguageManager;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.mclogs.McLogsApi;
 import me.theentropyshard.crlauncher.network.UserAgentInterceptor;
@@ -78,6 +79,7 @@ public class CRLauncher {
     private final McLogsApi mcLogsApi;
     private final ItchIoApi itchIoApi;
 
+    private final LanguageManager languageManager;
     private final VersionManager versionManager;
     private final InstanceManager instanceManager;
     private final IconManager iconManager;
@@ -93,8 +95,6 @@ public class CRLauncher {
 
     public static JFrame frame;
     public static String[] rawArgs;
-
-    private final Map<String, Language> languages;
 
     public CRLauncher(Args args, String[] rawArgs, Path workDir) {
         this.args = args;
@@ -148,11 +148,8 @@ public class CRLauncher {
 
         this.createDirectories();
 
-        this.languages = new LinkedHashMap<>();
-
-        this.loadBuiltinLanguages();
-
-        this.loadExternalLanguages();
+        this.languageManager = new LanguageManager(this.languagesDir);
+        this.languageManager.load();
 
         Language language = this.getLanguage();
         UIManager.put("OptionPane.yesButtonText", language.getString("gui.general.yes"));
@@ -342,52 +339,6 @@ public class CRLauncher {
         }
     }
 
-    private void loadBuiltinLanguages() {
-        for (String lang : new String[]{"de_DE", "en_PT", "en_US", "fil_PH", "hr_HR", "ru_RU", "tl_PH"}) {
-            String resourcePath = "/lang/" + lang + ".json";
-
-            String json = null;
-
-            try {
-                json = ResourceUtils.readToString(resourcePath);
-            } catch (IOException e) {
-                Log.warn("Cannot load " + resourcePath + ": " + e.getMessage());
-            }
-
-            if (json == null) {
-                continue;
-            }
-
-            Language language = new Language(json);
-            this.languages.put(language.getName(), language);
-        }
-    }
-
-    private void loadExternalLanguages() {
-        try {
-            for (Path languageJsonFile : FileUtils.list(this.languagesDir)) {
-                try {
-                    String json = FileUtils.readUtf8(languageJsonFile);
-
-                    Language language = new Language(json);
-                    String name = language.getName();
-
-                    if (this.languages.containsKey(name)) {
-                        Log.warn("Duplicate language is in 'languages' folder, it won't be loaded! Duplicated name: " + name);
-
-                        continue;
-                    }
-
-                    this.languages.put(name, language);
-                } catch (IOException e) {
-                    Log.error("Could not load custom languages", e);
-                }
-            }
-        } catch (IOException e) {
-            Log.error("Could not list '" + this.languagesDir + "'", e);
-        }
-    }
-
     public void doTask(Runnable r) {
         this.taskPool.submit(r);
     }
@@ -433,17 +384,11 @@ public class CRLauncher {
     }
 
     public Language getLanguage() {
-        Language language = this.languages.get(this.settings.language);
-
-        if (language == null) {
-            return this.languages.get("English");
-        }
-
-        return language;
+        return this.languageManager.getLanguage(this.settings.language);
     }
 
     public Map<String, Language> getLanguages() {
-        return this.languages;
+        return this.languageManager.getLanguages();
     }
 
     private static void setInstance(CRLauncher instance) {
