@@ -45,6 +45,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -310,6 +311,9 @@ public class MainTab extends Tab {
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                Map<String, String> envVars = instance.getEnvironmentVariables();
+                envVars.clear();
+
                 String envVarsText = MainTab.this.envVarsArea.getText();
                 String[] pairs = envVarsText.split(";");
                 for (String pair : pairs) {
@@ -321,7 +325,11 @@ public class MainTab extends Tab {
 
                     String[] nameValue = pair.split("=");
 
-                    instance.getEnvironmentVariables().put(nameValue[0], nameValue[1]);
+                    if (nameValue.length != 2) {
+                        continue;
+                    }
+
+                    envVars.put(nameValue[0], nameValue[1]);
                 }
 
                 boolean widthEmpty = false;
