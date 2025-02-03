@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.main;
 
 import com.formdev.flatlaf.FlatClientProperties;
+import com.formdev.flatlaf.ui.FlatScrollPaneBorder;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.version.CosmicArchiveVersion;
@@ -27,6 +28,7 @@ import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java.JavaTab;
 import me.theentropyshard.crlauncher.gui.utils.*;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.Language;
@@ -45,6 +47,7 @@ import java.awt.event.WindowEvent;
 import java.util.List;
 import java.util.Vector;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 public class MainTab extends Tab {
     private final JComboBox<Version> versionsCombo;
@@ -52,6 +55,7 @@ public class MainTab extends Tab {
     private final String oldWindowTitle;
     private final JTextField widthField;
     private final JTextField heightField;
+    private final JTextArea envVarsArea;
 
     private List<Version> versions;
     private Version previousValue;
@@ -274,16 +278,52 @@ public class MainTab extends Tab {
         }
 
         {
-            EnvironmentVariablesPanel environmentVariablesPanel = new EnvironmentVariablesPanel(instance);
+            JPanel envVarsPanel = new JPanel(new BorderLayout());
+            envVarsPanel.setBorder(new TitledBorder(CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.mainTab.environmentVariables.borderName")));
+
+            String text = instance.getEnvironmentVariables().entrySet().stream()
+                .map(entry -> entry.getKey() + "=" + entry.getValue())
+                .collect(Collectors.joining(";"));
+
+            this.envVarsArea = new JTextArea(text);
+            this.envVarsArea.setFont(JavaTab.MONOSPACED);
+            this.envVarsArea.setLineWrap(true);
+            this.envVarsArea.setWrapStyleWord(true);
+
+            JScrollPane envVarsScrollPane = new JScrollPane(
+                this.envVarsArea,
+                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+            );
+            envVarsScrollPane.setUI(new FlatSmoothScrollPaneUI());
+            envVarsScrollPane.setPreferredSize(new Dimension(0, 250));
+            envVarsScrollPane.setMaximumSize(new Dimension(1000, 250));
+            envVarsScrollPane.setBorder(new FlatScrollPaneBorder());
+
+            envVarsPanel.add(envVarsScrollPane, BorderLayout.CENTER);
 
             gbc.gridy++;
             gbc.weighty = 1;
-            panel.add(environmentVariablesPanel, gbc);
+            panel.add(envVarsPanel, gbc);
         }
 
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
+                String envVarsText = MainTab.this.envVarsArea.getText();
+                String[] pairs = envVarsText.split(";");
+                for (String pair : pairs) {
+                    pair = pair.trim();
+
+                    if (pair.isEmpty()) {
+                        continue;
+                    }
+
+                    String[] nameValue = pair.split("=");
+
+                    instance.getEnvironmentVariables().put(nameValue[0], nameValue[1]);
+                }
+
                 boolean widthEmpty = false;
                 boolean heightEmpty = false;
 

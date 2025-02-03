@@ -101,10 +101,7 @@
                     }
                 },
                 "environmentVariables": {
-                    "borderName": "Переменные среды",
-                    "nameFieldPlaceholder": "Имя",
-                    "valueFieldPlaceholder": "Значение",
-                    "addEnvVarButton": "Добавить переменную среды"
+                    "borderName": "<html>Переменные среды. Разделяйте через точку с запятой: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
                 }
             },
             "javaTab": {

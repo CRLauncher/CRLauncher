@@ -101,10 +101,7 @@
                     }
                 },
                 "environmentVariables": {
-                    "borderName": "Environment variables",
-                    "nameFieldPlaceholder": "Name",
-                    "valueFieldPlaceholder": "Value",
-                    "addEnvVarButton": "Add environment variable"
+                    "borderName": "<html>Environment variables. Separate with semicolon: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
                 }
             },
             "javaTab": {

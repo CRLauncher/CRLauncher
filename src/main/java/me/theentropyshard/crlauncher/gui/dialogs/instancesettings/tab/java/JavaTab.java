@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.java;
 import com.formdev.flatlaf.FlatClientProperties;
 import com.formdev.flatlaf.ui.FlatScrollPaneBorder;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.CosmicRunner;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Set;
 
 public class JavaTab extends Tab {
-    private static final Font MONOSPACED = new Font(Font.MONOSPACED, Font.PLAIN, 14);
+    public static final Font MONOSPACED = new Font(Font.MONOSPACED, Font.PLAIN, 14);
 
     private final JTextArea flagsArea;
     private final JComboBox<String> flagsOptions;
@@ -167,6 +168,7 @@ public class JavaTab extends Tab {
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
+        scrollPane.setUI(new FlatSmoothScrollPaneUI());
         scrollPane.setPreferredSize(new Dimension(0, 250));
         scrollPane.setMaximumSize(new Dimension(1000, 250));
         scrollPane.setBorder(new FlatScrollPaneBorder());
