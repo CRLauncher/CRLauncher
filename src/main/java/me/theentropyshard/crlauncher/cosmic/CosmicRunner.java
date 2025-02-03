@@ -237,6 +237,8 @@ public class CosmicRunner extends Thread {
             }
 
             if (launcher instanceof PatchCosmicLauncher patchLauncher) {
+                this.instance.getEnvironmentVariables().forEach(patchLauncher::putEnvironment);
+
                 patchLauncher.putEnvironment(CosmicRunner.COSMIC_REACH_LAUNCHER_NAME, BuildConfig.APP_NAME + " " + BuildConfig.APP_VERSION);
 
                 patchLauncher.defineProperty(new SystemProperty("file.encoding", "utf-8"));
