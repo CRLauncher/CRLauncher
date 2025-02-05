@@ -195,13 +195,13 @@ public class ModsTab extends Tab implements ItemListener {
 
             JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
-            JCheckBox updateModsStartup = new JCheckBox("Update mods before running");
+            JCheckBox updateModsStartup = new JCheckBox(language.getString("gui.instanceSettingsDialog.modsTab.updateModsCheckbox"));
             updateModsStartup.addActionListener(e -> {
                 instance.setUpdateMods(updateModsStartup.isSelected());
             });
             rightBottomPanel.add(updateModsStartup);
 
-            JButton updateMods = new JButton("Update mods");
+            JButton updateMods = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.updateModsButton"));
             updateMods.addActionListener(e -> {
 
             });
