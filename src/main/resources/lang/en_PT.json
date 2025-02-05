@@ -176,7 +176,9 @@
                     }
                 },
                 "openModsFolder": "Open sail folder",
-                "searchModsCRMM": "Search sails on CRMM"
+                "searchModsCRMM": "Search sails on CRMM",
+                "updateModsCheckbox": "Update mods before running",
+                "updateModsButton": "Update mods"
             },
             "jarModsTab": {
                 "name": "Jar Sails",

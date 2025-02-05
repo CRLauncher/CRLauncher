@@ -176,7 +176,9 @@
                     }
                 },
                 "openModsFolder": "Buksan ang polder ng mga modipikasyon",
-                "searchModsCRMM": "Maghanap ng mga modipikasyon sa CRMM"
+                "searchModsCRMM": "Maghanap ng mga modipikasyon sa CRMM",
+                "updateModsCheckbox": "Update mods before running",
+                "updateModsButton": "Update mods"
             },
             "jarModsTab": {
                 "name": "Modipikasyong Arkibong Java",

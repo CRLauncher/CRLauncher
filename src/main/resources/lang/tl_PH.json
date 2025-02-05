@@ -176,7 +176,9 @@
                     }
                 },
                 "openModsFolder": "Buksan ang ligpitan ng mga pagbabago",
-                "searchModsCRMM": "Maghanap ng mga pagbabago sa CRMM"
+                "searchModsCRMM": "Maghanap ng mga pagbabago sa CRMM",
+                "updateModsCheckbox": "Update mods before running",
+                "updateModsButton": "Update mods"
             },
             "jarModsTab": {
                 "name": "Pagbabagong Sinupang Java",

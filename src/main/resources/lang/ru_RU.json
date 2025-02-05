@@ -176,7 +176,9 @@
                     }
                 },
                 "openModsFolder": "Открыть папку с модами",
-                "searchModsCRMM": "Найти моды на CRMM"
+                "searchModsCRMM": "Найти моды на CRMM",
+                "updateModsCheckbox": "Обновлять моды перед запуском",
+                "updateModsButton": "Обновить моды"
             },
             "jarModsTab": {
                 "name": "Jar-моды",

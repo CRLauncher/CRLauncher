@@ -176,7 +176,9 @@
                     }
                 },
                 "openModsFolder": "Otvori mapu modova",
-                "searchModsCRMM": "Traži modove na CRMM-u"
+                "searchModsCRMM": "Traži modove na CRMM-u",
+                "updateModsCheckbox": "Update mods before running",
+                "updateModsButton": "Update mods"
             },
             "jarModsTab": {
                 "name": "Jar Modovi",
