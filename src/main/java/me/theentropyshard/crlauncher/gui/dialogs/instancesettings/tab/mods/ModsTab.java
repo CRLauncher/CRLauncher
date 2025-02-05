@@ -51,6 +51,7 @@ public class ModsTab extends Tab implements ItemListener {
     private final JPanel root;
     private final JPanel loaderVersionsPanel;
     private final ModsView modsView;
+    private final JButton updateModsButton;
 
     private ModLoader lastType;
     private boolean versionsLoaded;
@@ -201,11 +202,12 @@ public class ModsTab extends Tab implements ItemListener {
             });
             rightBottomPanel.add(updateModsStartup);
 
-            JButton updateMods = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.updateModsButton"));
-            updateMods.addActionListener(e -> {
+            this.updateModsButton = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.updateModsButton"));
+            this.updateModsButton.setEnabled(instance.getModLoader() != ModLoader.VANILLA);
+            this.updateModsButton.addActionListener(e -> {
 
             });
-            rightBottomPanel.add(updateMods);
+            rightBottomPanel.add(this.updateModsButton);
 
             bottomPanel.add(rightBottomPanel, BorderLayout.EAST);
 
@@ -256,6 +258,8 @@ public class ModsTab extends Tab implements ItemListener {
 
         this.lastType = instance.getModLoader();
         instance.setModLoader((ModLoader) e.getItem());
+
+        this.updateModsButton.setEnabled(instance.getModLoader() != ModLoader.VANILLA);
 
         this.updateModsView();
         this.getRoot().revalidate();
