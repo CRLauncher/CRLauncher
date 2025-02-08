@@ -29,6 +29,7 @@ import me.theentropyshard.crlauncher.cosmic.launcher.LaunchType;
 import me.theentropyshard.crlauncher.cosmic.launcher.PatchCosmicLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
+import me.theentropyshard.crlauncher.cosmic.mods.ModUpdater;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
@@ -177,6 +178,10 @@ public class CosmicRunner extends Thread {
             Log.info("Java path: " + javaPath);
 
             Path clientPath = this.applyJarMods(version);
+
+            if (this.instance.isUpdateMods() && this.instance.canAutoUpdateMods()) {
+                new ModUpdater(this.instance, null).runSync();
+            }
 
             CosmicLauncher launcher;
 

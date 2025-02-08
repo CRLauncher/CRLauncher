@@ -19,7 +19,8 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.language.Language;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
+import me.theentropyshard.crlauncher.cosmic.mods.ModUpdater;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.crmm.SearchCrmmModsDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
@@ -29,7 +30,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
-import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
@@ -197,15 +198,16 @@ public class ModsTab extends Tab implements ItemListener {
             JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
             JCheckBox updateModsStartup = new JCheckBox(language.getString("gui.instanceSettingsDialog.modsTab.updateModsCheckbox"));
+            updateModsStartup.setSelected(instance.isUpdateMods());
             updateModsStartup.addActionListener(e -> {
                 instance.setUpdateMods(updateModsStartup.isSelected());
             });
             rightBottomPanel.add(updateModsStartup);
 
             this.updateModsButton = new JButton(language.getString("gui.instanceSettingsDialog.modsTab.updateModsButton"));
-            this.updateModsButton.setEnabled(instance.getModLoader() != ModLoader.VANILLA);
+            this.updateModsButton.setEnabled(instance.canAutoUpdateMods());
             this.updateModsButton.addActionListener(e -> {
-
+                new ModUpdater(instance, this.getModsView().getModsTableModel()).execute();
             });
             rightBottomPanel.add(this.updateModsButton);
 
@@ -233,9 +235,12 @@ public class ModsTab extends Tab implements ItemListener {
         this.loaderVersionCombo.removeAllItems();
 
         switch (instance.getModLoader()) {
-            case FABRIC -> new FabricVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
-            case QUILT -> new QuiltVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
-            case PUZZLE -> new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
+            case FABRIC ->
+                new FabricVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
+            case QUILT ->
+                new QuiltVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
+            case PUZZLE ->
+                new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
         }
 
         this.versionsLoaded = true;
@@ -259,7 +264,7 @@ public class ModsTab extends Tab implements ItemListener {
         this.lastType = instance.getModLoader();
         instance.setModLoader((ModLoader) e.getItem());
 
-        this.updateModsButton.setEnabled(instance.getModLoader() != ModLoader.VANILLA);
+        this.updateModsButton.setEnabled(instance.canAutoUpdateMods());
 
         this.updateModsView();
         this.getRoot().revalidate();

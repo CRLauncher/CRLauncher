@@ -20,11 +20,10 @@ package me.theentropyshard.crlauncher.crmm;
 
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionsResponse;
-import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.QueryMap;
+import retrofit2.http.*;
 
 import java.util.Map;
 
@@ -40,4 +39,7 @@ public interface CrmmHttpApi {
 
     @GET("project/{slug}/version/latest")
     ProjectVersionResponse getLatestVersion(@Path("slug") String slug);
+
+    @POST("version-files/update")
+    Map<String, ProjectVersion> getLatestVersions(@Body HashesBody body);
 }

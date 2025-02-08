@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.crmm.filter.SortBy;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionsResponse;
 import me.theentropyshard.crlauncher.utils.CallUnwrapAdapter;
@@ -75,5 +76,9 @@ public class CrmmApi {
 
     public ProjectVersionResponse getLatestVersion(String slug) {
         return this.crmmApi.getLatestVersion(slug);
+    }
+
+    public Map<String, ProjectVersion> getLatestVersions(HashesBody body) {
+        return this.crmmApi.getLatestVersions(body);
     }
 }

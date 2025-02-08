@@ -87,6 +87,10 @@ public class CosmicInstance extends JavaInstance {
         this.puzzleMods = new ArrayList<>();
     }
 
+    public boolean canAutoUpdateMods() {
+        return this.modLoader == ModLoader.QUILT || this.modLoader == ModLoader.PUZZLE;
+    }
+
     public Path getCurrentModsDir() {
         return this.getModsDir(this.modLoader);
     }
