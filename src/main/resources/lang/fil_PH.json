@@ -68,6 +68,10 @@
             "datePublished": "Petsang pinublish",
             "downloads": "Mga download"
         },
+        "modUpdateDialog": {
+            "title": "Updating mods",
+            "downloading": "Downloading"
+        },
         "instanceSettingsDialog": {
             "title": "Settings ng Instansiya - $$INSTANCE_NAME$$",
             "exportInstance": {

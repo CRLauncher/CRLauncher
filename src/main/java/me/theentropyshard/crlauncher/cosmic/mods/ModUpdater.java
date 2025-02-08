@@ -58,7 +58,10 @@ public class ModUpdater extends Worker<Void, Pair<Mod, ModLoader>> {
 
         this.instance = instance;
         this.tableModel = tableModel;
-        this.progressDialog = new ProgressDialog("Updating mods - " + instance.getName());
+        this.progressDialog = new ProgressDialog(
+            CRLauncher.getInstance().getLanguage().getString("gui.modUpdateDialog.title") +
+            " - " + instance.getName()
+        );
     }
 
     public void runSync() throws Exception {
@@ -121,7 +124,8 @@ public class ModUpdater extends Worker<Void, Pair<Mod, ModLoader>> {
         FileUtils.createDirectoryIfNotExists(tmpDir);
 
         SwingUtilities.invokeLater(() -> {
-            this.progressDialog.setStage("Downloading " + file.getName());
+            this.progressDialog.setStage(CRLauncher.getInstance().getLanguage().getString("gui.modUpdateDialog.downloading") +
+                " " + file.getName());
             this.progressDialog.update(0, 0, 0, false);
         });
 

@@ -68,6 +68,10 @@
             "datePublished": "Datum objave",
             "downloads": "Preuzimanja"
         },
+        "modUpdateDialog": {
+            "title": "Updating mods",
+            "downloading": "Downloading"
+        },
         "instanceSettingsDialog": {
             "title": "Postavke Instance - $$INSTANCE_NAME$$",
             "exportInstance": {

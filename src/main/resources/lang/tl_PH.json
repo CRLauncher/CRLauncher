@@ -68,6 +68,10 @@
             "datePublished": "Taburaw ng paglathala",
             "downloads": "Dalaiba"
         },
+        "modUpdateDialog": {
+            "title": "Updating mods",
+            "downloading": "Downloading"
+        },
         "instanceSettingsDialog": {
             "title": "Pagsasaayos ng Pagkakataon - $$INSTANCE_NAME$$",
             "exportInstance": {

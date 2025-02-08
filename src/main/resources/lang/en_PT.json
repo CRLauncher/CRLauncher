@@ -68,6 +68,10 @@
             "datePublished": "Date published",
             "downloads": "Downloads"
         },
+        "modUpdateDialog": {
+            "title": "Updating mods",
+            "downloading": "Downloading"
+        },
         "instanceSettingsDialog": {
             "title": "Dock Settings - $$INSTANCE_NAME$$",
             "exportInstance": {

@@ -68,6 +68,10 @@
             "datePublished": "Дата публикации",
             "downloads": "Количество загрузок"
         },
+        "modUpdateDialog": {
+            "title": "Обновление модов",
+            "downloading": "Скачивание"
+        },
         "instanceSettingsDialog": {
             "title": "Настройки инстанса - $$INSTANCE_NAME$$",
             "exportInstance": {
