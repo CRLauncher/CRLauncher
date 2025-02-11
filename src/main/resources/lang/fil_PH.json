@@ -105,10 +105,7 @@
                     }
                 },
                 "environmentVariables": {
-                    "borderName": "Environment variables",
-                    "nameFieldPlaceHolder": "Pangalan",
-                    "valueFieldPlaceHolder": "Nilalaman",
-                    "addEnvVarButton": "Idagdag bilang environment variable"
+                    "borderName": "<html>Environment variables. Semicolon ang panghiwalay: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
                 }
             },
             "javaTab": {
