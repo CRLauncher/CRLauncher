@@ -124,11 +124,11 @@
                 "jvmFlags": {
                     "borderName": "JVM Flags",
                     "options": {
-                        "customFlags": "Custom flags",
-                        "optimizedFlags1": "Optimized set of flags #1 (Client and Server, G1 GC)",
-                        "optimizedFlags2": "Optimized set of flags #2 (Client, G1 GC)"
+                        "customFlags": "Custom na mga flags",
+                        "optimizedFlags1": "Unang mainam na hanay ng flags (Kliyente at Server, G1 GC)",
+                        "optimizedFlags2": "Pangalawang mainam na hanay ng flags (Kliyente, G1 GC)"
                     },
-                    "notice": "Add custom JVM flags here. Separate with spaces"
+                    "notice": "Dito makakadagdag ng custom na mga JVM flags. Patlang ang panghiwalay"
                 }
             },
             "modsTab": {
