@@ -46,7 +46,7 @@
                 "modInvalid": "Isang di-wastong modipikasyong $$MOD_LOADER$$ ang $$MOD_PATH$$!"
             },
             "progressDialog": {
-                "nonexistentVersion": "Version $$VERSION_ID$$ does not exist in $$VERSION_LIST$$"
+                "nonexistentVersion": "Wala sa $$VERSION_LIST$$ ang bersiyong $$VERSION_ID$$"
             }
         }
     },
