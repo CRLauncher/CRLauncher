@@ -69,8 +69,8 @@
             "downloads": "Mga download"
         },
         "modUpdateDialog": {
-            "title": "Updating mods",
-            "downloading": "Downloading"
+            "title": "Ina-update ang mga modipikasyon",
+            "downloading": "Nagda-download"
         },
         "instanceSettingsDialog": {
             "title": "Settings ng Instansiya - $$INSTANCE_NAME$$",
