@@ -7,7 +7,7 @@
         "gui": {
             "error": "Error",
             "errorParsingModGameMessage": "<html>Nagka-error sa pag-parse ng nasusunod na mga file: <b>$$FILE_PATH$$</b> na galing sa modipikasyong may namespace na <b>$$MOD_NAMESPACE$$</b>. Mangyaring suriin ang iyong mga modipikasyon!</html>",
-            "errorTooMuchMemoryGiven": "The Java Virtual Machine could not allocate the amount of memory set for this instance (min: $$MIN_MEMORY$$ MB, max: $$MAX_MEMORY$$ MB). Either buy more RAM or decrease the amount of memory in instance settings.",
+            "errorTooMuchMemoryGiven": "Hindi mailaan ang binagay na bilang ng memorya ng Java Virtual Machine para sa instansiyang ito (min: $$MIN_MEMORY$$ MB, max: $$MAX_MEMORY$$ MB). Magyaring bumili ng pandagdag na RAM o kaya ay bawasan ang hiling na memory sa settings ng instansiya.",
             "gameOutOfMemory": "Game has ran out of memory. Increase the amount of memory in instance settings.",
             "addAccountDialog": {
                 "offline": {
