@@ -369,8 +369,8 @@
                 "tip": "Alalahaning pindutin ang ENTER upang maligtas ang landas"
             },
             "game": {
-                "borderName": "Game",
-                "versionsSourceLabel": "Versions source",
+                "borderName": "Laro",
+                "versionsSourceLabel": "Pinagmulan ng mga bersiyon",
                 "versionsSourceCombo": {
                     "options": {
                         "cosmicArchive": "Cosmic Archive",
