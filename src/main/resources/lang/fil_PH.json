@@ -105,7 +105,10 @@
                     }
                 },
                 "environmentVariables": {
-                    "borderName": "<html>Environment variables. Separate with semicolon: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
+                    "borderName": "Environment variables",
+                    "nameFieldPlaceHolder": "Pangalan",
+                    "valueFieldPlaceHolder": "Nilalaman",
+                    "addEnvVarButton": "Idagdag bilang environment variable"
                 }
             },
             "javaTab": {
