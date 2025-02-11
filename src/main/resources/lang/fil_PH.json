@@ -181,8 +181,8 @@
                 },
                 "openModsFolder": "Buksan ang polder ng mga modipikasyon",
                 "searchModsCRMM": "Maghanap ng mga modipikasyon sa CRMM",
-                "updateModsCheckbox": "Update mods before running",
-                "updateModsButton": "Update mods"
+                "updateModsCheckbox": "I-update ang mga modipikasyon bago tumbakbo",
+                "updateModsButton": "I-update ang mga modipikasyon"
             },
             "jarModsTab": {
                 "name": "Modipikasyong Arkibong Java",
