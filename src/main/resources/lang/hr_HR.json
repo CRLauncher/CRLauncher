@@ -6,9 +6,9 @@
     "messages": {
         "gui": {
             "error": "Greška",
-            "errorParsingModGameMessage": "<html>There was an error parsing the following file: <b>$$FILE_PATH$$</b> from mod with namespace <b>$$MOD_NAMESPACE$$</b>. Please check your mods!</html>",
-            "errorTooMuchMemoryGiven": "The Java Virtual Machine could not allocate the amount of memory set for this instance (min: $$MIN_MEMORY$$ MB, max: $$MAX_MEMORY$$ MB). Either buy more RAM or decrease the amount of memory in instance settings.",
-            "gameOutOfMemory": "Game has ran out of memory. Increase the amount of memory in instance settings.",
+        "errorParsingModGameMessage": "<html>Došlo je do greške u obrađivanju ove datoteke: <b>$$FILE_PATH$$</b> iz modifikacije sa namespace-om <b>$$MOD_NAMESPACE$$</b>. Provjeri modove!</html>",
+            "errorTooMuchMemoryGiven": "Java Virtualna Mašina nije mogla alocirati količinu RAM memorije postavljenu za ovu instancu (minimum: $$MIN_MEMORY$$ MB, maksimum: $$MAX_MEMORY$$ MB). Ili kupi više RAM-a, ili smanji količinu memorije u postavkama instance.",
+            "gameOutOfMemory": "Igra je ostala bez RAM memorije. Povisi količinu RAM memorije u postavkama instance.",
             "addAccountDialog": {
                 "offline": {
                     "enterUsername": "Unesi željeno ime igrača"
@@ -23,7 +23,7 @@
             "playView": {
                 "deleteInstanceConfirm": "Jesi li siguran da želiš ukloniti instancu '$$INSTANCE_NAME$$'?",
                 "cannotDeleteInstance": "Nije moguće ukloniti $$INSTANCE_DIR$$",
-                "invalidInstanceName": "An invalid name was supplied! Valid name was created."
+                "invalidInstanceName": "Nevažeće ime je predano! Važeće ime je kreirano."
             },
             "addInstanceDialog": {
                 "instanceNameCannotBeEmpty": "Ime instance ne može biti prazno!",
@@ -46,7 +46,7 @@
                 "modInvalid": "$$MOD_PATH$$ nije važeći $$MOD_LOADER$$ mod!"
             },
             "progressDialog": {
-                "nonexistentVersion": "Version $$VERSION_ID$$ does not exist in $$VERSION_LIST$$"
+                "nonexistentVersion": "Verzija $$VERSION_ID$$ ne postoji u $$VERSION_LIST$$"
             }
         }
     },
@@ -69,8 +69,8 @@
             "downloads": "Preuzimanja"
         },
         "modUpdateDialog": {
-            "title": "Updating mods",
-            "downloading": "Downloading"
+            "title": "Ažuriranje modova",
+            "downloading": "Preuzimanje"
         },
         "instanceSettingsDialog": {
             "title": "Postavke Instance - $$INSTANCE_NAME$$",
@@ -89,23 +89,23 @@
                     "autoUpdateToLatest": "Automatski ažuriraj na najnoviju verziju"
                 },
                 "windowSettings": {
-                    "borderName": "Window",
+                    "borderName": "Prozor",
                     "customTitle": {
-                        "label": "Custom title",
-                        "textFieldPlaceholder": "Type custom window title here"
+                        "label": "Prilagođen naslov",
+                        "textFieldPlaceholder": "Upiši prilagođen naslov prozora ovdje"
                     },
                     "startup": {
-                        "fullscreen": "Fullscreen",
-                        "maximized": "Maximized",
+                        "fullscreen": "Puni Ekran",
+                        "maximized": "Maksimiziran",
                         "customSize": {
-                            "radioButton": "Custom Size",
-                            "width": "Width",
-                            "height": "Height"
+                            "radioButton": "Prilagođena Veličina",
+                            "width": "Dužina",
+                            "height": "Visina"
                         }
                     }
                 },
                 "environmentVariables": {
-                    "borderName": "<html>Environment variables. Separate with semicolon: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
+                    "borderName": "<html>Environment varijable. Odvoji sa točka-zarezom: <b>IME1=VRIJEDNOST1; IME2=VRIJEDNOST2</b></html>"
                 }
             },
             "javaTab": {
@@ -122,13 +122,13 @@
                     "maximum": "Maksimalna memoija (Megabajti)"
                 },
                 "jvmFlags": {
-                    "borderName": "JVM Flags",
+                    "borderName": "JVM Flag-ovi",
                     "options": {
-                        "customFlags": "Custom flags",
-                        "optimizedFlags1": "Optimized set of flags #1 (Client and Server, G1 GC)",
-                        "optimizedFlags2": "Optimized set of flags #2 (Client, G1 GC)"
+                        "customFlags": "Prilagođeni flag-ovi",
+                        "optimizedFlags1": "Optimizirani set flag-ova #1 (Client i Server, G1 GC)",
+                        "optimizedFlags2": "Optimizirani set flag-ova #2 (Client, G1 GC)"
                     },
-                    "notice": "Add custom JVM flags here. Separate with spaces"
+                    "notice": "Dodaj prilagođene JVM flag-ove ovdje. Odvoji sa razmacima"
                 }
             },
             "modsTab": {
@@ -146,7 +146,7 @@
                     "borderName": "Loader verzija"
                 },
                 "modpack": "Modpack",
-                "customModpack": "Custom",
+                "customModpack": "Prilagođen",
                 "modsTable": {
                     "borderName": "Modovi",
                     "vanilla": {
@@ -181,8 +181,8 @@
                 },
                 "openModsFolder": "Otvori mapu modova",
                 "searchModsCRMM": "Traži modove na CRMM-u",
-                "updateModsCheckbox": "Update mods before running",
-                "updateModsButton": "Update mods"
+                "updateModsCheckbox": "Ažuriraj modove prije pokretanja",
+                "updateModsButton": "Ažuriraj modove"
             },
             "jarModsTab": {
                 "name": "Jar Modovi",
@@ -242,36 +242,36 @@
             "otherFiles": "Druge datoteke",
             "modVersionsDialogTitle": "Verzije modova",
             "selectLoadersDialog": {
-                "title": "Select loaders",
-                "message": "Select loaders for the mod to install"
+                "title": "Odaberi loader-e",
+                "message": "Odaberi loader-e za instalaciju"
             },
             "navbar": {
-                "mods": "Mods",
-                "datamods": "Data Mods",
-                "resourcePacks": "Resource Packs",
-                "shaders": "Shaders",
-                "modpacks": "Modpacks"
+                "mods": "Modovi",
+                "datamods": "Podatkovni Modovi",
+                "resourcePacks": "Paketi Resursa",
+                "shaders": "Shaderi",
+                "modpacks": "Paketi Modova"
             },
             "search": {
                 "inputPlaceholder": {
-                    "searchMods": "Search mods...",
-                    "searchDatamods": "Search data mods...",
-                    "searchResourcePacks": "Search resource packs...",
-                    "searchShaders": "Search shaders...",
-                    "searchModpacks": "Search modpacks..."
+                    "searchMods": "Traži modove...",
+                    "searchDatamods": "Traži podatkovne modove...",
+                    "searchResourcePacks": "Traži pakete resursa...",
+                    "searchShaders": "Traži shadere...",
+                    "searchModpacks": "Traži pakete modova..."
                 },
                 "sortBy": {
-                    "label": "Sort by",
+                    "label": "Sortiraj po",
                     "options": {
-                        "relevance": "Relevance",
-                        "downloads": "Downloads",
-                        "follow_count": "Follow count",
-                        "recently_updated": "Recently updated",
-                        "recently_published": "Recently published"
+                        "relevance": "Relevantnosti",
+                        "downloads": "Preuzimanjima",
+                        "follow_count": "Broju pratitelja",
+                        "recently_updated": "Nedavno ažurirano",
+                        "recently_published": "Nedavno objavljeno"
                     }
                 },
                 "showPerPage": {
-                    "label": "Show per page",
+                    "label": "Pokaži po stranici",
                     "options": {
                         "five": "5",
                         "ten": "10",
@@ -305,7 +305,7 @@
         "general": {
             "yes": "Da",
             "no": "Ne",
-            "ok": "OK",
+            "ok": "U redu",
             "cancel": "Otkaži",
             "archives": "Arhive",
             "openLauncherFolder": "Otvori mapu pokretača",
@@ -356,7 +356,7 @@
                     }
                 },
                 "amountOfTime": "Pokaži koliko je vremena prošlo od datuma izlaska",
-                "showConsoleAtStartup": "Show console at startup"
+                "showConsoleAtStartup": "Pokaži konzolu pri pokretanju"
             },
             "storageSettings": {
                 "borderName": "Pohrana",
@@ -369,11 +369,11 @@
                 "tip": "Zapamti da treba pritisnuti ENTER da bi se lokacija spremila. Promjene će se primijeniti nakon ponovnog pokretanja"
             },
             "game": {
-                "borderName": "Game",
-                "versionsSourceLabel": "Versions source",
+                "borderName": "Igra",
+                "versionsSourceLabel": "Izvor verzija",
                 "versionsSourceCombo": {
                     "options": {
-                        "cosmicArchive": "Cosmic Archive",
+                        "cosmicArchive": "Cosmic Arhiva",
                         "itch": "Itch"
                     }
                 }
@@ -401,10 +401,10 @@
                 "checkUpdatesNowButton": "Provjeri ima li ažuriranja",
                 "checkingForUpdates": "Provjeravanje...",
                 "noUpdatesAvailable": "Koristiš najnoviju verziju",
-                "patchOfflineAccount": "Set display name for offline account as in the launcher",
+                "patchOfflineAccount": "Postavi isto ime za offline račun u igri kao u pokretaču",
                 "appendUsername": "Dodaj ime prije razgovornih poruka",
                 "language": "Jezik",
-                "disableFileIntegrityCheck": "Disable file integrity check"
+                "disableFileIntegrityCheck": "Onemogući provjeru integriteta datoteka"
             }
         },
         "aboutView": {
@@ -438,8 +438,8 @@
                 "dateReleased": "Datum izlaska",
                 "versionType": "Tip"
             },
-            "latestVersion": "(Latest)",
-            "showOnlyInstalled": "Show only installed versions"
+            "latestVersion": "(Najnovija)",
+            "showOnlyInstalled": "Pokaži samo instalirane verzije"
         },
         "updateDialog": {
             "title": "Ažuriranja",
