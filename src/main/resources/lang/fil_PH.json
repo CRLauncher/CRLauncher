@@ -6,8 +6,8 @@
     "messages": {
         "gui": {
             "error": "Error",
-            "errorParsingModGameMessage": "<html>There was an error parsing the following file: <b>$$FILE_PATH$$</b> from mod with namespace <b>$$MOD_NAMESPACE$$</b>. Please check your mods!</html>",
-            "errorTooMuchMemoryGiven": "The Java Virtual Machine could not allocate the amount of memory set for this instance (min: $$MIN_MEMORY$$ MB, max: $$MAX_MEMORY$$ MB). Either buy more RAM or decrease the amount of memory in instance settings.",
+            "errorParsingModGameMessage": "<html>Nagka-error sa pag-parse ng nasusunod na mga file: <b>$$FILE_PATH$$</b> na galing sa modipikasyong may namespace na <b>$$MOD_NAMESPACE$$</b>. Mangyaring suriin ang iyong mga modipikasyon!</html>",
+            "errorTooMuchMemoryGiven": "Hindi mailaan ang binagay na bilang ng memorya ng Java Virtual Machine para sa instansiyang ito (min: $$MIN_MEMORY$$ MB, max: $$MAX_MEMORY$$ MB). Magyaring bumili ng pandagdag na RAM o kaya ay bawasan ang hiling na memory sa settings ng instansiya.",
             "gameOutOfMemory": "Game has ran out of memory. Increase the amount of memory in instance settings.",
             "addAccountDialog": {
                 "offline": {
@@ -46,7 +46,7 @@
                 "modInvalid": "Isang di-wastong modipikasyong $$MOD_LOADER$$ ang $$MOD_PATH$$!"
             },
             "progressDialog": {
-                "nonexistentVersion": "Version $$VERSION_ID$$ does not exist in $$VERSION_LIST$$"
+                "nonexistentVersion": "Wala sa $$VERSION_LIST$$ ang bersiyong $$VERSION_ID$$"
             }
         }
     },
@@ -69,8 +69,8 @@
             "downloads": "Mga download"
         },
         "modUpdateDialog": {
-            "title": "Updating mods",
-            "downloading": "Downloading"
+            "title": "Ina-update ang mga modipikasyon",
+            "downloading": "Nagda-download"
         },
         "instanceSettingsDialog": {
             "title": "Settings ng Instansiya - $$INSTANCE_NAME$$",
@@ -105,7 +105,7 @@
                     }
                 },
                 "environmentVariables": {
-                    "borderName": "<html>Environment variables. Separate with semicolon: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
+                    "borderName": "<html>Environment variables. Semicolon ang panghiwalay: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
                 }
             },
             "javaTab": {
@@ -124,11 +124,11 @@
                 "jvmFlags": {
                     "borderName": "JVM Flags",
                     "options": {
-                        "customFlags": "Custom flags",
-                        "optimizedFlags1": "Optimized set of flags #1 (Client and Server, G1 GC)",
-                        "optimizedFlags2": "Optimized set of flags #2 (Client, G1 GC)"
+                        "customFlags": "Custom na mga flags",
+                        "optimizedFlags1": "Unang mainam na hanay ng flags (Kliyente at Server, G1 GC)",
+                        "optimizedFlags2": "Pangalawang mainam na hanay ng flags (Kliyente, G1 GC)"
                     },
-                    "notice": "Add custom JVM flags here. Separate with spaces"
+                    "notice": "Dito makakadagdag ng custom na mga JVM flags. Patlang ang panghiwalay"
                 }
             },
             "modsTab": {
@@ -181,8 +181,8 @@
                 },
                 "openModsFolder": "Buksan ang polder ng mga modipikasyon",
                 "searchModsCRMM": "Maghanap ng mga modipikasyon sa CRMM",
-                "updateModsCheckbox": "Update mods before running",
-                "updateModsButton": "Update mods"
+                "updateModsCheckbox": "I-update ang mga modipikasyon bago tumbakbo",
+                "updateModsButton": "I-update ang mga modipikasyon"
             },
             "jarModsTab": {
                 "name": "Modipikasyong Arkibong Java",
@@ -369,8 +369,8 @@
                 "tip": "Alalahaning pindutin ang ENTER upang maligtas ang landas"
             },
             "game": {
-                "borderName": "Game",
-                "versionsSourceLabel": "Versions source",
+                "borderName": "Laro",
+                "versionsSourceLabel": "Pinagmulan ng mga bersiyon",
                 "versionsSourceCombo": {
                     "options": {
                         "cosmicArchive": "Cosmic Archive",
