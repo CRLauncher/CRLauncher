@@ -307,7 +307,7 @@ public class CrmmModsView extends JPanel {
 
                     ModCard card = new ModCard(modInfo);
                     card.addMouseListener(new MouseClickListener(e -> {
-                        new ModVersionsDialog(modInfo, CrmmModsView.this.instance, CrmmModsView.this.modsTab,
+                        new ModViewDialog(modInfo, CrmmModsView.this.instance, CrmmModsView.this.modsTab,
                             new ModDownloadWorkerSupplier());
                     }));
 

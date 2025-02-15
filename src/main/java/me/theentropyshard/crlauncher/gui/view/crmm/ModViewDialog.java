@@ -22,19 +22,23 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.CrmmModView;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import java.awt.*;
 
-public class ModVersionsDialog extends AppDialog {
-    public ModVersionsDialog(ModInfo modInfo, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
+public class ModViewDialog extends AppDialog {
+    public ModViewDialog(ModInfo modInfo, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
         super(CRLauncher.frame,
             CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modVersionsDialogTitle") +
                 " - " + modInfo.getName());
 
-        ModVersionsView view = new ModVersionsView(modInfo, instance, modsTab, supplier);
+        //ModVersionsView view = new ModVersionsView(modInfo, instance, modsTab, supplier);
+        CrmmModView view = new CrmmModView(modInfo);
         view.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
-        view.loadVersions();
+        //view.loadVersions();
+
+        this.getDialog().getRootPane().setDefaultButton(view.getHeader().getDownloadButton());
 
         this.setContent(view);
         this.center(0);
