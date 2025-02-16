@@ -103,12 +103,24 @@ public class Card extends JPanel {
         g2d.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), this.arc, this.arc);
     }
 
+    public Color getDefaultColor() {
+        return this.defaultColor;
+    }
+
     public void setDefaultColor(Color defaultColor) {
         this.defaultColor = defaultColor;
     }
 
+    public Color getHoveredColor() {
+        return this.hoveredColor;
+    }
+
     public void setHoveredColor(Color hoveredColor) {
         this.hoveredColor = hoveredColor;
+    }
+
+    public Color getPressedColor() {
+        return this.pressedColor;
     }
 
     public void setPressedColor(Color pressedColor) {

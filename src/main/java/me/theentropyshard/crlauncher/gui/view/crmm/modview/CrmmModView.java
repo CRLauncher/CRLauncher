@@ -19,7 +19,6 @@
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
-import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -33,19 +32,34 @@ public class CrmmModView extends JPanel {
     public CrmmModView(Project project) {
         super(new BorderLayout());
 
-        this.setBorder(new EmptyBorder(10, 10, 10, 10));
+        this.setBorder(new EmptyBorder(0, 10, 0, 10));
 
         this.header = new CrmmModViewHeader(project);
         this.add(this.header, BorderLayout.NORTH);
 
-        JPanel centerPanel = new JPanel(new MigLayout("fill, insets 0, gap 10 10", "[25%][75%]", "[top]"));
+        JPanel centerPanel = new JPanel(new GridBagLayout());
         centerPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
 
-        this.sideView = new CrmmModSideView(project);
-        centerPanel.add(this.sideView, "growx");
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.anchor = GridBagConstraints.NORTH;
+        gbc.fill = GridBagConstraints.BOTH;
 
-        this.infoView = new CrmmModInfoView();
-        centerPanel.add(this.infoView, "growx");
+        this.sideView = new CrmmModSideView(project);
+
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.add(this.sideView, BorderLayout.PAGE_START);
+
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.weightx = 0.25;
+        centerPanel.add(panel, gbc);
+
+        this.infoView = new CrmmModInfoView(project);
+        this.infoView.setBorder(new EmptyBorder(0, 10, 0, 0));
+
+        gbc.gridx = 1;
+        gbc.weightx = 0.75;
+        centerPanel.add(this.infoView, gbc);
 
         this.add(centerPanel, BorderLayout.CENTER);
     }

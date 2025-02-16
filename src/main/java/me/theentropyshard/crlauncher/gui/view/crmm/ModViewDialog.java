@@ -28,6 +28,7 @@ import me.theentropyshard.crlauncher.gui.view.crmm.modview.CrmmModView;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class ModViewDialog extends AppDialog {
@@ -36,17 +37,17 @@ public class ModViewDialog extends AppDialog {
             CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modVersionsDialogTitle") +
                 " - " + project.getName());
 
-        //ModVersionsView view = new ModVersionsView(modInfo, instance, modsTab, supplier);
         CrmmModView view = new CrmmModView(project);
-        view.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
-        //view.loadVersions();
 
         JScrollPane scrollPane = new JScrollPane(
             view,
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
+        scrollPane.setPreferredSize(new Dimension(1280, 720));
+        scrollPane.setBorder(new EmptyBorder(10, 0, 10, 10));
         scrollPane.setUI(new FlatSmoothScrollPaneUI());
+        scrollPane.getViewport().setViewPosition(new Point(0, 0));
 
         this.getDialog().getRootPane().setDefaultButton(view.getHeader().getDownloadButton());
 

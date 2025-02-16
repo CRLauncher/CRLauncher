@@ -18,15 +18,15 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
-import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.crmm.model.project.Project;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class CrmmModInfoView extends JPanel {
-    public CrmmModInfoView() {
+    public CrmmModInfoView(Project project) {
         super(new BorderLayout());
 
-        this.add(new Card());
+        this.add(new ModDescriptionCard(project));
     }
 }
