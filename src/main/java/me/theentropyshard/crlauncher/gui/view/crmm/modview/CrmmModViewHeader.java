@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
+import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.components.Card;
 import me.theentropyshard.crlauncher.gui.utils.GifIcon;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
@@ -46,14 +47,14 @@ public class CrmmModViewHeader extends Card {
     private final JLabel descriptionLabel;
     private final JButton downloadButton;
 
-    public CrmmModViewHeader(ModInfo modInfo) {
+    public CrmmModViewHeader(Project project) {
         this.setLayout(new BorderLayout());
 
         this.iconLabel = new JLabel();
         this.iconLabel.setPreferredSize(new Dimension(96, 96));
         this.add(this.iconLabel, BorderLayout.WEST);
 
-        this.fetchIcon(modInfo);
+        this.fetchIcon(project);
 
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
@@ -62,10 +63,10 @@ public class CrmmModViewHeader extends Card {
         JPanel nameDescriptionPanel = new JPanel(new GridLayout(2, 1));
         nameDescriptionPanel.setOpaque(false);
 
-        this.nameLabel = new JLabel("<html><b>" + modInfo.getName() + "</b></html>");
+        this.nameLabel = new JLabel("<html><b>" + project.getName() + "</b></html>");
         nameDescriptionPanel.add(this.nameLabel);
 
-        this.descriptionLabel = new JLabel("<html><p>" + modInfo.getDescription() + "</p></html>");
+        this.descriptionLabel = new JLabel("<html><p>" + project.getSummary() + "</p></html>");
         this.descriptionLabel.setFont(this.descriptionLabel.getFont().deriveFont(14.0f));
         nameDescriptionPanel.add(this.descriptionLabel);
 
@@ -77,8 +78,8 @@ public class CrmmModViewHeader extends Card {
 
         Language language = CRLauncher.getInstance().getLanguage();
 
-        String downloads = modInfo.getDownloads();
-        int downloadsLastDigit = Integer.parseInt(downloads) % 10;
+        int downloads = project.getDownloads();
+        int downloadsLastDigit = downloads % 10;
         String downloadsText;
         if (downloadsLastDigit == 1) {
             downloadsText = downloads + " " + language.getString("gui.searchCRMMModsDialog.download1");
@@ -91,8 +92,8 @@ public class CrmmModViewHeader extends Card {
         downloadsLabel.setFont(downloadsLabel.getFont().deriveFont(14.0f));
         statsPanel.add(downloadsLabel);
 
-        String followers = modInfo.getFollowers();
-        int followersLastDigit = Integer.parseInt(followers) % 10;
+        int followers = project.getFollowers();
+        int followersLastDigit =followers % 10;
         String followersText;
         if (followersLastDigit == 1) {
             followersText = followers + " " + language.getString("gui.searchCRMMModsDialog.follower1");
@@ -121,13 +122,13 @@ public class CrmmModViewHeader extends Card {
         this.add(verticalBox, BorderLayout.EAST);
     }
 
-    private void fetchIcon(ModInfo modInfo) {
-        new Worker<Icon, Void>("fetching icon for mod " + modInfo.getName()) {
+    private void fetchIcon(Project project) {
+        new Worker<Icon, Void>("fetching icon for mod " + project.getName()) {
             @Override
             protected Icon work() throws Exception {
                 OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient();
 
-                String iconUrl = modInfo.getIconUrl();
+                String iconUrl = project.getIcon();
 
                 if (iconUrl == null) {
                     return ModNoIcon.getInstance();

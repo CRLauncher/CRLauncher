@@ -26,6 +26,8 @@ import me.theentropyshard.crlauncher.crmm.filter.SortBy;
 import me.theentropyshard.crlauncher.crmm.model.mod.CrmmMod;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchModsResponse;
 import me.theentropyshard.crlauncher.crmm.model.mod.SearchType;
+import me.theentropyshard.crlauncher.crmm.model.project.Project;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
@@ -307,8 +309,40 @@ public class CrmmModsView extends JPanel {
 
                     ModCard card = new ModCard(modInfo);
                     card.addMouseListener(new MouseClickListener(e -> {
-                        new ModViewDialog(modInfo, CrmmModsView.this.instance, CrmmModsView.this.modsTab,
-                            new ModDownloadWorkerSupplier());
+                        new Worker<Project, Void>("fetching project") {
+                            @Override
+                            protected Project work() {
+                                ProjectResponse projectResponse = CRLauncher.getInstance().getCrmmApi().getProject(modInfo.getSlug());
+
+                                if (!projectResponse.isSuccess()) {
+                                    return null;
+                                }
+
+                                return projectResponse.getProject();
+                            }
+
+                            @Override
+                            protected void done() {
+                                Project project;
+
+                                try {
+                                    project = this.get();
+                                } catch (InterruptedException | ExecutionException ex) {
+                                    Log.error("Unexpected error");
+
+                                    return;
+                                }
+
+                                if (project == null) {
+                                    Log.warn("Got null project for mod " + modInfo.getName());
+
+                                    return;
+                                }
+
+                                new ModViewDialog(project, CrmmModsView.this.instance, CrmmModsView.this.modsTab,
+                                    new ModDownloadWorkerSupplier());
+                            }
+                        }.execute();
                     }));
 
                     searchModsView.getModCardsPanel().add(card);

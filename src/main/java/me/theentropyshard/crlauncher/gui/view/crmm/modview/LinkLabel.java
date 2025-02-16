@@ -18,15 +18,31 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
-import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
+import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseListener;
 
-public class CrmmModInfoView extends JPanel {
-    public CrmmModInfoView() {
-        super(new BorderLayout());
+public class LinkLabel extends JLabel {
+    public LinkLabel(String name, String link) {
+        this.setText("<html>" + name + "</html>");
 
-        this.add(new Card());
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        MouseListener listener = new MouseListenerBuilder()
+            .mouseEntered(e -> {
+                this.setText("<html><u>" + name + "</u></html>");
+            })
+            .mouseExited(e -> {
+                this.setText("<html>" + name + "</html>");
+            })
+            .mouseClicked(e -> {
+                OperatingSystem.browse(link);
+            })
+            .build();
+
+        this.addMouseListener(listener);
     }
 }

@@ -18,7 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
-import me.theentropyshard.crlauncher.crmm.ModInfo;
+import me.theentropyshard.crlauncher.crmm.model.project.Project;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -26,14 +27,27 @@ import java.awt.*;
 
 public class CrmmModView extends JPanel {
     private final CrmmModViewHeader header;
+    private final CrmmModSideView sideView;
+    private final CrmmModInfoView infoView;
 
-    public CrmmModView(ModInfo modInfo) {
+    public CrmmModView(Project project) {
         super(new BorderLayout());
 
         this.setBorder(new EmptyBorder(10, 10, 10, 10));
 
-        this.header = new CrmmModViewHeader(modInfo);
+        this.header = new CrmmModViewHeader(project);
         this.add(this.header, BorderLayout.NORTH);
+
+        JPanel centerPanel = new JPanel(new MigLayout("fill, insets 0, gap 10 10", "[25%][75%]", "[top]"));
+        centerPanel.setBorder(new EmptyBorder(10, 0, 0, 0));
+
+        this.sideView = new CrmmModSideView(project);
+        centerPanel.add(this.sideView, "growx");
+
+        this.infoView = new CrmmModInfoView();
+        centerPanel.add(this.infoView, "growx");
+
+        this.add(centerPanel, BorderLayout.CENTER);
     }
 
     public CrmmModViewHeader getHeader() {

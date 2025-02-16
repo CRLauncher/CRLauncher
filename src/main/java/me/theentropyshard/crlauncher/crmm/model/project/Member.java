@@ -20,12 +20,12 @@ package me.theentropyshard.crlauncher.crmm.model.project;
 
 import java.util.List;
 
-public class Member{
+public class Member {
     private String id;
     private String userId;
     private String teamId;
     private String userName;
-    private String avatarUrl;
+    private String avatar;
     private String role;
     private boolean isOwner;
     private boolean accepted;
@@ -52,8 +52,8 @@ public class Member{
         return this.userName;
     }
 
-    public String getAvatarUrl() {
-        return this.avatarUrl;
+    public String getAvatar() {
+        return this.avatar;
     }
 
     public String getRole() {

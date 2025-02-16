@@ -20,27 +20,37 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
+import me.theentropyshard.crlauncher.crmm.model.project.Project;
+import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.modview.CrmmModView;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class ModViewDialog extends AppDialog {
-    public ModViewDialog(ModInfo modInfo, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
+    public ModViewDialog(Project project, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
         super(CRLauncher.frame,
             CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modVersionsDialogTitle") +
-                " - " + modInfo.getName());
+                " - " + project.getName());
 
         //ModVersionsView view = new ModVersionsView(modInfo, instance, modsTab, supplier);
-        CrmmModView view = new CrmmModView(modInfo);
+        CrmmModView view = new CrmmModView(project);
         view.setPreferredSize(new Dimension((int) (900 * 1.2), (int) (480 * 1.2)));
         //view.loadVersions();
 
+        JScrollPane scrollPane = new JScrollPane(
+            view,
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+        );
+        scrollPane.setUI(new FlatSmoothScrollPaneUI());
+
         this.getDialog().getRootPane().setDefaultButton(view.getHeader().getDownloadButton());
 
-        this.setContent(view);
+        this.setContent(scrollPane);
         this.center(0);
 
         this.setVisible(true);
