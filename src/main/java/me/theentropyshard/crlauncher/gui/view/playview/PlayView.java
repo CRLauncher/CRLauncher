@@ -216,7 +216,7 @@ public class PlayView extends JPanel {
                         }
                         item.instanceChanged(instance);
                     } catch (IOException ex) {
-                        Log.error("Could not rename instance " + instance.getName() + " (" + instance.getWorkDir() + ") to " + newName);
+                        Log.error("Could not rename instance " + instance.getName() + " (" + instance.getWorkDir() + ") to " + newName, ex);
                     }
                 });
                 popupMenu.add(renameItem);
