@@ -79,6 +79,7 @@ dependencies {
     implementation "com.miglayout:miglayout-swing:$miglayout"
     implementation "org.commonmark:commonmark:$commonmark"
     implementation "org.commonmark:commonmark-ext-image-attributes:$commonmark"
+    implementation "org.commonmark:commonmark-ext-gfm-tables:$commonmark"
     implementation "com.twelvemonkeys.imageio:imageio-webp:$imageiowebp"
     implementation "com.github.rtyley:animated-gif-lib-for-java:$gifdecoder"
     implementation "org.jsoup:jsoup:$jsoup"
