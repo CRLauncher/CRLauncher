@@ -77,7 +77,7 @@ public class PuzzleManager {
         }
 
         GithubApi downloader = new GithubApi();
-        List<GithubRelease> allReleases = downloader.getAllReleases("PuzzleLoader", "PuzzleLoader");
+        List<GithubRelease> allReleases = downloader.getAllReleases("PuzzlesHQ", "PuzzleLoader");
         GithubRelease release = ListUtils.search(allReleases, r -> r.tag_name.equals(version));
         if (release == null) {
             throw new IOException("Puzzle Loader " + version + " not found");
@@ -93,7 +93,7 @@ public class PuzzleManager {
         HttpDownload loaderDownload = new HttpDownload.Builder()
             .httpClient(CRLauncher.getInstance().getHttpClient())
             .saveAs(filePath)
-            .url("https://jitpack.io/com/github/PuzzleLoader/PuzzleLoader/" + version + "/" + fileName)
+            .url("https://jitpack.io/com/github/PuzzlesHQ/PuzzleLoader/" + version + "/" + fileName)
             // todo add sha 1 to download and verify
             .build();
 
