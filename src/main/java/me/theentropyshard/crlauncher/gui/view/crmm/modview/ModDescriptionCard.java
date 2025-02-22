@@ -21,9 +21,10 @@ package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.BrowseHyperlinkListener;
 import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.utils.ResourceUtils;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
-import org.commonmark.node.Node;
+import org.commonmark.ext.image.attributes.ImageAttributesExtension;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
 import org.jsoup.Jsoup;
@@ -36,47 +37,87 @@ import org.jsoup.select.Evaluator;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import java.awt.*;
-import java.util.ArrayDeque;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.List;
 
 public class ModDescriptionCard extends Card {
+    private final JTextPane changelogPane;
+    private String html;
+
     public ModDescriptionCard(Project project) {
         this.setLayout(new BorderLayout());
 
+        InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0), "rss");
+
+        ActionMap actionMap = this.getActionMap();
+        actionMap.put("rss", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ModDescriptionCard.this.updateStyleSheet(ModDescriptionCard.this.html);
+            }
+        });
+
         List<Extension> extensions = new ArrayList<>();
         extensions.add(TablesExtension.create());
+        extensions.add(ImageAttributesExtension.create());
 
         Parser parser = Parser.builder().extensions(extensions).build();
-        Node document = parser.parse(project.getDescription());
         HtmlRenderer renderer = HtmlRenderer.builder().extensions(extensions).build();
-        String html = renderer.render(document);
+        this.html = renderer.render(parser.parse(project.getDescription()));
 
-        Document htmlDocument = Jsoup.parse(html);
-        Elements imgs = Collector.collect(new Evaluator.Tag("img"), htmlDocument);
-        for (Element img : imgs) {
+        Document htmlDocument = Jsoup.parse(this.html);
+        Elements imageElements = Collector.collect(new Evaluator.Tag("img"), htmlDocument);
+        for (Element img : imageElements) {
             Attributes attributes = img.attributes();
             attributes.add("style", "max-width: 600;");
             attributes.add("height", "300");
         }
-        System.out.println(htmlDocument);
-        html = htmlDocument.toString();
 
-        JTextPane changelogPane = new JTextPane();
-        changelogPane.setBorder(new EmptyBorder(-15, 0, 0, 0));
-        changelogPane.addHyperlinkListener(new BrowseHyperlinkListener());
-        changelogPane.setFont(changelogPane.getFont().deriveFont(14.0f));
-        changelogPane.setContentType("text/html");
-        changelogPane.setEditorKit(new HTMLEditorKit());
-        changelogPane.setText("<html><body><div style='width:750px'>" +
-            html
-            + "</div></body></html>");
-        changelogPane.setEditable(false);
-        changelogPane.setBackground(this.getDefaultColor());
+        this.html = htmlDocument.toString();
 
-        this.add(changelogPane, BorderLayout.CENTER);
+        this.changelogPane = new JTextPane();
+        this.changelogPane.setBorder(new EmptyBorder(-15, 0, 0, 0));
+        this.changelogPane.addHyperlinkListener(new BrowseHyperlinkListener());
+        this.changelogPane.setContentType("text/html");
+        this.updateStyleSheet(this.html);
+        this.changelogPane.setEditable(false);
+        this.changelogPane.setBackground(this.getDefaultColor());
+
+        this.add(this.changelogPane, BorderLayout.CENTER);
+    }
+
+    private void updateStyleSheet(String html) {
+        HTMLEditorKit kit = new HTMLEditorKit() {
+            @Override
+            public javax.swing.text.Document createDefaultDocument() {
+                StyleSheet styleSheet = new StyleSheet();
+
+                try {
+                    List<String> rules = CssParser.parse(ResourceUtils.readToString("/themes/mod-view-dark.css"));
+
+                    rules.forEach(styleSheet::addRule);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+
+                HTMLDocument doc = new HTMLDocument(styleSheet);
+                doc.setParser(this.getParser());
+                doc.setAsynchronousLoadPriority(4);
+                doc.setTokenThreshold(100);
+                return doc;
+            }
+        };
+        this.changelogPane.setEditorKit(kit);
+        this.changelogPane.setDocument(kit.createDefaultDocument());
+        this.changelogPane.setText("<html><body><div style='width:750px'>" + html + "</body></html>");
+        this.revalidate();
     }
 }
