@@ -26,12 +26,21 @@ import org.commonmark.ext.gfm.tables.TablesExtension;
 import org.commonmark.node.Node;
 import org.commonmark.parser.Parser;
 import org.commonmark.renderer.html.HtmlRenderer;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Attributes;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Collector;
+import org.jsoup.select.Elements;
+import org.jsoup.select.Evaluator;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.List;
 
 public class ModDescriptionCard extends Card {
@@ -46,17 +55,25 @@ public class ModDescriptionCard extends Card {
         HtmlRenderer renderer = HtmlRenderer.builder().extensions(extensions).build();
         String html = renderer.render(document);
 
+        Document htmlDocument = Jsoup.parse(html);
+        Elements imgs = Collector.collect(new Evaluator.Tag("img"), htmlDocument);
+        for (Element img : imgs) {
+            Attributes attributes = img.attributes();
+            attributes.add("style", "max-width: 600;");
+            attributes.add("height", "300");
+        }
+        System.out.println(htmlDocument);
+        html = htmlDocument.toString();
+
         JTextPane changelogPane = new JTextPane();
         changelogPane.setBorder(new EmptyBorder(-15, 0, 0, 0));
         changelogPane.addHyperlinkListener(new BrowseHyperlinkListener());
         changelogPane.setFont(changelogPane.getFont().deriveFont(14.0f));
         changelogPane.setContentType("text/html");
         changelogPane.setEditorKit(new HTMLEditorKit());
-        changelogPane.setText(
-            "<html><body><div style='width:800px'>" +
+        changelogPane.setText("<html><body><div style='width:750px'>" +
             html
-            + "</div></body></html>"
-        );
+            + "</div></body></html>");
         changelogPane.setEditable(false);
         changelogPane.setBackground(this.getDefaultColor());
 
