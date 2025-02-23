@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -26,7 +28,7 @@ public class GameVersionLabel extends JLabel {
     public GameVersionLabel(String text) {
         super(text);
 
-        this.setBackground(UIManager.getColor("InstanceItem.pressedColor"));
+        this.setBackground(CRLauncher.getInstance().getSettings().darkTheme ? Color.DARK_GRAY : Color.decode("#f2f2f2"));
         this.setBorder(new EmptyBorder(1, 5, 1, 5));
     }
 
