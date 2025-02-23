@@ -38,7 +38,7 @@ public interface CrmmHttpApi {
     ProjectVersionsResponse getProjectVersions(@Path("slug") String slug);
 
     @GET("project/{slug}/version/latest")
-    ProjectVersionResponse getLatestVersion(@Path("slug") String slug);
+    ProjectVersionResponse getLatestVersion(@Path("slug") String slug, @Query("loader") String loader);
 
     @POST("version-files/update")
     Map<String, ProjectVersion> getLatestVersions(@Body HashesBody body);

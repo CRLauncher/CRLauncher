@@ -74,8 +74,8 @@ public class CrmmApi {
         return this.crmmApi.getProjectVersions(slug);
     }
 
-    public ProjectVersionResponse getLatestVersion(String slug) {
-        return this.crmmApi.getLatestVersion(slug);
+    public ProjectVersionResponse getLatestVersion(String slug, String loader) {
+        return this.crmmApi.getLatestVersion(slug, loader);
     }
 
     public Map<String, ProjectVersion> getLatestVersions(HashesBody body) {
