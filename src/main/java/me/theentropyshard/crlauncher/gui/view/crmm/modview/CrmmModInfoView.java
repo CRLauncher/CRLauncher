@@ -19,14 +19,47 @@
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.view.crmm.ModVersionsView;
+import me.theentropyshard.crlauncher.gui.view.crmm.WorkerSupplier;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class CrmmModInfoView extends JPanel {
-    public CrmmModInfoView(Project project) {
+    public CrmmModInfoView(Project project, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
         super(new BorderLayout());
 
-        this.add(new ModDescriptionCard(project));
+        CardLayout cardLayout = new CardLayout();
+        JPanel cardPanel = new JPanel(cardLayout);
+
+        JPanel infoCard = new JPanel(new BorderLayout());
+        infoCard.add(new ModDescriptionCard(project), BorderLayout.CENTER);
+
+        cardPanel.add(infoCard, "info");
+
+        ModVersionsView versionsView = new ModVersionsView(project, instance, modsTab, supplier);
+        cardPanel.add(versionsView, "versions");
+
+        this.add(cardPanel, BorderLayout.CENTER);
+
+        TabsCard tabsCard = new TabsCard(
+            () -> {
+                cardLayout.show(cardPanel, "info");
+            },
+            () -> {},
+            () -> {},
+            () -> {
+                versionsView.loadVersions();
+                cardLayout.show(cardPanel, "versions");
+            }
+        );
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBorder(new EmptyBorder(0, 0, 10, 0));
+        panel.add(tabsCard, BorderLayout.CENTER);
+
+        this.add(panel, BorderLayout.NORTH);
     }
 }

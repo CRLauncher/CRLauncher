@@ -19,6 +19,9 @@
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.view.crmm.WorkerSupplier;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,7 +32,7 @@ public class CrmmModView extends JPanel {
     private final CrmmModSideView sideView;
     private final CrmmModInfoView infoView;
 
-    public CrmmModView(Project project) {
+    public CrmmModView(Project project, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
         super(new BorderLayout());
 
         this.setBorder(new EmptyBorder(0, 10, 0, 10));
@@ -54,7 +57,7 @@ public class CrmmModView extends JPanel {
         gbc.weightx = 0.25;
         centerPanel.add(panel, gbc);
 
-        this.infoView = new CrmmModInfoView(project);
+        this.infoView = new CrmmModInfoView(project, instance, modsTab, supplier);
         this.infoView.setBorder(new EmptyBorder(0, 10, 0, 0));
 
         gbc.gridx = 1;

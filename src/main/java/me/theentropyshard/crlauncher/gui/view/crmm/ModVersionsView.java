@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.gui.view.crmm;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
+import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersionsResponse;
@@ -37,31 +38,27 @@ import java.util.List;
 
 public class ModVersionsView extends JPanel {
     private final JPanel modVersionCardsPanel;
-    private final ModInfo modInfo;
+    private final Project project;
     private final CosmicInstance instance;
     private final ModsTab modsTab;
     private final WorkerSupplier<?, Void> workerSupplier;
 
-    public ModVersionsView(ModInfo modInfo, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> workerSupplier) {
+    public ModVersionsView(Project project, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> workerSupplier) {
         super(new BorderLayout());
 
-        this.modInfo = modInfo;
+        this.project = project;
         this.instance = instance;
         this.modsTab = modsTab;
         this.workerSupplier = workerSupplier;
 
         this.modVersionCardsPanel = new JPanel(new GridLayout(0, 1, 0, 10));
-        this.modVersionCardsPanel.setBorder(new EmptyBorder(0, 10, 0, 10));
+        this.modVersionCardsPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
         JPanel borderPanel = new JPanel(new BorderLayout());
         borderPanel.add(this.modVersionCardsPanel, BorderLayout.PAGE_START);
 
-        JScrollPane scrollPane = new JScrollPane(borderPanel);
-        scrollPane.setUI(new FlatSmoothScrollPaneUI());
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        this.add(borderPanel, BorderLayout.CENTER);
 
-        this.add(scrollPane, BorderLayout.CENTER);
-
-        this.setBorder(new EmptyBorder(0, 0, 10, 0));
+        this.setBorder(new EmptyBorder(0, 0, 0, 0));
     }
 
     public void addModVersionCard(ModVersionCard card) {
@@ -69,11 +66,13 @@ public class ModVersionsView extends JPanel {
     }
 
     public void loadVersions() {
-        new Worker<Void, ProjectVersion>("loading versions for mod " + this.modInfo.getName()) {
+        this.modVersionCardsPanel.removeAll();
+
+        new Worker<Void, ProjectVersion>("loading versions for mod " + this.project.getName()) {
             @Override
             protected Void work() throws Exception {
                 CrmmApi crmmApi = CRLauncher.getInstance().getCrmmApi();
-                String slug = ModVersionsView.this.modInfo.getSlug();
+                String slug = ModVersionsView.this.project.getSlug();
                 ProjectResponse projectResponse = crmmApi.getProject(slug);
 
                 if (projectResponse == null) {
@@ -116,8 +115,8 @@ public class ModVersionsView extends JPanel {
         return this.modVersionCardsPanel;
     }
 
-    public ModInfo getModInfo() {
-        return this.modInfo;
+    public Project getProject() {
+        return this.project;
     }
 
     public CosmicInstance getInstance() {

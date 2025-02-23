@@ -36,7 +36,7 @@ public class ModViewDialog extends AppDialog {
             CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modVersionsDialogTitle") +
                 " - " + project.getName());
 
-        CrmmModView view = new CrmmModView(project);
+        CrmmModView view = new CrmmModView(project, instance, modsTab, supplier);
 
         JScrollPane scrollPane = new JScrollPane(
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -57,18 +57,6 @@ public class ModViewDialog extends AppDialog {
         this.getDialog().getRootPane().setDefaultButton(view.getHeader().getDownloadButton());
 
         this.setContent(scrollPane);
-
-
-        /*Member owner = ListUtils.search(project.getMembers(), Member::isOwner);
-        String userName = owner == null ? "Unknown owner" : owner.getUserName();
-        ModVersionsView view = new ModVersionsView(new ModInfo(
-            project.getIcon(), project.getName(), project.getDescription(), userName, project.getDatePublished(),
-            project.getDateUpdated(), String.valueOf(project.getDownloads()), String.valueOf(project.getFollowers()),
-            project.getFeaturedCategories(), project.getLoaders(), project.getSlug()
-        ), instance, modsTab, supplier);
-        view.setPreferredSize(new Dimension(960, 540));
-        view.loadVersions();
-        this.setContent(view);*/
 
         this.center(0);
 
