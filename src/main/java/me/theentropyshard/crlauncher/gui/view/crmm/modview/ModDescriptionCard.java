@@ -18,9 +18,11 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.BrowseHyperlinkListener;
 import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ResourceUtils;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
@@ -37,13 +39,13 @@ import org.jsoup.select.Evaluator;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.html.HTMLDocument;
-import javax.swing.text.html.HTMLEditorKit;
-import javax.swing.text.html.StyleSheet;
+import javax.swing.text.*;
+import javax.swing.text.html.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,8 +79,7 @@ public class ModDescriptionCard extends Card {
         Elements imageElements = Collector.collect(new Evaluator.Tag("img"), htmlDocument);
         for (Element img : imageElements) {
             Attributes attributes = img.attributes();
-            attributes.add("style", "max-width: 600;");
-            attributes.add("height", "300");
+            attributes.add("width", "600");
         }
 
         this.html = htmlDocument.toString();
@@ -101,7 +102,9 @@ public class ModDescriptionCard extends Card {
                 StyleSheet styleSheet = new StyleSheet();
 
                 try {
-                    List<String> rules = CssParser.parse(ResourceUtils.readToString("/themes/mod-view-dark.css"));
+                    String file = CRLauncher.getInstance().getSettings().darkTheme ? "mod-view-dark.css" : "mod-view-light.css";
+
+                    List<String> rules = CssParser.parse(ResourceUtils.readToString("/themes/" + file));
 
                     rules.forEach(styleSheet::addRule);
                 } catch (IOException e) {
@@ -112,6 +115,7 @@ public class ModDescriptionCard extends Card {
                 doc.setParser(this.getParser());
                 doc.setAsynchronousLoadPriority(4);
                 doc.setTokenThreshold(100);
+
                 return doc;
             }
         };
