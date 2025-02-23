@@ -26,6 +26,7 @@ public class GameVersionLabel extends JLabel {
     public GameVersionLabel(String text) {
         super(text);
 
+        this.setBackground(UIManager.getColor("InstanceItem.pressedColor"));
         this.setBorder(new EmptyBorder(1, 5, 1, 5));
     }
 
@@ -34,7 +35,7 @@ public class GameVersionLabel extends JLabel {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2d.setColor(Color.DARK_GRAY);
+        g2d.setColor(this.getBackground());
         g2d.fillRoundRect(0, 0, this.getWidth(), this.getHeight(), this.getHeight(), this.getHeight());
 
         super.paintComponent(g);
