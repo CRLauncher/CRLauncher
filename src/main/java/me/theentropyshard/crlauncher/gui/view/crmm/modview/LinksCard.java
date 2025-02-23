@@ -18,8 +18,10 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -34,14 +36,16 @@ public class LinksCard extends Card {
         JPanel linksPanel = new JPanel();
         linksPanel.setOpaque(false);
 
-        this.addLinkLabel("Issue tracker", project.getIssueTrackerUrl(), linksPanel);
-        this.addLinkLabel("Source code", project.getProjectSourceUrl(), linksPanel);
-        this.addLinkLabel("Wiki", project.getProjectWikiUrl(), linksPanel);
-        this.addLinkLabel("Discord invite", project.getDiscordInviteUrl(), linksPanel);
+        LanguageSection section = CRLauncher.getInstance().getLanguage().getSection("gui.searchCRMMModsDialog.modViewDialog.sideView.linksCard");
+
+        this.addLinkLabel(section.getString("issueTracker"), project.getIssueTrackerUrl(), linksPanel);
+        this.addLinkLabel(section.getString("sourceCode"), project.getProjectSourceUrl(), linksPanel);
+        this.addLinkLabel(section.getString("wiki"), project.getProjectWikiUrl(), linksPanel);
+        this.addLinkLabel(section.getString("discordInvite"), project.getDiscordInviteUrl(), linksPanel);
 
         linksPanel.setLayout(new GridLayout(this.links, 1));
 
-        JLabel linksLabel = new JLabel("<html><b>Links</b><html>");
+        JLabel linksLabel = new JLabel("<html><b>" + section.getString("title") + "</b><html>");
         linksLabel.setBorder(new EmptyBorder(-5, 0, 5, 0));
         linksLabel.setFont(linksLabel.getFont().deriveFont(16.0f));
 

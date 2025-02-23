@@ -18,8 +18,10 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.utils.StringUtils;
 
 import javax.swing.*;
@@ -30,10 +32,11 @@ import java.util.stream.Collectors;
 
 public class CompatibilityCard extends Card {
     public CompatibilityCard(Project project) {
-        //this.setLayout(new MigLayout("fill, insets 0, gap 10 10", "[fill]", "[top][top][top]"));
         this.setLayout(new BorderLayout());
 
-        JLabel compatibilityLabel = new JLabel("<html><b>Compatibility</b><html>");
+        LanguageSection section = CRLauncher.getInstance().getLanguage().getSection("gui.searchCRMMModsDialog.modViewDialog.sideView.compatibilityCard");
+
+        JLabel compatibilityLabel = new JLabel("<html><b>" + section.getString("title") + "</b><html>");
         compatibilityLabel.setBorder(new EmptyBorder(-5, 0, 10, 0));
         compatibilityLabel.setFont(compatibilityLabel.getFont().deriveFont(16.0f));
         this.add(compatibilityLabel, BorderLayout.NORTH);
@@ -46,7 +49,7 @@ public class CompatibilityCard extends Card {
         JPanel gameVersionsPanel = new JPanel(new BorderLayout());
         gameVersionsPanel.setOpaque(false);
 
-        JLabel gameVersionsLabel = new JLabel("<html><b>Game versions</b><html>");
+        JLabel gameVersionsLabel = new JLabel("<html><b>" + section.getString("gameVersions") + "</b><html>");
         gameVersionsLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
         gameVersionsLabel.setFont(gameVersionsLabel.getFont().deriveFont(14.0f));
         gameVersionsPanel.add(gameVersionsLabel, BorderLayout.NORTH);
@@ -65,7 +68,7 @@ public class CompatibilityCard extends Card {
         JPanel loadersPanel = new JPanel(new BorderLayout());
         loadersPanel.setOpaque(false);
 
-        JLabel loadersLabel = new JLabel("<html><b>Loaders</b><html>");
+        JLabel loadersLabel = new JLabel("<html><b>" + section.getString("loaders") + "</b><html>");
         loadersLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
         loadersLabel.setFont(loadersLabel.getFont().deriveFont(14.0f));
         loadersPanel.add(loadersLabel, BorderLayout.NORTH);
@@ -89,7 +92,7 @@ public class CompatibilityCard extends Card {
         JPanel environmentsPanel = new JPanel(new BorderLayout());
         environmentsPanel.setOpaque(false);
 
-        JLabel environmentsLabel = new JLabel("<html><b>Environments</b><html>");
+        JLabel environmentsLabel = new JLabel("<html><b>" + section.getString("environments") + "</b><html>");
         environmentsLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
         environmentsLabel.setFont(environmentsLabel.getFont().deriveFont(14.0f));
         environmentsPanel.add(environmentsLabel, BorderLayout.NORTH);
@@ -101,13 +104,13 @@ public class CompatibilityCard extends Card {
         String clientSide = project.getClientSide();
 
         if (clientSide != null && clientSide.equals("required")) {
-            environmentsSubPanel.add(new GameVersionLabel("Client side"));
+            environmentsSubPanel.add(new GameVersionLabel(section.getString("clientSide")));
         }
 
         String serverSide = project.getServerSide();
 
         if (serverSide != null && serverSide.equals("required")) {
-            environmentsSubPanel.add(new GameVersionLabel("Client side"));
+            environmentsSubPanel.add(new GameVersionLabel(section.getString("serverSide")));
         }
 
         environmentsPanel.add(environmentsSubPanel, BorderLayout.CENTER);

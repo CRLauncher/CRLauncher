@@ -18,7 +18,9 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,19 +29,21 @@ public class TabsCard extends Card {
     public TabsCard(Runnable onDescriptionClick, Runnable onGalleryClick, Runnable onChangelogClick, Runnable onVersionsClick) {
         this.setLayout(new FlowLayout(FlowLayout.LEFT));
 
+        LanguageSection section = CRLauncher.getInstance().getLanguage().getSection("gui.searchCRMMModsDialog.modViewDialog.infoView.tabsCard");
+
         ButtonGroup buttonGroup = new ButtonGroup();
 
-        ModInfoTabButton descriptionButton = new ModInfoTabButton("Description", buttonGroup, onDescriptionClick);
+        ModInfoTabButton descriptionButton = new ModInfoTabButton(section.getString("description"), buttonGroup, onDescriptionClick);
         descriptionButton.setSelected(true);
         this.add(descriptionButton);
 
-        ModInfoTabButton galleryButton = new ModInfoTabButton("Gallery", buttonGroup, onGalleryClick);
+        ModInfoTabButton galleryButton = new ModInfoTabButton(section.getString("gallery"), buttonGroup, onGalleryClick);
         this.add(galleryButton);
 
-        ModInfoTabButton changelogButton = new ModInfoTabButton("Changelog", buttonGroup, onChangelogClick);
+        ModInfoTabButton changelogButton = new ModInfoTabButton(section.getString("changelog"), buttonGroup, onChangelogClick);
         this.add(changelogButton);
 
-        ModInfoTabButton versionsButton = new ModInfoTabButton("Versions", buttonGroup, onVersionsClick);
+        ModInfoTabButton versionsButton = new ModInfoTabButton(section.getString("versions"), buttonGroup, onVersionsClick);
         this.add(versionsButton);
     }
 }

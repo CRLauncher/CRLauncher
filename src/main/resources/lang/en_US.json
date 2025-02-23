@@ -240,7 +240,46 @@
             "downloadButton": "Download",
             "primary": "primary",
             "otherFiles": "Other files",
-            "modVersionsDialogTitle": "Mod versions",
+            "modViewDialog": {
+                "title": "Mod - $$MOD_NAME$$",
+                "sideView": {
+                    "compatibilityCard": {
+                        "title": "Compatibility",
+                        "gameVersions": "Game versions",
+                        "loaders": "Loaders",
+                        "environments": "Environments",
+                        "clientSide": "Client side",
+                        "serverSide": "Server side"
+                    },
+                    "linksCard": {
+                        "title": "Links",
+                        "issueTracker": "Issue tracker",
+                        "sourceCode": "Source code",
+                        "wiki": "Wiki",
+                        "discordInvite": "Discord invite"
+                    },
+                    "featuredVersionsCard": {
+                        "title": "Featured versions"
+                    },
+                    "creatorsCard": {
+                        "title": "Creators"
+                    },
+                    "detailsCard": {
+                        "title": "Details",
+                        "license": "LICENSED",
+                        "published": "Published on $$DATE$$",
+                        "updated": "Updated on $$DATE$$"
+                    }
+                },
+                "infoView": {
+                    "tabsCard": {
+                        "description": "Description",
+                        "gallery": "Gallery",
+                        "changelog": "Changelog",
+                        "versions": "Versions"
+                    }
+                }
+            },
             "selectLoadersDialog": {
                 "title": "Select loaders",
                 "message": "Select loaders for the mod to install"

@@ -240,7 +240,7 @@
             "downloadButton": "Скачать",
             "primary": "основной",
             "otherFiles": "Другие файлы",
-            "modVersionsDialogTitle": "Версии мода",
+            "modViewDialogTitle": "Мод - $$MOD_NAME$$",
             "selectLoadersDialog": {
                 "title": "Выберите загрузчики",
                 "message": "Выберите загрузчики, для которых будет установлен мод"

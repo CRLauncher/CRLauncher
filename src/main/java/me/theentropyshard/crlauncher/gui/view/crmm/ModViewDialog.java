@@ -33,8 +33,8 @@ import java.awt.*;
 public class ModViewDialog extends AppDialog {
     public ModViewDialog(Project project, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
         super(CRLauncher.frame,
-            CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modVersionsDialogTitle") +
-                " - " + project.getName());
+            CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modViewDialog.title")
+                .replace("$$MOD_NAME$$", project.getName()));
 
         CrmmModView view = new CrmmModView(project, instance, modsTab, supplier);
 

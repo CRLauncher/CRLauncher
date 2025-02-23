@@ -7,6 +7,7 @@ import me.theentropyshard.crlauncher.gui.components.Card;
 import me.theentropyshard.crlauncher.gui.utils.GifIcon;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.gui.view.crmm.ModNoIcon;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.ImageUtils;
 import okhttp3.OkHttpClient;
@@ -26,7 +27,9 @@ public class CreatorsCard extends Card {
     public CreatorsCard(Project project) {
         this.setLayout(new BorderLayout());
 
-        JLabel creatorsLabel = new JLabel("<html><b>Creators</b><html>");
+        LanguageSection section = CRLauncher.getInstance().getLanguage().getSection("gui.searchCRMMModsDialog.modViewDialog.sideView.creatorsCard");
+
+        JLabel creatorsLabel = new JLabel("<html><b>" + section.getString("title") + "</b><html>");
         creatorsLabel.setBorder(new EmptyBorder(-5, 0, 10, 0));
         creatorsLabel.setFont(creatorsLabel.getFont().deriveFont(16.0f));
         this.add(creatorsLabel, BorderLayout.NORTH);

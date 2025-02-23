@@ -18,18 +18,26 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DetailsCard extends Card {
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+
     public DetailsCard(Project project) {
         this.setLayout(new BorderLayout());
 
-        JLabel featuredVersionsLabel = new JLabel("<html><b>Details</b><html>");
+        LanguageSection section = CRLauncher.getInstance().getLanguage().getSection("gui.searchCRMMModsDialog.modViewDialog.sideView.detailsCard");
+
+        JLabel featuredVersionsLabel = new JLabel("<html><b>" + section.getString("title") + "</b><html>");
         featuredVersionsLabel.setBorder(new EmptyBorder(-5, 0, 10, 0));
         featuredVersionsLabel.setFont(featuredVersionsLabel.getFont().deriveFont(16.0f));
         this.add(featuredVersionsLabel, BorderLayout.NORTH);
@@ -37,13 +45,13 @@ public class DetailsCard extends Card {
         JPanel detailsPanel = new JPanel(new GridLayout(3, 1));
         detailsPanel.setOpaque(false);
 
-        JLabel licenseLabel = new JLabel("<html><b>LICENSED " + project.getLicenseId() + "</b></html");
+        JLabel licenseLabel = new JLabel("<html><b>" + section.getString("license") + " " + project.getLicenseId() + "</b></html");
         detailsPanel.add(licenseLabel);
 
-        JLabel createdLabel = new JLabel(project.getDatePublished());
+        JLabel createdLabel = new JLabel(section.getString("published").replace("$$DATE$$", DetailsCard.FORMATTER.format(OffsetDateTime.parse(project.getDatePublished()))));
         detailsPanel.add(createdLabel);
 
-        JLabel updatedLabel = new JLabel(project.getDateUpdated());
+        JLabel updatedLabel = new JLabel(section.getString("updated").replace("$$DATE$$", DetailsCard.FORMATTER.format(OffsetDateTime.parse(project.getDateUpdated()))));
         detailsPanel.add(updatedLabel);
 
         this.add(detailsPanel, BorderLayout.CENTER);

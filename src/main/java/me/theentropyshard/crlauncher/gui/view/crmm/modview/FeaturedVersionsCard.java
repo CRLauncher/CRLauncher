@@ -18,8 +18,10 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
+import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -29,7 +31,9 @@ public class FeaturedVersionsCard extends Card {
     public FeaturedVersionsCard(Project project) {
         this.setLayout(new BorderLayout());
 
-        JLabel featuredVersionsLabel = new JLabel("<html><b>Featured versions</b><html>");
+        LanguageSection section = CRLauncher.getInstance().getLanguage().getSection("gui.searchCRMMModsDialog.modViewDialog.sideView.featuredVersionsCard");
+
+        JLabel featuredVersionsLabel = new JLabel("<html><b>" + section.getString("title") + "</b><html>");
         featuredVersionsLabel.setBorder(new EmptyBorder(-5, 0, 10, 0));
         featuredVersionsLabel.setFont(featuredVersionsLabel.getFont().deriveFont(16.0f));
         this.add(featuredVersionsLabel, BorderLayout.NORTH);
