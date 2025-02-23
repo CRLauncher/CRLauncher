@@ -19,15 +19,12 @@
 package me.theentropyshard.crlauncher.gui.view.crmm;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.crmm.ModInfo;
-import me.theentropyshard.crlauncher.crmm.model.project.Member;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.modview.CrmmModView;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
-import me.theentropyshard.crlauncher.utils.ListUtils;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -39,7 +36,7 @@ public class ModViewDialog extends AppDialog {
             CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modVersionsDialogTitle") +
                 " - " + project.getName());
 
-        /*CrmmModView view = new CrmmModView(project);
+        CrmmModView view = new CrmmModView(project);
 
         JScrollPane scrollPane = new JScrollPane(
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -59,10 +56,10 @@ public class ModViewDialog extends AppDialog {
 
         this.getDialog().getRootPane().setDefaultButton(view.getHeader().getDownloadButton());
 
-        this.setContent(scrollPane);*/
+        this.setContent(scrollPane);
 
 
-        Member owner = ListUtils.search(project.getMembers(), Member::isOwner);
+        /*Member owner = ListUtils.search(project.getMembers(), Member::isOwner);
         String userName = owner == null ? "Unknown owner" : owner.getUserName();
         ModVersionsView view = new ModVersionsView(new ModInfo(
             project.getIcon(), project.getName(), project.getDescription(), userName, project.getDatePublished(),
@@ -71,7 +68,7 @@ public class ModViewDialog extends AppDialog {
         ), instance, modsTab, supplier);
         view.setPreferredSize(new Dimension(960, 540));
         view.loadVersions();
-        this.setContent(view);
+        this.setContent(view);*/
 
         this.center(0);
 

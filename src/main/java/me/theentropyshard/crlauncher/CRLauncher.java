@@ -30,7 +30,6 @@ import me.theentropyshard.crlauncher.gui.Gui;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.UpdateDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
-import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.itch.ItchIoApi;

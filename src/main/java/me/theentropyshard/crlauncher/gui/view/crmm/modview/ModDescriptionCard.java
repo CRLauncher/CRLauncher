@@ -22,7 +22,6 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.BrowseHyperlinkListener;
 import me.theentropyshard.crlauncher.gui.components.Card;
-import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ResourceUtils;
 import org.commonmark.Extension;
 import org.commonmark.ext.gfm.tables.TablesExtension;
@@ -39,13 +38,13 @@ import org.jsoup.select.Evaluator;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.*;
-import javax.swing.text.html.*;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
