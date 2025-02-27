@@ -49,7 +49,7 @@ public class Project {
     private String serverSide;
     private List<String> loaders;
     private List<String> gameVersions;
-    private List<Object> gallery;
+    private List<GalleryImage> gallery;
     private List<Member> members;
     private Object organisation;
 
@@ -169,7 +169,7 @@ public class Project {
         return this.gameVersions;
     }
 
-    public List<Object> getGallery() {
+    public List<GalleryImage> getGallery() {
         return this.gallery;
     }
 
