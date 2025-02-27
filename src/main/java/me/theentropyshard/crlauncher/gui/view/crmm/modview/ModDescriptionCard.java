@@ -38,6 +38,8 @@ import org.jsoup.select.Evaluator;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.*;
+import javax.swing.text.html.HTML;
 import javax.swing.text.html.HTMLDocument;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
@@ -116,6 +118,25 @@ public class ModDescriptionCard extends Card {
                 doc.setTokenThreshold(100);
 
                 return doc;
+            }
+
+            @Override
+            public ViewFactory getViewFactory() {
+                return new HTMLFactory() {
+                    @Override
+                    public View create(javax.swing.text.Element elem) {
+                        AttributeSet attrs = elem.getAttributes();
+                        Object elementName = attrs.getAttribute(AbstractDocument.ElementNameAttribute);
+                        Object o = (elementName != null) ? null : attrs.getAttribute(StyleConstants.NameAttribute);
+                        if (o instanceof HTML.Tag tag) {
+                            if (tag == HTML.Tag.IMG) {
+                                return new ModernImageView(elem);
+                            }
+                        }
+
+                        return super.create(elem);
+                    }
+                };
             }
         };
         this.changelogPane.setEditorKit(kit);
