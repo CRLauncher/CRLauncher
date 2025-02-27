@@ -16,7 +16,7 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.view.crmm;
+package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
@@ -29,6 +29,7 @@ import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModInstaller;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.gui.view.crmm.SelectLoadersDialog;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.download.HttpDownload;

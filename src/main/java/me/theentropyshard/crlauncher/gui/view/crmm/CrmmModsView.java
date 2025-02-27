@@ -31,6 +31,7 @@ import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.ModDownloadWorkerSupplier;
 import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
 import me.theentropyshard.crlauncher.gui.view.crmm.pagination.PageButton;
 import me.theentropyshard.crlauncher.gui.view.crmm.pagination.PaginationPanel;

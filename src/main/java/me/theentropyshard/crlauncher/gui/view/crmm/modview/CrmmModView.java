@@ -18,14 +18,8 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
-import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
-import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
-import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.view.crmm.ModDownloadWorker;
-import me.theentropyshard.crlauncher.gui.view.crmm.WorkerSupplier;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 

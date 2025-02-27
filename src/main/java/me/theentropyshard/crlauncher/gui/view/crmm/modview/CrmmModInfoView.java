@@ -20,8 +20,8 @@ package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
-import me.theentropyshard.crlauncher.gui.view.crmm.ModVersionsView;
-import me.theentropyshard.crlauncher.gui.view.crmm.WorkerSupplier;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.versions.ModVersionsView;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.description.ModDescriptionCard;
 import me.theentropyshard.crlauncher.gui.view.crmm.modview.gallery.GalleryView;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 

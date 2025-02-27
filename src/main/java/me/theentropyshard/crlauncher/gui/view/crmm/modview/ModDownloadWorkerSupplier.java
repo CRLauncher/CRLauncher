@@ -16,11 +16,12 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.view.crmm;
+package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.versions.ModVersionsView;
 
 @SuppressWarnings("rawtypes")
 public class ModDownloadWorkerSupplier implements WorkerSupplier {

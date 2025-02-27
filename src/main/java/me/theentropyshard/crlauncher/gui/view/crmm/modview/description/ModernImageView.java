@@ -1,4 +1,4 @@
-package me.theentropyshard.crlauncher.gui.view.crmm.modview;
+package me.theentropyshard.crlauncher.gui.view.crmm.modview.description;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.utils.Worker;

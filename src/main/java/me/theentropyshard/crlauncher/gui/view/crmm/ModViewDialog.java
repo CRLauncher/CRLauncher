@@ -24,6 +24,7 @@ import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.dialogs.AppDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.modview.CrmmModView;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.WorkerSupplier;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
