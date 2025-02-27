@@ -623,7 +623,6 @@ public class ModernImageView extends View {
             @Override
             protected void done() {
                 try {
-                    System.out.println("did?");
                     image = this.get();
                     repaint(0);
                     //updateImageSize();
