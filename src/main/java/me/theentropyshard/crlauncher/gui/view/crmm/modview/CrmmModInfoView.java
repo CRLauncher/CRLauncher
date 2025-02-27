@@ -22,6 +22,7 @@ import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.ModVersionsView;
 import me.theentropyshard.crlauncher.gui.view.crmm.WorkerSupplier;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.gallery.GalleryView;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 
 import javax.swing.*;
@@ -40,6 +41,9 @@ public class CrmmModInfoView extends JPanel {
 
         cardPanel.add(infoCard, "info");
 
+        GalleryView galleryView = new GalleryView(project, instance);
+        cardPanel.add(galleryView, "gallery");
+
         ModVersionsView versionsView = new ModVersionsView(project, instance, modsTab, supplier);
         cardPanel.add(versionsView, "versions");
 
@@ -49,8 +53,13 @@ public class CrmmModInfoView extends JPanel {
             () -> {
                 cardLayout.show(cardPanel, "info");
             },
-            () -> {},
-            () -> {},
+            () -> {
+                galleryView.loadImages();
+                cardLayout.show(cardPanel, "gallery");
+            },
+            () -> {
+                cardLayout.show(cardPanel, "changelog");
+            },
             () -> {
                 versionsView.loadVersions();
                 cardLayout.show(cardPanel, "versions");
