@@ -240,7 +240,46 @@
             "downloadButton": "Скачать",
             "primary": "основной",
             "otherFiles": "Другие файлы",
-            "modViewDialogTitle": "Мод - $$MOD_NAME$$",
+            "modViewDialog": {
+                "title": "Мод - $$MOD_NAME$$",
+                "sideView": {
+                    "compatibilityCard": {
+                        "title": "Совместимость",
+                        "gameVersions": "Версии игры",
+                        "loaders": "Загрузчики",
+                        "environments": "Среды",
+                        "clientSide": "Клиент",
+                        "serverSide": "Сервер"
+                    },
+                    "linksCard": {
+                        "title": "Ссылки",
+                        "issueTracker": "Ишью-трекер",
+                        "sourceCode": "Исходный код",
+                        "wiki": "Вики",
+                        "discordInvite": "Discord-приглашение"
+                    },
+                    "featuredVersionsCard": {
+                        "title": "Рекомендуемое"
+                    },
+                    "creatorsCard": {
+                        "title": "Создатели"
+                    },
+                    "detailsCard": {
+                        "title": "Дополнительно",
+                        "license": "ЛИЦЕНЗИЯ",
+                        "published": "Опубликовано $$DATE$$",
+                        "updated": "Обновлено $$DATE$$"
+                    }
+                },
+                "infoView": {
+                    "tabsCard": {
+                        "description": "Описание",
+                        "gallery": "Галерея",
+                        "changelog": "Список изменений",
+                        "versions": "Версии"
+                    }
+                }
+            },
             "selectLoadersDialog": {
                 "title": "Выберите загрузчики",
                 "message": "Выберите загрузчики, для которых будет установлен мод"
