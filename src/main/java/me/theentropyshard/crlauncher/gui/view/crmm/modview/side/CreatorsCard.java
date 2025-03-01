@@ -1,5 +1,6 @@
 package me.theentropyshard.crlauncher.gui.view.crmm.modview.side;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.project.Member;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
@@ -45,13 +46,15 @@ public class CreatorsCard extends Card {
             count++;
         }
 
-        membersPanel.setLayout(new GridLayout(count, 1));
+        membersPanel.setLayout(new GridLayout(count, 1, 0, 4));
 
         this.add(membersPanel, BorderLayout.CENTER);
     }
 
     private static final class CreatorCard extends Card {
         public CreatorCard(String avatarUrl, String name, String role) {
+            this.setBorder(new EmptyBorder(0, 4, 0, 0));
+
             this.setLayout(new BorderLayout());
 
             JLabel avatarLabel = new JLabel();
@@ -80,7 +83,13 @@ public class CreatorsCard extends Card {
                     OkHttpClient httpClient = CRLauncher.getInstance().getHttpClient();
 
                     if (avatarUrl == null) {
-                        return ModNoIcon.getInstance();
+                        FlatSVGIcon.ColorFilter colorFilter = new FlatSVGIcon.ColorFilter(
+                            color -> CRLauncher.getInstance().getSettings().darkTheme ? Color.LIGHT_GRAY : Color.BLACK
+                        );
+
+                        return new FlatSVGIcon(CreatorsCard.class.getResource("/assets/images/user.svg"))
+                            .setColorFilter(colorFilter)
+                            .derive(32, 32);
                     }
 
                     Request request = new Request.Builder()
