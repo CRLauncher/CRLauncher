@@ -42,11 +42,15 @@ public class DetailsCard extends Card {
         featuredVersionsLabel.setFont(featuredVersionsLabel.getFont().deriveFont(16.0f));
         this.add(featuredVersionsLabel, BorderLayout.NORTH);
 
-        JPanel detailsPanel = new JPanel(new GridLayout(3, 1));
+        String licenseId = project.getLicenseId();
+
+        JPanel detailsPanel = new JPanel(new GridLayout(licenseId == null ? 2 : 3, 1));
         detailsPanel.setOpaque(false);
 
-        JLabel licenseLabel = new JLabel("<html><b>" + section.getString("license") + " " + project.getLicenseId() + "</b></html");
-        detailsPanel.add(licenseLabel);
+        if (licenseId != null) {
+            JLabel licenseLabel = new JLabel("<html><b>" + section.getString("license") + " " + licenseId + "</b></html");
+            detailsPanel.add(licenseLabel);
+        }
 
         JLabel createdLabel = new JLabel(section.getString("published").replace("$$DATE$$", DetailsCard.FORMATTER.format(OffsetDateTime.parse(project.getDatePublished()))));
         detailsPanel.add(createdLabel);
