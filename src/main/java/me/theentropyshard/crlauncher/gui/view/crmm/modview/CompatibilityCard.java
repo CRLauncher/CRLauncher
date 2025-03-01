@@ -28,6 +28,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class CompatibilityCard extends Card {
@@ -41,7 +42,9 @@ public class CompatibilityCard extends Card {
         compatibilityLabel.setFont(compatibilityLabel.getFont().deriveFont(16.0f));
         this.add(compatibilityLabel, BorderLayout.NORTH);
 
-        JPanel contentPanel = new JPanel(new GridLayout(3, 1));
+        List<String> loaders = project.getLoaders();
+
+        JPanel contentPanel = new JPanel(new GridLayout(loaders.isEmpty() ? 2 : 3, 1));
         contentPanel.setBorder(new EmptyBorder(0, 0, -5, 0));
         contentPanel.setOpaque(false);
         this.add(contentPanel, BorderLayout.CENTER);
@@ -65,29 +68,31 @@ public class CompatibilityCard extends Card {
 
         contentPanel.add(gameVersionsPanel);
 
-        JPanel loadersPanel = new JPanel(new BorderLayout());
-        loadersPanel.setOpaque(false);
+        if (!loaders.isEmpty()) {
+            JPanel loadersPanel = new JPanel(new BorderLayout());
+            loadersPanel.setOpaque(false);
 
-        JLabel loadersLabel = new JLabel("<html><b>" + section.getString("loaders") + "</b><html>");
-        loadersLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
-        loadersLabel.setFont(loadersLabel.getFont().deriveFont(14.0f));
-        loadersPanel.add(loadersLabel, BorderLayout.NORTH);
+            JLabel loadersLabel = new JLabel("<html><b>" + section.getString("loaders") + "</b><html>");
+            loadersLabel.setBorder(new EmptyBorder(0, 0, 5, 0));
+            loadersLabel.setFont(loadersLabel.getFont().deriveFont(14.0f));
+            loadersPanel.add(loadersLabel, BorderLayout.NORTH);
 
-        JPanel loadersSubPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        loadersSubPanel.setBorder(new EmptyBorder(0, -5, 0, 0));
-        loadersSubPanel.setOpaque(false);
+            JPanel loadersSubPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+            loadersSubPanel.setBorder(new EmptyBorder(0, -5, 0, 0));
+            loadersSubPanel.setOpaque(false);
 
-        for (String loader : project.getLoaders()) {
-            loader = Arrays.stream(loader.replace("_", " ").split(" "))
-                .map(StringUtils::capitalize)
-                .collect(Collectors.joining(" "));
+            for (String loader : loaders) {
+                loader = Arrays.stream(loader.replace("_", " ").split(" "))
+                    .map(StringUtils::capitalize)
+                    .collect(Collectors.joining(" "));
 
-            loadersSubPanel.add(new GameVersionLabel(loader));
+                loadersSubPanel.add(new GameVersionLabel(loader));
+            }
+
+            loadersPanel.add(loadersSubPanel, BorderLayout.CENTER);
+
+            contentPanel.add(loadersPanel);
         }
-
-        loadersPanel.add(loadersSubPanel, BorderLayout.CENTER);
-
-        contentPanel.add(loadersPanel);
 
         JPanel environmentsPanel = new JPanel(new BorderLayout());
         environmentsPanel.setOpaque(false);
