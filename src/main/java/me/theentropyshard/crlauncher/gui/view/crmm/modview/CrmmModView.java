@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.side.CrmmModSideView;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 
