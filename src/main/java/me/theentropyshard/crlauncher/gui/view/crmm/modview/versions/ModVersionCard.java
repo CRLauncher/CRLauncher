@@ -19,10 +19,11 @@
 package me.theentropyshard.crlauncher.gui.view.crmm.modview.versions;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectFile;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.GameVersionLabel;
+import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.utils.StringUtils;
 import net.miginfocom.swing.MigLayout;
 
@@ -33,7 +34,6 @@ import java.awt.event.MouseListener;
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ModVersionCard extends JPanel {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(
@@ -62,7 +62,7 @@ public class ModVersionCard extends JPanel {
 
         this.add(versionInfoPanel);
 
-        JPanel compatibility = new JPanel(new GridLayout(1, 2, 5, 0));
+        JPanel compatibility = new JPanel(new MigLayout("insets 0, gap 5 5", "[][]", "[]"));
         compatibility.setOpaque(false);
 
         List<String> gameVersions = version.getGameVersions();
@@ -73,16 +73,20 @@ public class ModVersionCard extends JPanel {
             gameText = gameVersions.get(0).replace("-pre-alpha", "") + "-" +
                 gameVersions.get(gameVersions.size() - 1).replace("-pre-alpha", "");
         }
-        JLabel gameVersion = new JLabel(
+        GameVersionLabel gameVersion = new GameVersionLabel(
             gameText
         );
         compatibility.add(gameVersion);
 
-        JLabel loader = new JLabel(version.getLoaders().stream()
-            .map(ldr -> ldr.replace("-", ""))
-            .map(StringUtils::capitalize)
-            .collect(Collectors.joining(" ")));
-        compatibility.add(loader);
+        for (String loader : version.getLoaders()) {
+            StringBuilder formattedLoader = new StringBuilder();
+
+            for (String s : loader.replace("_", " ").split(" ")) {
+                formattedLoader.append(StringUtils.capitalize(s)).append(" ");
+            }
+
+            compatibility.add(new GameVersionLabel(formattedLoader.toString().trim()));
+        }
 
         this.add(compatibility);
 
