@@ -28,7 +28,11 @@ public class CrmmModSideView extends JPanel {
         this.setLayout(new MigLayout("fill, insets 0, gap 10 10", "[fill]", "[top][top][top][top][top]"));
 
         this.add(new CompatibilityCard(project), "grow, wrap");
-        this.add(new LinksCard(project), "grow, wrap");
+
+        if (project.hasLinks()) {
+            this.add(new LinksCard(project), "grow, wrap");
+        }
+
         this.add(new FeaturedVersionsCard(project), "grow, wrap");
         this.add(new CreatorsCard(project), "grow, wrap");
         this.add(new DetailsCard(project), "grow");

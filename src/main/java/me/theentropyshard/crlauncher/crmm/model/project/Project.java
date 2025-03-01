@@ -57,6 +57,10 @@ public class Project {
 
     }
 
+    public boolean hasLinks() {
+        return this.issueTrackerUrl != null || this.projectSourceUrl != null || this.projectWikiUrl != null || this.discordInviteUrl != null;
+    }
+
     public String getId() {
         return this.id;
     }
