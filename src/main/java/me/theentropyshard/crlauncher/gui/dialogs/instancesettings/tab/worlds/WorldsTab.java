@@ -22,6 +22,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SvgIcon;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
@@ -84,10 +85,7 @@ public class WorldsTab extends Tab {
         });
 
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem copyItem = new JMenuItem(section.getString("contextMenu.copySeed"),
-            new FlatSVGIcon(WorldsTab.class.getResource("/assets/images/" +
-                (CRLauncher.getInstance().getSettings().darkTheme ? "copy_dark.svg" : "copy.svg")))
-        );
+        JMenuItem copyItem = new JMenuItem(section.getString("contextMenu.copySeed"), SvgIcon.get("copy"));
         copyItem.addActionListener(e -> {
             int selectedRow = worldsTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -100,10 +98,7 @@ public class WorldsTab extends Tab {
 
         popupMenu.add(copyItem);
 
-        JMenuItem exportAsZipItem = new JMenuItem(section.getString("contextMenu.exportAsZip"),
-            new FlatSVGIcon(WorldsTab.class.getResource("/assets/images/" +
-                (CRLauncher.getInstance().getSettings().darkTheme ? "export_dark.svg" : "export.svg")))
-        );
+        JMenuItem exportAsZipItem = new JMenuItem(section.getString("contextMenu.exportAsZip"), SvgIcon.get("export"));
         exportAsZipItem.addActionListener(e -> {
             int selectedRow = worldsTable.getSelectedRow();
             if (selectedRow == -1) {
@@ -161,11 +156,7 @@ public class WorldsTab extends Tab {
 
         popupMenu.addSeparator();
 
-        JMenuItem deleteItem = new JMenuItem(
-            section.getString("contextMenu.delete"),
-            new FlatSVGIcon(WorldsTab.class.getResource("/assets/images/" +
-                (CRLauncher.getInstance().getSettings().darkTheme ? "delete_dark.svg" : "delete.svg")))
-        );
+        JMenuItem deleteItem = new JMenuItem(section.getString("contextMenu.delete"), SvgIcon.get("delete"));
         deleteItem.addActionListener(e -> {
             int selectedRow = worldsTable.getSelectedRow();
             if (selectedRow == -1) {
