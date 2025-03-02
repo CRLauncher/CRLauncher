@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screensho
 
 import com.google.gson.JsonObject;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.gui.utils.SvgIcon;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
@@ -90,14 +91,14 @@ public class ScreenshotItem extends JPanel {
 
                     JPopupMenu popupMenu = new JPopupMenu();
 
-                    JMenuItem copyImageItem = new JMenuItem(section.getString("copyImage"));
+                    JMenuItem copyImageItem = new JMenuItem(section.getString("copyImage"), SvgIcon.get("copy"));
                     copyImageItem.addActionListener(copy -> {
                         SwingUtils.startWorker(() -> {
                             OperatingSystem.copyToClipboard(info.getOriginalImage());
                         });
                     });
 
-                    JMenuItem copyFileItem = new JMenuItem(section.getString("copyFile"));
+                    JMenuItem copyFileItem = new JMenuItem(section.getString("copyFile"), SvgIcon.get("copy"));
                     copyFileItem.addActionListener(copy -> {
                         SwingUtils.startWorker(() -> {
                             OperatingSystem.copyToClipboard(info.getFilePath());
@@ -105,7 +106,7 @@ public class ScreenshotItem extends JPanel {
                     });
 
                     // TODO: add confirmation dialog
-                    JMenuItem deleteFileItem = new JMenuItem(section.getString("delete"));
+                    JMenuItem deleteFileItem = new JMenuItem(section.getString("delete"), SvgIcon.get("delete"));
                     deleteFileItem.addActionListener(delete -> {
                         SwingUtils.startWorker(() -> {
                             try {
