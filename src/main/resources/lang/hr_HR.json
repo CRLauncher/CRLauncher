@@ -6,7 +6,7 @@
     "messages": {
         "gui": {
             "error": "Greška",
-        "errorParsingModGameMessage": "<html>Došlo je do greške u obrađivanju ove datoteke: <b>$$FILE_PATH$$</b> iz modifikacije sa namespace-om <b>$$MOD_NAMESPACE$$</b>. Provjeri modove!</html>",
+            "errorParsingModGameMessage": "<html>Došlo je do greške u obrađivanju ove datoteke: <b>$$FILE_PATH$$</b> iz modifikacije sa namespace-om <b>$$MOD_NAMESPACE$$</b>. Provjeri modove!</html>",
             "errorTooMuchMemoryGiven": "Java Virtualna Mašina nije mogla alocirati količinu RAM memorije postavljenu za ovu instancu (minimum: $$MIN_MEMORY$$ MB, maksimum: $$MAX_MEMORY$$ MB). Ili kupi više RAM-a, ili smanji količinu memorije u postavkama instance.",
             "gameOutOfMemory": "Igra je ostala bez RAM memorije. Povisi količinu RAM memorije u postavkama instance.",
             "addAccountDialog": {
@@ -201,9 +201,16 @@
                 },
                 "contextMenu": {
                     "copySeed": "Kopiraj seed",
+                    "exportAsZip": "Export as ZIP",
                     "delete": "Izbriši"
                 },
-                "deletingWorld": "Brisanje svijeta"
+                "exportWorld": {
+                    "title": "Export world",
+                    "success": "World $$WORLD_NAME$$ exported successfully",
+                    "failure": "Could not export world $$WORLD_NAME$$"
+                },
+                "deletingWorld": "Brisanje svijeta",
+                "openWorldsDirButton": "Open worlds folder"
             },
             "screenshotsTab": {
                 "name": "Screenshotovi",
@@ -211,7 +218,8 @@
                 "copyFile": "Kopiraj Datoteku",
                 "delete": "Izbriši",
                 "rename": "Preimenuj",
-                "renameMessage": "Upiši novo ime za datoteku"
+                "renameMessage": "Upiši novo ime za datoteku",
+                "openScreenshotsDirButton": "Open screenshots folder"
             },
             "gameLogTab": {
                 "name": "Log Igre",
@@ -240,7 +248,46 @@
             "downloadButton": "Preuzmi",
             "primary": "primaran",
             "otherFiles": "Druge datoteke",
-            "modVersionsDialogTitle": "Verzije modova",
+            "modViewDialog": {
+                "title": "Mod - $$MOD_NAME$$",
+                "sideView": {
+                    "compatibilityCard": {
+                        "title": "Compatibility",
+                        "gameVersions": "Game versions",
+                        "loaders": "Loaders",
+                        "environments": "Environments",
+                        "clientSide": "Client side",
+                        "serverSide": "Server side"
+                    },
+                    "linksCard": {
+                        "title": "Links",
+                        "issueTracker": "Issue tracker",
+                        "sourceCode": "Source code",
+                        "wiki": "Wiki",
+                        "discordInvite": "Discord invite"
+                    },
+                    "featuredVersionsCard": {
+                        "title": "Featured versions"
+                    },
+                    "creatorsCard": {
+                        "title": "Creators"
+                    },
+                    "detailsCard": {
+                        "title": "Details",
+                        "license": "LICENSED",
+                        "published": "Published on $$DATE$$",
+                        "updated": "Updated on $$DATE$$"
+                    }
+                },
+                "infoView": {
+                    "tabsCard": {
+                        "description": "Description",
+                        "gallery": "Gallery",
+                        "changelog": "Changelog",
+                        "versions": "Versions"
+                    }
+                }
+            },
             "selectLoadersDialog": {
                 "title": "Odaberi loader-e",
                 "message": "Odaberi loader-e za instalaciju"

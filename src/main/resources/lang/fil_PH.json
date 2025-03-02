@@ -201,9 +201,16 @@
                 },
                 "contextMenu": {
                     "copySeed": "Kopyahin ang binhi",
+                    "exportAsZip": "Export as ZIP",
                     "delete": "Burahin"
                 },
-                "deletingWorld": "Binibura ang mundo"
+                "exportWorld": {
+                    "title": "Export world",
+                    "success": "World $$WORLD_NAME$$ exported successfully",
+                    "failure": "Could not export world $$WORLD_NAME$$"
+                },
+                "deletingWorld": "Binibura ang mundo",
+                "openWorldsDirButton": "Open worlds folder"
             },
             "screenshotsTab": {
                 "name": "Iskrinshot",
@@ -211,7 +218,8 @@
                 "copyFile": "Kopyahin ang File",
                 "delete": "Burahin",
                 "rename": "Palit-ngalan",
-                "renameMessage": "Ilagay ang bagong ngalan ng file"
+                "renameMessage": "Ilagay ang bagong ngalan ng file",
+                "openScreenshotsDirButton": "Open screenshots folder"
             },
             "gameLogTab": {
                 "name": "Log ng Laro",
@@ -240,7 +248,46 @@
             "downloadButton": "I-download",
             "primary": "primaryo",
             "otherFiles": "Ibang mga file",
-            "modVersionsDialogTitle": "Mga bersiyon ng modipikasyon",
+            "modViewDialog": {
+                "title": "Mod - $$MOD_NAME$$",
+                "sideView": {
+                    "compatibilityCard": {
+                        "title": "Compatibility",
+                        "gameVersions": "Game versions",
+                        "loaders": "Loaders",
+                        "environments": "Environments",
+                        "clientSide": "Client side",
+                        "serverSide": "Server side"
+                    },
+                    "linksCard": {
+                        "title": "Links",
+                        "issueTracker": "Issue tracker",
+                        "sourceCode": "Source code",
+                        "wiki": "Wiki",
+                        "discordInvite": "Discord invite"
+                    },
+                    "featuredVersionsCard": {
+                        "title": "Featured versions"
+                    },
+                    "creatorsCard": {
+                        "title": "Creators"
+                    },
+                    "detailsCard": {
+                        "title": "Details",
+                        "license": "LICENSED",
+                        "published": "Published on $$DATE$$",
+                        "updated": "Updated on $$DATE$$"
+                    }
+                },
+                "infoView": {
+                    "tabsCard": {
+                        "description": "Description",
+                        "gallery": "Gallery",
+                        "changelog": "Changelog",
+                        "versions": "Versions"
+                    }
+                }
+            },
             "selectLoadersDialog": {
                 "title": "Pumili ng mangdadala",
                 "message": "Pumili ng mangdadala upang maidagdag ang modipikasyon"
