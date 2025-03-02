@@ -31,6 +31,7 @@ import me.theentropyshard.crlauncher.crmm.model.project.ProjectResponse;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.CrmmModView;
 import me.theentropyshard.crlauncher.gui.view.crmm.modview.ModDownloadWorkerSupplier;
 import me.theentropyshard.crlauncher.gui.view.crmm.navbar.NavBar;
 import me.theentropyshard.crlauncher.gui.view.crmm.pagination.PageButton;
@@ -46,8 +47,10 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CrmmModsView extends JPanel {
     private final CosmicInstance instance;
@@ -309,8 +312,11 @@ public class CrmmModsView extends JPanel {
                     ModInfo modInfo = crmmMod.toModInfo();
 
                     ModCard card = new ModCard(modInfo);
+
                     card.addMouseListener(new MouseClickListener(e -> {
                         new Worker<Project, Void>("fetching project") {
+                            private final AtomicBoolean showDialog = new AtomicBoolean(true);
+
                             @Override
                             protected Project work() {
                                 ProjectResponse projectResponse = CRLauncher.getInstance().getCrmmApi().getProject(modInfo.getSlug());
@@ -319,7 +325,16 @@ public class CrmmModsView extends JPanel {
                                     return null;
                                 }
 
-                                return projectResponse.getProject();
+                                Project project = projectResponse.getProject();
+
+                                if (e.getButton() == MouseEvent.BUTTON3) {
+                                    this.showDialog.set(false);
+
+                                    CrmmModView.downloadLatestModVersion(project, CrmmModsView.this.instance,
+                                        CrmmModsView.this.modsTab.getModsView().getModsTableModel());
+                                }
+
+                                return project;
                             }
 
                             @Override
@@ -340,8 +355,10 @@ public class CrmmModsView extends JPanel {
                                     return;
                                 }
 
-                                new ModViewDialog(project, CrmmModsView.this.instance, CrmmModsView.this.modsTab,
-                                    new ModDownloadWorkerSupplier());
+                                if (this.showDialog.get()) {
+                                    new ModViewDialog(project, CrmmModsView.this.instance, CrmmModsView.this.modsTab,
+                                        new ModDownloadWorkerSupplier());
+                                }
                             }
                         }.execute();
                     }));
