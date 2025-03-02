@@ -60,7 +60,7 @@ public class CrmmModView extends JPanel {
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.fill = GridBagConstraints.BOTH;
 
-        this.sideView = new CrmmModSideView(project);
+        this.sideView = new CrmmModSideView(project, instance, modsTab.getModsView().getModsTableModel());
 
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(this.sideView, BorderLayout.PAGE_START);

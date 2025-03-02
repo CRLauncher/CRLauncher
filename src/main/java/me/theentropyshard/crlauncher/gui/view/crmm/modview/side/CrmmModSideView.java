@@ -19,13 +19,15 @@
 package me.theentropyshard.crlauncher.gui.view.crmm.modview.side;
 
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTableModel;
 import me.theentropyshard.crlauncher.gui.view.crmm.modview.side.*;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 
 public class CrmmModSideView extends JPanel {
-    public CrmmModSideView(Project project) {
+    public CrmmModSideView(Project project, CosmicInstance instance, ModsTableModel tableModel) {
         this.setLayout(new MigLayout("fill, insets 0, gap 10 10", "[fill]", "[top][top][top][top][top]"));
 
         this.add(new CompatibilityCard(project), "grow, wrap");
@@ -34,7 +36,7 @@ public class CrmmModSideView extends JPanel {
             this.add(new LinksCard(project), "grow, wrap");
         }
 
-        this.add(new FeaturedVersionsCard(project), "grow, wrap");
+        this.add(new FeaturedVersionsCard(project, instance, tableModel), "grow, wrap");
         this.add(new CreatorsCard(project), "grow, wrap");
         this.add(new DetailsCard(project), "grow");
     }

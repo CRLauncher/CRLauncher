@@ -24,14 +24,19 @@ import me.theentropyshard.crlauncher.crmm.model.project.Member;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.components.Card;
+import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTableModel;
+import me.theentropyshard.crlauncher.gui.view.crmm.modview.ModDownloadWorker;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.MouseListener;
 
 public class FeaturedVersionsCard extends Card {
-    public FeaturedVersionsCard(Project project) {
+    public FeaturedVersionsCard(Project project, CosmicInstance instance, ModsTableModel tableModel) {
         this.setLayout(new BorderLayout());
 
         LanguageSection section = CRLauncher.getInstance().getLanguage().getSection("gui.searchCRMMModsDialog.modViewDialog.sideView.featuredVersionsCard");
@@ -51,7 +56,9 @@ public class FeaturedVersionsCard extends Card {
         int count = 0;
 
         for (ProjectVersion version : project.getFeaturedVersions()) {
-            membersPanel.add(new VersionCard(version.getTitle(), version.getVersionNumber()));
+            membersPanel.add(new VersionCard(version.getTitle(), version.getVersionNumber(), () -> {
+                new ModDownloadWorker(instance, tableModel, version, version.getPrimaryFile()).execute();
+            }));
 
             count++;
         }
@@ -62,7 +69,7 @@ public class FeaturedVersionsCard extends Card {
     }
 
     private static final class VersionCard extends Card {
-        public VersionCard(String name, String role) {
+        public VersionCard(String name, String role, Runnable onClick) {
             this.setLayout(new BorderLayout());
             this.setBorder(new EmptyBorder(0, 4, 0, 0));
             this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -90,6 +97,14 @@ public class FeaturedVersionsCard extends Card {
 
             JLabel roleLabel = new JLabel(role);
             nameRolePanel.add(roleLabel);
+
+            MouseListener listener = new MouseListenerBuilder()
+                .mouseClicked(e -> {
+                    onClick.run();
+                })
+                .build();
+
+            this.addMouseListener(listener);
         }
     }
 }
