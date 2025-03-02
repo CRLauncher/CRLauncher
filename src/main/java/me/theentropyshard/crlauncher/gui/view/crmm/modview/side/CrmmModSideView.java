@@ -36,7 +36,10 @@ public class CrmmModSideView extends JPanel {
             this.add(new LinksCard(project), "grow, wrap");
         }
 
-        this.add(new FeaturedVersionsCard(project, instance, tableModel), "grow, wrap");
+        if (project.hasFeaturedVersions()) {
+            this.add(new FeaturedVersionsCard(project, instance, tableModel), "grow, wrap");
+        }
+
         this.add(new CreatorsCard(project), "grow, wrap");
         this.add(new DetailsCard(project), "grow");
     }

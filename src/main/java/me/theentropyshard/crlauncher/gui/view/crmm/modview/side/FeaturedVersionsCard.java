@@ -49,10 +49,6 @@ public class FeaturedVersionsCard extends Card {
         JPanel membersPanel = new JPanel();
         membersPanel.setOpaque(false);
 
-        if (!project.hasFeaturedVersions()) {
-            return;
-        }
-
         int count = 0;
 
         for (ProjectVersion version : project.getFeaturedVersions()) {
