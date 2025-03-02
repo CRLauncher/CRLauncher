@@ -201,7 +201,13 @@
                 },
                 "contextMenu": {
                     "copySeed": "Копировать сид",
+                    "exportAsZip": "Экспортировать как ZIP",
                     "delete": "Удалить"
+                },
+                "exportWorld": {
+                    "title": "Экспорт мира",
+                    "success": "Мир $$WORLD_NAME$$ был успешно экспортирован",
+                    "failure": "Не удалось экспортировать мир $$WORLD_NAME$$"
                 },
                 "deletingWorld": "Удаление мира"
             },

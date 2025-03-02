@@ -18,21 +18,26 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.worlds;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
+import me.theentropyshard.crlauncher.language.Language;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
+import net.lingala.zip4j.ZipFile;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
@@ -43,6 +48,7 @@ public class WorldsTab extends Tab {
             .getString("gui.instanceSettingsDialog.worldsTab.name"), instance, dialog);
 
         Language language = CRLauncher.getInstance().getLanguage();
+        LanguageSection section = language.getSection("gui.instanceSettingsDialog.worldsTab");
 
         JTable worldsTable = new JTable();
         worldsTable.getTableHeader().setEnabled(false);
@@ -77,8 +83,9 @@ public class WorldsTab extends Tab {
         });
 
         JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem copyItem = new JMenuItem(
-            language.getString("gui.instanceSettingsDialog.worldsTab.contextMenu.copySeed")
+        JMenuItem copyItem = new JMenuItem(section.getString("contextMenu.copySeed"),
+            new FlatSVGIcon(WorldsTab.class.getResource("/assets/images/" +
+                (CRLauncher.getInstance().getSettings().darkTheme ? "copy_dark.svg" : "copy.svg")))
         );
         copyItem.addActionListener(e -> {
             int selectedRow = worldsTable.getSelectedRow();
@@ -92,8 +99,71 @@ public class WorldsTab extends Tab {
 
         popupMenu.add(copyItem);
 
+        JMenuItem exportAsZipItem = new JMenuItem(section.getString("contextMenu.exportAsZip"),
+            new FlatSVGIcon(WorldsTab.class.getResource("/assets/images/" +
+                (CRLauncher.getInstance().getSettings().darkTheme ? "export_dark.svg" : "export.svg")))
+        );
+        exportAsZipItem.addActionListener(e -> {
+            int selectedRow = worldsTable.getSelectedRow();
+            if (selectedRow == -1) {
+                return;
+            }
+
+            CosmicWorld world = worldsModel.worldAt(selectedRow);
+
+            new Worker<Void, Void>("exporting world " + world.getWorldDisplayName()) {
+                @Override
+                protected Void work() throws Exception {
+                    JFileChooser fileChooser = new JFileChooser();
+                    fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                    fileChooser.setFileFilter(new FileNameExtensionFilter("Zip files", "zip"));
+
+                    File worldsDir = instance.getWorldsDir().toFile();
+                    File saveAs = new File(worldsDir, world.getWorldDisplayName() + ".zip");
+                    fileChooser.setSelectedFile(saveAs);
+
+                    int option = fileChooser.showSaveDialog(CRLauncher.frame);
+                    if (option != JFileChooser.APPROVE_OPTION) {
+                        return null;
+                    }
+
+                    saveAs = fileChooser.getSelectedFile();
+
+                    if (saveAs == null) {
+                        return null;
+                    }
+
+                    try (ZipFile zipFile = new ZipFile(saveAs)) {
+                        zipFile.addFolder(world.getWorldDir().toFile());
+                    } catch (IOException e) {
+                        MessageBox.showErrorMessage(
+                            CRLauncher.frame, section.getString("exportWorld.failure")
+                                .replace("$$WORLD_NAME$$", world.getWorldDisplayName()) + ": " + e.getMessage()
+                        );
+
+                        Log.error("Could not export world " + world.getWorldDisplayName(), e);
+
+                        return null;
+                    }
+
+                    MessageBox.showPlainMessage(CRLauncher.frame,
+                        section.getString("exportWorld.title"),
+                        section.getString("exportWorld.success").replace("$$WORLD_NAME$$", world.getWorldDisplayName())
+                    );
+
+                    return null;
+                }
+            }.execute();
+        });
+
+        popupMenu.add(exportAsZipItem);
+
+        popupMenu.addSeparator();
+
         JMenuItem deleteItem = new JMenuItem(
-            language.getString("gui.instanceSettingsDialog.worldsTab.contextMenu.delete")
+            section.getString("contextMenu.delete"),
+            new FlatSVGIcon(WorldsTab.class.getResource("/assets/images/" +
+                (CRLauncher.getInstance().getSettings().darkTheme ? "delete_dark.svg" : "delete.svg")))
         );
         deleteItem.addActionListener(e -> {
             int selectedRow = worldsTable.getSelectedRow();
@@ -104,7 +174,7 @@ public class WorldsTab extends Tab {
             CosmicWorld world = worldsModel.worldAt(selectedRow);
 
             boolean ok = MessageBox.showConfirmMessage(CRLauncher.frame,
-                language.getString("gui.instanceSettingsDialog.worldsTab.deletingWorld"),
+                section.getString("deletingWorld"),
                 language.getString("messages.gui.instanceSettingsDialog.deleteWorldSure")
                     .replace("$$WORLD_NAME$$", world.getWorldDisplayName()));
 
@@ -157,9 +227,9 @@ public class WorldsTab extends Tab {
         worldsTable.setComponentPopupMenu(popupMenu);
 
         JScrollPane scrollPane = new JScrollPane(
-                worldsTable,
-                JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
+            worldsTable,
+            JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+            JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
 
         JPanel root = this.getRoot();

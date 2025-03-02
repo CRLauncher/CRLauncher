@@ -201,7 +201,13 @@
                 },
                 "contextMenu": {
                     "copySeed": "Copy seed",
+                    "exportAsZip": "Export as ZIP",
                     "delete": "Delete"
+                },
+                "exportWorld": {
+                    "title": "Export world",
+                    "success": "World $$WORLD_NAME$$ exported successfully",
+                    "failure": "Could not export world $$WORLD_NAME$$"
                 },
                 "deletingWorld": "Deleting world"
             },
