@@ -18,6 +18,7 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview.side;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.model.project.Member;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
@@ -62,11 +63,19 @@ public class FeaturedVersionsCard extends Card {
 
     private static final class VersionCard extends Card {
         public VersionCard(String name, String role) {
-            this.setBorder(new EmptyBorder(0, 4, 0, 0));
-
             this.setLayout(new BorderLayout());
+            this.setBorder(new EmptyBorder(0, 4, 0, 0));
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-            JLabel avatarLabel = new JLabel();
+            FlatSVGIcon.ColorFilter colorFilter = new FlatSVGIcon.ColorFilter(
+                color -> CRLauncher.getInstance().getSettings().darkTheme ? Color.LIGHT_GRAY : Color.BLACK
+            );
+
+            FlatSVGIcon icon = new FlatSVGIcon(CreatorsCard.class.getResource("/assets/images/download.svg"))
+                .setColorFilter(colorFilter)
+                .derive(32, 32);
+
+            JLabel avatarLabel = new JLabel(icon);
             avatarLabel.setPreferredSize(new Dimension(32, 32));
             this.add(avatarLabel, BorderLayout.WEST);
 
