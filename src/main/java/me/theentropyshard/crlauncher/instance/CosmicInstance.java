@@ -95,6 +95,10 @@ public class CosmicInstance extends JavaInstance {
         return this.getCosmicDir().resolve("worlds");
     }
 
+    public Path getScreenshotsDir() {
+        return this.getCosmicDir().resolve("screenshots");
+    }
+
     public Path getCurrentModsDir() {
         return this.getModsDir(this.modLoader);
     }
