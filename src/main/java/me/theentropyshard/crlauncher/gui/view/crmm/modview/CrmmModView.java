@@ -18,7 +18,10 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.ModsTab;
 import me.theentropyshard.crlauncher.gui.view.crmm.modview.side.CrmmModSideView;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
@@ -40,16 +43,23 @@ public class CrmmModView extends JPanel {
 
         this.header = new CrmmModViewHeader(project);
         this.header.getDownloadButton().addActionListener(e -> {
-            /*CRLauncher.getInstance().doTask(() -> {
+            CRLauncher.getInstance().doTask(() -> {
+                String loader = switch (instance.getModLoader()) {
+                    case QUILT -> "quilt";
+                    case PUZZLE -> "puzzle_loader";
+                    case FABRIC -> "fabric";
+                    default -> null;
+                };
+
+                if ("fabric".equals(loader)) {
+                    return;
+                }
+
                 CrmmApi api = CRLauncher.getInstance().getCrmmApi();
-                // todo
-                ProjectVersion projectVersion = api.getLatestVersion(project.getSlug(),
-                    ).getProjectVersion();
+                ProjectVersion projectVersion = api.getLatestVersion(project.getSlug(), loader).getProjectVersion();
 
                 new ModDownloadWorker(instance, modsTab.getModsView().getModsTableModel(), projectVersion, projectVersion.getPrimaryFile()).execute();
-            });*/
-
-            Log.warn("Main download button is not implemented yet");
+            });
         });
         this.add(this.header, BorderLayout.NORTH);
 
