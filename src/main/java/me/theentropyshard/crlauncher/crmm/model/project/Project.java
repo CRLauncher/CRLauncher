@@ -18,6 +18,8 @@
 
 package me.theentropyshard.crlauncher.crmm.model.project;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class Project {
@@ -53,12 +55,19 @@ public class Project {
     private List<Member> members;
     private Object organisation;
 
+    @SerializedName("versions")
+    private List<ProjectVersion> featuredVersions;
+
     public Project() {
 
     }
 
     public boolean hasLinks() {
         return this.issueTrackerUrl != null || this.projectSourceUrl != null || this.projectWikiUrl != null || this.discordInviteUrl != null;
+    }
+
+    public boolean hasFeaturedVersions() {
+        return this.featuredVersions != null && !this.featuredVersions.isEmpty();
     }
 
     public String getId() {
@@ -183,5 +192,9 @@ public class Project {
 
     public Object getOrganisation() {
         return this.organisation;
+    }
+
+    public List<ProjectVersion> getFeaturedVersions() {
+        return this.featuredVersions;
     }
 }

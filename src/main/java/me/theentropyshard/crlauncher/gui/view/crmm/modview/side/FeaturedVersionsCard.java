@@ -19,7 +19,9 @@
 package me.theentropyshard.crlauncher.gui.view.crmm.modview.side;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.crmm.model.project.Member;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
+import me.theentropyshard.crlauncher.crmm.model.project.ProjectVersion;
 import me.theentropyshard.crlauncher.gui.components.Card;
 import me.theentropyshard.crlauncher.language.LanguageSection;
 
@@ -37,5 +39,48 @@ public class FeaturedVersionsCard extends Card {
         featuredVersionsLabel.setBorder(new EmptyBorder(-5, 0, 10, 0));
         featuredVersionsLabel.setFont(featuredVersionsLabel.getFont().deriveFont(16.0f));
         this.add(featuredVersionsLabel, BorderLayout.NORTH);
+
+        JPanel membersPanel = new JPanel();
+        membersPanel.setOpaque(false);
+
+        if (!project.hasFeaturedVersions()) {
+            return;
+        }
+
+        int count = 0;
+
+        for (ProjectVersion version : project.getFeaturedVersions()) {
+            membersPanel.add(new VersionCard(version.getTitle(), version.getVersionNumber()));
+
+            count++;
+        }
+
+        membersPanel.setLayout(new GridLayout(count, 1, 0, 4));
+
+        this.add(membersPanel, BorderLayout.CENTER);
+    }
+
+    private static final class VersionCard extends Card {
+        public VersionCard(String name, String role) {
+            this.setBorder(new EmptyBorder(0, 4, 0, 0));
+
+            this.setLayout(new BorderLayout());
+
+            JLabel avatarLabel = new JLabel();
+            avatarLabel.setPreferredSize(new Dimension(32, 32));
+            this.add(avatarLabel, BorderLayout.WEST);
+
+            JPanel nameRolePanel = new JPanel(new GridLayout(2, 1));
+            nameRolePanel.setBorder(new EmptyBorder(0, 10, 0, 0));
+            nameRolePanel.setOpaque(false);
+            this.add(nameRolePanel, BorderLayout.CENTER);
+
+            JLabel nameLabel = new JLabel("<html><b>" + name + "</b></html>");
+            nameLabel.setFont(nameLabel.getFont().deriveFont(14.0f));
+            nameRolePanel.add(nameLabel);
+
+            JLabel roleLabel = new JLabel(role);
+            nameRolePanel.add(roleLabel);
+        }
     }
 }

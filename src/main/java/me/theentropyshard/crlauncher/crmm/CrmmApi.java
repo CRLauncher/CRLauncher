@@ -67,7 +67,7 @@ public class CrmmApi {
     }
 
     public ProjectResponse getProject(String slug) {
-        return this.crmmApi.getProject(slug);
+        return this.crmmApi.getProject(slug, true, true);
     }
 
     public ProjectVersionsResponse getProjectVersions(String slug) {

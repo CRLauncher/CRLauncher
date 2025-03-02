@@ -32,7 +32,7 @@ public interface CrmmHttpApi {
     SearchModsResponse search(@QueryMap Map<String, String> query);
 
     @GET("project/{slug}")
-    ProjectResponse getProject(@Path("slug") String slug);
+    ProjectResponse getProject(@Path("slug") String slug, @Query("includeVersions") boolean includeVersions, @Query("featuredOnly") boolean featuredOnly);
 
     @GET("project/{slug}/version")
     ProjectVersionsResponse getProjectVersions(@Path("slug") String slug);
