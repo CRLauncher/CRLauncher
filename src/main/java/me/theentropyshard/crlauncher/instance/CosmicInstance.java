@@ -91,6 +91,10 @@ public class CosmicInstance extends JavaInstance {
         return this.modLoader == ModLoader.QUILT || this.modLoader == ModLoader.PUZZLE;
     }
 
+    public Path getWorldsDir() {
+        return this.getCosmicDir().resolve("worlds");
+    }
+
     public Path getCurrentModsDir() {
         return this.getModsDir(this.modLoader);
     }
