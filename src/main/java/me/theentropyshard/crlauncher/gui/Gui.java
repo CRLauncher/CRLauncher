@@ -24,6 +24,7 @@ import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.gui.console.LauncherConsole;
 import me.theentropyshard.crlauncher.gui.laf.DarkLauncherLaf;
 import me.theentropyshard.crlauncher.gui.laf.LightLauncherLaf;
+import me.theentropyshard.crlauncher.gui.utils.SvgIcon;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.view.AboutView;
 import me.theentropyshard.crlauncher.gui.view.accountsview.AccountItem;
@@ -191,6 +192,8 @@ public class Gui {
     }
 
     public void switchTheme() {
+        SvgIcon.clear();
+
         if (this.isDarkTheme()) {
             DarkLauncherLaf.setup();
         } else {

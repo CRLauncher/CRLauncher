@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view.playview;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.gui.utils.*;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.CosmicRunner;
 import me.theentropyshard.crlauncher.gui.components.AddInstanceItem;
@@ -26,10 +27,6 @@ import me.theentropyshard.crlauncher.gui.components.InstanceItem;
 import me.theentropyshard.crlauncher.gui.dialogs.SelectIconDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.addinstance.AddInstanceDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.InstanceSettingsDialog;
-import me.theentropyshard.crlauncher.gui.utils.MessageBox;
-import me.theentropyshard.crlauncher.gui.utils.MouseClickListener;
-import me.theentropyshard.crlauncher.gui.utils.MouseEnterExitListener;
-import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -185,7 +182,7 @@ public class PlayView extends JPanel {
 
                 JPopupMenu popupMenu = new JPopupMenu();
 
-                JMenuItem editMenuItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.edit"));
+                JMenuItem editMenuItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.edit"), SvgIcon.get("edit"));
                 editMenuItem.addActionListener(edit -> {
                     new InstanceSettingsDialog(instance);
                 });
@@ -223,7 +220,7 @@ public class PlayView extends JPanel {
 
                 popupMenu.addSeparator();
 
-                JMenuItem deleteMenuItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.delete"));
+                JMenuItem deleteMenuItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.delete"), SvgIcon.get("delete"));
                 deleteMenuItem.addActionListener(delete -> {
                     this.deleteInstance(item);
                 });
@@ -231,13 +228,13 @@ public class PlayView extends JPanel {
 
                 popupMenu.addSeparator();
 
-                JMenuItem openInstanceFolder = new JMenuItem(language.getString("gui.instanceItem.contextMenu.openInstanceFolder"));
+                JMenuItem openInstanceFolder = new JMenuItem(language.getString("gui.instanceItem.contextMenu.openInstanceFolder"), SvgIcon.get("open"));
                 openInstanceFolder.addActionListener(open -> {
                     OperatingSystem.open(instance.getWorkDir());
                 });
                 popupMenu.add(openInstanceFolder);
 
-                JMenuItem openCosmicFolder = new JMenuItem(language.getString("gui.instanceItem.contextMenu.openCosmicFolder"));
+                JMenuItem openCosmicFolder = new JMenuItem(language.getString("gui.instanceItem.contextMenu.openCosmicFolder"), SvgIcon.get("open"));
                 openCosmicFolder.addActionListener(open -> {
                     OperatingSystem.open(instance.getCosmicDir());
                 });
@@ -245,7 +242,7 @@ public class PlayView extends JPanel {
 
                 popupMenu.addSeparator();
 
-                JMenuItem exitInstanceItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.killProcess"));
+                JMenuItem exitInstanceItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.killProcess"), SvgIcon.get("suspend"));
                 exitInstanceItem.setEnabled(item.getAssociatedInstance().isRunning());
                 exitInstanceItem.addActionListener(exit -> {
                     this.cosmicRunner.stopGame();

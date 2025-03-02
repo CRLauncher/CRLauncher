@@ -39,4 +39,8 @@ public final class SvgIcon {
 
         return icon;
     }
+
+    public static void clear() {
+        SvgIcon.icons.clear();
+    }
 }
