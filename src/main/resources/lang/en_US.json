@@ -209,7 +209,8 @@
                     "success": "World $$WORLD_NAME$$ exported successfully",
                     "failure": "Could not export world $$WORLD_NAME$$"
                 },
-                "deletingWorld": "Deleting world"
+                "deletingWorld": "Deleting world",
+                "openWorldsDirButton": "Open worlds folder"
             },
             "screenshotsTab": {
                 "name": "Screenshots",

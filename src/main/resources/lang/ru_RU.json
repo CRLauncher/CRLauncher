@@ -209,7 +209,8 @@
                     "success": "Мир $$WORLD_NAME$$ был успешно экспортирован",
                     "failure": "Не удалось экспортировать мир $$WORLD_NAME$$"
                 },
-                "deletingWorld": "Удаление мира"
+                "deletingWorld": "Удаление мира",
+                "openWorldsDirButton": "Открыть папку с мирами"
             },
             "screenshotsTab": {
                 "name": "Скриншоты",

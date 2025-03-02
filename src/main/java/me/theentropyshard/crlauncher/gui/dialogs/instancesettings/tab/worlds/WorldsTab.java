@@ -22,6 +22,7 @@ import com.formdev.flatlaf.extras.FlatSVGIcon;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.Language;
@@ -232,8 +233,27 @@ public class WorldsTab extends Tab {
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
 
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+
+        JButton openWorldsDirButton = new JButton(section.getString("openWorldsDirButton"));
+        openWorldsDirButton.addActionListener(e -> {
+            SwingUtils.startWorker(() -> {
+                Path worldsDir = instance.getWorldsDir();
+
+                try {
+                    FileUtils.createDirectoryIfNotExists(worldsDir);
+                } catch (IOException ex) {
+                    Log.error("Could not create worlds folder: " + worldsDir, ex);
+                }
+
+                OperatingSystem.open(worldsDir);
+            });
+        });
+        buttonsPanel.add(openWorldsDirButton);
+
         JPanel root = this.getRoot();
         root.setLayout(new BorderLayout());
         root.add(scrollPane, BorderLayout.CENTER);
+        root.add(buttonsPanel, BorderLayout.SOUTH);
     }
 }
