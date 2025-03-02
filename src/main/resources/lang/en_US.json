@@ -218,7 +218,8 @@
                 "copyFile": "Copy File",
                 "delete": "Delete",
                 "rename": "Rename",
-                "renameMessage": "Enter new name for the file"
+                "renameMessage": "Enter new name for the file",
+                "openScreenshotsDirButton": "Open screenshots folder"
             },
             "gameLogTab": {
                 "name": "Game Log",

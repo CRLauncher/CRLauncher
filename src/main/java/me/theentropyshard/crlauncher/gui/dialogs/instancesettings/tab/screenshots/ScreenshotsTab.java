@@ -20,10 +20,18 @@ package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.screensho
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
+import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.OperatingSystem;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.io.IOException;
+import java.nio.file.Path;
 
 public class ScreenshotsTab extends Tab {
     private final ScreenshotsPanel screenshotsPanel;
@@ -36,6 +44,28 @@ public class ScreenshotsTab extends Tab {
 
         this.screenshotsPanel = new ScreenshotsPanel();
         root.add(this.screenshotsPanel, BorderLayout.CENTER);
+
+        JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        buttonsPanel.setBorder(new MatteBorder(1, 0, 0, 0, UIManager.getColor("Component.borderColor")));
+        root.add(buttonsPanel, BorderLayout.SOUTH);
+
+        JButton openFolder = new JButton(
+            CRLauncher.getInstance().getLanguage().getString("gui.instanceSettingsDialog.screenshotsTab.openScreenshotsDirButton")
+        );
+        openFolder.addActionListener(e -> {
+            SwingUtils.startWorker(() -> {
+                Path screenshotsDir = instance.getScreenshotsDir();
+
+                try {
+                    FileUtils.createDirectoryIfNotExists(screenshotsDir);
+                } catch (IOException ex) {
+                    Log.error("Could not create screenshots folder: " + screenshotsDir, ex);
+                }
+
+                OperatingSystem.open(screenshotsDir);
+            });
+        });
+        buttonsPanel.add(openFolder);
 
         this.loadScreenshots();
     }

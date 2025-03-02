@@ -218,7 +218,8 @@
                 "copyFile": "Копировать файл",
                 "delete": "Удалить",
                 "rename": "Переименовать",
-                "renameMessage": "Введите новое имя файла"
+                "renameMessage": "Введите новое имя файла",
+                "openScreenshotsDirButton": "Открыть папку со скриншотами"
             },
             "gameLogTab": {
                 "name": "Лог Игры",
