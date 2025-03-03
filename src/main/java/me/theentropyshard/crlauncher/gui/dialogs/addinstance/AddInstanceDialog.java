@@ -43,6 +43,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
+import java.util.Set;
+import java.util.Vector;
 
 public class AddInstanceDialog extends AppDialog {
     public static final String TITLE = "gui.addInstanceDialog.title";
@@ -60,13 +62,13 @@ public class AddInstanceDialog extends AppDialog {
     public static final String NO_CLIENT_MESSAGE = "messages.gui.addInstanceDialog.doesNotHaveClient";
     public static final String SHOW_ONLY_INSTALLED = "gui.addInstanceDialog.showOnlyInstalled";
     private final JTextField nameField;
-    private final JTextField groupField;
+    private final JComboBox<String> groupCombo;
     private final JButton addButton;
     private final JCheckBox preAlphasBox;
 
     private boolean nameEdited;
 
-    public AddInstanceDialog(PlayView playView, String groupName) {
+    public AddInstanceDialog(PlayView playView, String groupName, Set<String> groups) {
         super(CRLauncher.frame,
             CRLauncher.getInstance().getLanguage().getString(AddInstanceDialog.TITLE));
 
@@ -111,8 +113,10 @@ public class AddInstanceDialog extends AppDialog {
         });
         headerPanelRightPanel.add(this.nameField);
 
-        this.groupField = new JTextField(groupName);
-        headerPanelRightPanel.add(this.groupField);
+        this.groupCombo = new JComboBox<>(new Vector<>(groups));
+        this.groupCombo.setEditable(true);
+        this.groupCombo.setSelectedItem(groupName);
+        headerPanelRightPanel.add(this.groupCombo);
 
         headerPanel.add(headerPanelLeftPanel, BorderLayout.WEST);
         headerPanel.add(headerPanelRightPanel, BorderLayout.CENTER);
@@ -250,7 +254,16 @@ public class AddInstanceDialog extends AppDialog {
                 return;
             }
 
-            String chosenGroupName = this.groupField.getText();
+            Object selectedItem = this.groupCombo.getSelectedItem();
+
+            if (selectedItem == null) {
+                MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
+                    language.getString(AddInstanceDialog.GROUP_NAME_EMPTY_MESSAGE));
+
+                return;
+            }
+
+            String chosenGroupName = String.valueOf(selectedItem);
             if (chosenGroupName.trim().isEmpty()) {
                 MessageBox.showErrorMessage(AddInstanceDialog.this.getDialog(),
                     language.getString(AddInstanceDialog.GROUP_NAME_EMPTY_MESSAGE));

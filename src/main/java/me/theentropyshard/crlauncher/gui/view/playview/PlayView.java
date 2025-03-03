@@ -72,7 +72,7 @@ public class PlayView extends JPanel {
         this.add(this.header, BorderLayout.NORTH);
 
         AddInstanceItem defaultItem = new AddInstanceItem();
-        defaultItem.onClick(e -> new AddInstanceDialog(this, PlayView.DEFAULT_GROUP_NAME));
+        defaultItem.onClick(e -> new AddInstanceDialog(this, PlayView.DEFAULT_GROUP_NAME, groups.keySet()));
 
         this.defaultInstancesPanel = new InstancesPanel(defaultItem);
         this.currentPanel = this.defaultInstancesPanel;
@@ -155,7 +155,7 @@ public class PlayView extends JPanel {
         InstancesPanel panel = this.groups.get(groupName);
         if (panel == null) {
             AddInstanceItem addInstanceItem = new AddInstanceItem();
-            addInstanceItem.onClick(e -> new AddInstanceDialog(this, groupName));
+            addInstanceItem.onClick(e -> new AddInstanceDialog(this, groupName, groups.keySet()));
 
             panel = new InstancesPanel(addInstanceItem);
             this.groups.put(groupName, panel);
@@ -201,7 +201,7 @@ public class PlayView extends JPanel {
 
                     if (instancesPanel == null) {
                         AddInstanceItem addInstanceItem = new AddInstanceItem();
-                        addInstanceItem.onClick(ev -> new AddInstanceDialog(this, group));
+                        addInstanceItem.onClick(ev -> new AddInstanceDialog(this, group, groups.keySet()));
 
                         instancesPanel = new InstancesPanel(addInstanceItem);
                         this.groups.put(group, instancesPanel);
