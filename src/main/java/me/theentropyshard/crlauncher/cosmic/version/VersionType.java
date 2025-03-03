@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum VersionType {
+    ALPHA("alpha", "Alpha"),
     PRE_ALPHA("pre_alpha", "Pre-Alpha");
 
     private static final Map<String, VersionType> lookup = new HashMap<>();

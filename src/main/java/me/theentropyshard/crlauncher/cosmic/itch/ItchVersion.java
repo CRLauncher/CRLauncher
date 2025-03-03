@@ -21,9 +21,13 @@ package me.theentropyshard.crlauncher.cosmic.itch;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 import me.theentropyshard.crlauncher.itch.DetailedBuild;
+import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.RegexUtils;
+import me.theentropyshard.crlauncher.utils.SemanticVersion;
 
 import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Matcher;
 
 public class ItchVersion extends DetailedBuild implements Version {
     @Override
@@ -38,6 +42,23 @@ public class ItchVersion extends DetailedBuild implements Version {
 
     @Override
     public VersionType getType() {
+        SemanticVersion version = SemanticVersion.parse(this.getId());
+
+        if (version == null) {
+            Matcher matcher = RegexUtils.THREE_DIGITS.matcher(this.getId());
+
+            if (matcher.find()) {
+                String parsedVersion = matcher.group(0);
+                version = SemanticVersion.parse(parsedVersion);
+            } else {
+                Log.warn("ItchVersion: could not determine game version");
+            }
+        }
+
+        if (version != null && version.getMinor() == 4) {
+            return VersionType.ALPHA;
+        }
+
         return VersionType.PRE_ALPHA;
     }
 }

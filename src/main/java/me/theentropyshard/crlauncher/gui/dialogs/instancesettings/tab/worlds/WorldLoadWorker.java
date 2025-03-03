@@ -23,6 +23,7 @@ import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.RegexUtils;
 import me.theentropyshard.crlauncher.utils.SemanticVersion;
 import me.theentropyshard.crlauncher.utils.json.Json;
 
@@ -93,8 +94,7 @@ public class WorldLoadWorker extends Worker<Void, CosmicWorld> {
             Log.warn("Could not parse game version " + version + " of instance " + this.instance.getName() +
                 ", trying to extract with regex");
 
-            Pattern versionPattern = Pattern.compile("\\d+\\.\\d+\\.\\d+");
-            Matcher matcher = versionPattern.matcher(version);
+            Matcher matcher = RegexUtils.THREE_DIGITS.matcher(version);
             if (matcher.find()) {
                 String parsedVersion = matcher.group(0);
                 cosmicVersion = SemanticVersion.parse(parsedVersion);

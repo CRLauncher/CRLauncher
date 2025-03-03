@@ -64,6 +64,7 @@ public class AddInstanceDialog extends AppDialog {
     private final JTextField nameField;
     private final JComboBox<String> groupCombo;
     private final JButton addButton;
+    private final JCheckBox alphasBox;
     private final JCheckBox preAlphasBox;
 
     private boolean nameEdited;
@@ -189,8 +190,13 @@ public class AddInstanceDialog extends AppDialog {
 
         gbc.anchor = GridBagConstraints.WEST;
 
+        this.alphasBox = new JCheckBox("Alpha");
         this.preAlphasBox = new JCheckBox("Pre-Alpha", true);
+
         JCheckBox experimentsBox = new JCheckBox("Experiments");
+
+        gbc.gridy++;
+        filterPanel.add(this.alphasBox, gbc);
 
         gbc.gridy++;
         filterPanel.add(this.preAlphasBox, gbc);
@@ -342,6 +348,10 @@ public class AddInstanceDialog extends AppDialog {
 
     public JButton getAddButton() {
         return this.addButton;
+    }
+
+    public JCheckBox getAlphasBox() {
+        return this.alphasBox;
     }
 
     public JCheckBox getPreAlphasBox() {
