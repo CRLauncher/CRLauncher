@@ -54,6 +54,7 @@
         "instanceItem": {
             "contextMenu": {
                 "edit": "Bearbeiten",
+                "changeGroup": "Change Group",
                 "icon": "Icon",
                 "rename": "Umbenennen",
                 "delete": "Löschen",
@@ -61,6 +62,10 @@
                 "openCosmicFolder": "Cosmic Reach Ordner öffnen",
                 "killProcess": "Prozess beenden"
             }
+        },
+        "changeGroupDialog": {
+            "title": "Change group of $$INSTANCE_NAME$$",
+            "label": "Select an existing group or type a name for a new one. Press Enter when done."
         },
         "modFilesDialog": {
             "name": "Name",

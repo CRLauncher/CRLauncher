@@ -54,6 +54,7 @@
         "instanceItem": {
             "contextMenu": {
                 "edit": "Редактировать",
+                "changeGroup": "Изменить группу",
                 "icon": "Иконка",
                 "rename": "Переименовать",
                 "delete": "Удалить",
@@ -61,6 +62,10 @@
                 "openCosmicFolder": "Открыть папку cosmic-reach",
                 "killProcess": "Остановить процесс"
             }
+        },
+        "changeGroupDialog": {
+            "title": "Изменить группу $$INSTANCE_NAME$$",
+            "label": "Выберите существующую группу или впишите имя новой, после нажмите Enter."
         },
         "modFilesDialog": {
             "name": "Имя",

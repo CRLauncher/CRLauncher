@@ -54,6 +54,7 @@
         "instanceItem": {
             "contextMenu": {
                 "edit": "Uredi",
+                "changeGroup": "Change Group",
                 "icon": "Ikona",
                 "rename": "Preimenuj",
                 "delete": "Izbriši",
@@ -61,6 +62,10 @@
                 "openCosmicFolder": "Otvori Cosmic mapu",
                 "killProcess": "Isključi proces"
             }
+        },
+        "changeGroupDialog": {
+            "title": "Change group of $$INSTANCE_NAME$$",
+            "label": "Select an existing group or type a name for a new one. Press Enter when done."
         },
         "modFilesDialog": {
             "name": "Ime",

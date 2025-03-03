@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view.playview;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.gui.dialogs.ChangeGroupDialog;
 import me.theentropyshard.crlauncher.gui.utils.*;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.cosmic.CosmicRunner;
@@ -187,6 +188,32 @@ public class PlayView extends JPanel {
                     new InstanceSettingsDialog(instance);
                 });
                 popupMenu.add(editMenuItem);
+
+                JMenuItem changeGroupItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.changeGroup"));
+                changeGroupItem.addActionListener(changeGroup -> {
+                    String group = new ChangeGroupDialog(instance, this.groups.keySet()).getGroup();
+
+                    if (group == null || group.trim().isEmpty() || instance.getGroupName().equals(group)) {
+                        return;
+                    }
+
+                    InstancesPanel instancesPanel = this.groups.get(group);
+
+                    if (instancesPanel == null) {
+                        AddInstanceItem addInstanceItem = new AddInstanceItem();
+                        addInstanceItem.onClick(ev -> new AddInstanceDialog(this, group));
+
+                        instancesPanel = new InstancesPanel(addInstanceItem);
+                        this.groups.put(group, instancesPanel);
+                        this.model.addElement(group);
+                        this.instancesPanelView.add(instancesPanel, group);
+                    }
+
+                    instance.setGroupName(group);
+                    instancesPanel.addInstanceItem(item, true);
+                    this.currentPanel.removeInstanceItem(item);
+                });
+                popupMenu.add(changeGroupItem);
 
                 JMenuItem iconMenuItem = new JMenuItem(language.getString("gui.instanceItem.contextMenu.icon"));
                 iconMenuItem.addActionListener(edit -> {

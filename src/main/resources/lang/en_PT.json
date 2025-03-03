@@ -54,6 +54,7 @@
         "instanceItem": {
             "contextMenu": {
                 "edit": "Mend",
+                "changeGroup": "Change Group",
                 "icon": "Painting",
                 "rename": "Rename",
                 "delete": "Sink",
@@ -61,6 +62,10 @@
                 "openCosmicFolder": "Open Cosmic folder storage",
                 "killProcess": "Sink process"
             }
+        },
+        "changeGroupDialog": {
+            "title": "Change group of $$INSTANCE_NAME$$",
+            "label": "Select an existing group or type a name for a new one. Press Enter when done."
         },
         "modFilesDialog": {
             "name": "Name",

@@ -102,6 +102,10 @@ public class InstancesPanel extends JPanel {
         this.instancesPanel.add(item, 0);
     }
 
+    public void removeInstanceItem(InstanceItem item) {
+        this.instancesPanel.remove(item);
+    }
+
     public AddInstanceItem getAddInstanceItem() {
         return this.addInstanceItem;
     }

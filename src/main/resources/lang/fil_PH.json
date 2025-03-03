@@ -54,6 +54,7 @@
         "instanceItem": {
             "contextMenu": {
                 "edit": "Baguhin",
+                "changeGroup": "Change Group",
                 "icon": "Ikono",
                 "rename": "Palit-ngalan",
                 "delete": "Burahin",
@@ -61,6 +62,10 @@
                 "openCosmicFolder": "Buksan ang polder ng Cosmic",
                 "killProcess": "Patayin ang proseso"
             }
+        },
+        "changeGroupDialog": {
+            "title": "Change group of $$INSTANCE_NAME$$",
+            "label": "Select an existing group or type a name for a new one. Press Enter when done."
         },
         "modFilesDialog": {
             "name": "Pangalan",
