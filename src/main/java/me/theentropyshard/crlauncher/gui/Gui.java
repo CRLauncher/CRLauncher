@@ -45,6 +45,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 public class Gui {
     public static final String OPEN_LAUNCHER_FOLDER = "gui.general.openLauncherFolder";
@@ -112,6 +113,15 @@ public class Gui {
         }));
 
         CRLauncher.frame = this.frame = new JFrame(title);
+        this.frame.setIconImages(
+            List.of(
+                SwingUtils.getImage("/assets/images/icons/logo/icon_silver_16x.png"),
+                SwingUtils.getImage("/assets/images/icons/logo/icon_silver_32x.png"),
+                SwingUtils.getImage("/assets/images/icons/logo/icon_silver_64x.png"),
+                SwingUtils.getImage("/assets/images/icons/logo/icon_silver_128x.png")
+            )
+        );
+        console.getFrame().setIconImages(this.frame.getIconImages());
         this.frame.add(this.viewSelector, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(/*new FlowLayout(FlowLayout.LEFT, 3, 5)*/ new MigLayout("fillx, insets 0, gap 5 5", "[left][right]", "[center]")) {
@@ -140,7 +150,7 @@ public class Gui {
         int instancesCount = CRLauncher.getInstance().getInstanceManager().getInstancesCount();
 
         if (instancesCount == 0) {
-            this.statsLabel  = new JLabel(language.getString("gui.general.statsLabel.tipIfEmpty"));
+            this.statsLabel = new JLabel(language.getString("gui.general.statsLabel.tipIfEmpty"));
         } else {
             this.statsLabel = new JLabel(instances.replace("$$INSTANCES_COUNT$$", String.valueOf(instancesCount)) +
                 ", " + time.replace("$$TOTAL_PLAYTIME$$", TimeUtils.getHoursMinutesSecondsLocalized(
