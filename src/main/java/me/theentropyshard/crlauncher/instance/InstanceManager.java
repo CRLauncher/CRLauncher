@@ -37,11 +37,11 @@ import java.util.List;
 import java.util.Map;
 
 public class InstanceManager {
-
-
     private final Path workDir;
     private final List<CosmicInstance> instances;
     private final Map<String, CosmicInstance> instancesByName;
+
+    private long totalPlaytime;
 
     public InstanceManager(Path workDir) {
         this.workDir = workDir;
@@ -72,6 +72,7 @@ public class InstanceManager {
         instance.setWorkDir(instanceDir);
 
         this.cacheInstance(instance);
+        this.increaseTotalPlaytime(instance.getTotalPlaytime());
 
         return instance;
     }
@@ -178,6 +179,7 @@ public class InstanceManager {
         FileUtils.delete(instance.getWorkDir());
 
         this.uncacheInstance(instance);
+        this.decreaseTotalPlaytime(instance.getTotalPlaytime());
     }
 
     public boolean renameInstance(CosmicInstance instance, String newName) throws IOException {
@@ -260,6 +262,30 @@ public class InstanceManager {
         SUCCESS,
         BAD_FILE,
         INSTANCE_EXISTS
+    }
+
+    private void increaseTotalPlaytime(long seconds) {
+        if (seconds < 0) {
+            return;
+        }
+
+        this.totalPlaytime += seconds;
+    }
+
+    private void decreaseTotalPlaytime(long seconds) {
+        if (seconds < 0) {
+            return;
+        }
+
+        this.totalPlaytime = Math.max(0, Math.min(this.totalPlaytime, this.totalPlaytime - seconds));
+    }
+
+    public long getTotalPlaytime() {
+        return this.totalPlaytime;
+    }
+
+    public int getInstancesCount() {
+        return this.instances.size();
     }
 
     public CosmicInstance getInstanceByName(String name) {
