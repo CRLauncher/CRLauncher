@@ -367,7 +367,8 @@
             },
             "statsLabel": {
                 "instances": "$$INSTANCES_COUNT$$ инстансов",
-                "totalPlayedFor": "в сумме в игре проведено $$TOTAL_PLAYTIME$$"
+                "totalPlayedFor": "в сумме в игре проведено $$TOTAL_PLAYTIME$$",
+                "tipIfEmpty": "Нажмите на «+», чтобы создать новый инстанс!"
             },
             "tab": {
                 "play": "Игра",

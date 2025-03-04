@@ -137,10 +137,15 @@ public class Gui {
         String instances = language.getString("gui.general.statsLabel.instances");
         String time = language.getString("gui.general.statsLabel.totalPlayedFor");
 
-        this.statsLabel = new JLabel(
-            instances.replace("$$INSTANCES_COUNT$$", String.valueOf(CRLauncher.getInstance().getInstanceManager().getInstances().size())) +
-            ", " + time.replace("$$TOTAL_PLAYTIME$$", TimeUtils.getHoursMinutesSecondsLocalized(
+        int instancesCount = CRLauncher.getInstance().getInstanceManager().getInstancesCount();
+
+        if (instancesCount == 0) {
+            this.statsLabel  = new JLabel(language.getString("gui.general.statsLabel.tipIfEmpty"));
+        } else {
+            this.statsLabel = new JLabel(instances.replace("$$INSTANCES_COUNT$$", String.valueOf(instancesCount)) +
+                ", " + time.replace("$$TOTAL_PLAYTIME$$", TimeUtils.getHoursMinutesSecondsLocalized(
                 CRLauncher.getInstance().getInstanceManager().getTotalPlaytime())));
+        }
         rightBottomPanel.add(this.statsLabel);
 
         leftBottomPanel.add(this.openFolderButton);
@@ -202,9 +207,15 @@ public class Gui {
         String instances = language.getString("gui.general.statsLabel.instances");
         String time = language.getString("gui.general.statsLabel.totalPlayedFor");
 
-        this.statsLabel.setText(instances.replace("$$INSTANCES_COUNT$$", String.valueOf(CRLauncher.getInstance().getInstanceManager().getInstances().size())) +
-            ", " + time.replace("$$TOTAL_PLAYTIME$$", TimeUtils.getHoursMinutesSecondsLocalized(
-            CRLauncher.getInstance().getInstanceManager().getTotalPlaytime())));
+        int instancesCount = CRLauncher.getInstance().getInstanceManager().getInstancesCount();
+
+        if (instancesCount == 0) {
+            this.statsLabel.setText(language.getString("gui.general.statsLabel.tipIfEmpty"));
+        } else {
+            this.statsLabel.setText(instances.replace("$$INSTANCES_COUNT$$", String.valueOf(instancesCount)) +
+                ", " + time.replace("$$TOTAL_PLAYTIME$$", TimeUtils.getHoursMinutesSecondsLocalized(
+                CRLauncher.getInstance().getInstanceManager().getTotalPlaytime())));
+        }
 
         LauncherConsole.instance.reloadLanguage();
         this.playView.reloadLanguage();
