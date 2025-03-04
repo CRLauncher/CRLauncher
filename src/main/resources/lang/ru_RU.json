@@ -365,6 +365,10 @@
                 "show": "Показать консоль",
                 "hide": "Скрыть консоль"
             },
+            "statsLabel": {
+                "instances": "$$INSTANCES_COUNT$$ инстансов",
+                "totalPlayedFor": "в сумме в игре проведено $$TOTAL_PLAYTIME$$"
+            },
             "tab": {
                 "play": "Игра",
                 "devlog": "Изменения",

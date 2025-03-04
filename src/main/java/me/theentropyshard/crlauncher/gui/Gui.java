@@ -37,6 +37,8 @@ import me.theentropyshard.crlauncher.gui.view.settings.SettingsView;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
+import me.theentropyshard.crlauncher.utils.TimeUtils;
+import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,6 +59,7 @@ public class Gui {
     private final JFrame frame;
     private final JButton openFolderButton;
     private final JButton consoleButton;
+    private final JLabel statsLabel;
 
     private PlayView playView;
     private DevlogView devlogView;
@@ -111,7 +114,7 @@ public class Gui {
         CRLauncher.frame = this.frame = new JFrame(title);
         this.frame.add(this.viewSelector, BorderLayout.CENTER);
 
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 5)) {
+        JPanel bottomPanel = new JPanel(/*new FlowLayout(FlowLayout.LEFT, 3, 5)*/ new MigLayout("fillx, insets 0, gap 5 5", "[left][right]", "[center]")) {
             @Override
             public void updateUI() {
                 super.updateUI();
@@ -124,7 +127,23 @@ public class Gui {
         this.openFolderButton.addActionListener(e -> {
             OperatingSystem.open(CRLauncher.getInstance().getWorkDir());
         });
-        bottomPanel.add(this.openFolderButton);
+
+        JPanel leftBottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 3, 5));
+        bottomPanel.add(leftBottomPanel);
+
+        JPanel rightBottomPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        bottomPanel.add(rightBottomPanel);
+
+        String instances = language.getString("gui.general.statsLabel.instances");
+        String time = language.getString("gui.general.statsLabel.totalPlayedFor");
+
+        this.statsLabel = new JLabel(
+            instances.replace("$$INSTANCES_COUNT$$", String.valueOf(CRLauncher.getInstance().getInstanceManager().getInstances().size())) +
+            ", " + time.replace("$$TOTAL_PLAYTIME$$", TimeUtils.getHoursMinutesSecondsLocalized(
+                CRLauncher.getInstance().getInstanceManager().getTotalPlaytime())));
+        rightBottomPanel.add(this.statsLabel);
+
+        leftBottomPanel.add(this.openFolderButton);
 
         Settings settings = CRLauncher.getInstance().getSettings();
         if (settings.showConsoleAtStartup) {
@@ -150,7 +169,7 @@ public class Gui {
             }
         });
 
-        bottomPanel.add(this.consoleButton);
+        leftBottomPanel.add(this.consoleButton);
 
         this.frame.add(bottomPanel, BorderLayout.SOUTH);
 
@@ -179,6 +198,13 @@ public class Gui {
         this.hideConsoleText = language.getString(Gui.CONSOLE_BUTTON_HIDE);
 
         this.consoleButton.setText(this.consoleOpen ? this.hideConsoleText : this.showConsoleText);
+
+        String instances = language.getString("gui.general.statsLabel.instances");
+        String time = language.getString("gui.general.statsLabel.totalPlayedFor");
+
+        this.statsLabel.setText(instances.replace("$$INSTANCES_COUNT$$", String.valueOf(CRLauncher.getInstance().getInstanceManager().getInstances().size())) +
+            ", " + time.replace("$$TOTAL_PLAYTIME$$", TimeUtils.getHoursMinutesSecondsLocalized(
+            CRLauncher.getInstance().getInstanceManager().getTotalPlaytime())));
 
         LauncherConsole.instance.reloadLanguage();
         this.playView.reloadLanguage();

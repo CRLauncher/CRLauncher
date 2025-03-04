@@ -365,6 +365,10 @@
                 "show": "Show console",
                 "hide": "Hide console"
             },
+            "statsLabel": {
+                "instances": "$$INSTANCES_COUNT$$ instances",
+                "totalPlayedFor": "played for $$TOTAL_PLAYTIME$$ in total"
+            },
             "tab": {
                 "play": "Play",
                 "devlog": "Devlog",
