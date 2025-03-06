@@ -18,20 +18,13 @@
 
 package me.theentropyshard.crlauncher.gui.view.devlog;
 
-import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.utils.CardLayoutPanel;
 import me.theentropyshard.crlauncher.gui.utils.ScrollablePanel;
-import me.theentropyshard.crlauncher.gui.utils.Worker;
-import me.theentropyshard.crlauncher.network.HttpRequest;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.io.IOException;
-import java.util.List;
 
 public class DevlogView extends JPanel {
     private final CardLayoutPanel cardPanel;
@@ -70,44 +63,16 @@ public class DevlogView extends JPanel {
         });
         this.cardPanel.addComponent(this.devlogPostView, "postView");
 
-        new Worker<Void, PostInfo>("loading devlogs") {
-            @Override
-            protected Void work() throws Exception {
-                List<PostInfo> postInfos = PostInfo.fromDocument(this.fetchDocument());
-
-                for (PostInfo postInfo : postInfos) {
-                    this.publish(postInfo);
-
-                    Thread.sleep(16L);
-                }
-
-                return null;
-            }
-
-            @Override
-            protected void process(List<PostInfo> chunks) {
-                for (PostInfo postInfo : chunks) {
-                    Runnable r = () -> {
-                        DevlogView.this.devlogPostView.load(postInfo);
-                        DevlogView.this.cardPanel.showComponent("postView");
-                    };
-
-                    DevlogView.this.addDevlogCard(new DevlogCard(postInfo, r));
-                }
-            }
-
-            private Document fetchDocument() throws IOException {
-                try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
-                    String html = request.asString("https://finalforeach.itch.io/cosmic-reach/devlog");
-
-                    return Jsoup.parse(html);
-                }
-            }
-        }.execute();
+        new DevlogLoader(this).execute();
     }
 
     public void addDevlogCard(DevlogCard card) {
         this.devlogCardsPanel.add(card);
+    }
+
+    public void loadPost(PostInfo postInfo) {
+        this.devlogPostView.load(postInfo);
+        this.cardPanel.showComponent("postView");
     }
 
     public void reloadLanguage() {
