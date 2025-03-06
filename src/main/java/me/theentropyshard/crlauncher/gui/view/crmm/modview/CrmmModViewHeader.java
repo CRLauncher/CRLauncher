@@ -18,11 +18,13 @@
 
 package me.theentropyshard.crlauncher.gui.view.crmm.modview;
 
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.crmm.ModInfo;
 import me.theentropyshard.crlauncher.crmm.model.project.Project;
 import me.theentropyshard.crlauncher.gui.components.Card;
 import me.theentropyshard.crlauncher.gui.utils.GifIcon;
+import me.theentropyshard.crlauncher.gui.utils.SvgIcon;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 import me.theentropyshard.crlauncher.gui.view.crmm.ModNoIcon;
 import me.theentropyshard.crlauncher.language.Language;
@@ -88,12 +90,30 @@ public class CrmmModViewHeader extends Card {
         } else {
             downloadsText = downloads + " " + language.getString("gui.searchCRMMModsDialog.downloads");
         }
-        JLabel downloadsLabel = new JLabel(downloadsText);
+        JLabel downloadsLabel = new JLabel(SvgIcon.get("download").derive(16, 16)
+            .setColorFilter(new FlatSVGIcon.ColorFilter(color ->
+                CRLauncher.getInstance().getSettings().darkTheme ? Color.LIGHT_GRAY : Color.BLACK)));
+        downloadsLabel.setText(String.valueOf(downloads));
+        downloadsLabel.setToolTipText(downloadsText);
         downloadsLabel.setFont(downloadsLabel.getFont().deriveFont(14.0f));
         statsPanel.add(downloadsLabel);
 
+        statsPanel.add(new JPanel() {
+            {
+                this.setPreferredSize(new Dimension(2, downloadsLabel.getPreferredSize().height));
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+
+                g.setColor(this.getBackground());
+                g.fillRect(0, 0, this.getWidth(), this.getHeight());
+            }
+        });
+
         int followers = project.getFollowers();
-        int followersLastDigit =followers % 10;
+        int followersLastDigit = followers % 10;
         String followersText;
         if (followersLastDigit == 1) {
             followersText = followers + " " + language.getString("gui.searchCRMMModsDialog.follower1");
@@ -102,10 +122,13 @@ public class CrmmModViewHeader extends Card {
         } else {
             followersText = followers + " " + language.getString("gui.searchCRMMModsDialog.followers");
         }
-        JLabel followersLabel = new JLabel(followersText);
+        JLabel followersLabel = new JLabel(SvgIcon.get("heart").derive(16, 16)
+            .setColorFilter(new FlatSVGIcon.ColorFilter(color ->
+                CRLauncher.getInstance().getSettings().darkTheme ? Color.LIGHT_GRAY : Color.BLACK)));
+        followersLabel.setText(String.valueOf(followers));
+        followersLabel.setToolTipText(followersText);
         followersLabel.setFont(followersLabel.getFont().deriveFont(14.0f));
         statsPanel.add(followersLabel);
-
 
         centerPanel.add(statsPanel, BorderLayout.SOUTH);
 
