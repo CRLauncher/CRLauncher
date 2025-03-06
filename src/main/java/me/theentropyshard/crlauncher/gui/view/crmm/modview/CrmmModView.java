@@ -72,6 +72,10 @@ public class CrmmModView extends JPanel {
         gbc.weightx = 0.75;
         centerPanel.add(this.infoView, gbc);
 
+        gbc.gridy = 1;
+        gbc.weighty = 1;
+        centerPanel.add(Box.createHorizontalBox(), gbc);
+
         this.add(centerPanel, BorderLayout.CENTER);
     }
 
