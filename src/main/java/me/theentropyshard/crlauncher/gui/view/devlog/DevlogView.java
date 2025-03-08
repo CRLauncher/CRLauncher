@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.gui.view.devlog;
 
 import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
+import me.theentropyshard.crlauncher.gui.components.SmoothScrollPane;
 import me.theentropyshard.crlauncher.gui.utils.CardLayoutPanel;
 import me.theentropyshard.crlauncher.gui.utils.ScrollablePanel;
 
@@ -50,8 +51,7 @@ public class DevlogView extends JPanel {
         JPanel borderPanel = new ScrollablePanel(new BorderLayout());
         borderPanel.add(this.devlogCardsPanel, BorderLayout.PAGE_START);
 
-        JScrollPane scrollPane = new JScrollPane(borderPanel);
-        scrollPane.setUI(new FlatSmoothScrollPaneUI());
+        SmoothScrollPane scrollPane = new SmoothScrollPane(borderPanel);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 
