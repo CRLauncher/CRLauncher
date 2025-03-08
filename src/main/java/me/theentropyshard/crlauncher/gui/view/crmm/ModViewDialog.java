@@ -30,12 +30,25 @@ import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class ModViewDialog extends AppDialog {
+    public static JDialog instance;
+
     public ModViewDialog(Project project, CosmicInstance instance, ModsTab modsTab, WorkerSupplier<?, Void> supplier) {
         super(CRLauncher.frame,
             CRLauncher.getInstance().getLanguage().getString("gui.searchCRMMModsDialog.modViewDialog.title")
                 .replace("$$MOD_NAME$$", project.getName()));
+
+        ModViewDialog.instance = this.getDialog();
+
+        this.getDialog().addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                ModViewDialog.instance = null;
+            }
+        });
 
         CrmmModView view = new CrmmModView(project, instance, modsTab, supplier);
 

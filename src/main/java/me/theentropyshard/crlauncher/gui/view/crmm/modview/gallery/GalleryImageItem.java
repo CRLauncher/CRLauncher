@@ -20,33 +20,25 @@ package me.theentropyshard.crlauncher.gui.view.crmm.modview.gallery;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 import me.theentropyshard.crlauncher.gui.components.Card;
-import me.theentropyshard.crlauncher.gui.components.MouseListenerBuilder;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.event.MouseListener;
+import java.awt.*;
 
 public class GalleryImageItem extends Card {
     public GalleryImageItem(GalleryImageInfo info) {
         this.setLayout(new MigLayout("wrap, flowy", "[center]", "[center][bottom]"));
         this.setBorder(new EmptyBorder(5, 5, 5, 5));
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         JLabel imageLabel = new JLabel(new ImageIcon(info.getThumbnail()));
         this.add(imageLabel);
 
         JLabel textLabel = new JLabel(info.getTitle());
-        textLabel.setIcon(new FlatSVGIcon(GalleryImageItem.class.getResource("/assets/images/star_"
-            + (info.isFeatured() ? "full" : "outline") + ".svg")));
+        String path = "/assets/images/star_" + (info.isFeatured() ? "full" : "outline") + ".svg";
+        textLabel.setIcon(new FlatSVGIcon(GalleryImageItem.class.getResource(path)));
         textLabel.setHorizontalTextPosition(JLabel.LEADING);
         this.add(textLabel);
-
-        MouseListener listener = new MouseListenerBuilder()
-            .mouseClicked(e -> {
-
-            })
-            .build();
-
-        this.addMouseListener(listener);
     }
 }

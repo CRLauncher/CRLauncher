@@ -25,12 +25,14 @@ public class GalleryImageInfo {
     private final String title;
     private final boolean featured;
     private final String dateCreated;
+    private final String imageUrl;
 
-    public GalleryImageInfo(BufferedImage thumbnail, String title, boolean featured, String dateCreated) {
+    public GalleryImageInfo(BufferedImage thumbnail, String title, boolean featured, String dateCreated, String imageUrl) {
         this.thumbnail = thumbnail;
         this.title = title;
         this.featured = featured;
         this.dateCreated = dateCreated;
+        this.imageUrl = imageUrl;
     }
 
     public BufferedImage getThumbnail() {
@@ -47,5 +49,9 @@ public class GalleryImageInfo {
 
     public String getDateCreated() {
         return this.dateCreated;
+    }
+
+    public String getImageUrl() {
+        return this.imageUrl;
     }
 }
