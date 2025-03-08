@@ -365,6 +365,11 @@
                 "show": "Pokaži konzolu",
                 "hide": "Sakrij konzolu"
             },
+            "statsLabel": {
+                "instances": "$$INSTANCES_COUNT$$ instances",
+                "totalPlayedFor": "played for $$TOTAL_PLAYTIME$$ in total",
+                "tipIfEmpty": "Create an instance by pressing the «+» button!"
+            },
             "tab": {
                 "play": "Igraj",
                 "devlog": "Devlog",

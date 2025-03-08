@@ -365,6 +365,11 @@
                 "show": "Buksan ang tala ng pangyayari",
                 "hide": "Taguin ang tala ng pangyayari"
             },
+            "statsLabel": {
+                "instances": "$$INSTANCES_COUNT$$ instances",
+                "totalPlayedFor": "played for $$TOTAL_PLAYTIME$$ in total",
+                "tipIfEmpty": "Create an instance by pressing the «+» button!"
+            },
             "tab": {
                 "play": "Maglaro",
                 "devlog": "Devlog",
