@@ -190,8 +190,10 @@ public class AddInstanceDialog extends AppDialog {
 
         gbc.anchor = GridBagConstraints.WEST;
 
-        this.alphasBox = new JCheckBox("Alpha");
-        this.preAlphasBox = new JCheckBox("Pre-Alpha", true);
+        Settings settings = CRLauncher.getInstance().getSettings();
+
+        this.alphasBox = new JCheckBox("Alpha", settings.alphaSelected);
+        this.preAlphasBox = new JCheckBox("Pre-Alpha", settings.preAlphaSelected);
 
         JCheckBox experimentsBox = new JCheckBox("Experiments");
 

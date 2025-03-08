@@ -83,8 +83,16 @@ public class LoadVersionsWorker extends Worker<Void, Version> {
     protected void done() {
         TableRowSorter<CosmicVersionsTableModel> rowSorter = new TableRowSorter<>(this.model);
 
-        this.dialog.getAlphasBox().addActionListener(e -> rowSorter.sort());
-        this.dialog.getPreAlphasBox().addActionListener(e -> rowSorter.sort());
+        this.dialog.getAlphasBox().addActionListener(e -> {
+            CRLauncher.getInstance().getSettings().alphaSelected = this.dialog.getAlphasBox().isSelected();
+
+            rowSorter.sort();
+        });
+        this.dialog.getPreAlphasBox().addActionListener(e -> {
+            CRLauncher.getInstance().getSettings().preAlphaSelected = this.dialog.getPreAlphasBox().isSelected();
+
+            rowSorter.sort();
+        });
 
         rowSorter.setRowFilter(RowFilter.orFilter(Arrays.asList(
             new VersionTypeRowFilter(this.dialog.getAlphasBox(), VersionType.ALPHA),

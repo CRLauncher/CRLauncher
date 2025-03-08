@@ -55,6 +55,8 @@ public class Settings {
     public boolean disableFileIntegrityCheck = false;
     public boolean showOnlyInstalledVersions;
     public int versionsSourceOption = 0;
+    public boolean alphaSelected = true;
+    public boolean preAlphaSelected = true;
 
     public Settings() {
 
