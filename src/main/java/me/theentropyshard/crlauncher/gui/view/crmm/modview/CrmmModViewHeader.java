@@ -30,12 +30,14 @@ import me.theentropyshard.crlauncher.gui.view.crmm.ModNoIcon;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.ImageUtils;
+import net.miginfocom.swing.MigLayout;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
@@ -74,7 +76,7 @@ public class CrmmModViewHeader extends Card {
 
         centerPanel.add(nameDescriptionPanel, BorderLayout.NORTH);
 
-        JPanel statsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        JPanel statsPanel = new JPanel(new MigLayout("insets 5, gap 10 10"));
         statsPanel.setBorder(new EmptyBorder(0, -5, -5, 0));
         statsPanel.setOpaque(false);
 
@@ -100,7 +102,9 @@ public class CrmmModViewHeader extends Card {
 
         statsPanel.add(new JPanel() {
             {
+                this.setMinimumSize(new Dimension(2, downloadsLabel.getPreferredSize().height));
                 this.setPreferredSize(new Dimension(2, downloadsLabel.getPreferredSize().height));
+                this.setMaximumSize(new Dimension(2, downloadsLabel.getPreferredSize().height));
             }
 
             @Override
