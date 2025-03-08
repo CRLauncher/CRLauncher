@@ -345,6 +345,12 @@ public class CosmicRunner extends Thread {
                 Log.info("You played for " + timePlayed + "!");
             }
 
+            CRLauncher.getInstance().getInstanceManager().increaseTotalPlaytime(timePlayedSeconds);
+
+            SwingUtilities.invokeLater(() -> {
+                CRLauncher.getInstance().getGui().updateStats();
+            });
+
             this.instance.updatePlaytime(timePlayedSeconds);
             this.instance.save();
 

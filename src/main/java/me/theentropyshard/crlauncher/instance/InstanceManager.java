@@ -264,7 +264,7 @@ public class InstanceManager {
         INSTANCE_EXISTS
     }
 
-    private void increaseTotalPlaytime(long seconds) {
+    public void increaseTotalPlaytime(long seconds) {
         if (seconds < 0) {
             return;
         }
@@ -272,7 +272,7 @@ public class InstanceManager {
         this.totalPlaytime += seconds;
     }
 
-    private void decreaseTotalPlaytime(long seconds) {
+    public void decreaseTotalPlaytime(long seconds) {
         if (seconds < 0) {
             return;
         }

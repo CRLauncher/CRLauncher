@@ -324,6 +324,8 @@ public class AddInstanceDialog extends AppDialog {
                         new InstanceItem(instance), chosenGroupName, false
                     );
 
+                    CRLauncher.getInstance().getGui().updateStats();
+
                     this.getDialog().dispose();
                 });
             });

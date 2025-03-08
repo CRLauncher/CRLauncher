@@ -34,7 +34,9 @@ import me.theentropyshard.crlauncher.gui.view.devlog.DevlogView;
 import me.theentropyshard.crlauncher.gui.view.playview.InstancesPanel;
 import me.theentropyshard.crlauncher.gui.view.playview.PlayView;
 import me.theentropyshard.crlauncher.gui.view.settings.SettingsView;
+import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.language.Language;
+import me.theentropyshard.crlauncher.language.LanguageSection;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import me.theentropyshard.crlauncher.utils.TimeUtils;
@@ -214,18 +216,7 @@ public class Gui {
 
         this.consoleButton.setText(this.consoleOpen ? this.hideConsoleText : this.showConsoleText);
 
-        String instances = language.getString("gui.general.statsLabel.instances");
-        String time = language.getString("gui.general.statsLabel.totalPlayedFor");
-
-        int instancesCount = CRLauncher.getInstance().getInstanceManager().getInstancesCount();
-
-        if (instancesCount == 0) {
-            this.statsLabel.setText(language.getString("gui.general.statsLabel.tipIfEmpty"));
-        } else {
-            this.statsLabel.setText(instances.replace("$$INSTANCES_COUNT$$", String.valueOf(instancesCount)) +
-                ", " + time.replace("$$TOTAL_PLAYTIME$$", TimeUtils.getHoursMinutesSecondsLocalized(
-                CRLauncher.getInstance().getInstanceManager().getTotalPlaytime())));
-        }
+        this.updateStats();
 
         LauncherConsole.instance.reloadLanguage();
         this.playView.reloadLanguage();
@@ -236,6 +227,28 @@ public class Gui {
 
         SwingUtilities.updateComponentTreeUI(this.frame);
         this.frame.pack();
+    }
+
+    public void updateStats() {
+        LanguageSection section = CRLauncher.getInstance().getLanguage().getSection("gui.general.statsLabel");
+
+        InstanceManager instanceManager = CRLauncher.getInstance().getInstanceManager();
+        int instancesCount = instanceManager.getInstancesCount();
+
+        String instances = section
+            .getString("instances")
+            .replace("$$INSTANCES_COUNT$$", String.valueOf(instancesCount));
+
+        String time = section
+            .getString("totalPlayedFor")
+            .replace("$$TOTAL_PLAYTIME$$", TimeUtils.getHoursMinutesSecondsLocalized(instanceManager.getTotalPlaytime()));
+
+
+        if (instancesCount == 0) {
+            this.statsLabel.setText(section.getString("tipIfEmpty"));
+        } else {
+            this.statsLabel.setText(instances + ", " + time);
+        }
     }
 
     public void switchTheme() {
