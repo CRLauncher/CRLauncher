@@ -41,7 +41,7 @@ public class CosmicArchiveVersionList extends VersionList {
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
             RawVersionList versionList = Json.parse(request.asString(this.url), RawVersionList.class);
 
-            this.latestVersion = ListUtils.search(versionList.getVersions(), v -> v.getId().equals(versionList.getLatest().getPreAlpha()));
+            this.latestVersion = ListUtils.search(versionList.getVersions(), v -> v.getId().equals(versionList.getLatest().getAlpha()));
 
             versionList.getVersions().forEach(this::addVersion);
         }
@@ -61,11 +61,18 @@ public class CosmicArchiveVersionList extends VersionList {
         }
 
         public static final class Latest {
+            @SerializedName("alpha")
+            private String alpha;
+
             @SerializedName("pre_alpha")
             private String preAlpha;
 
             public Latest() {
 
+            }
+
+            public String getAlpha() {
+                return this.alpha;
             }
 
             public String getPreAlpha() {
