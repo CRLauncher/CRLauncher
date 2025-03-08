@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.gui.view.settings;
 
 import com.formdev.flatlaf.FlatClientProperties;
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.gui.components.SmoothScrollPane;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
@@ -110,12 +111,11 @@ public class SettingsView extends JPanel {
 
         VerticalScrollJPanel root = new VerticalScrollJPanel(new GridBagLayout());
 
-        JScrollPane scrollPane = new JScrollPane(
+        SmoothScrollPane scrollPane = new SmoothScrollPane(
             root,
             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
-        scrollPane.setUI(new FlatSmoothScrollPaneUI());
         scrollPane.setHorizontalScrollBar(null);
         scrollPane.getVerticalScrollBar().setPreferredSize(new Dimension(0, 0));
         this.add(scrollPane, BorderLayout.CENTER);
