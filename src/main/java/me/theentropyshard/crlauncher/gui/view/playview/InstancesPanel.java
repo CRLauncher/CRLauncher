@@ -18,9 +18,9 @@
 
 package me.theentropyshard.crlauncher.gui.view.playview;
 
-import me.theentropyshard.crlauncher.gui.FlatSmoothScrollPaneUI;
 import me.theentropyshard.crlauncher.gui.components.AddInstanceItem;
 import me.theentropyshard.crlauncher.gui.components.InstanceItem;
+import me.theentropyshard.crlauncher.gui.components.SmoothScrollPane;
 import me.theentropyshard.crlauncher.gui.layouts.WrapLayout;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ import java.awt.*;
 public class InstancesPanel extends JPanel {
     private final AddInstanceItem addInstanceItem;
     private final JPanel instancesPanel;
-    private final JScrollPane scrollPane;
+    private final SmoothScrollPane scrollPane;
 
     public InstancesPanel(AddInstanceItem addInstanceItem) {
         super(new BorderLayout());
@@ -41,13 +41,11 @@ public class InstancesPanel extends JPanel {
         JPanel borderPanel = new JPanel(new BorderLayout());
         borderPanel.add(this.instancesPanel, BorderLayout.CENTER);
 
-        this.scrollPane = new JScrollPane(
+        this.scrollPane = new SmoothScrollPane(
             borderPanel,
             JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED,
             JScrollPane.HORIZONTAL_SCROLLBAR_NEVER
         );
-        this.scrollPane.setUI(new FlatSmoothScrollPaneUI());
-        this.scrollPane.setBorder(null);
         this.scrollPane.getVerticalScrollBar().setUnitIncrement(8);
 
         this.add(this.scrollPane, BorderLayout.CENTER);
