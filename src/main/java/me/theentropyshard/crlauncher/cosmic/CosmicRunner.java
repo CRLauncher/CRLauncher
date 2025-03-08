@@ -279,7 +279,7 @@ public class CosmicRunner extends Thread {
                     Set<String> customJvmFlags = this.instance.getCustomJvmFlags();
                     if (customJvmFlags != null && !customJvmFlags.isEmpty()) {
                         for (String customJvmFlag : customJvmFlags) {
-                            if (customJvmFlag.isEmpty()) {
+                            if (customJvmFlag.trim().isEmpty()) {
                                 continue;
                             }
 
@@ -295,7 +295,7 @@ public class CosmicRunner extends Thread {
                 } else {
                     String[] flags = CosmicRunner.getBuiltinFlags(currentFlagsOption);
                     for (String customJvmFlag : flags) {
-                        if (customJvmFlag.isEmpty()) {
+                        if (customJvmFlag.trim().isEmpty()) {
                             continue;
                         }
 
