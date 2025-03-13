@@ -68,11 +68,10 @@ public class ProgressDialog extends AppDialog implements ProgressListener {
         this.progressBar.setMaximum((int) contentLength);
         this.progressBar.setValue((int) downloadedBytes);
 
-        String current = String.valueOf(MathUtils.round(downloadedBytes / 1024.0D / 1024.0D, 2));
-        String total = contentLength == 0 ? "<unknown>" :
-                String.valueOf(MathUtils.round(contentLength / 1024.0D / 1024.0D, 2));
+        double downloaded = MathUtils.round(downloadedBytes / 1024.0D / 1024.0D, 2);
+        double total = MathUtils.round(contentLength / 1024.0D / 1024.0D, 2);
 
-        this.progressBar.setString(current + " MiB / " + total + " MiB");
+        this.progressBar.setString(String.format("%.2f MiB / %.2f MiB", downloaded, total));
     }
 
     public void setStage(String stage) {
