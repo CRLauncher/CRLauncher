@@ -34,9 +34,9 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class PatchCosmicLauncher extends AbstractCosmicLauncher {
-    private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.5");
+    private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.7");
     private static final String CR_LOADER_JAR = "CRLoader-" + PatchCosmicLauncher.CR_LOADER_VERSION.toVersionString() + ".jar";
-    private static final String CR_LOADER_SHA256 = "0086752ef682c5704208e932310e269181dcee2c766bcf20c48642f4860f266e";
+    private static final String CR_LOADER_SHA256 = "32c0b16d75627e4ee19b3bbc25d77c8f2fcb1da94002bb586832cb404371ce3b";
 
     private boolean changeSaveLocation;
     private String customWindowTitle;
@@ -47,6 +47,8 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
     private boolean maximized;
     private int windowWidth;
     private int windowHeight;
+    private String joinWorldName;
+    private String joinServerAddress;
 
     public PatchCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath) {
         super(javaPath, runDir, gameFilesLocation, clientPath);
@@ -138,6 +140,21 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
             this.defineProperty(new SystemProperty("crloader.windowHeight", this.windowHeight));
         }
 
+        if (this.joinWorldName != null) {
+            SystemProperty property = new SystemProperty("crloader.joinWorldName", this.joinWorldName) {
+                @Override
+                public String asJvmArg() {
+                    return "\"" + super.asJvmArg() + "\"";
+                }
+            };
+
+            this.defineProperty(property);
+        }
+
+        if (this.joinServerAddress != null) {
+            this.defineProperty(new SystemProperty("crloader.joinServerAddress", this.joinServerAddress));
+        }
+
         super.buildCommand(command);
 
         command.add("-javaagent:" + this.setupLoader());
@@ -205,5 +222,13 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
 
     public void setWindowHeight(int windowHeight) {
         this.windowHeight = windowHeight;
+    }
+
+    public void setJoinWorldName(String joinWorldName) {
+        this.joinWorldName = joinWorldName;
+    }
+
+    public void setJoinServerAddress(String joinServerAddress) {
+        this.joinServerAddress = joinServerAddress;
     }
 }

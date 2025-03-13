@@ -93,6 +93,13 @@
                     "borderName": "Cosmic Reach ship build",
                     "autoUpdateToLatest": "Automatically update to the ship build"
                 },
+                "quickPlay": {
+                    "borderName": "Quick Play",
+                    "disabled": "Disabled",
+                    "world": "World",
+                    "server": "Server",
+                    "serverPlaceholder": "Enter server address"
+                },
                 "windowSettings": {
                     "borderName": "Window",
                     "customTitle": {

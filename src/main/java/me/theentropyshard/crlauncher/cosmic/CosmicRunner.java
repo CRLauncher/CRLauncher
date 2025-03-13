@@ -273,6 +273,16 @@ public class CosmicRunner extends Thread {
                     patchLauncher.setWindowHeight(this.instance.getCosmicWindowHeight());
                 }
 
+                if (!this.instance.isQuickPlayWorld() || !this.instance.isQuickPlayServer()) {
+                    if (this.instance.isQuickPlayWorld()) {
+                        patchLauncher.setJoinWorldName(this.instance.getQuickPlayWorldName());
+                    }
+
+                    if (this.instance.isQuickPlayServer()) {
+                        patchLauncher.setJoinServerAddress(this.instance.getQuickPlayServerAddress());
+                    }
+                }
+
                 int currentFlagsOption = this.instance.getCurrentFlagsOption();
 
                 if (currentFlagsOption == 0) {

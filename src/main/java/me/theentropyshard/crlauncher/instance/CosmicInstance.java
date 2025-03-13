@@ -54,6 +54,12 @@ public class CosmicInstance extends JavaInstance {
     private int cosmicWindowHeight = 576;
     private String customWindowTitle;
 
+    private boolean quickPlayWorld;
+    private String quickPlayWorldName;
+
+    private boolean quickPlayServer;
+    private String quickPlayServerAddress;
+
     private final List<Mod> jarMods;
     private final List<Mod> dataMods;
     private final List<Mod> fabricMods;
@@ -245,6 +251,38 @@ public class CosmicInstance extends JavaInstance {
 
     public Path getDisabledJarModsDir() {
         return this.getWorkDir().resolve(CosmicInstance.DISABLED_JARMODS_DIR_NAME);
+    }
+
+    public boolean isQuickPlayWorld() {
+        return this.quickPlayWorld;
+    }
+
+    public void setQuickPlayWorld(boolean quickPlayWorld) {
+        this.quickPlayWorld = quickPlayWorld;
+    }
+
+    public String getQuickPlayWorldName() {
+        return this.quickPlayWorldName;
+    }
+
+    public void setQuickPlayWorldName(String quickPlayWorldName) {
+        this.quickPlayWorldName = quickPlayWorldName;
+    }
+
+    public boolean isQuickPlayServer() {
+        return this.quickPlayServer;
+    }
+
+    public void setQuickPlayServer(boolean quickPlayServer) {
+        this.quickPlayServer = quickPlayServer;
+    }
+
+    public String getQuickPlayServerAddress() {
+        return this.quickPlayServerAddress;
+    }
+
+    public void setQuickPlayServerAddress(String quickPlayServerAddress) {
+        this.quickPlayServerAddress = quickPlayServerAddress;
     }
 
     public List<Mod> getJarMods() {

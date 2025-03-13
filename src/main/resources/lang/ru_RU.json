@@ -93,6 +93,13 @@
                     "borderName": "Версия Cosmic Reach",
                     "autoUpdateToLatest": "Автоматически обновлять до последней версии"
                 },
+                "quickPlay": {
+                    "borderName": "Быстрая игра",
+                    "disabled": "Отключено",
+                    "world": "Мир",
+                    "server": "Сервер",
+                    "serverPlaceholder": "Введите адрес сервера"
+                },
                 "windowSettings": {
                     "borderName": "Окно",
                     "customTitle": {

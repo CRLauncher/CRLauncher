@@ -33,6 +33,8 @@ import me.theentropyshard.crlauncher.gui.utils.*;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.language.LanguageSection;
+import me.theentropyshard.crlauncher.utils.FileUtils;
+import me.theentropyshard.crlauncher.utils.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -41,6 +43,8 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -169,6 +173,121 @@ public class MainTab extends Tab {
 
             gbc.gridy++;
             panel.add(crVersionSettings, gbc);
+        }
+
+        {
+            LanguageSection section = language.getSection("gui.instanceSettingsDialog.mainTab.quickPlay");
+
+            if (instance.isQuickPlayWorld() && instance.isQuickPlayServer()) {
+                instance.setQuickPlayWorld(false);
+                instance.setQuickPlayServer(false);
+            }
+
+            JPanel quickPlay = new JPanel(new GridLayout(3, 2));
+            quickPlay.setBorder(new TitledBorder(section.getString("borderName")));
+
+            ButtonGroup buttonGroup = new ButtonGroup();
+
+            JRadioButton quickPlayDisabledButton = new JRadioButton(section.getString("disabled"));
+            quickPlayDisabledButton.setSelected(!instance.isQuickPlayWorld() && !instance.isQuickPlayServer());
+            quickPlay.add(quickPlayDisabledButton);
+            quickPlay.add(Box.createHorizontalBox());
+            buttonGroup.add(quickPlayDisabledButton);
+
+            JRadioButton joinWorldButton = new JRadioButton(section.getString("world"));
+            joinWorldButton.setSelected(instance.isQuickPlayWorld());
+            quickPlay.add(joinWorldButton);
+            buttonGroup.add(joinWorldButton);
+
+            DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+
+            JComboBox<String> worlds = new JComboBox<>(model);
+            worlds.addItemListener(e -> {
+                if (e.getStateChange() != ItemEvent.SELECTED) {
+                    return;
+                }
+
+                instance.setQuickPlayWorldName(String.valueOf(worlds.getSelectedItem()));
+            });
+            worlds.setEnabled(instance.isQuickPlayWorld());
+            quickPlay.add(worlds);
+
+            JRadioButton joinServerButton = new JRadioButton(section.getString("server"));
+            joinServerButton.setSelected(instance.isQuickPlayServer());
+            quickPlay.add(joinServerButton);
+            buttonGroup.add(joinServerButton);
+
+            JTextField serverAddressField = new JTextField();
+            serverAddressField.getDocument().addDocumentListener(new SimpleDocumentListener(() -> {
+                instance.setQuickPlayServerAddress(serverAddressField.getText());
+            }));
+            if (StringUtils.notNullNotEmpty(instance.getQuickPlayServerAddress())) {
+                serverAddressField.setText(instance.getQuickPlayServerAddress());
+            }
+            serverAddressField.setEnabled(instance.isQuickPlayServer());
+            serverAddressField.putClientProperty(FlatClientProperties.PLACEHOLDER_TEXT, section.getString("serverPlaceholder"));
+            quickPlay.add(serverAddressField);
+
+            quickPlayDisabledButton.addActionListener(e -> {
+                if (quickPlayDisabledButton.isSelected()) {
+                    instance.setQuickPlayWorld(false);
+                    instance.setQuickPlayServer(false);
+
+                    worlds.setEnabled(false);
+                    serverAddressField.setEnabled(false);
+                }
+            });
+
+            joinWorldButton.addActionListener(e -> {
+                instance.setQuickPlayWorld(true);
+                instance.setQuickPlayServer(false);
+
+                worlds.setEnabled(true);
+                serverAddressField.setEnabled(false);
+            });
+
+            joinServerButton.addActionListener(e -> {
+                instance.setQuickPlayWorld(false);
+                instance.setQuickPlayServer(true);
+
+                worlds.setEnabled(false);
+                serverAddressField.setEnabled(true);
+            });
+
+            new Worker<Void, String>("loading worlds") {
+                @Override
+                protected Void work() throws Exception {
+                    Path worldsDir = instance.getWorldsDir();
+
+                    if (!Files.exists(worldsDir)) {
+                        return null;
+                    }
+
+                    List<Path> worldDirs = FileUtils.list(worldsDir);
+
+                    for (Path worldDir : worldDirs) {
+                        if (!Files.isDirectory(worldDir)) {
+                            continue;
+                        }
+
+                        if (!Files.exists(worldDir.resolve("worldInfo.json"))) {
+                            continue;
+                        }
+
+                        this.publish(worldDir.getFileName().toString());
+                    }
+
+                    return null;
+                }
+
+                @Override
+                protected void process(List<String> worlds) {
+                    worlds.forEach(model::addElement);
+                }
+            }.execute();
+
+            gbc.gridy++;
+            panel.add(quickPlay, gbc);
         }
 
         {
