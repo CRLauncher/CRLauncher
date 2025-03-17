@@ -349,8 +349,8 @@
                 "textFieldPlaceholder": "Erwünschten Benutzernamen eingeben"
             },
             "itch": {
-                "tabName": "Itch.io",
-                "textFieldPlaceholder": "Itch.io API-Key eingeben"
+                "tabName": "itch.io",
+                "textFieldPlaceholder": "itch.io API-Key eingeben"
             },
             "accountExists": "Ein Account mit dem Namen '$$ACCOUNT_NAME$$' existiert bereits",
             "addButton": "Hinzufügen"
@@ -438,7 +438,7 @@
                 "versionsSourceCombo": {
                     "options": {
                         "cosmicArchive": "Cosmic Archive",
-                        "itch": "Itch"
+                        "itch": "itch"
                     }
                 }
             },

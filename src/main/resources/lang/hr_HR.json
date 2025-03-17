@@ -349,8 +349,8 @@
                 "textFieldPlaceholder": "Upiši željeno ime"
             },
             "itch": {
-                "tabName": "Itch.io",
-                "textFieldPlaceholder": "Upiši Itch.io API ključ"
+                "tabName": "itch.io",
+                "textFieldPlaceholder": "Upiši itch.io API ključ"
             },
             "accountExists": "Račun s imenom '$$ACCOUNT_NAME$$' već postoji",
             "addButton": "Dodaj"
@@ -438,7 +438,7 @@
                 "versionsSourceCombo": {
                     "options": {
                         "cosmicArchive": "Cosmic Arhiva",
-                        "itch": "Itch"
+                        "itch": "itch"
                     }
                 }
             },

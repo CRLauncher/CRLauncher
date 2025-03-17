@@ -324,9 +324,9 @@
                     "options": {
                         "relevance": "Релевантности",
                         "downloads": "Кол-ву скачиваний",
-                        "follow_count":  "Кол-ву фолловеров",
+                        "follow_count": "Кол-ву фолловеров",
                         "recently_updated": "Дате обновления",
-                        "recently_published":  "Дате публикации"
+                        "recently_published": "Дате публикации"
                     }
                 },
                 "showPerPage": {
@@ -349,8 +349,8 @@
                 "textFieldPlaceholder": "Введите желаемое имя"
             },
             "itch": {
-                "tabName": "Itch.io",
-                "textFieldPlaceholder": "Введите API-ключ Itch.io"
+                "tabName": "itch.io",
+                "textFieldPlaceholder": "Введите API-ключ itch.io"
             },
             "accountExists": "Аккаунт с ником '$$ACCOUNT_NAME$$' уже добавлен",
             "addButton": "Добавить"
@@ -438,7 +438,7 @@
                 "versionsSourceCombo": {
                     "options": {
                         "cosmicArchive": "Cosmic Archive",
-                        "itch": "Itch"
+                        "itch": "itch"
                     }
                 }
             },
