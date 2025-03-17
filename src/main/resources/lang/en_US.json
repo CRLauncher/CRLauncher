@@ -38,7 +38,7 @@
                 "ramMinCannotBeLess512MB": "Minimum amount of RAM cannot be less than 512 MiB",
                 "deleteWorldSure": "Are you sure that you want to delete world '$$WORLD_NAME$$'?",
                 "couldNotDeleteWorld": "Could not delete world '$$WORLD_NAME$$' located at $$WORLD_DIR$$",
-                "couldNotUpdateMod": "Could not update $$MOD_LOADER$$ mod '$$MOD_ID$$"
+                "couldNotUpdateMod": "Could not update $$MOD_LOADER$$ mod '$$MOD_ID$$'"
             },
             "mods": {
                 "modAddedName": "Mod with name '$$MOD_NAME$$' already added!",
