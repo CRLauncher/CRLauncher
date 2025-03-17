@@ -349,8 +349,8 @@
                 "textFieldPlaceholder": "Ilagay ang ginustong ngalan ng gagamit"
             },
             "itch": {
-                "tabName": "Itch.io",
-                "textFieldPlaceholder": "Ilagay ang susi ng Interpas sa Pagpoprograma ng Aplikasyong Itch.io"
+                "tabName": "itch.io",
+                "textFieldPlaceholder": "Ilagay ang susi ng Interpas sa Pagpoprograma ng Aplikasyong itch.io"
             },
             "accountExists": "Mayroon ng akawnt na nagngangalang '$$ACCOUNT_NAME$$'",
             "addButton": "Dumdagdag"
@@ -438,7 +438,7 @@
                 "versionsSourceCombo": {
                     "options": {
                         "cosmicArchive": "Cosmic Archive",
-                        "itch": "Itch"
+                        "itch": "itch"
                     }
                 }
             },
