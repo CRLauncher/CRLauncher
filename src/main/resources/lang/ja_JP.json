@@ -1,0 +1,546 @@
+{
+    "metaInfo": {
+        "name": "Japanese",
+        "displayName": "日本語"
+    },
+    "messages": {
+        "gui": {
+            "error": "エラー",
+            "errorParsingModGameMessage": "<html>名前空間<b>$$MOD_NAMESPACE$$</b>のModから<b>$$FILE_PATH$$</b>のファイルの解析中にエラーが発生しました。Modを確認してください！</html>",
+            "errorTooMuchMemoryGiven": "JVMはこのインスタンスに設定されたメモリ量を割り当てることができませんでした（最小：$$MIN_MEMORY$$MB，最大：$$MAX_MEMORY$$MBあ）。RAMを増やすかメモリ量をインスタンス設定で減らしてください。",
+            "gameOutOfMemory": "ゲームのメモリが不足しました。インスタンス設定でメモリの量を増やしてください。",
+            "addAccountDialog": {
+                "offline": {
+                    "enterUsername": "ユーザー名を入力"
+                },
+                "itch": {
+                    "apiKeyCannotBeEmpty": "APIキーは空にできません"
+                }
+            },
+            "accountDelete": {
+                "error": "アカウント「$$ACCOUNT_NAME$$」を削除できませんでした"
+            },
+            "playView": {
+                "deleteInstanceConfirm": "本当にインスタンス「$$INSTANCE_NAME$$」を削除しますか？",
+                "cannotDeleteInstance": "$$INSTANCE_DIR$$を削除できませんでした",
+                "invalidInstanceName": "無効な名前が指定されました！有効な名前を作成しました。"
+            },
+            "addInstanceDialog": {
+                "instanceNameCannotBeEmpty": "インスタンス名は空にできません！",
+                "groupNameCannotBeEmpty": "グループ名は空にできません！",
+                "cosmicVersionNotSelected": "Cosmic Reachバージョンが選択せれていません！",
+                "unableToCreateInstance": "新しいインスタンスがの作成ができませんでした",
+                "doesNotHaveClient": "$$CR_VERSION$$はクライアントのバージョンがありません"
+            },
+            "instanceSettingsDialog": {
+                "couldNotLoadVersions": "バージョンを取得できませんでした",
+                "ramMinCannotBeLargerMax": "RAMの最小割り当て量は最大割り当て量より大きくできません",
+                "ramMinCannotBeLess512MB": "RAMの最小割り当て量は512MiB未満にできません",
+                "deleteWorldSure": "本当にワールド「$$WORLD_NAME$$」を削除しますか？",
+                "couldNotDeleteWorld": "$$WORLD_DIR$$にあるワールド「$$WORLD_NAME$$」を削除できませんでした",
+                "couldNotUpdateMod": "$$MOD_LOADER$$のMod「$$MOD_ID$$」を更新できませんでした"
+            },
+            "mods": {
+                "modAddedName": "「$$MOD_NAME$$」の名前のModは既に追加されています！",
+                "modAddedId": "「$$MOD_ID$$」のIDのModは既に追加されています！",
+                "modInvalid": "$$MOD_PATH$$は有効な$$MOD_LOADER$$のModではありません！"
+            },
+            "progressDialog": {
+                "nonexistentVersion": "バージョン$$VERSION_ID$$は$$VERSION_LIST$$に存在しません"
+            }
+        }
+    },
+    "gui": {
+        "instanceItem": {
+            "contextMenu": {
+                "edit": "編集",
+                "changeGroup": "グループ変更",
+                "icon": "アイコン",
+                "rename": "名前を編集",
+                "delete": "削除",
+                "openInstanceFolder": "インスタンスのフォルダーを開く",
+                "openCosmicFolder": "Cosmic Reachのフォルダーを開く",
+                "killProcess": "プロセスを強制終了する"
+            }
+        },
+        "changeGroupDialog": {
+            "title": "$$INSTANCE_NAME$$のグループを変更する",
+            "label": "既存のグループを選択するか新しいグループ名を入力して、完了したらEnterキーを押してください。"
+        },
+        "modFilesDialog": {
+            "name": "名前",
+            "compatibility": "互換性",
+            "datePublished": "公開日",
+            "downloads": "ダウンロード数"
+        },
+        "modUpdateDialog": {
+            "title": "Modの更新中",
+            "downloading": "ダウンロード中"
+        },
+        "instanceSettingsDialog": {
+            "title": "インスタンス設定ー$$INSTANCE_NAME$$",
+            "exportInstance": {
+                "exportButton": "エクスポート",
+                "crliFiles": "CRLauncherインスタンスファイル（*.crli）",
+                "title": "インスタンスのエクスポート",
+                "success": "インスタンスのエクスポートに成功しました！",
+                "failure": "インスタンスをエクスポートできませんでした",
+                "wrongExtension": "エクスポートするファイルは.crliで終わる必要があります"
+            },
+            "mainTab": {
+                "name": "メイン",
+                "cosmicReachVersion": {
+                    "borderName": "Cosmic Reachバージョン",
+                    "autoUpdateToLatest": "自動で最新のアップデートに更新する"
+                },
+                "quickPlay": {
+                    "borderName": "クイックプレイ",
+                    "disabled": "無効",
+                    "world": "ワールド",
+                    "server": "サーバー",
+                    "serverPlaceholder": "サーバーアドレスを入力"
+                },
+                "windowSettings": {
+                    "borderName": "ウィンドウ",
+                    "customTitle": {
+                        "label": "ウィンドウのタイトル",
+                        "textFieldPlaceholder": "ウィンドウのタイトルをここに入力"
+                    },
+                    "startup": {
+                        "fullscreen": "全画面表示",
+                        "maximized": "最大化",
+                        "customSize": {
+                            "radioButton": "ウィンドウのサイズ",
+                            "width": "ウィンドウの幅：",
+                            "height": "ウィンドウの高さ："
+                        }
+                    }
+                },
+                "environmentVariables": {
+                    "borderName": "<html>環境変数　セミコロンで区切ってください（例）：<b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
+                }
+            },
+            "javaTab": {
+                "name": "Java",
+                "javaInstallation": {
+                    "borderName": "Javaインストール",
+                    "textFieldPlaceholder": "$$JAVAW$$のファイルパス",
+                    "current": "$$CURRENT_INSTALLATION$$（現在）",
+                    "browse": "参照..."
+                },
+                "memorySettings": {
+                    "borderName": "メモリ設定",
+                    "minimum": "最小メモリ割り当て（MB）",
+                    "maximum": "最大メモリ割り当て（MB）"
+                },
+                "jvmFlags": {
+                    "borderName": "JVMフラグ",
+                    "options": {
+                        "customFlags": "カスタム",
+                        "optimizedFlags1": "最適化されたフラグ＃１（クライアントとサーバー，G1 GC）",
+                        "optimizedFlags2": "最適化されたフラグ＃２（クライアント，G1 GC）"
+                    },
+                    "notice": "JVMフラグをここに入力してください。スペースで区切ってください"
+                }
+            },
+            "modsTab": {
+                "name": "Mod",
+                "modLoader": {
+                    "borderName": "Modローダー",
+                    "options": {
+                        "vanilla": "バニラ",
+                        "fabric": "Fabric",
+                        "cosmicQuilt": "Cosmic Quilt",
+                        "puzzle": "Puzzle"
+                    }
+                },
+                "loaderVersion": {
+                    "borderName": "Modローダーのバージョン"
+                },
+                "modpack": "Modパック",
+                "customModpack": "カスタム",
+                "modsTable": {
+                    "borderName": "Mod",
+                    "vanilla": {
+                        "modFolder": "Modフォルダー",
+                        "addModButton": "データModを追加する",
+                        "deleteModButton": "データModを削除する"
+                    },
+                    "fabric": {
+                        "modName": "名前",
+                        "modVersion": "バージョン",
+                        "modDescription": "概要",
+                        "modActive": "有効",
+                        "addModButton": "FabricのModを追加する",
+                        "deleteModButton": "FabricのModを削除する"
+                    },
+                    "cosmicQuilt": {
+                        "modName": "名前",
+                        "modVersion": "バージョン",
+                        "modDescription": "概要",
+                        "modActive": "有効",
+                        "addModButton": "QuiltのModを追加する",
+                        "deleteModButton": "QuiltのModを削除する"
+                    },
+                    "puzzle": {
+                        "modName": "名前",
+                        "modVersion": "バージョン",
+                        "modDescription": "概要",
+                        "modActive": "有効",
+                        "addModButton": "PuzzleのModを追加する",
+                        "deleteModButton": "PuzzleのModを削除する"
+                    }
+                },
+                "openModsFolder": "modsフォルダーを開く",
+                "searchModsCRMM": "CRMMでModを検索する",
+                "updateModsCheckbox": "実行する前にModを更新する",
+                "updateModsButton": "Modを更新する"
+            },
+            "jarModsTab": {
+                "name": "Jar Mod",
+                "modName": "名前",
+                "modActive": "有効",
+                "addModButton": "Jar Modを追加する",
+                "deleteModButton": "Jar Modを削除する"
+            },
+            "worldsTab": {
+                "name": "ワールド",
+                "table": {
+                    "worldName": "名前",
+                    "worldSeed": "シード",
+                    "lastPlayed": "最後のプレイ",
+                    "createdAt": "作成日"
+                },
+                "contextMenu": {
+                    "copySeed": "シードをコピーする",
+                    "exportAsZip": "ZIPファイルとしてエクスポートする",
+                    "delete": "削除"
+                },
+                "exportWorld": {
+                    "title": "ワールドのエクスポート",
+                    "success": "ワールド「$$WORLD_NAME$$」のエクスポートに成功しました",
+                    "failure": "ワールド「$$WORLD_NAME$$」のエクスポートできませんでした"
+                },
+                "deletingWorld": "ワールドの削除中",
+                "openWorldsDirButton": "worldsフォルダーを開く"
+            },
+            "screenshotsTab": {
+                "name": "スクリーンショット",
+                "copyImage": "画像をコピー",
+                "copyFile": "ファイルをコピー",
+                "delete": "削除",
+                "rename": "名前を編集",
+                "renameMessage": "ファイルの新しい名前を入力してください",
+                "openScreenshotsDirButton": "screenshotsフォルダーを開く"
+            },
+            "gameLogTab": {
+                "name": "ゲームのログ",
+                "search": "検索",
+                "find": "次の一致項目",
+                "upload": "アップロード",
+                "copyFile": "ファイルをコピー",
+                "copyText": "テキストをコピー",
+                "clear": "クリア",
+                "title": "アップロード",
+                "uploading": "McLogsにログをアップロード中",
+                "failed": "ログをアップロードできませんでした",
+                "largeLog": "ログのサイズが大きいため、ログを切り捨てます",
+                "successTitle": "ログのアップロード",
+                "successMessage": "ログのアップロードを成功しました！リンク：$$LINK$$（クリップボードにコピーされました）"
+            }
+        },
+        "searchCRMMModsDialog": {
+            "title": "CRMMでModを検索する",
+            "download1": "ダウンロード",
+            "downloads234": "ダウンロード",
+            "downloads": "ダウンロード",
+            "follower1": "フォロー",
+            "followers234": "フォロー",
+            "followers": "フォロー",
+            "downloadButton": "ダウンロード",
+            "primary": "プライマリー",
+            "otherFiles": "その他のファイル",
+            "modViewDialog": {
+                "title": "Modー$$MOD_NAME$$",
+                "sideView": {
+                    "compatibilityCard": {
+                        "title": "互換性",
+                        "gameVersions": "ゲームのバージョン",
+                        "loaders": "ローダー",
+                        "environments": "環境",
+                        "clientSide": "クライアント",
+                        "serverSide": "サーバー"
+                    },
+                    "linksCard": {
+                        "title": "リンク",
+                        "issueTracker": "問題追跡",
+                        "sourceCode": "ソースコード",
+                        "wiki": "Wiki",
+                        "discordInvite": "Discordサーバー"
+                    },
+                    "featuredVersionsCard": {
+                        "title": "注目バージョン"
+                    },
+                    "creatorsCard": {
+                        "title": "作成者"
+                    },
+                    "detailsCard": {
+                        "title": "詳細",
+                        "license": "ライセンス",
+                        "published": "$$DATE$$に公開",
+                        "updated": "$$DATE$$に更新"
+                    }
+                },
+                "infoView": {
+                    "tabsCard": {
+                        "description": "概要",
+                        "gallery": "ギャラリー",
+                        "changelog": "更新履歴",
+                        "versions": "バージョン"
+                    }
+                }
+            },
+            "selectLoadersDialog": {
+                "title": "ローダーの選択",
+                "message": "インストールするModのローダーを選択する"
+            },
+            "navbar": {
+                "mods": "Mod",
+                "datamods": "データMod",
+                "resourcePacks": "リソースパック",
+                "shaders": "シェーダー",
+                "modpacks": "Modパック"
+            },
+            "search": {
+                "inputPlaceholder": {
+                    "searchMods": "Modを検索...",
+                    "searchDatamods": "データModを検索...",
+                    "searchResourcePacks": "リソースパックを検索...",
+                    "searchShaders": "シェーダーを検索...",
+                    "searchModpacks": "Modパックを検索..."
+                },
+                "sortBy": {
+                    "label": "並び替え",
+                    "options": {
+                        "relevance": "関連性順",
+                        "downloads": "ダウンロード数順",
+                        "follow_count": "フォロー数順",
+                        "recently_updated": "更新日順",
+                        "recently_published": "公開日順"
+                    }
+                },
+                "showPerPage": {
+                    "label": "件数",
+                    "options": {
+                        "five": "5",
+                        "ten": "10",
+                        "fifteen": "15",
+                        "twenty": "20",
+                        "fifty": "50",
+                        "oneHundred": "100"
+                    }
+                }
+            }
+        },
+        "addAccountDialog": {
+            "title": "アカウントを追加",
+            "offline": {
+                "tabName": "オフライン",
+                "textFieldPlaceholder": "ユーザー名を入力"
+            },
+            "itch": {
+                "tabName": "itch.io",
+                "textFieldPlaceholder": "itch.ioのAPIキーを入力"
+            },
+            "accountExists": "「$$ACCOUNT_NAME$$」の名前のアカウントは既に存在します",
+            "addButton": "追加"
+        },
+        "console": {
+            "title": "CRLauncherコンソール",
+            "scrollDown": "下にスクロール",
+            "copyButton": "コピー",
+            "clearButton": "クリア"
+        },
+        "general": {
+            "yes": "はい",
+            "no": "いいえ",
+            "ok": "OK",
+            "cancel": "キャンセル",
+            "archives": "アーカイブ",
+            "openLauncherFolder": "ランチャーのフォルダーを開く",
+            "consoleButton": {
+                "show": "コンソールを表示する",
+                "hide": "コンソールを非表示する"
+            },
+            "statsLabel": {
+                "instances": "$$INSTANCES_COUNT$$個のインスタンス",
+                "totalPlayedFor": "$$TOTAL_PLAYTIME$$の合計プレイ時間",
+                "tipIfEmpty": "«+»ボタンを押してインスタンスを作ってください！"
+            },
+            "tab": {
+                "play": "プレイ",
+                "devlog": "開発ログ",
+                "accounts": "アカウント",
+                "settings": "設定",
+                "about": "情報"
+            }
+        },
+        "playView": {
+            "instanceGroup": "インスタンスのグループ",
+            "account": "アカウント",
+            "deleteInstanceTitle": "インスタンスを削除する",
+            "renameInstanceDialog": {
+                "title": "インスタンスの名前を編集",
+                "message": "新しい名前を入力"
+            },
+            "lastPlayedFor": "前回のプレイ時間：",
+            "totalPlayedFor": "合計プレイ時間：",
+            "running": "実行中"
+        },
+        "accountsView": {
+            "addAccountButton": "クリックしてアカウントを追加する",
+            "deleteConfirmation": {
+                "title": "アカウントの削除",
+                "message": "本当にアカウント「$$ACCOUNT_NAME$$」を削除しますか？"
+            }
+        },
+        "settingsView": {
+            "themeSettings": {
+                "borderName": "モード",
+                "light": "ライトモード",
+                "dark": "ダークモード"
+            },
+            "ui": {
+                "borderName": "UI",
+                "dialogPosition": {
+                    "label": "ダイアログボックスの位置",
+                    "options": {
+                        "relativeToParent": "親ウィンドウを基準",
+                        "alwaysCentered": "常に中央"
+                    }
+                },
+                "amountOfTime": "リリース日から経過した時間を表示",
+                "showConsoleAtStartup": "起動時にコンソールを表示"
+            },
+            "storageSettings": {
+                "borderName": "ストレージ",
+                "versionsPathLabel": "バージョンのディレクトリパス",
+                "versionsPathFieldPlaceholder": "<ランチャーのフォルダー>/cosmic-reach/versions",
+                "instancesPathLabel": "インスタンスのディレクトリパス",
+                "instancesPathFieldPlaceholder": "<ランチャーのフォルダー>/cosmic-reach/instances",
+                "modLoadersPathLabel": "Modローダーのディレクトリパス",
+                "modLoadersPathFieldPlaceholder": "<ランチャーのフォルダー>/cosmic-reach/modloaders",
+                "tip": "Enterキーを押してパスを保存してください。変更は再起動後に適用されます"
+            },
+            "game": {
+                "borderName": "ゲーム",
+                "versionsSourceLabel": "バージョンのソース",
+                "versionsSourceCombo": {
+                    "options": {
+                        "cosmicArchive": "Cosmic Archive",
+                        "itch": "itch"
+                    }
+                }
+            },
+            "other": {
+                "borderName": "その他",
+                "writePrettyJson": "整形されたJSONファイルを書き込む（開発／デバッグ用に便利）",
+                "onGameLaunch": {
+                    "label": "Cosmic Reachが起動した後：",
+                    "options": {
+                        "doNothing": "何もしない",
+                        "hideLauncher": "ランチャーを非表示する",
+                        "hideLauncherAndConsole": "ランチャーとコンソールを非表示する",
+                        "exitLauncher": "ランチャーを終了する（インスタンスのプレイ時間はカウントされません）"
+                    }
+                },
+                "onGameExit": {
+                    "label": "Cosmic Reachが終了した後：",
+                    "options": {
+                        "doNothing": "何もしない",
+                        "exitLauncher": "Cosmic Reachの終了コードが０（ok）の場合ランチャーを終了する"
+                    }
+                },
+                "checkForUpdatesAtStartup": "起動時に更新を確認する",
+                "checkUpdatesNowButton": "更新を確認",
+                "checkingForUpdates": "確認中...",
+                "noUpdatesAvailable": "最新バージョンを使用しています",
+                "patchOfflineAccount": "ランチャーと同じオフラインアカウントのディスプレイネームを設定する",
+                "appendUsername": "チャットメッセージの前にユーザー名を追加する",
+                "language": "言語",
+                "disableFileIntegrityCheck": "ファイルの整合性チェックを無効にする"
+            }
+        },
+        "aboutView": {
+            "lines": {
+                "line1": "CRLauncher $$LAUNCHER_VERSION$$ーCosmic Reachのシンプルなランチャー",
+                "line2": "作成者：TheEntropyShard",
+                "line3": "詳細は$$LAUNCHER_URL$$をご覧ください"
+            }
+        },
+        "addInstanceDialog": {
+            "importInstance": {
+                "importButton": "インポート",
+                "crliFiles": "CRLauncherインスタンスファイル(*.crli)",
+                "title": "インスタンスのインポート",
+                "success": "インスタンスをインポートできました",
+                "failure": "インスタンスをインポートできませんでした",
+                "duplicate": "$$INSTANCE_FOLDER$$のフォルダーのインスタンスが既に存在します",
+                "badFile": "インスタンスファイルが破損しているかフォーマットが違います",
+                "wrongExtension": "インポートされたファイルは.crliで終わる必要があります"
+            },
+            "title": "新しいインスタンスを追加する",
+            "nameFieldLabel": "名前",
+            "groupFieldLabel": "グループ",
+            "autoUpdateToLatest": "自動で最新のアップデートに更新する",
+            "filter": "フィルター",
+            "refreshButton": "再読み込み",
+            "addButton": "追加",
+            "cancelButton": "キャンセル",
+            "table": {
+                "version": "バージョン",
+                "dateReleased": "リリース",
+                "versionType": "タイプ"
+            },
+            "latestVersion": "（最新）",
+            "showOnlyInstalled": "インストールされたバージョンだけ表示する"
+        },
+        "updateDialog": {
+            "title": "更新",
+            "updateNowButton": "更新する",
+            "updateLaterButton": "後で"
+        }
+    },
+    "general": {
+        "updated": "更新",
+        "time": {
+            "dateFormat": "yyyy年M月d日",
+            "ago": "前",
+            "units": {
+                "second1": "秒",
+                "seconds234": "秒",
+                "seconds": "秒",
+                "minute1": "分",
+                "minutes234": "分",
+                "minutes": "分",
+                "hour1": "時間",
+                "hours234": "時間",
+                "hours": "時間",
+                "day1": "日",
+                "days234": "日",
+                "days": "日",
+                "today": "今日",
+                "yesterday": "昨日",
+                "week1": "週間",
+                "weeks234": "週間",
+                "weeks": "週間",
+                "month1": "ヶ月",
+                "months234": "ヶ月",
+                "months": "ヶ月",
+                "year1": "年",
+                "years234": "年",
+                "years": "年"
+            }
+        }
+    }
+}
