@@ -38,7 +38,7 @@
                 "ramMinCannotBeLess512MB": "Hindi maaaring kumulang ang pinakamababang alaalang alisagang kuha sa bilang na 512 MiB",
                 "deleteWorldSure": "Tiyak ka ba sa pagdelete ng mundong '$$WORLD_NAME$$'?",
                 "couldNotDeleteWorld": "Hindi madelete ang mundong '$$WORLD_NAME$$' na nakalagay sa $$WORLD_DIR$$",
-                "couldNotUpdateMod": "Hindi maupdate ang modipikasyong $$MOD_LOADER$$ '$$MOD_ID$$"
+                "couldNotUpdateMod": "Hindi maupdate ang modipikasyong $$MOD_LOADER$$ '$$MOD_ID$$'"
             },
             "mods": {
                 "modAddedName": "Naidagdag na ang modipikasyong nagngangalang '$$MOD_NAME$$'!",

@@ -38,7 +38,7 @@
                 "ramMinCannotBeLess512MB": "Minimum RAM cannot be under 512 MiB",
                 "deleteWorldSure": "Are ye sure ya wanna  drain ocean '$$WORLD_NAME$$'?",
                 "couldNotDeleteWorld": "Couldn't drain ocean '$$WORLD_NAME$$' located at $$WORLD_DIR$$",
-                "couldNotUpdateMod": "Could not get new ship build for $$MOD_LOADER$$ mod '$$MOD_ID$$"
+                "couldNotUpdateMod": "Could not get new ship build for $$MOD_LOADER$$ mod '$$MOD_ID$$'"
             },
             "mods": {
                 "modAddedName": "Sail with name '$$MOD_NAME$$' already flown!",
