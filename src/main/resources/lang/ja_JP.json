@@ -273,13 +273,13 @@
                     },
                     "linksCard": {
                         "title": "リンク",
-                        "issueTracker": "問題追跡",
+                        "issueTracker": "バグトラッカー",
                         "sourceCode": "ソースコード",
                         "wiki": "Wiki",
                         "discordInvite": "Discordサーバー"
                     },
                     "featuredVersionsCard": {
-                        "title": "注目バージョン"
+                        "title": "主要バージョン"
                     },
                     "creatorsCard": {
                         "title": "作成者"
