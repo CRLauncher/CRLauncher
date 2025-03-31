@@ -21,6 +21,7 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.java.JavaLocator;
 import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.OperatingSystem;
 import me.theentropyshard.crlauncher.utils.ProcessReader;
 import me.theentropyshard.crlauncher.utils.SystemProperty;
 
@@ -64,6 +65,10 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
         command.clear();
 
         command.add(this.getJavaPath());
+
+        if (OperatingSystem.isMacOS()) {
+            command.add("-XstartOnFirstThread");
+        }
 
         for (SystemProperty property : this.properties) {
             command.add(property.asJvmArg());
