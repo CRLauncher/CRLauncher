@@ -3,7 +3,7 @@
     <Appenders>
         <RollingRandomAccessFile name="FileLogger" fileName="${sys:crlauncher.logsDir}/latest.log"
                                  filePattern="${sys:crlauncher.logsDir}/$${date:MM-yyyy}/app-%d{dd-MM-yyyy}-%i.log.gz">
-            <PatternLayout pattern="%d{HH:mm:ss} [%t] %level %logger - %msg%n" charset="866"/>
+            <PatternLayout pattern="[%d{dd-MM-yyyy HH:mm:ss}] %level - %msg" charset="866"/>
             <Policies>
                 <TimeBasedTriggeringPolicy/>
                 <SizeBasedTriggeringPolicy size="10 MB"/>
