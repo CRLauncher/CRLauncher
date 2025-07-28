@@ -21,9 +21,10 @@ package me.theentropyshard.crlauncher.cosmic.gson;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 
 import java.io.IOException;
+
+import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 
 public class VersionTypeTypeAdapter extends TypeAdapter<VersionType> {
     public VersionTypeTypeAdapter() {

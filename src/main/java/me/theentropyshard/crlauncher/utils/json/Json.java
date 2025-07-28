@@ -26,9 +26,11 @@ import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.cosmic.account.AccountStorage;
 import me.theentropyshard.crlauncher.cosmic.account.gson.AccountDeserializer;
 import me.theentropyshard.crlauncher.cosmic.account.gson.AccountStorageDeserializer;
+import me.theentropyshard.crlauncher.cosmic.gson.VersionPhaseTypeAdapter;
 import me.theentropyshard.crlauncher.cosmic.gson.VersionTypeTypeAdapter;
-import me.theentropyshard.crlauncher.cosmic.version.VersionType;
+import me.theentropyshard.crlauncher.cosmic.version.VersionPhase;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
+import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 import me.theentropyshard.crlauncher.utils.json.type.InstanceTypeTypeAdapter;
 import me.theentropyshard.crlauncher.utils.json.type.LocalDateTimeTypeAdapter;
 
@@ -41,6 +43,7 @@ public final class Json {
         .disableJdkUnsafe()
         //
         .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeTypeAdapter())
+        .registerTypeAdapter(VersionPhase.class, new VersionPhaseTypeAdapter())
         .registerTypeAdapter(VersionType.class, new VersionTypeTypeAdapter())
         .registerTypeAdapter(ModLoader.class, new InstanceTypeTypeAdapter())
         .registerTypeAdapter(AccountStorage.class, new AccountStorageDeserializer())

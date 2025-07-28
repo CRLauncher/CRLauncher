@@ -30,7 +30,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 public class VersionManager {
-    public static final String REMOTE_VERSIONS = "https://raw.githubusercontent.com/CRModders/CosmicArchive/main/versions.json";
+    public static final String REMOTE_VERSIONS = "https://raw.githubusercontent.com/CRLauncher/version-index/master/versions.json";
 
     private Mode mode = Mode.ONLINE;
     private VersionList versionList;

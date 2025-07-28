@@ -16,14 +16,23 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.cosmic.version;
+package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
 
-public interface Version {
-    String getId();
+import me.theentropyshard.crlauncher.cosmic.version.VersionPhase;
 
-    long getReleaseTime();
+import javax.swing.*;
 
-    VersionType getType();
+public class VersionPhaseRowFilter extends RowFilter<CosmicVersionsTableModel, Integer> {
+    private final JCheckBox checkBox;
+    private final VersionPhase versionPhase;
 
-    VersionPhase getPhase();
+    public VersionPhaseRowFilter(JCheckBox checkBox, VersionPhase versionPhase) {
+        this.checkBox = checkBox;
+        this.versionPhase = versionPhase;
+    }
+
+    @Override
+    public boolean include(Entry<? extends CosmicVersionsTableModel, ? extends Integer> entry) {
+        return this.checkBox.isSelected() && entry.getValue(2) == this.versionPhase;
+    }
 }

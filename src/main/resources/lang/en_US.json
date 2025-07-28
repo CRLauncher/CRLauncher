@@ -500,6 +500,7 @@
             "table": {
                 "version": "Version",
                 "dateReleased": "Date released",
+                "versionPhase": "Phase",
                 "versionType": "Type"
             },
             "latestVersion": "(Latest)",
@@ -541,6 +542,10 @@
                 "years234": "years",
                 "years": "years"
             }
+        },
+        "versionType": {
+            "release": "Release",
+            "snapshot": "Snapshot"
         }
     }
 }

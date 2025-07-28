@@ -500,6 +500,7 @@
             "table": {
                 "version": "バージョン",
                 "dateReleased": "リリース",
+                "versionPhase": "Phase",
                 "versionType": "タイプ"
             },
             "latestVersion": "（最新）",
@@ -541,6 +542,10 @@
                 "years234": "年",
                 "years": "年"
             }
+        },
+        "versionType": {
+            "release": "Release",
+            "snapshot": "Snapshot"
         }
     }
 }

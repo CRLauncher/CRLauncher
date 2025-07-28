@@ -16,23 +16,27 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.theentropyshard.crlauncher.gui.dialogs.addinstance;
+package me.theentropyshard.crlauncher.cosmic.gson;
 
-import me.theentropyshard.crlauncher.cosmic.version.VersionType;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import me.theentropyshard.crlauncher.cosmic.version.VersionPhase;
 
-import javax.swing.*;
+import java.io.IOException;
 
-public class VersionTypeRowFilter extends RowFilter<CosmicVersionsTableModel, Integer> {
-    private final JCheckBox checkBox;
-    private final VersionType versionType;
+public class VersionPhaseTypeAdapter extends TypeAdapter<VersionPhase> {
+    public VersionPhaseTypeAdapter() {
 
-    public VersionTypeRowFilter(JCheckBox checkBox, VersionType versionType) {
-        this.checkBox = checkBox;
-        this.versionType = versionType;
     }
 
     @Override
-    public boolean include(Entry<? extends CosmicVersionsTableModel, ? extends Integer> entry) {
-        return this.checkBox.isSelected() && entry.getValue(2) == this.versionType;
+    public void write(JsonWriter writer, VersionPhase phase) throws IOException {
+        writer.value(phase.getJsonName());
+    }
+
+    @Override
+    public VersionPhase read(JsonReader reader) throws IOException {
+        return VersionPhase.getByJsonName(reader.nextString());
     }
 }

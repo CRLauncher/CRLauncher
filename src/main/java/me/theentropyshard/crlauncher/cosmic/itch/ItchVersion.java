@@ -19,6 +19,7 @@
 package me.theentropyshard.crlauncher.cosmic.itch;
 
 import me.theentropyshard.crlauncher.cosmic.version.Version;
+import me.theentropyshard.crlauncher.cosmic.version.VersionPhase;
 import me.theentropyshard.crlauncher.cosmic.version.VersionType;
 import me.theentropyshard.crlauncher.itch.DetailedBuild;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -42,6 +43,13 @@ public class ItchVersion extends DetailedBuild implements Version {
 
     @Override
     public VersionType getType() {
+        char lastChar = Character.toLowerCase(this.getId().charAt(this.getId().length() - 1));
+
+        return lastChar >= 'a' && lastChar <= 'z' ? VersionType.SNAPSHOT : VersionType.RELEASE;
+    }
+
+    @Override
+    public VersionPhase getPhase() {
         SemanticVersion version = SemanticVersion.parse(this.getId());
 
         if (version == null) {
@@ -56,9 +64,9 @@ public class ItchVersion extends DetailedBuild implements Version {
         }
 
         if (version != null && version.getMinor() == 4) {
-            return VersionType.ALPHA;
+            return VersionPhase.ALPHA;
         }
 
-        return VersionType.PRE_ALPHA;
+        return VersionPhase.PRE_ALPHA;
     }
 }

@@ -500,6 +500,7 @@
             "table": {
                 "version": "Banyuri",
                 "dateReleased": "Taburaw ng pinakawalan",
+                "versionPhase": "Phase",
                 "versionType": "Uri"
             },
             "latestVersion": "(Pinakabago)",
@@ -541,6 +542,10 @@
                 "years234": "taon",
                 "years": "taon"
             }
+        },
+        "versionType": {
+            "release": "Release",
+            "snapshot": "Snapshot"
         }
     }
 }

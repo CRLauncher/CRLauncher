@@ -500,6 +500,7 @@
             "table": {
                 "version": "Verzija",
                 "dateReleased": "Datum izlaska",
+                "versionPhase": "Phase",
                 "versionType": "Tip"
             },
             "latestVersion": "(Najnovija)",
@@ -541,6 +542,10 @@
                 "years234": "godine",
                 "years": "godina"
             }
+        },
+        "versionType": {
+            "release": "Release",
+            "snapshot": "Snapshot"
         }
     }
 }

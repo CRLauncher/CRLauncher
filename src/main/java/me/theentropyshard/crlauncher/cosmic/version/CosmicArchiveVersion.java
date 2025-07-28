@@ -30,6 +30,11 @@ public class CosmicArchiveVersion implements Version {
     private VersionType type;
 
     /**
+     * Phase of the version
+     */
+    private VersionPhase phase;
+
+    /**
      * Time, when version was released, unix timestamp
      */
     private long releaseTime;
@@ -50,9 +55,10 @@ public class CosmicArchiveVersion implements Version {
 
     @Override
     public String toString() {
-        return "Version{" +
+        return "CosmicArchiveVersion{" +
             "id='" + this.id + '\'' +
             ", type=" + this.type +
+            ", phase=" + this.phase +
             ", releaseTime=" + this.releaseTime +
             ", client=" + this.client +
             ", server=" + this.server +
@@ -67,6 +73,11 @@ public class CosmicArchiveVersion implements Version {
     @Override
     public VersionType getType() {
         return this.type;
+    }
+
+    @Override
+    public VersionPhase getPhase() {
+        return this.phase;
     }
 
     @Override

@@ -500,6 +500,7 @@
             "table": {
                 "version": "Версия",
                 "dateReleased": "Дата релиза",
+                "versionPhase": "Фаза версии",
                 "versionType": "Тип версии"
             },
             "latestVersion": "(Новейшая)",
@@ -541,6 +542,10 @@
                 "years234": "года",
                 "years": "лет"
             }
+        },
+        "versionType": {
+            "release": "Релиз",
+            "snapshot": "Снапшот"
         }
     }
 }

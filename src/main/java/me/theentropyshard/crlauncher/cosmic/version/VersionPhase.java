@@ -21,35 +21,46 @@ package me.theentropyshard.crlauncher.cosmic.version;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum VersionType {
-    RELEASE("release"),
-    SNAPSHOT("snapshot");
+public enum VersionPhase {
+    ALPHA("alpha", "Alpha"),
+    PRE_ALPHA("pre_alpha", "Pre-Alpha");
 
-    private static final Map<String, VersionType> lookup = new HashMap<>();
+    private static final Map<String, VersionPhase> lookup = new HashMap<>();
 
     static {
-        for (VersionType type : VersionType.values()) {
+        for (VersionPhase type : VersionPhase.values()) {
             lookup.put(type.getJsonName(), type);
         }
     }
 
     private final String jsonName;
+    private final String readableName;
 
-    VersionType(String jsonName) {
+    VersionPhase(String jsonName, String readableName) {
         this.jsonName = jsonName;
+        this.readableName = readableName;
     }
 
-    public static VersionType getByJsonName(String jsonName) {
-        VersionType type = lookup.get(jsonName);
+    public static VersionPhase getByJsonName(String jsonName) {
+        VersionPhase type = lookup.get(jsonName);
 
         if (type == null) {
-            throw new IllegalArgumentException("Unknown version type: " + jsonName);
+            throw new IllegalArgumentException("Unknown version phase: " + jsonName);
         }
 
         return type;
     }
 
+    @Override
+    public String toString() {
+        return this.readableName;
+    }
+
     public String getJsonName() {
         return this.jsonName;
+    }
+
+    public String getReadableName() {
+        return this.readableName;
     }
 }

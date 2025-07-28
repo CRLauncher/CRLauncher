@@ -36,9 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CosmicVersionsTableModel extends AbstractTableModel {
-    private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class};
-    private static final double[] WIDTH_PERCENTAGES = {70, 15, 15};
-    private static final double[] WIDTH_PERCENTAGES_WITH_TIME = {55, 30, 15};
+    private static final Class<?>[] COLUMN_CLASSES = {String.class, String.class, String.class, String.class};
+    private static final double[] WIDTH_PERCENTAGES = {70, 15, 15, 15};
+    private static final double[] WIDTH_PERCENTAGES_WITH_TIME = {55, 30, 15, 15};
 
     private final List<Version> versions;
     private final AddInstanceDialog dialog;
@@ -58,6 +58,7 @@ public class CosmicVersionsTableModel extends AbstractTableModel {
         this.columnNames = new String[]{
             language.getString("gui.addInstanceDialog.table.version"),
             language.getString("gui.addInstanceDialog.table.dateReleased"),
+            language.getString("gui.addInstanceDialog.table.versionPhase"),
             language.getString("gui.addInstanceDialog.table.versionType")
         };
 
@@ -142,7 +143,8 @@ public class CosmicVersionsTableModel extends AbstractTableModel {
                 yield this.formatter.format(releaseTime) + (showAmountOfTime ?
                     " (" + CosmicVersionsTableModel.getAgoFromNow(releaseTime) + ")" : "");
             }
-            case 2 -> version.getType();
+            case 2 -> version.getPhase();
+            case 3 -> CRLauncher.getInstance().getLanguage().getString("general.versionType." + version.getType().getJsonName());
             default -> null;
         };
     }

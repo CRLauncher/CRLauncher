@@ -22,7 +22,7 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.version.Version;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
-import me.theentropyshard.crlauncher.cosmic.version.VersionType;
+import me.theentropyshard.crlauncher.cosmic.version.VersionPhase;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
 
@@ -95,8 +95,8 @@ public class LoadVersionsWorker extends Worker<Void, Version> {
         });
 
         rowSorter.setRowFilter(RowFilter.orFilter(Arrays.asList(
-            new VersionTypeRowFilter(this.dialog.getAlphasBox(), VersionType.ALPHA),
-            new VersionTypeRowFilter(this.dialog.getPreAlphasBox(), VersionType.PRE_ALPHA)
+            new VersionPhaseRowFilter(this.dialog.getAlphasBox(), VersionPhase.ALPHA),
+            new VersionPhaseRowFilter(this.dialog.getPreAlphasBox(), VersionPhase.PRE_ALPHA)
         )));
 
         this.table.setRowSorter(rowSorter);
