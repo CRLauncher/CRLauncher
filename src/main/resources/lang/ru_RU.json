@@ -126,7 +126,8 @@
                     "borderName": "Установка Java",
                     "textFieldPlaceholder": "Путь до $$JAVAW$$",
                     "current": "$$CURRENT_INSTALLATION$$ (Текущая)",
-                    "browse": "Выбрать..."
+                    "browse": "Выбрать...",
+                    "customJavaPath": "Свой путь к Java"
                 },
                 "memorySettings": {
                     "borderName": "Выделение памяти",

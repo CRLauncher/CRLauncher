@@ -34,6 +34,7 @@ import me.theentropyshard.crlauncher.gui.utils.WindowClosingListener;
 import me.theentropyshard.crlauncher.instance.InstanceManager;
 import me.theentropyshard.crlauncher.itch.ItchIoApi;
 import me.theentropyshard.crlauncher.java.JavaLocator;
+import me.theentropyshard.crlauncher.java.JavaManager;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.language.LanguageManager;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -85,6 +86,7 @@ public class CRLauncher {
     private final QuiltManager quiltManager;
     private final PuzzleManager puzzleManager;
     private final AccountManager accountManager;
+    private final JavaManager javaManager;
 
     private final ExecutorService taskPool;
 
@@ -197,6 +199,8 @@ public class CRLauncher {
 
         this.quiltManager = new QuiltManager(this.modloadersDir.resolve("cosmic-quilt"));
         this.puzzleManager = new PuzzleManager(this.modloadersDir.resolve("puzzle"));
+
+        this.javaManager = new JavaManager(this.workDir.resolve("runtimes"));
 
         this.taskPool = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
@@ -428,6 +432,10 @@ public class CRLauncher {
 
     public AccountManager getAccountManager() {
         return this.accountManager;
+    }
+
+    public JavaManager getJavaManager() {
+        return this.javaManager;
     }
 
     public Settings getSettings() {

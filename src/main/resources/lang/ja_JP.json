@@ -126,7 +126,8 @@
                     "borderName": "Javaインストール",
                     "textFieldPlaceholder": "$$JAVAW$$のファイルパス",
                     "current": "$$CURRENT_INSTALLATION$$（現在）",
-                    "browse": "参照..."
+                    "browse": "参照...",
+                    "customJavaPath": "Custom Java path"
                 },
                 "memorySettings": {
                     "borderName": "メモリ設定",

@@ -126,7 +126,8 @@
                     "borderName": "Java Installation",
                     "textFieldPlaceholder": "Datenpfad zu $$JAVAW$$",
                     "current": "$$CURRENT_INSTALLATION$$ (Aktuell)",
-                    "browse": "Datenpfad browsen..."
+                    "browse": "Datenpfad browsen...",
+                    "customJavaPath": "Custom Java path"
                 },
                 "memorySettings": {
                     "borderName": "Memory Einstellungen",

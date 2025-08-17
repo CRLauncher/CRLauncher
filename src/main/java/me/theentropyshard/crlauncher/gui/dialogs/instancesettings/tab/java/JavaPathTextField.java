@@ -41,7 +41,9 @@ public class JavaPathTextField extends JTextField {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent event) {
-                popupMenu.showBelow(JavaPathTextField.this);
+                if (JavaPathTextField.this.isEnabled()) {
+                    popupMenu.showBelow(JavaPathTextField.this);
+                }
             }
         });
 

@@ -18,6 +18,20 @@
 
 package me.theentropyshard.crlauncher.cosmic;
 
+import net.lingala.zip4j.ZipFile;
+import net.lingala.zip4j.model.ZipParameters;
+
+import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
+
 import me.theentropyshard.crlauncher.BuildConfig;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.Settings;
@@ -38,24 +52,10 @@ import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.instance.CosmicInstance;
 import me.theentropyshard.crlauncher.java.JavaLocator;
+import me.theentropyshard.crlauncher.java.JavaManager;
 import me.theentropyshard.crlauncher.logging.Log;
-import me.theentropyshard.crlauncher.utils.FileUtils;
-import me.theentropyshard.crlauncher.utils.ProcessReader;
-import me.theentropyshard.crlauncher.utils.SystemProperty;
-import me.theentropyshard.crlauncher.utils.TimeUtils;
+import me.theentropyshard.crlauncher.utils.*;
 import me.theentropyshard.crlauncher.utils.ansi.AnsiColor;
-import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.model.ZipParameters;
-
-import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Consumer;
 
 public class CosmicRunner extends Thread {
     public static final String[] FLAG_SET_1 = {
@@ -121,21 +121,63 @@ public class CosmicRunner extends Thread {
 
     @Override
     public void run() {
-        VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
-
         try {
+            String rawCosmicVersion = this.instance.getCosmicVersion();
+
+            String javaPath = this.instance.getJavaPath();
+
+            if (!this.instance.isCustomJavaPath()) {
+                SemanticVersion cosmicVersion = SemanticVersion.parse(rawCosmicVersion);
+
+                if (cosmicVersion == null) {
+                    Matcher matcher = RegexUtils.THREE_DIGITS.matcher(rawCosmicVersion);
+
+                    if (matcher.find()) {
+                        String parsedVersion = matcher.group(0);
+                        cosmicVersion = SemanticVersion.parse(parsedVersion);
+                    } else {
+                        Log.warn("ItchVersion: could not determine game version");
+                    }
+                }
+
+                if (cosmicVersion != null) {
+                    JavaManager javaManager = CRLauncher.getInstance().getJavaManager();
+
+                    JavaManager.JavaVersion version = cosmicVersion.isHigherThan(new SemanticVersion(0, 4, 10)) ?
+                        JavaManager.JavaVersion.VERSION_24 : JavaManager.JavaVersion.VERSION_17;
+
+                    if (!javaManager.isJREInstalled(version)) {
+                        ProgressDialog jreDownloadDialog = new ProgressDialog("Downloading JRE");
+                        SwingUtilities.invokeLater(() -> jreDownloadDialog.setVisible(true));
+                        javaManager.installJRE(version, jreDownloadDialog);
+                        SwingUtilities.invokeLater(() -> jreDownloadDialog.setVisible(false));
+                    }
+
+                    javaPath = javaManager.getJavaExecutable(version);
+                }
+            } else {
+                if (javaPath == null || javaPath.isEmpty()) {
+                    javaPath = JavaLocator.getJavaPath();
+                    this.instance.setJavaPath(javaPath);
+                }
+            }
+
+            Log.info("Using Java: " + javaPath);
+
+            VersionManager versionManager = CRLauncher.getInstance().getVersionManager();
+
             if (!versionManager.isLoaded()) {
                 versionManager.load();
             }
 
             Log.info("Starting instance \"" + this.instance.getName() + "\"");
-            Log.info("Cosmic Reach version: " + this.instance.getCosmicVersion());
+            Log.info("Cosmic Reach version: " + rawCosmicVersion);
 
             this.updateCosmicVersion();
 
             Log.info("Mod Loader: " + this.instance.getModLoader());
 
-            Version version = versionManager.getVersion(this.instance.getCosmicVersion());
+            Version version = versionManager.getVersion(rawCosmicVersion);
 
             Log.info("Versions source: " + (CRLauncher.getInstance().getSettings().versionsSourceOption == 1 ? "Itch" : "Cosmic Archive"));
 
@@ -143,7 +185,7 @@ public class CosmicRunner extends Thread {
                 SwingUtilities.invokeLater(() -> {
                     String s = CRLauncher.getInstance().getLanguage().getString("messages.gui.progressDialog.nonexistentVersion");
                     String message = s
-                        .replace("$$VERSION_ID$$", this.instance.getCosmicVersion())
+                        .replace("$$VERSION_ID$$", rawCosmicVersion)
                         .replace("$$VERSION_LIST$$",
                             switch (CRLauncher.getInstance().getSettings().versionsSourceOption) {
                                 case 1 -> "Itch";
@@ -168,14 +210,6 @@ public class CosmicRunner extends Thread {
             Log.info("Working directory: " + saveDirPath);
 
             this.instance.setLastTimePlayed(LocalDateTime.now());
-
-            String javaPath = this.instance.getJavaPath();
-            if (javaPath == null || javaPath.isEmpty()) {
-                javaPath = JavaLocator.getJavaPath();
-                this.instance.setJavaPath(javaPath);
-            }
-
-            Log.info("Java path: " + javaPath);
 
             Path clientPath = this.applyJarMods(version);
 

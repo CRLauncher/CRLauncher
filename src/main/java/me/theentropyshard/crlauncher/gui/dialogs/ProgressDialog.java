@@ -74,6 +74,7 @@ public class ProgressDialog extends AppDialog implements ProgressListener {
         this.progressBar.setString(String.format("%.2f MiB / %.2f MiB", downloaded, total));
     }
 
+    @Override
     public void setStage(String stage) {
         this.stageLabel.setText(stage);
     }

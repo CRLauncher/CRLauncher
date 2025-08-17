@@ -126,7 +126,8 @@
                     "borderName": "Java dock",
                     "textFieldPlaceholder": "Map to javaw.exe",
                     "current": "$$CURRENT_INSTALLATION$$ (Current)",
-                    "browse": "Browse path..."
+                    "browse": "Browse path...",
+                    "customJavaPath": "Custom Java path"
                 },
                 "memorySettings": {
                     "borderName": "Memory Cogs",

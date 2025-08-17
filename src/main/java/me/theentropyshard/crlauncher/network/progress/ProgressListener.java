@@ -20,4 +20,8 @@ package me.theentropyshard.crlauncher.network.progress;
 
 public interface ProgressListener {
     void update(long contentLength, long totalBytesRead, long bytesReadThisTime, boolean done);
+
+    default void setStage(String stage) {
+
+    }
 }

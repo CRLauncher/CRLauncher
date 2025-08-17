@@ -126,7 +126,8 @@
                     "borderName": "Lagayan ng Java",
                     "textFieldPlaceholder": "Landas patungong javaw.exe",
                     "current": "$$CURRENT_INSTALLATION$$ (Kasalukuyan)",
-                    "browse": "Maghanap ng landas..."
+                    "browse": "Maghanap ng landas...",
+                    "customJavaPath": "Custom Java path"
                 },
                 "memorySettings": {
                     "borderName": "Pagsasaayos ng Alaala",

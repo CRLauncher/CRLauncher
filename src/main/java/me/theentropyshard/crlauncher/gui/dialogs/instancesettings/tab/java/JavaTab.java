@@ -60,11 +60,20 @@ public class JavaTab extends Tab {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.NORTH;
 
-        JPanel javaInstallation = new JPanel(new GridLayout(0, 1));
+        JPanel javaInstallation = new JPanel(new GridLayout(2, 1));
         JavaPathTextField javaPathTextField = new JavaPathTextField();
         javaPathTextField.setText(instance.getJavaPath());
         javaInstallation.add(javaPathTextField);
         javaInstallation.setBorder(new TitledBorder(javaTabSection.getString("javaInstallation.borderName")));
+
+        JCheckBox customJavaPath = new JCheckBox(javaTabSection.getString("javaInstallation.customJavaPath"));
+        customJavaPath.setSelected(instance.isCustomJavaPath());
+        javaPathTextField.setEnabled(instance.isCustomJavaPath());
+        customJavaPath.addActionListener(e -> {
+            instance.setCustomJavaPath(customJavaPath.isSelected());
+            javaPathTextField.setEnabled(customJavaPath.isSelected());
+        });
+        javaInstallation.add(customJavaPath);
 
         JPanel memorySettings = new JPanel(new GridLayout(2, 2));
         JLabel minMemoryLabel = new JLabel(javaTabSection.getString("memorySettings.minimum") + ":");

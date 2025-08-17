@@ -126,7 +126,8 @@
                     "borderName": "Java Instalacija",
                     "textFieldPlaceholder": "Lokacija $$JAVAW$$",
                     "current": "$$CURRENT_INSTALLATION$$ (Sadašnja)",
-                    "browse": "Odaberi lokaciju..."
+                    "browse": "Odaberi lokaciju...",
+                    "customJavaPath": "Custom Java path"
                 },
                 "memorySettings": {
                     "borderName": "Postavke memorije",
