@@ -18,11 +18,11 @@
 
 package me.theentropyshard.crlauncher.utils;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Predicate;
 
 public final class ListUtils {
-    public static <T> T search(List<T> list, Predicate<T> predicate) {
+    public static <T> T search(Collection<T> list, Predicate<T> predicate) {
         for (T t : list) {
             if (predicate.test(t)) {
                 return t;
