@@ -18,7 +18,7 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven;
 
-public record MavenArtifact(String groupId, String artifactId, String version) {
+public record QuiltMavenArtifact(String groupId, String artifactId, String version) {
     public String jar() {
         return this.artifactId + "-" + this.version + ".jar";
     }
