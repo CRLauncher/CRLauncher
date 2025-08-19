@@ -19,7 +19,7 @@
 package me.theentropyshard.crlauncher.cosmic.mods.puzzle;
 
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.MavenArtifact;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.QuiltMavenArtifact;
 import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
@@ -38,23 +38,23 @@ import java.util.List;
 
 public class PuzzleManager {
     private static final List<PuzzleDependency> LIBRARIES = List.of(
-        new PuzzleDependency("https://repo.spongepowered.org/repository/maven-public/", new MavenArtifact("org.spongepowered", "mixin", "0.8.5")),
-        new PuzzleDependency("https://jitpack.io/", new MavenArtifact("com.github.PuzzleLoader", "access_manipulators", "1.0.1")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-tree", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-util", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-analysis", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-commons", "9.6"))
+        new PuzzleDependency("https://repo.spongepowered.org/repository/maven-public/", new QuiltMavenArtifact("org.spongepowered", "mixin", "0.8.5")),
+        new PuzzleDependency("https://jitpack.io/", new QuiltMavenArtifact("com.github.PuzzleLoader", "access_manipulators", "1.0.1")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm-tree", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm-util", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm-analysis", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm-commons", "9.6"))
     );
 
     private static final List<PuzzleDependency> LIBRARIES_2_0_0 = List.of(
-        new PuzzleDependency("https://maven.fabricmc.net/", new MavenArtifact("net.fabricmc", "sponge-mixin", "0.15.3+mixin.0.8.7")),
-        new PuzzleDependency("https://jitpack.io/", new MavenArtifact("com.github.PuzzleLoader", "access_manipulators", "1.0.1")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-tree", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-util", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-analysis", "9.6")),
-        new PuzzleDependency("https://repo1.maven.org/maven2/", new MavenArtifact("org.ow2.asm", "asm-commons", "9.6"))
+        new PuzzleDependency("https://maven.fabricmc.net/", new QuiltMavenArtifact("net.fabricmc", "sponge-mixin", "0.15.3+mixin.0.8.7")),
+        new PuzzleDependency("https://jitpack.io/", new QuiltMavenArtifact("com.github.PuzzleLoader", "access_manipulators", "1.0.1")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm-tree", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm-util", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm-analysis", "9.6")),
+        new PuzzleDependency("https://repo1.maven.org/maven2/", new QuiltMavenArtifact("org.ow2.asm", "asm-commons", "9.6"))
     );
 
     private static final SemanticVersion VERSION_2_0_0 = new SemanticVersion(2, 0, 0);
@@ -100,7 +100,7 @@ public class PuzzleManager {
         list.add(loaderDownload);
 
         for (PuzzleDependency dependency : PuzzleManager.getLibraries(version)) {
-            MavenArtifact artifact = dependency.mavenArtifact();
+            QuiltMavenArtifact artifact = dependency.mavenArtifact();
 
             HttpDownload libDownload = new HttpDownload.Builder()
                 .httpClient(CRLauncher.getInstance().getHttpClient())
@@ -129,7 +129,7 @@ public class PuzzleManager {
         }
 
         for (PuzzleDependency dependency : PuzzleManager.getLibraries(version)) {
-            MavenArtifact artifact = dependency.mavenArtifact();
+            QuiltMavenArtifact artifact = dependency.mavenArtifact();
 
             if (!Files.exists(this.depsDir.resolve(artifact.jar()))) {
                 return false;

@@ -18,8 +18,8 @@
 
 package me.theentropyshard.crlauncher.cosmic.mods.puzzle;
 
-import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.MavenArtifact;
+import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.QuiltMavenArtifact;
 
-public record PuzzleDependency(String baseRepoURL, MavenArtifact mavenArtifact) {
+public record PuzzleDependency(String baseRepoURL, QuiltMavenArtifact mavenArtifact) {
 
 }

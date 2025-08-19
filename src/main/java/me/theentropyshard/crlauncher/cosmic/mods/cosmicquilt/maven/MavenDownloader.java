@@ -47,7 +47,7 @@ public class MavenDownloader {
             "https://jitpack.io/",
     };
 
-    public static List<MavenArtifact> downloadRelease(String version, Path saveDir, Path cqPath, List<HttpDownload> downloads) throws IOException {
+    public static List<QuiltMavenArtifact> downloadRelease(String version, Path saveDir, Path cqPath, List<HttpDownload> downloads) throws IOException {
         String jarUrl = MavenDownloader.QUILT_LOADER_DOWNLOAD.formatted(version, "cosmic-quilt-%s.jar".formatted(version));
 
         HttpDownload cqDownload = new HttpDownload.Builder()
@@ -58,14 +58,14 @@ public class MavenDownloader {
 
         downloads.add(cqDownload);
 
-        Map<String, MavenArtifact> deps = new HashMap<>();
+        Map<String, QuiltMavenArtifact> deps = new HashMap<>();
 
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
             String pomURL = MavenDownloader.QUILT_LOADER_DOWNLOAD.formatted(version, "cosmic-quilt-%s.pom".formatted(version));
             String pomContent = request.asString(pomURL);
 
             MavenDownloader.getDependencies(deps, pomContent, null, 0);
-            for (MavenArtifact mavenArtifact : deps.values()) {
+            for (QuiltMavenArtifact mavenArtifact : deps.values()) {
                 MavenDownloader.downloadDependencies(mavenArtifact, MavenDownloader.MAVEN_REPOSITORIES, downloads, saveDir);
             }
         }
@@ -73,7 +73,7 @@ public class MavenDownloader {
         return new ArrayList<>(deps.values());
     }
 
-    private static void getDependencies(Map<String, MavenArtifact> dependencies, String pom, String search, int depth) throws IOException {
+    private static void getDependencies(Map<String, QuiltMavenArtifact> dependencies, String pom, String search, int depth) throws IOException {
         if (pom == null || depth > 9) return;
         try {
             Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new InputSource(new StringReader(pom)));
@@ -100,7 +100,7 @@ public class MavenDownloader {
                             artifactId.equals("slf4j-api"))) && (!dependencies.containsKey(artifactId) ||
                             MavenDownloader.compare(dependencies.get(artifactId).version(), version) == 1) &&
                             !artifactId.equalsIgnoreCase("cosmicreach")) {
-                        dependencies.put(artifactId, new MavenArtifact(groupId, artifactId, version));
+                        dependencies.put(artifactId, new QuiltMavenArtifact(groupId, artifactId, version));
                         for (String repository : MavenDownloader.MAVEN_REPOSITORIES) {
                             try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
                                 String url = repository + groupId.replace('.', '/') +
@@ -140,7 +140,7 @@ public class MavenDownloader {
         }
     }
 
-    private static void downloadDependencies(MavenArtifact mavenArtifact, String[] repositories, List<HttpDownload> downloads, Path saveDir) throws IOException {
+    private static void downloadDependencies(QuiltMavenArtifact mavenArtifact, String[] repositories, List<HttpDownload> downloads, Path saveDir) throws IOException {
         if (mavenArtifact == null) {
             return;
         }
