@@ -67,10 +67,13 @@ public class JavaManager {
     }
 
     private Path getJavaPath(JavaVersion version) {
-        return this.workDir
-            .resolve(version.dirName)
-            .resolve("bin")
-            .resolve(OperatingSystem.getCurrent().getJavaExecutableName());
+        Path jreDir = this.workDir.resolve(version.dirName);
+
+        if (OperatingSystem.isMacOS()) {
+            jreDir =  jreDir.resolve("Contents").resolve("Home");
+        }
+
+        return jreDir.resolve("bin").resolve(OperatingSystem.getCurrent().getJavaExecutableName());
     }
 
     private void loadLocalJREs() throws IOException {
