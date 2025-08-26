@@ -214,7 +214,7 @@ public class CRLauncher {
 
                 if (this.settings.checkUpdatesStartup) {
                     this.taskPool.execute(() -> {
-//                        CRLauncher.checkForUpdates(false);
+                        CRLauncher.checkForUpdates(false);
                     });
                 }
 
