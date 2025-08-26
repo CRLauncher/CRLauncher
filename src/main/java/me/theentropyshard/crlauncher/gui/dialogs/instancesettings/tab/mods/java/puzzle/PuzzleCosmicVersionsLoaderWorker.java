@@ -28,13 +28,13 @@ import javax.swing.*;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class PuzzleVersionsLoaderWorker extends Worker<List<GithubRelease>, Void> {
+public class PuzzleCosmicVersionsLoaderWorker extends Worker<List<GithubRelease>, Void> {
     private final JComboBox<GithubRelease> versionsCombo;
     private final ToggleableItemListener listener;
     private final CosmicInstance instance;
 
-    public PuzzleVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, ToggleableItemListener listener, CosmicInstance instance) {
-        super("loading Puzzle versions");
+    public PuzzleCosmicVersionsLoaderWorker(JComboBox<GithubRelease> versionsCombo, ToggleableItemListener listener, CosmicInstance instance) {
+        super("loading Puzzle Cosmic versions");
 
         this.versionsCombo = versionsCombo;
         this.listener = listener;
@@ -43,10 +43,10 @@ public class PuzzleVersionsLoaderWorker extends Worker<List<GithubRelease>, Void
 
     @Override
     protected List<GithubRelease> work() throws Exception {
-        List<GithubRelease> versionArray = new GithubApi().getAllReleases("PuzzleLoader", "PuzzleLoader");
+        List<GithubRelease> versionArray = new GithubApi().getAllReleases("PuzzlesHQ", "puzzle-loader-cosmic");
 
-        if (this.instance.getPuzzleVersion() == null) {
-            this.instance.setPuzzleVersion(versionArray.get(0).tag_name);
+        if (this.instance.getPuzzleCosmicVersion() == null) {
+            this.instance.setPuzzleCosmicVersion(versionArray.get(0).tag_name);
         }
 
         return versionArray;
@@ -72,7 +72,7 @@ public class PuzzleVersionsLoaderWorker extends Worker<List<GithubRelease>, Void
         for (int i = 0; i < this.versionsCombo.getItemCount(); i++) {
             GithubRelease release = this.versionsCombo.getItemAt(i);
 
-            if (release.tag_name.equals(this.instance.getPuzzleVersion())) {
+            if (release.tag_name.equals(this.instance.getPuzzleCosmicVersion())) {
                 this.versionsCombo.setSelectedIndex(i);
 
                 break;

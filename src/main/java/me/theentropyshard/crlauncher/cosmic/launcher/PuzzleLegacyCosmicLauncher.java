@@ -20,6 +20,7 @@ package me.theentropyshard.crlauncher.cosmic.launcher;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleManager;
+import me.theentropyshard.crlauncher.cosmic.mods.puzzle.puzzle_legacy.PuzzleLegacyManager;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.logging.Log;
@@ -30,37 +31,33 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public class PuzzleCosmicLauncher extends ModdedPatchCosmicLauncher {
-    private final String coreVersion;
-    private final String cosmicVersion;
+public class PuzzleLegacyCosmicLauncher extends ModdedPatchCosmicLauncher {
+    private final String version;
 
-
-
-    public PuzzleCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String coreVersion,String cosmicVersion) {
+    public PuzzleLegacyCosmicLauncher(String javaPath, Path runDir, Path gameFilesLocation, Path clientPath, Path modsDir, String version) {
         super(javaPath, runDir, gameFilesLocation, clientPath, modsDir);
 
-        this.coreVersion = coreVersion;
-        this.cosmicVersion = cosmicVersion;
+        this.version = version;
     }
 
     @Override
     public void buildCommand(List<String> command) {
         super.buildCommand(command);
 
-        PuzzleManager puzzleManager = CRLauncher.getInstance().getPuzzleManager();
+        PuzzleLegacyManager puzzleManager = CRLauncher.getInstance().getPuzzleLegacyManager();
 
         try {
-            ProgressDialog dialog = new ProgressDialog("Downloading Puzzle");
-            dialog.setStage("Downloading Puzzle Core " + this.coreVersion + ", Puzzle Cosmic " + this.cosmicVersion);
+            ProgressDialog dialog = new ProgressDialog("Downloading Puzzle Legacy");
+            dialog.setStage("Downloading Puzzle Legacy" + this.version);
 
             SwingUtilities.invokeLater(() -> dialog.setVisible(true));
-            puzzleManager.downloadPuzzle(this.coreVersion,this.cosmicVersion, dialog);
+            puzzleManager.downloadPuzzle(this.version, dialog);
             SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
         } catch (IOException e) {
-            Log.error("Could not download Puzzle ", e);
+            Log.error("Could not download Puzzle Legacy " + this.version, e);
 
             MessageBox.showErrorMessage(
-                    CRLauncher.frame, "Could not download Puzzle : " + e.getMessage()
+                CRLauncher.frame, "Could not download Puzzle Legacy " + this.version + ": " + e.getMessage()
             );
 
             return;
@@ -68,12 +65,12 @@ public class PuzzleCosmicLauncher extends ModdedPatchCosmicLauncher {
 
         String classpath;
         try {
-            classpath = puzzleManager.getClasspath(this.coreVersion,this.cosmicVersion);
+            classpath = puzzleManager.getClasspath(this.version);
         } catch (IOException e) {
-            Log.error("Could not make classpath for Puzzle ", e);
+            Log.error("Could not make classpath for Puzzle Legacy " + this.version, e);
 
             MessageBox.showErrorMessage(
-                    CRLauncher.frame, "Could not get classpath for Puzzle : " + e.getMessage()
+                CRLauncher.frame, "Could not get classpath for Puzzle Legacy " + this.version + ": " + e.getMessage()
             );
 
             return;
@@ -82,6 +79,6 @@ public class PuzzleCosmicLauncher extends ModdedPatchCosmicLauncher {
         command.add("-classpath");
         command.add(classpath + File.pathSeparator + this.getClientPath());
 
-        command.add(PuzzleManager.getMainClass(this.coreVersion));
+        command.add(PuzzleManager.getMainClass(this.version));
     }
 }

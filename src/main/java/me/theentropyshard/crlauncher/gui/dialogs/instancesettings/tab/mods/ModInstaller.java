@@ -19,13 +19,13 @@
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
 import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.Settings;
 import me.theentropyshard.crlauncher.cosmic.mods.Mod;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltMod;
 import me.theentropyshard.crlauncher.cosmic.mods.fabric.FabricMod;
-import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleMod;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.jar.JarModsTableModel;
 import me.theentropyshard.crlauncher.gui.utils.MessageBox;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
@@ -334,7 +334,7 @@ public class ModInstaller {
                         switch (loader) {
                             case FABRIC -> mod = Json.parse(json, FabricMod.class).toMod();
                             case QUILT -> mod = Json.parse(json, QuiltMod.class).toMod();
-                            case PUZZLE -> mod = Json.parse(json, PuzzleMod.class).toMod();
+                            case PUZZLE,PUZZLE_LEGACY -> mod = Json.parse(json, PuzzleMod.class).toMod();
                             default -> mod = null;
                         }
 
@@ -385,7 +385,7 @@ public class ModInstaller {
             case VANILLA -> null;
             case FABRIC -> "fabric.mod.json";
             case QUILT -> "quilt.mod.json";
-            case PUZZLE -> "puzzle.mod.json";
+            case PUZZLE,PUZZLE_LEGACY -> "puzzle.mod.json";
         };
     }
 }

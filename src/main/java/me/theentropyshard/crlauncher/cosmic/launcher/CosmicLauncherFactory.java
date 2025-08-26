@@ -27,16 +27,25 @@ public class CosmicLauncherFactory {
                                              Path gameFilesLocation,
                                              Path clientPath) {
 
-        return CosmicLauncherFactory.getLauncher(javaPath, type, runDir, gameFilesLocation, clientPath, null, null);
+        return CosmicLauncherFactory.getLauncher(javaPath, type, runDir, gameFilesLocation, clientPath, null, null,null);
     }
-
     public static CosmicLauncher getLauncher(String javaPath,
                                              LaunchType type,
                                              Path runDir,
                                              Path gameFilesLocation,
                                              Path clientPath,
                                              Path modsDir,
-                                             String version
+                                             String version) {
+
+        return CosmicLauncherFactory.getLauncher(javaPath, type, runDir, gameFilesLocation, clientPath, modsDir, version,null);
+    }
+    public static CosmicLauncher getLauncher(String javaPath,
+                                             LaunchType type,
+                                             Path runDir,
+                                             Path gameFilesLocation,
+                                             Path clientPath,
+                                             Path modsDir,
+                                             String version,String version2
     ) {
 
         if (type == LaunchType.VANILLA) {
@@ -54,8 +63,13 @@ public class CosmicLauncherFactory {
                 return new FabricCosmicLauncher(javaPath, runDir, gameFilesLocation, clientPath, modsDir, version);
             } else if (type == LaunchType.QUILT) {
                 return new QuiltCosmicLauncher(javaPath, runDir, gameFilesLocation, clientPath, modsDir, version);
-            } else if (type == LaunchType.PUZZLE) {
-                return new PuzzleCosmicLauncher(javaPath, runDir, gameFilesLocation, clientPath, modsDir, version);
+            } else if (type == LaunchType.PUZZLE_LEGACY) {
+                return new PuzzleLegacyCosmicLauncher(javaPath, runDir, gameFilesLocation, clientPath, modsDir, version);
+            }
+            else if (type == LaunchType.PUZZLE) {
+                if(version2 == null)
+                    throw new IllegalArgumentException("Mod loader version must not be null when launching with mods");
+                return new PuzzleCosmicLauncher(javaPath, runDir, gameFilesLocation, clientPath, modsDir, version,version2);
             }
         }
 

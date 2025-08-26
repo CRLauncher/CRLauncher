@@ -81,7 +81,7 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
         SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
     }
 
-    private Path setupLoader() {
+    Path setupLoader() {
         CRLauncher launcher = CRLauncher.getInstance();
         Args args = launcher.getArgs();
 
@@ -157,7 +157,6 @@ public class PatchCosmicLauncher extends AbstractCosmicLauncher {
 
         super.buildCommand(command);
 
-        command.add("-javaagent:" + this.setupLoader());
     }
 
     public boolean isChangeSaveLocation() {

@@ -25,6 +25,7 @@ public enum ModLoader {
     VANILLA("vanilla", "Vanilla"),
     FABRIC("fabric", "Fabric"),
     QUILT("quilt", "Cosmic Quilt"),
+    PUZZLE_LEGACY("puzzle_legacy", "Puzzle Legacy"),
     PUZZLE("puzzle", "Puzzle");
 
     private static final Map<String, ModLoader> lookup = new HashMap<>();
@@ -56,6 +57,7 @@ public enum ModLoader {
     public static ModLoader getFromCrmm(String crmmName) {
         return switch (crmmName) {
             case "quilt" -> ModLoader.QUILT;
+//            case "puzzle_loader" -> ModLoader.PUZZLE_LEGACY; //TODO: support both puzzle and puzzle legacy
             case "puzzle_loader" -> ModLoader.PUZZLE;
             default -> throw new IllegalArgumentException("Unknown mod loader from CRMM: " + crmmName);
         };

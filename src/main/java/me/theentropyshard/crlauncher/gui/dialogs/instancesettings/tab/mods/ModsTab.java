@@ -25,7 +25,9 @@ import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.crmm.SearchCrmmModsDialog;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.fabric.FabricVersionsLoaderWorker;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.puzzle.PuzzleVersionsLoaderWorker;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.puzzle.PuzzleCoreVersionsLoaderWorker;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.puzzle.PuzzleCosmicVersionsLoaderWorker;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.puzzle.puzzle_legacy.PuzzleLegacyVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.quilt.QuiltVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
@@ -42,12 +44,15 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Objects;
 
 public class ModsTab extends Tab implements ItemListener {
     private final JComboBox<ModLoader> typeCombo;
 
     private final JComboBox<GithubRelease> loaderVersionCombo;
+    private JComboBox<GithubRelease> loaderVersion2Combo;
     private final ToggleableItemListener loaderVersionListener;
+    private ToggleableItemListener loaderVersion2Listener;
 
     private final JPanel root;
     private final JPanel loaderVersionsPanel;
@@ -117,7 +122,8 @@ public class ModsTab extends Tab implements ItemListener {
                 switch (instance.getModLoader()) {
                     case FABRIC -> instance.setFabricVersion(versionCombo.tag_name);
                     case QUILT -> instance.setQuiltVersion(versionCombo.tag_name);
-                    case PUZZLE -> instance.setPuzzleVersion(versionCombo.tag_name);
+                    case PUZZLE_LEGACY -> instance.setPuzzleLegacyVersion(versionCombo.tag_name);
+                    case PUZZLE-> instance.setPuzzleCoreVersion(versionCombo.tag_name);
                 }
             });
 
@@ -127,7 +133,33 @@ public class ModsTab extends Tab implements ItemListener {
                 language.getString("gui.instanceSettingsDialog.modsTab.loaderVersion.borderName"), 1, 1);
             this.loaderVersionsPanel.setVisible(false);
             this.loaderVersionsPanel.add(this.loaderVersionCombo);
+            this.loaderVersion2Combo = new JComboBox<>();
+            this.loaderVersion2Combo.setRenderer(new DefaultListCellRenderer() {
+                @Override
+                public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                    Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 
+                    if (value instanceof GithubRelease release) {
+                        ((JLabel) c).setText(release.name + " (" + release.tag_name + ")");
+                    }
+
+                    return c;
+                }
+            });
+            this.loaderVersion2Listener = new ToggleableItemListener(e -> {
+                GithubRelease versionCombo = (GithubRelease) e.getItem();
+
+                if (versionCombo == null) {
+                    return;
+                }
+
+                if (Objects.requireNonNull(instance.getModLoader()) == ModLoader.PUZZLE) {
+                    instance.setPuzzleCosmicVersion(versionCombo.tag_name);
+                }
+            });
+            loaderVersion2Combo.addItemListener(loaderVersion2Listener);
+            if(instance.getModLoader() == ModLoader.PUZZLE)
+                this.loaderVersionsPanel.add(this.loaderVersion2Combo);
             if (this.getInstance().getModLoader() != ModLoader.VANILLA) {
                 this.loadModloaderVersions();
                 this.loaderVersionsPanel.setVisible(true);
@@ -164,7 +196,7 @@ public class ModsTab extends Tab implements ItemListener {
                         case VANILLA -> instance.getDataModsDir();
                         case FABRIC -> instance.getFabricModsDir();
                         case QUILT -> instance.getQuiltModsDir();
-                        case PUZZLE -> instance.getPuzzleModsDir();
+                        case PUZZLE, PUZZLE_LEGACY -> instance.getPuzzleModsDir();
                     };
 
                     try {
@@ -239,8 +271,12 @@ public class ModsTab extends Tab implements ItemListener {
                 new FabricVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
             case QUILT ->
                 new QuiltVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
-            case PUZZLE ->
-                new PuzzleVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
+            case PUZZLE_LEGACY ->
+                new PuzzleLegacyVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
+            case PUZZLE -> {
+                    new PuzzleCoreVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
+                    new PuzzleCosmicVersionsLoaderWorker(this.loaderVersion2Combo,this.loaderVersion2Listener,instance).execute();
+            }
         }
 
         this.versionsLoaded = true;
@@ -265,7 +301,11 @@ public class ModsTab extends Tab implements ItemListener {
         instance.setModLoader((ModLoader) e.getItem());
 
         this.updateModsButton.setEnabled(instance.canAutoUpdateMods());
-
+        if(instance.getModLoader() != ModLoader.PUZZLE){
+             this.loaderVersionsPanel.remove(this.loaderVersion2Combo);
+        }else {
+            this.loaderVersionsPanel.add(this.loaderVersion2Combo);
+        }
         this.updateModsView();
         this.getRoot().revalidate();
     }

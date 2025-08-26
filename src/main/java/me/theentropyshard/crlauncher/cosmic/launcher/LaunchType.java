@@ -4,5 +4,6 @@ public enum LaunchType {
     VANILLA,
     FABRIC,
     QUILT,
-    PUZZLE
+    PUZZLE_LEGACY,
+    PUZZLE,
 }
