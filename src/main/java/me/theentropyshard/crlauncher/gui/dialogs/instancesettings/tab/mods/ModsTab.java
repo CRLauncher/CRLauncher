@@ -121,7 +121,7 @@ public class ModsTab extends Tab implements ItemListener {
                 switch (instance.getModLoader()) {
                     case FABRIC -> instance.setFabricVersion(versionCombo.tag_name);
                     case QUILT -> instance.setQuiltVersion(versionCombo.tag_name);
-                    case PUZZLE-> instance.setPuzzleCoreVersion(versionCombo.tag_name);
+                    case PUZZLE -> instance.setPuzzleCoreVersion(versionCombo.tag_name);
                 }
             });
 
@@ -155,7 +155,7 @@ public class ModsTab extends Tab implements ItemListener {
                     instance.setPuzzleCosmicVersion(versionCombo.tag_name);
                 }
             });
-            loaderVersion2Combo.addItemListener(loaderVersion2Listener);
+            this.loaderVersion2Combo.addItemListener(loaderVersion2Listener);
             if(instance.getModLoader() == ModLoader.PUZZLE)
                 this.loaderVersionsPanel.add(this.loaderVersion2Combo);
             if (this.getInstance().getModLoader() != ModLoader.VANILLA) {
@@ -271,7 +271,7 @@ public class ModsTab extends Tab implements ItemListener {
                 new QuiltVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
             case PUZZLE -> {
                     new PuzzleCoreVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
-                    new PuzzleCosmicVersionsLoaderWorker(this.loaderVersion2Combo,this.loaderVersion2Listener,instance).execute();
+                    new PuzzleCosmicVersionsLoaderWorker(this.loaderVersion2Combo, this.loaderVersion2Listener, instance).execute();
             }
         }
 

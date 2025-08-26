@@ -60,7 +60,7 @@ public class PuzzleCosmicLauncher extends ModdedPatchCosmicLauncher {
             Log.error("Could not download Puzzle ", e);
 
             MessageBox.showErrorMessage(
-                    CRLauncher.frame, "Could not download Puzzle : " + e.getMessage()
+                CRLauncher.frame, "Could not download Puzzle : " + e.getMessage()
             );
 
             return;

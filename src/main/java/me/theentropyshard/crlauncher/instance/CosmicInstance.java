@@ -379,7 +379,7 @@ public class CosmicInstance extends JavaInstance {
     }
 
     public String getPuzzleCoreVersion() {
-        return puzzleCoreVersion;
+        return this.puzzleCoreVersion;
     }
 
     public void setPuzzleCosmicVersion(String puzzleCosmicVersion) {
@@ -387,6 +387,6 @@ public class CosmicInstance extends JavaInstance {
     }
 
     public String getPuzzleCosmicVersion() {
-        return puzzleCosmicVersion;
+        return this.puzzleCosmicVersion;
     }
 }
