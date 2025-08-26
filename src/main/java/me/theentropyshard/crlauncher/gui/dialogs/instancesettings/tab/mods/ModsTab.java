@@ -27,7 +27,6 @@ import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.Tab;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.fabric.FabricVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.puzzle.PuzzleCoreVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.puzzle.PuzzleCosmicVersionsLoaderWorker;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.puzzle.puzzle_legacy.PuzzleLegacyVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.quilt.QuiltVersionsLoaderWorker;
 import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
 import me.theentropyshard.crlauncher.gui.utils.Worker;
@@ -122,7 +121,6 @@ public class ModsTab extends Tab implements ItemListener {
                 switch (instance.getModLoader()) {
                     case FABRIC -> instance.setFabricVersion(versionCombo.tag_name);
                     case QUILT -> instance.setQuiltVersion(versionCombo.tag_name);
-                    case PUZZLE_LEGACY -> instance.setPuzzleLegacyVersion(versionCombo.tag_name);
                     case PUZZLE-> instance.setPuzzleCoreVersion(versionCombo.tag_name);
                 }
             });
@@ -196,7 +194,7 @@ public class ModsTab extends Tab implements ItemListener {
                         case VANILLA -> instance.getDataModsDir();
                         case FABRIC -> instance.getFabricModsDir();
                         case QUILT -> instance.getQuiltModsDir();
-                        case PUZZLE, PUZZLE_LEGACY -> instance.getPuzzleModsDir();
+                        case PUZZLE -> instance.getPuzzleModsDir();
                     };
 
                     try {
@@ -271,8 +269,6 @@ public class ModsTab extends Tab implements ItemListener {
                 new FabricVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
             case QUILT ->
                 new QuiltVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
-            case PUZZLE_LEGACY ->
-                new PuzzleLegacyVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
             case PUZZLE -> {
                     new PuzzleCoreVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
                     new PuzzleCosmicVersionsLoaderWorker(this.loaderVersion2Combo,this.loaderVersion2Listener,instance).execute();

@@ -120,7 +120,6 @@ public class ModsView extends JPanel {
             case VANILLA -> new DataModsTableModel(this.modsTable, this.instance);
             case FABRIC -> new JavaModsTableModel(this.modsTable, this.instance, ModLoader.FABRIC);
             case QUILT -> new JavaModsTableModel(this.modsTable, this.instance, ModLoader.QUILT);
-            case PUZZLE_LEGACY -> new JavaModsTableModel(this.modsTable, this.instance, ModLoader.PUZZLE_LEGACY);
             case PUZZLE -> new JavaModsTableModel(this.modsTable, this.instance, ModLoader.PUZZLE);
         };
 
@@ -138,7 +137,7 @@ public class ModsView extends JPanel {
             case VANILLA -> language.getString(parentKey + ".vanilla.addModButton");
             case FABRIC -> language.getString(parentKey + ".fabric.addModButton");
             case QUILT -> language.getString(parentKey + ".cosmicQuilt.addModButton");
-            case PUZZLE_LEGACY, PUZZLE -> language.getString(parentKey + ".puzzle.addModButton");
+            case PUZZLE -> language.getString(parentKey + ".puzzle.addModButton");
         };
     }
 
@@ -151,7 +150,7 @@ public class ModsView extends JPanel {
             case VANILLA -> language.getString(parentKey + ".vanilla.deleteModButton");
             case FABRIC -> language.getString(parentKey + ".fabric.deleteModButton");
             case QUILT -> language.getString(parentKey + ".cosmicQuilt.deleteModButton");
-            case PUZZLE_LEGACY, PUZZLE -> language.getString(parentKey + ".puzzle.deleteModButton");
+            case  PUZZLE -> language.getString(parentKey + ".puzzle.deleteModButton");
         };
     }
 

@@ -25,7 +25,6 @@ public enum ModLoader {
     VANILLA("vanilla", "Vanilla"),
     FABRIC("fabric", "Fabric"),
     QUILT("quilt", "Cosmic Quilt"),
-    PUZZLE_LEGACY("puzzle_legacy", "Puzzle Legacy"),
     PUZZLE("puzzle", "Puzzle");
 
     private static final Map<String, ModLoader> lookup = new HashMap<>();

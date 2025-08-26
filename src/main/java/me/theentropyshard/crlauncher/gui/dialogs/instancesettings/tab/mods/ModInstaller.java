@@ -334,7 +334,7 @@ public class ModInstaller {
                         switch (loader) {
                             case FABRIC -> mod = Json.parse(json, FabricMod.class).toMod();
                             case QUILT -> mod = Json.parse(json, QuiltMod.class).toMod();
-                            case PUZZLE,PUZZLE_LEGACY -> mod = Json.parse(json, PuzzleMod.class).toMod();
+                            case PUZZLE -> mod = Json.parse(json, PuzzleMod.class).toMod();
                             default -> mod = null;
                         }
 
@@ -385,7 +385,7 @@ public class ModInstaller {
             case VANILLA -> null;
             case FABRIC -> "fabric.mod.json";
             case QUILT -> "quilt.mod.json";
-            case PUZZLE,PUZZLE_LEGACY -> "puzzle.mod.json";
+            case PUZZLE -> "puzzle.mod.json";
         };
     }
 }

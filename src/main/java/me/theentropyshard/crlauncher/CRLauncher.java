@@ -22,7 +22,6 @@ import me.theentropyshard.crlauncher.cosmic.account.AccountManager;
 import me.theentropyshard.crlauncher.cosmic.icon.IconManager;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.QuiltManager;
 import me.theentropyshard.crlauncher.cosmic.mods.puzzle.PuzzleManager;
-import me.theentropyshard.crlauncher.cosmic.mods.puzzle.puzzle_legacy.PuzzleLegacyManager;
 import me.theentropyshard.crlauncher.cosmic.version.VersionManager;
 import me.theentropyshard.crlauncher.crmm.CrmmApi;
 import me.theentropyshard.crlauncher.github.GithubApi;
@@ -85,7 +84,6 @@ public class CRLauncher {
     private final InstanceManager instanceManager;
     private final IconManager iconManager;
     private final QuiltManager quiltManager;
-    private final PuzzleLegacyManager puzzleLegacyManager;
     private final PuzzleManager puzzleManager;
     private final AccountManager accountManager;
     private final JavaManager javaManager;
@@ -200,7 +198,6 @@ public class CRLauncher {
         }
 
         this.quiltManager = new QuiltManager(this.modloadersDir.resolve("cosmic-quilt"));
-        this.puzzleLegacyManager = new PuzzleLegacyManager(this.modloadersDir.resolve("puzzle"));
         this.puzzleManager = new PuzzleManager(this.modloadersDir.resolve("puzzle"));
 
         this.javaManager = new JavaManager(this.workDir.resolve("runtimes"));
@@ -429,9 +426,6 @@ public class CRLauncher {
         return this.quiltManager;
     }
 
-    public PuzzleLegacyManager getPuzzleLegacyManager() {
-        return this.puzzleLegacyManager;
-    }
 
     public AccountManager getAccountManager() {
         return this.accountManager;

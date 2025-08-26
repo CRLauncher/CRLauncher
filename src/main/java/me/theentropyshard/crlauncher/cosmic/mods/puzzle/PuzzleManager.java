@@ -2,7 +2,6 @@ package me.theentropyshard.crlauncher.cosmic.mods.puzzle;
 
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.cosmicquilt.maven.QuiltMavenArtifact;
-import me.theentropyshard.crlauncher.cosmic.mods.puzzle.puzzle_legacy.PuzzleLegacyManager;
 import me.theentropyshard.crlauncher.github.GithubApi;
 import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.network.download.DownloadList;
@@ -10,8 +9,6 @@ import me.theentropyshard.crlauncher.network.download.HttpDownload;
 import me.theentropyshard.crlauncher.network.progress.ProgressListener;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.ListUtils;
-import me.theentropyshard.crlauncher.utils.SemanticVersion;
-import org.apache.commons.lang3.ObjectUtils;
 import org.hjson.JsonArray;
 import org.hjson.JsonObject;
 import org.hjson.JsonValue;

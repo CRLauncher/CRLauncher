@@ -247,15 +247,6 @@ public class CosmicRunner extends Thread {
                         this.instance.getQuiltModsDir(),
                         this.instance.getQuiltVersion()
                     );
-                    case PUZZLE_LEGACY -> CosmicLauncherFactory.getLauncher(
-                        javaPath,
-                        LaunchType.PUZZLE_LEGACY,
-                        saveDirPath,
-                        saveDirPath,
-                        clientPath,
-                        this.instance.getPuzzleModsDir(),
-                        this.instance.getPuzzleLegacyVersion()
-                    );
                     case PUZZLE -> CosmicLauncherFactory.getLauncher(
                             javaPath,
                             LaunchType.PUZZLE,

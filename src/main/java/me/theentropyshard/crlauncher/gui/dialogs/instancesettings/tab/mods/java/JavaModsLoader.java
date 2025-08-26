@@ -152,7 +152,7 @@ public class JavaModsLoader extends Worker<Void, Mod> {
             case VANILLA -> null;
             case FABRIC -> Json.parse(json, FabricMod.class).toMod();
             case QUILT -> Json.parse(json, QuiltMod.class).toMod();
-            case PUZZLE, PUZZLE_LEGACY -> Json.parse(json, PuzzleMod.class).toMod();
+            case PUZZLE -> Json.parse(json, PuzzleMod.class).toMod();
         };
     }
 
