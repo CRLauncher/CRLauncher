@@ -18,23 +18,23 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
-import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.language.Language;
-import me.theentropyshard.crlauncher.cosmic.mods.Mod;
-import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.data.DataModsTableModel;
-import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.JavaModsTableModel;
-import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
-import me.theentropyshard.crlauncher.instance.CosmicInstance;
-import me.theentropyshard.crlauncher.logging.Log;
-import me.theentropyshard.crlauncher.utils.FileUtils;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.IOException;
 import java.nio.file.Path;
+
+import me.theentropyshard.crlauncher.CRLauncher;
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.data.DataModsTableModel;
+import me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods.java.JavaModsTableModel;
+import me.theentropyshard.crlauncher.gui.utils.SwingUtils;
+import me.theentropyshard.crlauncher.instance.CosmicInstance;
+import me.theentropyshard.crlauncher.language.Language;
+import me.theentropyshard.crlauncher.logging.Log;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 
 public class ModsView extends JPanel {
     private final CosmicInstance instance;
@@ -150,7 +150,7 @@ public class ModsView extends JPanel {
             case VANILLA -> language.getString(parentKey + ".vanilla.deleteModButton");
             case FABRIC -> language.getString(parentKey + ".fabric.deleteModButton");
             case QUILT -> language.getString(parentKey + ".cosmicQuilt.deleteModButton");
-            case  PUZZLE -> language.getString(parentKey + ".puzzle.deleteModButton");
+            case PUZZLE -> language.getString(parentKey + ".puzzle.deleteModButton");
         };
     }
 

@@ -18,6 +18,13 @@
 
 package me.theentropyshard.crlauncher.cosmic.launcher;
 
+import javax.swing.*;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+
 import me.theentropyshard.crlauncher.Args;
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.github.GithubApi;
@@ -25,13 +32,6 @@ import me.theentropyshard.crlauncher.github.GithubRelease;
 import me.theentropyshard.crlauncher.gui.dialogs.ProgressDialog;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.*;
-
-import javax.swing.*;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
 
 public class PatchCosmicLauncher extends AbstractCosmicLauncher {
     private static final SemanticVersion CR_LOADER_VERSION = SemanticVersion.parse("0.1.7");

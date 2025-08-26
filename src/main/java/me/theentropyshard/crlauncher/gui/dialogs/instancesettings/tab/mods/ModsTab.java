@@ -18,6 +18,14 @@
 
 package me.theentropyshard.crlauncher.gui.dialogs.instancesettings.tab.mods;
 
+import javax.swing.*;
+import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.IOException;
+import java.nio.file.Path;
+
 import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
 import me.theentropyshard.crlauncher.cosmic.mods.ModUpdater;
@@ -35,15 +43,6 @@ import me.theentropyshard.crlauncher.language.Language;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.utils.FileUtils;
 import me.theentropyshard.crlauncher.utils.OperatingSystem;
-
-import javax.swing.*;
-import javax.swing.border.TitledBorder;
-import java.awt.*;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Objects;
 
 public class ModsTab extends Tab implements ItemListener {
     private final JComboBox<ModLoader> typeCombo;
@@ -151,17 +150,13 @@ public class ModsTab extends Tab implements ItemListener {
                     return;
                 }
 
-                if (Objects.requireNonNull(instance.getModLoader()) == ModLoader.PUZZLE) {
+                if (instance.getModLoader() == ModLoader.PUZZLE) {
                     instance.setPuzzleCosmicVersion(versionCombo.tag_name);
                 }
             });
-            this.loaderVersion2Combo.addItemListener(loaderVersion2Listener);
-            if(instance.getModLoader() == ModLoader.PUZZLE)
-                this.loaderVersionsPanel.add(this.loaderVersion2Combo);
-            if (this.getInstance().getModLoader() != ModLoader.VANILLA) {
-                this.loadModloaderVersions();
-                this.loaderVersionsPanel.setVisible(true);
-            }
+            this.loaderVersion2Combo.addItemListener(this.loaderVersion2Listener);
+            this.loaderVersionsPanel.add(this.loaderVersion2Combo);
+            this.loaderVersion2Combo.setVisible(instance.getModLoader() == ModLoader.PUZZLE);
 
             gbc.gridy++;
             this.root.add(this.loaderVersionsPanel, gbc);
@@ -270,8 +265,8 @@ public class ModsTab extends Tab implements ItemListener {
             case QUILT ->
                 new QuiltVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
             case PUZZLE -> {
-                    new PuzzleCoreVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
-                    new PuzzleCosmicVersionsLoaderWorker(this.loaderVersion2Combo, this.loaderVersion2Listener, instance).execute();
+                new PuzzleCoreVersionsLoaderWorker(this.loaderVersionCombo, this.loaderVersionListener, instance).execute();
+                new PuzzleCosmicVersionsLoaderWorker(this.loaderVersion2Combo, this.loaderVersion2Listener, instance).execute();
             }
         }
 
@@ -297,11 +292,7 @@ public class ModsTab extends Tab implements ItemListener {
         instance.setModLoader((ModLoader) e.getItem());
 
         this.updateModsButton.setEnabled(instance.canAutoUpdateMods());
-        if(instance.getModLoader() != ModLoader.PUZZLE){
-             this.loaderVersionsPanel.remove(this.loaderVersion2Combo);
-        }else {
-            this.loaderVersionsPanel.add(this.loaderVersion2Combo);
-        }
+        this.loaderVersion2Combo.setVisible(instance.getModLoader() == ModLoader.PUZZLE);
         this.updateModsView();
         this.getRoot().revalidate();
     }
@@ -311,14 +302,6 @@ public class ModsTab extends Tab implements ItemListener {
         panel.setBorder(new TitledBorder(title));
 
         return panel;
-    }
-
-    public JComboBox<GithubRelease> getLoaderVersionCombo() {
-        return this.loaderVersionCombo;
-    }
-
-    public ToggleableItemListener getLoaderVersionListener() {
-        return this.loaderVersionListener;
     }
 
     public ModsView getModsView() {

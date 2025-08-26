@@ -18,16 +18,16 @@
 
 package me.theentropyshard.crlauncher.instance;
 
-import me.theentropyshard.crlauncher.cosmic.mods.Mod;
-import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
-import me.theentropyshard.crlauncher.utils.FileUtils;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
+
+import me.theentropyshard.crlauncher.cosmic.mods.Mod;
+import me.theentropyshard.crlauncher.cosmic.mods.ModLoader;
+import me.theentropyshard.crlauncher.utils.FileUtils;
 
 public class CosmicInstance extends JavaInstance {
     private static final String COSMIC_DIR_NAME = "cosmic-reach";
@@ -178,7 +178,7 @@ public class CosmicInstance extends JavaInstance {
             case VANILLA -> this.getDataMods();
             case FABRIC -> this.getFabricMods();
             case QUILT -> this.getQuiltMods();
-            case PUZZLE-> this.getPuzzleMods();
+            case PUZZLE -> this.getPuzzleMods();
         };
     }
 
