@@ -17,6 +17,7 @@ import org.hjson.JsonObject;
 import org.hjson.JsonValue;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
@@ -75,7 +76,7 @@ public class PuzzleManager {
             filePath = this.versionsDir.resolve(fileName + "-common.jar");
             list.add(loaderDownload);
 
-            var loaderDownload2 = new HttpDownload.Builder()
+            HttpDownload loaderDownload2 = new HttpDownload.Builder()
                     .httpClient(CRLauncher.getInstance().getHttpClient())
                     .saveAs(filePath)
                     .url("https://repo1.maven.org/maven2/dev/puzzleshq/puzzle-loader-core/" + version + "/" + fileName + "-common.jar")
@@ -133,8 +134,12 @@ public class PuzzleManager {
     }
 
     public boolean isInstalled(String core,String cosmic) {
-        Path loaderFile = this.versionsDir.resolve(getClientName());
-        if (!Files.exists(loaderFile)) {
+
+        if(!Files.exists(this.versionsDir.resolve(PUZZLE_CORE_COMMON_FILE_NAME_FORMAT.formatted(core)))||
+                !Files.exists(this.versionsDir.resolve(PUZZLE_CORE_CLIENT_FILE_NAME_FORMAT.formatted(core))) ||
+                !Files.exists(this.versionsDir.resolve(PUZZLE_COSMIC_COMMON_FILE_NAME_FORMAT.formatted(cosmic))) ||
+                !Files.exists(this.versionsDir.resolve(PUZZLE_COSMIC_CLIENT_FILE_NAME_FORMAT.formatted(cosmic))))
+         {
             return false;
         }
 
@@ -153,18 +158,18 @@ public class PuzzleManager {
         List<PuzzleUnknownRepoDependency> deps = new ArrayList<>();
         List<String> repos = new ArrayList<>();
         try {
-            var stream = url.openStream();
+            InputStream stream = url.openStream();
             String jsonInfo = new String(stream.readAllBytes());
             stream.close();
 
             JsonObject obj = JsonValue.readHjson(jsonInfo).asObject();
-            var versionsList = obj.get("versions").asObject();
+            JsonObject versionsList = obj.get("versions").asObject();
             JsonObject versionInfo = versionsList.get(version).asObject();
             if (versionInfo == null) {
                 versionInfo = versionsList.get(obj.get("latest").asObject().get("*").asString()).asObject();
 //                assertTrue(ObjectUtils.allNotNull(versionInfo));
             }
-            var depsUrl = new URL(versionInfo.get("dependencies").asString());
+            URL depsUrl = new URL(versionInfo.get("dependencies").asString());
 
             stream = depsUrl.openStream();
             String jsonDepsInfoString = new String(stream.readAllBytes());
@@ -175,7 +180,7 @@ public class PuzzleManager {
                 JsonArray repoList = depsobj.get("repos").asArray();
                 for (JsonValue jsonValue : repoList){
 
-                    var repoObj = jsonValue.asObject();
+                    JsonObject repoObj = jsonValue.asObject();
 
                     repos.add(repoObj.get("url").asString());
                 }
@@ -184,7 +189,7 @@ public class PuzzleManager {
             if (depsobj.get("common") != null) {
                 JsonArray commonDepsList = depsobj.get("common").asArray();
                 for (JsonValue jsonValue : commonDepsList) {
-                    var depobj = jsonValue.asObject();
+                    JsonObject depobj = jsonValue.asObject();
                     if (Objects.equals(depobj.get("type").asString(), "implementation")) {
 
                         deps.add(new PuzzleUnknownRepoDependency(new ArrayList<>(repos),new QuiltMavenArtifact(
@@ -199,7 +204,7 @@ public class PuzzleManager {
             if (depsobj.get("client") != null) {
                 JsonArray commonDepsList = depsobj.get("client").asArray();
                 for (JsonValue jsonValue : commonDepsList) {
-                    var depobj = jsonValue.asObject();
+                    JsonObject depobj = jsonValue.asObject();
                     if (Objects.equals(depobj.get("type").asString(), "implementation")) {
 //                        String dep = String.format("%s:%s:%s",
 //                                depobj.get("groupId").asString(),
@@ -234,14 +239,9 @@ public class PuzzleManager {
         return dependencies;
     }
 
-    public static String getClientName()
-    {
-//        SemanticVersion puzzleVersion = SemanticVersion.parse();
-        return "bob";
-    }
 
     public static String getMainClass(String version) {
 
-        return "dev.puzzleshq.puzzleloader.loader.launch.pieces.ClientPiece";
+        return PuzzleProperties.MAIN_CLASS_REWRITE;
     }
 }
