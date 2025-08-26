@@ -419,9 +419,17 @@ public class MainTab extends Tab {
             envVarsPanel.add(envVarsScrollPane, BorderLayout.CENTER);
 
             gbc.gridy++;
-            gbc.weighty = 1;
             panel.add(envVarsPanel, gbc);
         }
+
+        JCheckBox showErrorMessage = new JCheckBox(language.getString("gui.instanceSettingsDialog.mainTab.showErrorMessage"));
+        showErrorMessage.addActionListener(e -> {
+            instance.setShowErrorMessage(showErrorMessage.isSelected());
+        });
+        showErrorMessage.setSelected(instance.showErrorMessage());
+        gbc.gridy++;
+        gbc.weighty = 1;
+        panel.add(showErrorMessage, gbc);
 
         this.getDialog().addWindowListener(new WindowAdapter() {
             @Override

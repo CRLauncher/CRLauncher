@@ -118,7 +118,8 @@
                 },
                 "environmentVariables": {
                     "borderName": "<html>Environment variables. Semicolon ang panghiwalay: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
-                }
+                },
+                "showErrorMessage": "Show error message if game launch failed"
             },
             "javaTab": {
                 "name": "Java",

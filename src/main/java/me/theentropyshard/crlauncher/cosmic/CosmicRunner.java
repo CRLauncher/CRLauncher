@@ -399,37 +399,8 @@ public class CosmicRunner extends Thread {
             this.instance.updatePlaytime(timePlayedSeconds);
             this.instance.save();
 
-            if (this.errorLine != null && !this.errorLine.trim().isEmpty()) {
-                this.errorLine = this.errorLine.strip();
-                this.errorLine = AnsiColor.stripAnsiCodes(this.errorLine);
-
-                String path = this.errorLine
-                    .replace("java.lang.RuntimeException: Error parsing block: ", "")
-                    .replace("java.lang.RuntimeException: Error parsing item: ", "")
-                    .replace("java.lang.RuntimeException: Error parsing recipes: ", "")
-                    .replace("java.lang.RuntimeException: Error parsing loot: ", "");
-
-                String namespace = path.split(":")[0];
-
-                String message = CRLauncher.getInstance().getLanguage().getString("messages.gui.errorParsingModGameMessage")
-                    .replace("$$FILE_PATH$$", path)
-                    .replace("$$MOD_NAMESPACE$$", namespace);
-
-                MessageBox.showErrorMessage(CRLauncher.frame, message);
-            }
-
-            if (this.errorOccurredDuringInitializationOfVM && this.objectHeapError != null && !this.objectHeapError.isEmpty()) {
-                String message = CRLauncher.getInstance().getLanguage().getString("messages.gui.errorTooMuchMemoryGiven")
-                    .replace("$$MIN_MEMORY$$", String.valueOf(this.instance.getMinimumMemoryInMegabytes()))
-                    .replace("$$MAX_MEMORY$$", String.valueOf(this.instance.getMaximumMemoryInMegabytes()));
-
-                MessageBox.showErrorMessage(CRLauncher.frame, message);
-            }
-
-            if (this.outOfMemory) {
-                String message = CRLauncher.getInstance().getLanguage().getString("messages.gui.gameOutOfMemory");
-
-                MessageBox.showErrorMessage(CRLauncher.frame, message);
+            if (this.instance.showErrorMessage()) {
+                this.showErrorMessage();
             }
 
             if (exitCode == 0 && exitsOption == 1) {
@@ -448,6 +419,41 @@ public class CosmicRunner extends Thread {
                     Log.error("Unable to delete temporary client", e);
                 }
             }
+        }
+    }
+
+    private void showErrorMessage() {
+        if (this.errorLine != null && !this.errorLine.trim().isEmpty()) {
+            this.errorLine = this.errorLine.strip();
+            this.errorLine = AnsiColor.stripAnsiCodes(this.errorLine);
+
+            String path = this.errorLine
+                .replace("java.lang.RuntimeException: Error parsing block: ", "")
+                .replace("java.lang.RuntimeException: Error parsing item: ", "")
+                .replace("java.lang.RuntimeException: Error parsing recipes: ", "")
+                .replace("java.lang.RuntimeException: Error parsing loot: ", "");
+
+            String namespace = path.split(":")[0];
+
+            String message = CRLauncher.getInstance().getLanguage().getString("messages.gui.errorParsingModGameMessage")
+                .replace("$$FILE_PATH$$", path)
+                .replace("$$MOD_NAMESPACE$$", namespace);
+
+            MessageBox.showErrorMessage(CRLauncher.frame, message);
+        }
+
+        if (this.errorOccurredDuringInitializationOfVM && this.objectHeapError != null && !this.objectHeapError.isEmpty()) {
+            String message = CRLauncher.getInstance().getLanguage().getString("messages.gui.errorTooMuchMemoryGiven")
+                .replace("$$MIN_MEMORY$$", String.valueOf(this.instance.getMinimumMemoryInMegabytes()))
+                .replace("$$MAX_MEMORY$$", String.valueOf(this.instance.getMaximumMemoryInMegabytes()));
+
+            MessageBox.showErrorMessage(CRLauncher.frame, message);
+        }
+
+        if (this.outOfMemory) {
+            String message = CRLauncher.getInstance().getLanguage().getString("messages.gui.gameOutOfMemory");
+
+            MessageBox.showErrorMessage(CRLauncher.frame, message);
         }
     }
 

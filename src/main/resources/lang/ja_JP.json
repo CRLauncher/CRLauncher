@@ -118,7 +118,8 @@
                 },
                 "environmentVariables": {
                     "borderName": "<html>環境変数　セミコロンで区切ってください（例）：<b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
-                }
+                },
+                "showErrorMessage": "Show error message if game launch failed"
             },
             "javaTab": {
                 "name": "Java",

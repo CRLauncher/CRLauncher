@@ -118,7 +118,8 @@
                 },
                 "environmentVariables": {
                     "borderName": "<html>Переменные среды. Разделяйте через точку с запятой: <b>NAME1=VALUE1; NAME2=VALUE2</b></html>"
-                }
+                },
+                "showErrorMessage": "Показать диалог с ошибкой, если не удалось запустить игру"
             },
             "javaTab": {
                 "name": "Java",

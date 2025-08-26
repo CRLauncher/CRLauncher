@@ -72,8 +72,8 @@ public class CosmicInstance extends JavaInstance {
     private String puzzleCosmicVersion;
     private boolean autoUpdateToLatest;
     private boolean updateMods;
-
     private int currentFlagsOption;
+    private boolean showErrorMessage = true;
 
     public CosmicInstance() {
         this(null, null, null);
@@ -318,6 +318,22 @@ public class CosmicInstance extends JavaInstance {
         this.cosmicVersion = cosmicVersion;
     }
 
+    public void setPuzzleCoreVersion(String puzzleCoreVersion) {
+        this.puzzleCoreVersion = puzzleCoreVersion;
+    }
+
+    public String getPuzzleCoreVersion() {
+        return this.puzzleCoreVersion;
+    }
+
+    public void setPuzzleCosmicVersion(String puzzleCosmicVersion) {
+        this.puzzleCosmicVersion = puzzleCosmicVersion;
+    }
+
+    public String getPuzzleCosmicVersion() {
+        return this.puzzleCosmicVersion;
+    }
+
     public boolean isFullscreen() {
         return this.fullscreen;
     }
@@ -374,19 +390,11 @@ public class CosmicInstance extends JavaInstance {
         this.updateMods = updateMods;
     }
 
-    public void setPuzzleCoreVersion(String puzzleCoreVersion) {
-        this.puzzleCoreVersion = puzzleCoreVersion;
+    public boolean showErrorMessage() {
+        return this.showErrorMessage;
     }
 
-    public String getPuzzleCoreVersion() {
-        return this.puzzleCoreVersion;
-    }
-
-    public void setPuzzleCosmicVersion(String puzzleCosmicVersion) {
-        this.puzzleCosmicVersion = puzzleCosmicVersion;
-    }
-
-    public String getPuzzleCosmicVersion() {
-        return this.puzzleCosmicVersion;
+    public void setShowErrorMessage(boolean showErrorMessage) {
+        this.showErrorMessage = showErrorMessage;
     }
 }
