@@ -150,7 +150,7 @@ public class ModsView extends JPanel {
             case VANILLA -> language.getString(parentKey + ".vanilla.deleteModButton");
             case FABRIC -> language.getString(parentKey + ".fabric.deleteModButton");
             case QUILT -> language.getString(parentKey + ".cosmicQuilt.deleteModButton");
-            case PUZZLE -> language.getString(parentKey + ".puzzle.deleteModButton");
+            case  PUZZLE -> language.getString(parentKey + ".puzzle.deleteModButton");
         };
     }
 

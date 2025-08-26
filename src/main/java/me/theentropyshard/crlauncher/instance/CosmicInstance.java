@@ -68,7 +68,8 @@ public class CosmicInstance extends JavaInstance {
     private ModLoader modLoader = ModLoader.VANILLA;
     private String fabricVersion;
     private String quiltVersion;
-    private String puzzleVersion;
+    private String puzzleCoreVersion;
+    private String puzzleCosmicVersion;
     private boolean autoUpdateToLatest;
     private boolean updateMods;
 
@@ -177,7 +178,7 @@ public class CosmicInstance extends JavaInstance {
             case VANILLA -> this.getDataMods();
             case FABRIC -> this.getFabricMods();
             case QUILT -> this.getQuiltMods();
-            case PUZZLE -> this.getPuzzleMods();
+            case PUZZLE-> this.getPuzzleMods();
         };
     }
 
@@ -215,14 +216,6 @@ public class CosmicInstance extends JavaInstance {
 
     public void setQuiltVersion(String quiltVersion) {
         this.quiltVersion = quiltVersion;
-    }
-
-    public String getPuzzleVersion() {
-        return this.puzzleVersion;
-    }
-
-    public void setPuzzleVersion(String puzzleVersion) {
-        this.puzzleVersion = puzzleVersion;
     }
 
     public ModLoader getModLoader() {
@@ -379,5 +372,21 @@ public class CosmicInstance extends JavaInstance {
 
     public void setUpdateMods(boolean updateMods) {
         this.updateMods = updateMods;
+    }
+
+    public void setPuzzleCoreVersion(String puzzleCoreVersion) {
+        this.puzzleCoreVersion = puzzleCoreVersion;
+    }
+
+    public String getPuzzleCoreVersion() {
+        return this.puzzleCoreVersion;
+    }
+
+    public void setPuzzleCosmicVersion(String puzzleCosmicVersion) {
+        this.puzzleCosmicVersion = puzzleCosmicVersion;
+    }
+
+    public String getPuzzleCosmicVersion() {
+        return this.puzzleCosmicVersion;
     }
 }

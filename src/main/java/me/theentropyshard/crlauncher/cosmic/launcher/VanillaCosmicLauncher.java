@@ -29,6 +29,7 @@ public class VanillaCosmicLauncher extends PatchCosmicLauncher {
     @Override
     public void buildCommand(List<String> command) {
         super.buildCommand(command);
+        command.add("-javaagent:" + super.setupLoader());
 
         command.add("-jar");
         command.add(this.getClientPath().toString());

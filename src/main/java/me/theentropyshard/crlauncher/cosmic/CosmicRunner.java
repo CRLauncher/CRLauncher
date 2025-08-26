@@ -248,13 +248,14 @@ public class CosmicRunner extends Thread {
                         this.instance.getQuiltVersion()
                     );
                     case PUZZLE -> CosmicLauncherFactory.getLauncher(
-                        javaPath,
-                        LaunchType.PUZZLE,
-                        saveDirPath,
-                        saveDirPath,
-                        clientPath,
-                        this.instance.getPuzzleModsDir(),
-                        this.instance.getPuzzleVersion()
+                            javaPath,
+                            LaunchType.PUZZLE,
+                            saveDirPath,
+                            saveDirPath,
+                            clientPath,
+                            this.instance.getPuzzleModsDir(),
+                            this.instance.getPuzzleCoreVersion(),
+                            this.instance.getPuzzleCosmicVersion()
                     );
                     default ->
                         throw new IllegalArgumentException("Unknown instance type: " + this.instance.getModLoader());

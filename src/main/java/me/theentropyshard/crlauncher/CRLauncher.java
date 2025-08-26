@@ -426,9 +426,6 @@ public class CRLauncher {
         return this.quiltManager;
     }
 
-    public PuzzleManager getPuzzleManager() {
-        return this.puzzleManager;
-    }
 
     public AccountManager getAccountManager() {
         return this.accountManager;
@@ -476,5 +473,9 @@ public class CRLauncher {
 
     public Gui getGui() {
         return this.gui;
+    }
+
+    public PuzzleManager getPuzzleManager() {
+        return puzzleManager;
     }
 }

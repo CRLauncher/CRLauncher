@@ -44,7 +44,9 @@ public class GithubApi {
     public List<GithubRelease> getAllReleases(String owner, String repo) throws IOException {
         try (HttpRequest request = new HttpRequest(CRLauncher.getInstance().getHttpClient())) {
             String string = request.asString(URL.formatted(owner, repo));
-
+            if (string.contains("API rate limit exceeded for")){
+                throw new RuntimeException("Github is rate limiting you, Please wait");
+            }
             return new ArrayList<>(List.of(Json.parse(string, GithubRelease[].class)));
         }
     }

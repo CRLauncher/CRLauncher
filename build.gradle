@@ -60,6 +60,7 @@ ext {
     imageiowebp = '3.12.0'
     gifdecoder = 'animated-gif-lib-1.7'
     jsoup = '1.18.3'
+    hjson = '3.1.0'
 }
 
 dependencies {
@@ -83,6 +84,7 @@ dependencies {
     implementation "com.twelvemonkeys.imageio:imageio-webp:$imageiowebp"
     implementation "com.github.rtyley:animated-gif-lib-for-java:$gifdecoder"
     implementation "org.jsoup:jsoup:$jsoup"
+    implementation "org.hjson:hjson:$hjson"
 }
 
 java {
