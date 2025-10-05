@@ -63,7 +63,7 @@ public class ItchVersion extends DetailedBuild implements Version {
             }
         }
 
-        if (version != null && version.getMinor() == 4) {
+        if (version != null && version.getMinor() >= 4) {
             return VersionPhase.ALPHA;
         }
 
