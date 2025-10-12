@@ -141,6 +141,21 @@ public class HttpDownload {
         }
     }
 
+    public boolean checkExist() {
+        Request request = new Request.Builder()
+                .url(this.url)
+                .head()
+                .build();
+
+        try (Response response = this.httpClient.newCall(request).execute()) {
+            int code = response.code();
+            return code == 200 || code == 204 || (code >= 300 && code < 400);
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+
     public void checkHash() throws IOException {
         if (CRLauncher.getInstance().getSettings().disableFileIntegrityCheck) {
             return;
@@ -248,5 +263,14 @@ public class HttpDownload {
                     this.executable, this.expectedSize
             );
         }
+    }
+
+    @Override
+    public String toString() {
+        return "url='" + this.url + '\'' +
+                ", saveAs=" + this.saveAs +
+                ", copyTo=" + this.copyTo +
+                ", sha256='" + this.sha256 + '\'' +
+                ", expectedSize=" + this.expectedSize;
     }
 }

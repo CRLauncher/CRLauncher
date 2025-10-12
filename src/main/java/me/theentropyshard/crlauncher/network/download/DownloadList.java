@@ -22,13 +22,10 @@ import me.theentropyshard.crlauncher.CRLauncher;
 import me.theentropyshard.crlauncher.logging.Log;
 import me.theentropyshard.crlauncher.network.progress.ProgressNetworkInterceptor;
 import okhttp3.OkHttpClient;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +38,7 @@ public class DownloadList {
 
     private final DownloadListener downloadListener;
     private final List<HttpDownload> downloads;
+    public final Set<Path> downloadPaths = new HashSet<>();
     private final AtomicLong downloadedBytes;
     private long totalSize;
 
@@ -53,6 +51,10 @@ public class DownloadList {
     }
 
     public synchronized void add(HttpDownload download) {
+        Path saveAs = download.getSaveAs();
+        if (this.downloadPaths.contains(saveAs)){
+            return;
+        }
         long totalSize = download.expectedSize();
         this.totalSize += totalSize > 0 ? totalSize : 0;
 
@@ -60,8 +62,10 @@ public class DownloadList {
             this.downloadedBytes.addAndGet(download.size());
         }
 
-        this.downloads.removeIf(d -> d.getSaveAs().equals(download.getSaveAs()));
-        this.downloads.add(download);
+        if (download.checkExist()) {
+            this.downloads.add(download);
+            this.downloadPaths.add(saveAs);
+        }
     }
 
     public synchronized void addAll(Collection<HttpDownload> downloads) {
