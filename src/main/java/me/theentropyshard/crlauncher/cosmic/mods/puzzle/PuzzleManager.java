@@ -120,13 +120,17 @@ public class PuzzleManager {
             QuiltMavenArtifact artifact = dependency.mavenArtifact();
 
             for (String repo : dependency.baseReposURL()) {
+                Path savePath = this.depsDir.resolve(artifact.jar());
+                if (list.getDownloadPaths().contains(savePath)){
+                    continue;
+                }
                 if (!repo.endsWith("/")) {
                     repo = repo + "/";
                 }
 
                 HttpDownload libDownload = new HttpDownload.Builder()
                     .httpClient(CRLauncher.getInstance().getHttpClient())
-                    .saveAs(this.depsDir.resolve(artifact.jar()))
+                    .saveAs(savePath)
                     .url(repo + artifact.url())
                     // todo add sha 1 to download and verify
                     .build();
