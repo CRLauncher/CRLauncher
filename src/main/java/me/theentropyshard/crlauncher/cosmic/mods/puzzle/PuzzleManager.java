@@ -120,7 +120,7 @@ public class PuzzleManager {
             QuiltMavenArtifact artifact = dependency.mavenArtifact();
 
             for (String repo : dependency.baseReposURL()) {
-                if (list.downloadPaths.contains(this.depsDir.resolve(artifact.jar()))){
+                if (list.getDownloadPaths().contains(this.depsDir.resolve(artifact.jar()))){
                     continue;
                 }
                 if (!repo.endsWith("/")) {

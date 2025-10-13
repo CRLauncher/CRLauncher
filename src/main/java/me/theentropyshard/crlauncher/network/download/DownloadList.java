@@ -38,7 +38,7 @@ public class DownloadList {
 
     private final DownloadListener downloadListener;
     private final List<HttpDownload> downloads;
-    public final Set<Path> downloadPaths = new HashSet<>();
+    private final Set<Path> downloadPaths = new HashSet<>();
     private final AtomicLong downloadedBytes;
     private long totalSize;
 
@@ -78,6 +78,10 @@ public class DownloadList {
 
     public long getTotalSize() {
         return this.totalSize;
+    }
+
+    public Set<Path> getDownloadPaths() {
+        return downloadPaths;
     }
 
     public synchronized void downloadAll() {
