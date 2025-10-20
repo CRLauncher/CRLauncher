@@ -121,7 +121,7 @@ public class PuzzleManager {
 
             for (String repo : dependency.baseReposURL()) {
                 Path savePath = this.depsDir.resolve(artifact.jar());
-                if (list.getDownloadPaths().contains(savePath)){
+                if (list.containsSavePath(savePath)){
                     continue;
                 }
                 if (!repo.endsWith("/")) {
@@ -135,7 +135,9 @@ public class PuzzleManager {
                     // todo add sha 1 to download and verify
                     .build();
 
-                list.add(libDownload);
+                if (libDownload.checkExist()) {
+                    list.add(libDownload);
+                }
             }
         }
 

@@ -156,7 +156,6 @@ public class HttpDownload {
         }
     }
 
-
     public void checkHash() throws IOException {
         if (CRLauncher.getInstance().getSettings().disableFileIntegrityCheck) {
             return;

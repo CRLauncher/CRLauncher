@@ -51,10 +51,6 @@ public class DownloadList {
     }
 
     public synchronized void add(HttpDownload download) {
-        Path saveAs = download.getSaveAs();
-        if (this.downloadPaths.contains(saveAs)){
-            return;
-        }
         long totalSize = download.expectedSize();
         this.totalSize += totalSize > 0 ? totalSize : 0;
 
@@ -62,14 +58,24 @@ public class DownloadList {
             this.downloadedBytes.addAndGet(download.size());
         }
 
-        if (download.checkExist()) {
-            this.downloads.add(download);
-            this.downloadPaths.add(saveAs);
-        }
+        this.downloads.removeIf(d -> {
+            if (d.getSaveAs().equals(download.getSaveAs())){
+                this.downloadPaths.remove(download.getSaveAs());
+                return true;
+            }
+            return false;
+        });
+        this.downloads.add(download);
+        this.downloadPaths.add(download.getSaveAs());
     }
+
 
     public synchronized void addAll(Collection<HttpDownload> downloads) {
         downloads.forEach(this::add);
+    }
+
+    public boolean containsSavePath(Path savePath){
+        return this.downloadPaths.contains(savePath);
     }
 
     public int size() {
@@ -78,10 +84,6 @@ public class DownloadList {
 
     public long getTotalSize() {
         return this.totalSize;
-    }
-
-    public Set<Path> getDownloadPaths() {
-        return downloadPaths;
     }
 
     public synchronized void downloadAll() {
