@@ -34,7 +34,3 @@ Or you can use the `--useJarLocation` argument, which will make the launcher use
 $ java -jar dist/CRLauncher.jar --useJarLocation
 ```
 This way the launcher will create its files in dist
-
-
-### Plans:
- - Add support for CRM-1 mod repositories
