@@ -82,6 +82,9 @@ public abstract class AbstractCosmicLauncher implements CosmicLauncher {
     public Process launch(boolean exitAfterLaunch) throws Exception {
         this.buildCommand(this.command);
 
+        this.command.add("--save-location");
+        this.command.add(this.gameFilesLocation.toAbsolutePath().toString());
+
         Log.info("Running: " + String.join(" ", this.command));
 
         ProcessBuilder processBuilder = new ProcessBuilder(this.command);
