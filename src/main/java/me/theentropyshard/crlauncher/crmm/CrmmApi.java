@@ -35,7 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CrmmApi {
-    public static final String BASE_URL = "https://api.crmm.tech/api/";
+    public static final String BASE_URL = "https://api.crmods.org/api/";
 
     private final Retrofit retrofit;
     private final CrmmHttpApi crmmApi;
