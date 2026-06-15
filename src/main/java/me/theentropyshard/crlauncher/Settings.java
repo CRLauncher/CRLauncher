@@ -38,6 +38,7 @@ public class Settings {
     public boolean dialogRelativeParent = true;
     public boolean settingsDialogUpdateToLatest = false;
     public boolean showConsoleAtStartup = true;
+    public int lastDisplay;
     public boolean showAmountOfTime = false;
     public boolean writePrettyJson = false;
     public boolean checkUpdatesStartup = true;
