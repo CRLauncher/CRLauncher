@@ -25,6 +25,7 @@ import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,9 +47,13 @@ public class ItchIoApi {
     }
 
     public List<ShortBuild> getBuilds(int uploadId, String apiKey) {
-        BuildsResponse builds = Objects.requireNonNull(this.itchApi.getBuilds(uploadId, apiKey));
+        BuildsResponse buildsResponse = this.itchApi.getBuilds(uploadId, apiKey);
 
-        return builds.getBuilds();
+        if (buildsResponse == null) {
+            return Collections.emptyList();
+        }
+
+        return buildsResponse.getBuilds();
     }
 
     public DetailedBuild getBuild(int buildId, String apiKey) {

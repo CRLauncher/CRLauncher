@@ -18,16 +18,14 @@
 
 package me.theentropyshard.crlauncher.cosmic.version;
 
+import java.io.IOException;
+import java.util.List;
+
 import me.theentropyshard.crlauncher.CRLauncher;
-import me.theentropyshard.crlauncher.cosmic.account.Account;
 import me.theentropyshard.crlauncher.cosmic.account.ItchIoAccount;
 import me.theentropyshard.crlauncher.cosmic.itch.ItchVersion;
 import me.theentropyshard.crlauncher.itch.DetailedBuild;
-import me.theentropyshard.crlauncher.itch.ItchIoApi;
 import me.theentropyshard.crlauncher.itch.ShortBuild;
-
-import java.io.IOException;
-import java.util.List;
 
 public class ItchVersionList extends VersionList {
     private static final int COSMIC_REACH_UPLOAD_ID = 9891067;
@@ -36,25 +34,21 @@ public class ItchVersionList extends VersionList {
 
     @Override
     public void load() throws IOException {
-        Account currentAccount = CRLauncher.getInstance().getAccountManager().getCurrentAccount();
-        ItchIoApi itchIoApi = CRLauncher.getInstance().getItchIoApi();
-        List<ShortBuild> builds = itchIoApi.getBuilds(ItchVersionList.COSMIC_REACH_UPLOAD_ID, ((ItchIoAccount) currentAccount).getItchIoApiKey());
-        builds.forEach(build -> {
-            ItchVersion version = new ItchVersion();
-            version.setBuildId(build.getBuildId());
-            version.setVersion(build.getVersion());
-            version.setUserVersion(build.getUserVersion());
-            version.setCreatedAt(build.getCreatedAt());
-            version.setUpdatedAt(build.getUpdatedAt());
-            version.setParentBuildId(build.getParentBuildId());
-            this.addVersion(version);
-        });
+        List<ShortBuild> builds = this.getBuilds();
+
+        if (builds.isEmpty()) {
+            return;
+        }
+
+        for (ShortBuild build : builds) {
+            this.addVersion(new ItchVersion(build));
+        }
+
         this.latestVersion = this.getVersions().get(0);
     }
 
     @Override
     public Version getVersionById(String id) {
-        Account currentAccount = CRLauncher.getInstance().getAccountManager().getCurrentAccount();
         ItchVersion version = (ItchVersion) super.getVersionById(id);
 
         if (version == null) {
@@ -62,9 +56,7 @@ public class ItchVersionList extends VersionList {
         }
 
         if (version.getFiles() == null) {
-            ItchIoApi itchIoApi = CRLauncher.getInstance().getItchIoApi();
-            DetailedBuild build = itchIoApi.getBuild(version.getBuildId(), ((ItchIoAccount) currentAccount).getItchIoApiKey());
-            version.setFiles(build.getFiles());
+            version.setFiles(this.getDetailedBuild(version.getBuildId()).getFiles());
         }
 
         return version;
@@ -73,5 +65,19 @@ public class ItchVersionList extends VersionList {
     @Override
     public Version getLatestVersion() {
         return this.getVersionById(this.latestVersion.getId());
+    }
+
+    private List<ShortBuild> getBuilds() {
+        CRLauncher launcher = CRLauncher.getInstance();
+        ItchIoAccount account = (ItchIoAccount) launcher.getAccountManager().getCurrentAccount();
+
+        return launcher.getItchIoApi().getBuilds(ItchVersionList.COSMIC_REACH_UPLOAD_ID, account.getItchIoApiKey());
+    }
+
+    private DetailedBuild getDetailedBuild(int buildId) {
+        CRLauncher launcher = CRLauncher.getInstance();
+        ItchIoAccount account = (ItchIoAccount) launcher.getAccountManager().getCurrentAccount();
+
+        return launcher.getItchIoApi().getBuild(buildId, account.getItchIoApiKey());
     }
 }
