@@ -20,8 +20,10 @@ package me.theentropyshard.crlauncher.gui.view.devlog;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PostInfo {
@@ -44,15 +46,20 @@ public class PostInfo {
     }
 
     public static List<PostInfo> fromDocument(Document document) {
+        Elements unorderedLists = document.selectXpath("/html/body/div[1]/div/div[2]/div/ul");
+
+        if (unorderedLists.isEmpty()) {
+            return Collections.emptyList();
+        }
+
         List<PostInfo> postInfos = new ArrayList<>();
 
-        Element postElementsList = document.selectXpath("/html/body/div[1]/div/div[2]/div/ul").get(0);
-
-        for (Element postElement : postElementsList.children()) {
+        for (Element postElement : unorderedLists.get(0).children()) {
             Element aElement = postElement.child(0).child(0);
-            String title = aElement.ownText();
             Element postContent = postElement.child(1).child(0);
             Element metaRow = postContent.child(0);
+
+            String title = aElement.ownText();
             String date = metaRow.child(0).child(0).attr("title");
             String author = metaRow.child(0).child(1).ownText();
             String summary = postContent.child(1).child(0).child(0).ownText();
