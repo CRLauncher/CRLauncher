@@ -23,7 +23,7 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Gradle
-        run: ./gradlew clean jpackage
+        run: ./gradlew clean jpackage --info
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
