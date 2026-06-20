@@ -1,5 +1,4 @@
-import java.time.LocalDate
-import java.time.ZoneId
+import org.panteleyev.jpackage.ImageType
 
 buildscript {
     repositories {
@@ -21,10 +20,8 @@ plugins {
     id 'java'
     id 'application'
     id 'de.undercouch.download' version '5.4.0'
-    id 'com.github.johnrengelman.shadow' version '8.1.1'
     id 'com.github.gmazzo.buildconfig' version '5.3.5'
-    id 'edu.sc.seis.launch4j' version '3.0.5'
-    id 'edu.sc.seis.macAppBundle' version '2.3.0'
+    id 'org.panteleyev.jpackageplugin' version '2.0.1'
 }
 
 group = 'me.theentropyshard'
@@ -34,7 +31,6 @@ description = 'CRLauncher'
 def theMainClass = 'me.theentropyshard.crlauncher.Main'
 def theVersion = project.version.toString()
 def theName = project.name
-def theBuildDir = layout.buildDirectory.asFile.get().absolutePath
 
 repositories {
     mavenCentral()
@@ -111,12 +107,8 @@ jar {
                 'Implementation-Vendor': theName
         )
     }
-}
 
-shadowJar {
-    archiveClassifier = ''
-    archiveBaseName = theName
-    archiveVersion = theVersion
+    archiveFileName = theName + '.jar'
 }
 
 buildConfig {
@@ -128,119 +120,60 @@ buildConfig {
     buildConfigField(String, 'APP_VERSION', theVersion)
 }
 
-launch4j {
-    outfile = "$theName-${theVersion}.exe"
-    jreMinVersion = "${project.java.targetCompatibility.toString()}"
-    mainClassName = theMainClass
-    // icon = "${projectDir}/src/main/resources/assets/image/icon.ico"
-    version = theVersion
-    textVersion = theVersion
-    copyright = "2023-${LocalDate.now(ZoneId.of("UTC")).getYear()} $theName"
-    companyName = theName
-    downloadUrl = "https://adoptium.net/temurin/releases/?version=17"
-    bundledJrePath = "jre/;%JAVA_HOME%;%PATH%"
-    jvmOptions = [
-            "-Djna.nosys=true"
-    ]
+tasks.register('copyDependencies', Copy) {
+    from(configurations.runtimeClasspath).into(layout.buildDirectory.dir('jars'))
 }
 
-macAppBundle {
-    mainClassName = theMainClass
+tasks.register('copyJar', Copy) {
+    from(tasks.jar).into(layout.buildDirectory.dir('jars'))
+}
+
+jpackage {
+    dependsOn('build', 'copyDependencies', 'copyJar')
+
+    input = layout.buildDirectory.dir('jars')
+    destination = layout.buildDirectory.dir('dist')
+
     appName = theName
-    appStyle = 'universalJavaApplicationStub'
-    runtimeConfigurationName = 'shadow'
-    jarTask = 'shadowJar'
-    // icon = 'src/main/resources/assets/image/icon.icns'
-    javaProperties.put('user.dir', '$APP_ROOT/Contents/Java')
-    javaProperties.put('apple.laf.useScreenMenuBar', 'true')
-    javaExtras.put("-Djna.nosys", "true")
-    bundleExtras.put("JVMVersion", project.java.targetCompatibility.toString() + "+")
+    vendor = theName
+
+    mainJar = tasks.jar.archiveFileName
+    mainClass = theMainClass
+
+    javaOptions = [
+            '-Djna.nosys=true',
+            '-Dfile.encoding=UTF-8'
+    ]
+
+    windows {
+        type = ImageType.MSI
+        winMenu = true
+        winPerUserInstall = true
+        winShortcut = true
+        winShortcutPrompt = true
+    }
+
+    linux {
+        type = ImageType.DEB
+        linuxAppCategory = "Game"
+        linuxDebMaintainer = "CRLauncher"
+        linuxPackageName = "me.theentropyshard.crlauncher"
+    }
+
+    mac {
+        type = ImageType.DMG
+        macAppCategory = "Entertainment"
+        macPackageName = "me.theentropyshard.crlauncher"
+    }
 }
 
-artifacts {
-    archives shadowJar
-
-    def path = project.tasks.jar.archiveFile.get().getAsFile().getAbsolutePath()
-    archives file(path.replace('.jar', '.exe').replace('libs', 'launch4j'))
-    archives file(path.replace('.jar', '.zip').replace('libs', 'distributions'))
-}
+copyJar.dependsOn jar
 
 tasks.register('updateLanguageFiles', JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     mainClass = "me.theentropyshard.crlauncher.utils.UpdateLanguageFiles"
     args = [projectDir.getAbsolutePath()]
 }
-
-tasks.register('copyArtifacts', Copy) {
-    dependsOn build
-    from shadowJar
-
-    def path = project.tasks.jar.archiveFile.get().getAsFile().getAbsolutePath()
-    from file(path.replace('.jar', '.exe').replace('libs', 'launch4j'))
-    from file(path.replace('.jar', '.zip').replace('libs', 'distributions'))
-
-    into "${projectDir}/dist"
-}
-
-tasks.register('renameArtifacts', Copy) {
-    from "${projectDir}/dist"
-    destinationDir file("${projectDir}/dist")
-
-    include "$theName-${theVersion}.exe"
-    include "$theName-${theVersion}.zip"
-    include "$theName-${theVersion}.jar"
-
-    rename "$theName-${theVersion}.exe", "${theName}.exe"
-    rename "$theName-${theVersion}.zip", "${theName}.zip"
-    rename "$theName-${theVersion}.jar", "${theName}.jar"
-}
-
-tasks.register('removeArtifacts', Delete) {
-    delete file("${projectDir}/dist/$theName-${theVersion}.zip")
-    delete file("${projectDir}/dist/$theName-${theVersion}.exe")
-    delete file("${projectDir}/dist/$theName-${theVersion}.jar")
-}
-
-tasks.register('downloadNewerUniversalJavaApplicationStub', Download) {
-    description 'Downloads newer universalJavaApplicationStub'
-    src 'https://raw.githubusercontent.com/tofi86/universalJavaApplicationStub/404f5c1b008d6296065de7a93406b387c9f3dce1/src/universalJavaApplicationStub'
-    dest file("$theBuildDir/macApp/${theName}.app/Contents/MacOS/universalJavaApplicationStub")
-    overwrite true
-}
-
-tasks.register('createMacApp', Zip) {
-    dependsOn createApp, shadowJar, downloadNewerUniversalJavaApplicationStub
-
-    from("$theBuildDir/macApp") {
-        include "${theName}.app/**"
-        exclude "${theName}.app/Contents/MacOS"
-    }
-
-    from("$theBuildDir/macApp") {
-        include "${theName}.app/Contents/MacOS/**"
-        fileMode 0777
-    }
-
-    archiveFileName = "$theName-${theVersion}.zip"
-}
-
-clean.doFirst {
-    delete "${projectDir}/dist"
-}
-
-removeArtifacts.doLast {
-    file("${projectDir}/dist/version.txt") << theVersion
-}
-
-build.finalizedBy copyArtifacts
-copyArtifacts.finalizedBy renameArtifacts
-renameArtifacts.finalizedBy removeArtifacts
-shadowJar.dependsOn jar
-build.dependsOn createExe, createMacApp
-startScripts.dependsOn shadowJar
-createExe.dependsOn shadowJar
-createAppZip.dependsOn downloadNewerUniversalJavaApplicationStub
-createDmg.dependsOn downloadNewerUniversalJavaApplicationStub
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
