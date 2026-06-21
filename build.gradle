@@ -158,7 +158,7 @@ jpackage {
         linuxAppCategory = "Game"
         linuxMenuGroup = "Games"
         linuxDebMaintainer = "CRLauncher"
-        linuxPackageName = theName
+        linuxPackageName = "crlauncher"
         linuxAppRelease = theVersion
         linuxShortcut = true
         linuxRpmLicenseType = "GPL-3.0"
