@@ -154,7 +154,9 @@ jpackage {
     }
 
     linux {
-        type = ImageType.DEB
+        type = ImageType.valueOf(
+                project.findProperty("linuxPackageType") ?: "DEB"
+        )
         linuxAppCategory = "Game"
         linuxDebMaintainer = "CRLauncher"
         linuxPackageName = "me.theentropyshard.crlauncher"
