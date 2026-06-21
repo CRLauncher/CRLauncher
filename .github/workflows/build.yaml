@@ -6,31 +6,31 @@ on:
       - master
 
 jobs:
-  build:
-    timeout-minutes: 10
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest]
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Set up JDK
-        uses: actions/setup-java@v5
-        with:
-          java-version: '17'
-          distribution: 'adopt'
-
-      - name: Build with Gradle
-        run: ./gradlew clean jpackage --info
-
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: CRLauncher-${{ matrix.os }}
-          path: build/dist
+#  build:
+#    timeout-minutes: 10
+#    runs-on: ${{ matrix.os }}
+#    strategy:
+#      matrix:
+#        os: [windows-latest, macos-latest]
+#
+#    steps:
+#      - name: Checkout code
+#        uses: actions/checkout@v7
+#
+#      - name: Set up JDK
+#        uses: actions/setup-java@v5
+#        with:
+#          java-version: '17'
+#          distribution: 'adopt'
+#
+#      - name: Build with Gradle
+#        run: ./gradlew clean jpackage --info
+#
+#      - name: Upload Artifact
+#        uses: actions/upload-artifact@v7
+#        with:
+#          name: CRLauncher-${{ matrix.os }}
+#          path: build/dist
 
   build-linux:
     timeout-minutes: 10

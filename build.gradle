@@ -154,12 +154,14 @@ jpackage {
     }
 
     linux {
-        type = ImageType.valueOf(
-                project.findProperty("linuxPackageType") ?: "DEB"
-        )
+        type = (project.findProperty("linuxPackageType") ?: "DEB").toString().toUpperCase().with { ImageType.valueOf(it) }
         linuxAppCategory = "Game"
+        linuxMenuGroup = "Games"
         linuxDebMaintainer = "CRLauncher"
-        linuxPackageName = "me.theentropyshard.crlauncher"
+        linuxPackageName = theName
+        linuxAppRelease = theVersion
+        linuxShortcut = true
+        linuxRpmLicenseType = "GPL-3.0"
     }
 
     mac {
