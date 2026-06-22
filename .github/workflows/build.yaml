@@ -24,7 +24,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Gradle
-        run: ./gradlew clean jpackage -Pbundled=true --info
+        run: ./gradlew clean jpackage --info
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7
@@ -62,7 +62,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Gradle
-        run: ./gradlew clean jpackage -Pbundled=true -PlinuxPackageType=${{ matrix.package-type }} --info
+        run: ./gradlew clean jpackage -PlinuxPackageType=${{ matrix.package-type }} --info
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7

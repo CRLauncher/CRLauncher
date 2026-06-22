@@ -120,7 +120,6 @@ buildConfig {
 
     buildConfigField(String, 'APP_NAME', theName)
     buildConfigField(String, 'APP_VERSION', theVersion)
-    buildConfigField(Boolean, 'BUNDLED', bundled)
 }
 
 tasks.register('copyDependencies', Copy) {
