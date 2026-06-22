@@ -1,0 +1,149 @@
+name: Build artifacts
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build-windows:
+    timeout-minutes: 10
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Gradle
+        run: ./gradlew clean jpackage --info
+
+      - name: Strip v from tag
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          STRIPPED_TAG="${TAG:1}"
+          echo "VERSION=$STRIPPED_TAG" >> $GITHUB_ENV
+
+      - name: Upload Windows msi artifact
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: build/dist/CRLauncher-${{ env.VERSION }}.msi
+          asset_name: CRLauncher-${{ env.VERSION }}.msi
+          asset_content_type: binary/octet-stream
+
+  build-linux-deb:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Install DEB packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fakeroot
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Gradle
+        run: ./gradlew clean jpackage -PlinuxPackageType=DEB --info
+
+      - name: Strip v from tag
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          STRIPPED_TAG="${TAG:1}"
+          echo "VERSION=$STRIPPED_TAG" >> $GITHUB_ENV
+
+      - name: Upload Linux deb artifact
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: build/dist/CRLauncher-${{ env.VERSION }}.deb
+          asset_name: CRLauncher-${{ env.VERSION }}.deb
+          asset_content_type: binary/octet-stream
+
+  build-linux-rpm:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Install RPM packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y rpm
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Gradle
+        run: ./gradlew clean jpackage -PlinuxPackageType=RPM --info
+
+      - name: Strip v from tag
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          STRIPPED_TAG="${TAG:1}"
+          echo "VERSION=$STRIPPED_TAG" >> $GITHUB_ENV
+
+      - name: Upload Linux rpm artifact
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: build/dist/CRLauncher-${{ env.VERSION }}.rpm
+          asset_name: CRLauncher-${{ env.VERSION }}.rpm
+          asset_content_type: binary/octet-stream
+
+  build-macos:
+    timeout-minutes: 10
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Gradle
+        run: ./gradlew clean jpackage --info
+
+      - name: Strip v from tag
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          STRIPPED_TAG="${TAG:1}"
+          echo "VERSION=$STRIPPED_TAG" >> $GITHUB_ENV
+
+      - name: Upload macOS dmg artifact
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: build/dist/CRLauncher-${{ env.VERSION }}.dmg
+          asset_name: CRLauncher-${{ env.VERSION }}.dmg
+          asset_content_type: binary/octet-stream
