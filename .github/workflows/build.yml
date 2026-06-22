@@ -76,7 +76,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: build/dist/crlauncher-${{ env.VERSION }}-1.x86_64.deb
+          asset_path: build/dist/crlauncher-${{ env.VERSION }}-1_x86_64.deb
           asset_name: CRLauncher-${{ env.VERSION }}-x86_64.deb
           asset_content_type: binary/octet-stream
 
