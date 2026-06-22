@@ -31,6 +31,12 @@ public class Args {
     @Parameter(names = {"--workDir"})
     private String workDirPath;
 
+    @Parameter(names = {"--useXdgDataHome"})
+    private boolean useXdgDataHome;
+
+    @Parameter(names = {"--useParentDir"})
+    private boolean useParentDir;
+
     @Parameter(names = {"--useJarLocation"})
     private boolean useJarLocation;
 
@@ -73,10 +79,16 @@ public class Args {
         if (this.useJarLocation) {
             workDir = Paths.get(URI.create(Args.class.getProtectionDomain().getCodeSource().getLocation().toString()))
                     .getParent();
+        } else if (this.useXdgDataHome) {
+            workDir = Paths.get(System.getProperty("XDG_DATA_HOME", ".local/share/"));
         } else {
             workDir = this.workDirPath == null || this.workDirPath.isEmpty() ?
                     Paths.get(System.getProperty("user.dir")) :
                     Paths.get(this.workDirPath);
+        }
+
+        if (this.useParentDir){
+            workDir = Paths.get(workDir.toString(), BuildConfig.APP_NAME);
         }
 
         return workDir.normalize().toAbsolutePath();

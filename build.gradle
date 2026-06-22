@@ -162,6 +162,11 @@ jpackage {
         linuxPackageName = "crlauncher"
         linuxShortcut = true
         linuxRpmLicenseType = "GPL-3.0"
+
+        arguments = List.of(
+                "--useXdgDataHome",
+                "--useParentDir"
+        )
     }
 
     mac {
