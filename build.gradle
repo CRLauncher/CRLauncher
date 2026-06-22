@@ -25,12 +25,14 @@ plugins {
 }
 
 group = 'me.theentropyshard'
-version = '1.0.0'
+version = '0.11.2'
 description = 'CRLauncher'
 
 def theMainClass = 'me.theentropyshard.crlauncher.Main'
 def theVersion = project.version.toString()
 def theName = project.name
+
+def bundled = project.findProperty("bundled") ?: false
 
 repositories {
     mavenCentral()
@@ -118,6 +120,7 @@ buildConfig {
 
     buildConfigField(String, 'APP_NAME', theName)
     buildConfigField(String, 'APP_VERSION', theVersion)
+    buildConfigField(Boolean, 'BUNDLED', bundled)
 }
 
 tasks.register('copyDependencies', Copy) {
