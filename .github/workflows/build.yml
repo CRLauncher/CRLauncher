@@ -152,3 +152,59 @@ jobs:
           asset_path: build/dist/CRLauncher-${{ env.VERSION }}.dmg
           asset_name: CRLauncher-${{ env.VERSION }}.dmg
           asset_content_type: binary/octet-stream
+
+  build-jar:
+    permissions: write-all
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Gradle
+        run: ./gradlew clean jar --info
+
+      - name: Upload JAR artifact
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: build/libs/CRLauncher.jar
+          asset_name: CRLauncher.jar
+          asset_content_type: binary/octet-stream
+
+  build-fat-jar:
+    permissions: write-all
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Gradle
+        run: ./gradlew clean shadowJar --info
+
+      - name: Upload JAR artifact
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: build/libs/CRLauncher-Fat.jar
+          asset_name: CRLauncher-Fat.jar
+          asset_content_type: binary/octet-stream

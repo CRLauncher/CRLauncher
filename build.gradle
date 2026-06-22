@@ -22,10 +22,11 @@ plugins {
     id 'de.undercouch.download' version '5.4.0'
     id 'com.github.gmazzo.buildconfig' version '5.3.5'
     id 'org.panteleyev.jpackageplugin' version '2.0.1'
+    id 'com.gradleup.shadow' version '8.3.3'
 }
 
 group = 'me.theentropyshard'
-version = '1.0.6'
+version = '1.0.7'
 description = 'CRLauncher'
 
 def theMainClass = 'me.theentropyshard.crlauncher.Main'
@@ -109,6 +110,11 @@ jar {
     }
 
     archiveFileName = theName + '.jar'
+}
+
+shadowJar {
+    mainClassName = theMainClass
+    archiveFileName = theName + '-Fat.jar'
 }
 
 buildConfig {
