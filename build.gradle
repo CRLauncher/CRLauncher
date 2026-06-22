@@ -32,8 +32,6 @@ def theMainClass = 'me.theentropyshard.crlauncher.Main'
 def theVersion = project.version.toString()
 def theName = project.name
 
-def bundled = project.findProperty("bundled") ?: false
-
 repositories {
     mavenCentral()
     gradlePluginPortal()
