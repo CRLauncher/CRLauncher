@@ -21,7 +21,7 @@ jobs:
 #        uses: actions/setup-java@v5
 #        with:
 #          java-version: '17'
-#          distribution: 'adopt'
+#          distribution: 'temurin'
 #
 #      - name: Build with Gradle
 #        run: ./gradlew clean jpackage --info
@@ -43,17 +43,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v7
 
-      - name: Install rpm packaging tools
-        if: matrix.package-type == 'rpm'
+      - name: Install RPM packaging tools
+        if: matrix.package-type == 'RPM'
         run: |
           sudo apt-get update
           sudo apt-get install -y rpm
+
+      - name: Install DEB packaging tools
+        if: matrix.package-type == 'DEB'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fakeroot
 
       - name: Set up JDK
         uses: actions/setup-java@v5
         with:
           java-version: '17'
-          distribution: 'adopt'
+          distribution: 'temurin'
 
       - name: Build with Gradle
         run: ./gradlew clean jpackage -PlinuxPackageType=${{ matrix.package-type }} --info

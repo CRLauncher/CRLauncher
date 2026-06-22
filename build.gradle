@@ -136,6 +136,7 @@ jpackage {
 
     appName = theName
     vendor = theName
+    icon = file("src/main/resources/assets/images/icons/logo/icon_silver_256x.png")
 
     mainJar = tasks.jar.archiveFileName
     mainClass = theMainClass
@@ -159,7 +160,6 @@ jpackage {
         linuxMenuGroup = "Games"
         linuxDebMaintainer = "CRLauncher"
         linuxPackageName = "crlauncher"
-        linuxAppRelease = theVersion
         linuxShortcut = true
         linuxRpmLicenseType = "GPL-3.0"
     }
