@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 public enum OperatingSystem {
     WINDOWS,
@@ -91,7 +93,20 @@ public enum OperatingSystem {
                     Log.warn("Unable to browse '" + uri + "' using java.awt.Desktop: " + e.getMessage());
                 }
             } else {
-                Log.warn("Unable to browse '" + uri + "' using java.awt.Desktop: action 'BROWSE' not supported");
+                if (OperatingSystem.isLinux()){
+                    try {
+                        List<String> arguments = new ArrayList<>();
+                        arguments.add("xdg-open");
+                        arguments.add(uri);
+
+                        ProcessBuilder builder = new ProcessBuilder(arguments);
+                        builder.start();
+                    } catch (IOException e) {
+                        Log.warn("Unable to use xdg-open '" + uri +"' :" + e.getMessage());
+                    }
+                } else {
+                    Log.warn("Unable to browse '" + uri + "' using java.awt.Desktop: action 'BROWSE' not supported");
+                }
             }
         } else {
             Log.warn("java.awt.Desktop not supported. OS: " + OperatingSystem.getCurrent());

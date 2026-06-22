@@ -45,12 +45,14 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -246,7 +248,7 @@ public class CRLauncher {
                 boolean updateNow = UpdateDialog.show(release);
 
                 if (updateNow) {
-                    CRLauncher.runUpdater(githubApi, release, latestVersion);
+                    OperatingSystem.browse("https://crlauncher.github.io/");
                 } else {
                     Log.info("Not updating");
                 }
@@ -266,55 +268,6 @@ public class CRLauncher {
         } catch (IOException e) {
             Log.error("Could not check for updates", e);
         }
-    }
-
-    public static void runUpdater(GithubApi githubApi, GithubRelease release, SemanticVersion latestVersion) throws IOException {
-        Log.info("Updating now");
-
-        String fileExtension;
-
-        if (CRLauncher.isJar()) {
-            fileExtension = ".jar";
-        } else if (CRLauncher.isExe()) {
-            fileExtension = ".exe";
-        } else {
-            throw new RuntimeException("Updating launcher while running not in jar " +
-                "and not in exe is not supported. (Running in an IDE?)");
-        }
-
-        Path tmpDir = CRLauncher.getInstance().getWorkDir().resolve("tmp");
-        FileUtils.createDirectoryIfNotExists(tmpDir);
-
-        Path newLauncherFile = tmpDir.resolve(BuildConfig.APP_NAME + fileExtension);
-        FileUtils.delete(newLauncherFile);
-
-        ProgressDialog dialog = new ProgressDialog("Updating CRLauncher to " + latestVersion.toVersionString());
-        dialog.setStage("Downloading launcher...");
-        SwingUtilities.invokeLater(() -> dialog.setVisible(true));
-
-        Log.info("Downloading new version");
-        GithubRelease.Asset asset = ListUtils.search(release.assets, a -> a.name.endsWith(fileExtension));
-        githubApi.downloadRelease(newLauncherFile, release, release.assets.indexOf(asset), dialog);
-
-        SwingUtilities.invokeLater(() -> dialog.getDialog().dispose());
-
-        Path currentPath = Paths.get(URI.create(Args.class.getProtectionDomain().getCodeSource().getLocation().toString()));
-
-        List<String> arguments = new ArrayList<>();
-        arguments.add(JavaLocator.getJavaPath());
-        arguments.add("-classpath");
-        arguments.add(newLauncherFile.toString());
-        arguments.add("me.theentropyshard.crlauncher.Updater");
-        arguments.add(currentPath.toString());
-        arguments.add(newLauncherFile.toString());
-        arguments.addAll(Arrays.asList(CRLauncher.rawArgs));
-
-        Log.info("Starting new version with command: " + arguments);
-
-        ProcessBuilder builder = new ProcessBuilder(arguments);
-        builder.start();
-
-        CRLauncher.getInstance().shutdown();
     }
 
     public static boolean isExe() {
