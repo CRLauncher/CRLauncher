@@ -25,7 +25,7 @@ plugins {
 }
 
 group = 'me.theentropyshard'
-version = '1.0.2'
+version = '1.0.3'
 description = 'CRLauncher'
 
 def theMainClass = 'me.theentropyshard.crlauncher.Main'
@@ -157,7 +157,7 @@ jpackage {
 
     linux {
         type = (project.findProperty("linuxPackageType") ?: "DEB").toString().toUpperCase().with { ImageType.valueOf(it) }
-        linuxAppRelease = 1
+        linuxAppRelease = "1"
         linuxAppCategory = "Game"
         linuxMenuGroup = "Games"
         linuxDebMaintainer = "CRLauncher"

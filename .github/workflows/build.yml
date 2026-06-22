@@ -7,6 +7,7 @@ on:
 
 jobs:
   build-windows:
+    permissions: write-all
     timeout-minutes: 10
     runs-on: windows-latest
 
@@ -41,6 +42,7 @@ jobs:
           asset_content_type: binary/octet-stream
 
   build-linux-deb:
+    permissions: write-all
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
@@ -79,6 +81,7 @@ jobs:
           asset_content_type: binary/octet-stream
 
   build-linux-rpm:
+    permissions: write-all
     timeout-minutes: 10
     runs-on: ubuntu-latest
 
@@ -117,6 +120,7 @@ jobs:
           asset_content_type: binary/octet-stream
 
   build-macos:
+    permissions: write-all
     timeout-minutes: 10
     runs-on: macos-latest
 
