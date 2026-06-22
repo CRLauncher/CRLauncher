@@ -96,6 +96,11 @@ tasks.withType(JavaExec).configureEach {
     doFirst {
         workingDir.mkdirs()
     }
+//
+//    args = List.of(
+//            "--useXdgDataHome",
+//            "--useParentDir"
+//    )
 }
 
 jar {
@@ -162,6 +167,11 @@ jpackage {
         linuxPackageName = "crlauncher"
         linuxShortcut = true
         linuxRpmLicenseType = "GPL-3.0"
+
+        arguments = List.of(
+                "--useXdgDataHome",
+                "--useParentDir"
+        )
     }
 
     mac {
